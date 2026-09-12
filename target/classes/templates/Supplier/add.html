@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Add Supplier</title>
+</head>
+<body>
+	<h2>Add Supplier</h2>
+	<form method="post" th:action="@{/supplier/add}"
+		th:object="${supplier}">
+		<div>
+			<label>Supplier_id</label> <input class="form-control" type="text"
+				th:field="${supplier.supplier_id}" />
+		</div>
+		<div>
+			<label>Name</label> <input class="form-control" type="text"
+				th:field="${supplier.name}" />
+		</div>
+		<div>
+			<label>Contact_Info</label> <input class="form-control" type="text"
+				th:field="${supplier.contact_info}" />
+		</div>
+		<div>
+			<label>Created_at</label> <input type="datetime-local"
+				th:field="${supplier.created_at}" />
+		</div>
+		<div>
+			<input type="submit" value="Add Supplier" />
+		</div>
+	</form>
+</body>
+</html>

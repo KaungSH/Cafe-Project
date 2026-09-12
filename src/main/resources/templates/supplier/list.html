@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Supplier List</title>
+</head>
+<body>
+	<h2>Supplier List</h2>
+	<a th:href="@{supplier/add}">Add Supplier</a>
+	<br></br>
+	<a th:href="@{/supplier/deleted}">Deleted suppliers list</a>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Supplier_id</th>
+				<th>Name</th>
+				<th>Contact_Info</th>
+				<th>Created_at</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="s, state: ${supplier}">
+				<td th:text="${s.supplier_id}"></td>
+				<td th:text="${s.name}"></td>
+				<td th:text="${s.contact_info}"></td>
+				<td th:text="${s.created_at}"></td>
+				<td><a
+					th:href="@{/supplier/edit/{supplier_id}(supplier_id=${s.supplier_id})}">Edit</a>
+					<a
+					th:href="@{/supplier/delete/{supplier_id}(supplier_id=${s.supplier_id})}">Delete</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>
