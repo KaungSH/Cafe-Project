@@ -113,8 +113,8 @@ public class ProductRepository {
 	}
 	
 	public int edit(Product product) {
-		String sql = "UPDATE products SET price = ? isedited = ? is_active = ? WHERE product_id = ?;";
-		jdbcTemplate.update(sql, product.getPrice(), true, product.isIs_active(), product.getProduct_id());
+		String sql = "UPDATE products SET price = ? isedited = true is_active = ? WHERE product_id = ?;";
+		jdbcTemplate.update(sql, product.getPrice(), product.isIs_active(), product.getProduct_id());
 		deleteProducts_ingredients(product.getProduct_id());
 		return addProducts_ingredients(product.getProduct_id(), product.getIngredient_ids(), product.getQuantity_required());
 	}
