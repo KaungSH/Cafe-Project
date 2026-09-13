@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import cafe.project.YinminThiriSoe.repositories.entities.Employee;
 import cafe.project.YinminThiriSoe.repositories.mappers.EmployeeMapper;
-import cafe.project.YinminThiriSoe.repositories.mappers.EmployeeResultSetExtractor;
+import cafe.project.YinminThiriSoe.repositories.mappers.resultsetextractors.EmployeeResultSetExtractor;
 
 @Repository
 public class EmployeeRepository {

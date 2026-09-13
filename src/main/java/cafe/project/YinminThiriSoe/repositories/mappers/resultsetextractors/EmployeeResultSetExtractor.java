@@ -1,4 +1,4 @@
-package cafe.project.YinminThiriSoe.repositories.mappers;
+package cafe.project.YinminThiriSoe.repositories.mappers.resultsetextractors;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
