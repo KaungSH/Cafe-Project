@@ -8,7 +8,12 @@ public class StarterController {
 	
 	@GetMapping("/")
 	public String starter() {
-		return "starter";
+		return "common/starter";
+	}
+	
+	@GetMapping("/notfound")
+	public String notfound() {
+		return "common/notfound";
 	}
 
 }
