@@ -67,7 +67,7 @@ public class BranchController {
 		if (dto.getOpening_time() != null && dto.getClosing_time() != null) {
 			if (dto.getClosing_time().isBefore(dto.getOpening_time())) {
 				result.rejectValue("closing_time", "error.branchDto", 
-						"The closing time should not be later than the opening time.");
+						"The cl3osing time should not be later than the opening time.");
 			}
 			if (dto.getClosing_time().equals(dto.getOpening_time())) {
 				result.rejectValue("closing_time", "error.branchDto",
