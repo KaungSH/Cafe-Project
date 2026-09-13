@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import cafe.project.repository.entities.Supplier;
-import cafe.project.repository.mapper.SupplierMapper;
+import cafe.project.repository.mappers.SupplierMapper;
 
 @Repository
 public class SupplierRepository {
@@ -43,6 +43,7 @@ public class SupplierRepository {
 
 	}
 
+	//soft delete
 	public int delete(String supplier_id) {
 		String sql = "UPDATE suppliers SET isdeleted=1 WHERE supplier_id=?";
 		return this.jdbcTemplate.update(sql, supplier_id);
@@ -57,7 +58,7 @@ public class SupplierRepository {
 		String sql = "UPDATE suppliers SET isdeleted = 0 WHERE supplier_id = ?";
 		return jdbcTemplate.update(sql, supplier_id);
 	}
-
+	//hard delete
 	public int realDelete(String supplier_id) {
 		String sql = "DELETE FROM suppliers WHERE supplier_id=?";
 		return this.jdbcTemplate.update(sql, supplier_id);

@@ -1,7 +1,10 @@
 package cafe.project.controllers;
 
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,7 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import cafe.project.model.SupplierDto;
-import cafe.project.service.SupplierService;
+import cafe.project.services.SupplierService;
+import jakarta.validation.Valid;
 
 @Controller
 public class SupplierController {
@@ -32,7 +36,11 @@ public class SupplierController {
 	}
 
 	@PostMapping("/supplier/add")
-	public String addSupplier(@ModelAttribute("supplier") SupplierDto supplier) {
+	public String addSupplier(@Valid @ModelAttribute("supplier") SupplierDto supplier, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			return "supplier/add";
+		}
+		supplier.setCreated_at(LocalDateTime.now());
 		this.supplierService.add(supplier);
 		return "redirect:/supplier";
 	}
@@ -48,7 +56,11 @@ public class SupplierController {
 	}
 
 	@PostMapping("/supplier/edit")
-	public String editSupplier(@ModelAttribute("supplier") SupplierDto supplier, Model model) {
+	public String editSupplier(@Valid @ModelAttribute("supplier") SupplierDto supplier, BindingResult bindingResult,
+			Model model) {
+		if (bindingResult.hasErrors()) {
+			return "supplier/edit";
+		}
 		this.supplierService.edit(supplier.getSupplier_id(), supplier);
 		return "redirect:/supplier";
 	}
