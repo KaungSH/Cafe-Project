@@ -10,5 +10,10 @@ public class StarterController {
 	public String starter() {
 		return "common/starter";
 	}
+	
+	@GetMapping("/notfound")
+	public String notfound() {
+		return "common/notfound";
+	}
 
 }
