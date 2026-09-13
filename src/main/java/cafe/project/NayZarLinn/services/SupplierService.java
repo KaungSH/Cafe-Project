@@ -1,13 +1,13 @@
-package cafe.project.services;
+package cafe.project.NayZarLinn.services;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import cafe.project.model.SupplierDto;
-import cafe.project.repository.SupplierRepository;
-import cafe.project.repository.entities.Supplier;
+import cafe.project.NayZarLinn.models.SupplierDto;
+import cafe.project.NayZarLinn.repositories.SupplierRepository;
+import cafe.project.NayZarLinn.repositories.entities.Supplier;
 
 @Service
 public class SupplierService {

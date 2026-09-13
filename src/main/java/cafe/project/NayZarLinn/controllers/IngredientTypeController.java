@@ -1,4 +1,4 @@
-package cafe.project.controllers;
+package cafe.project.NayZarLinn.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import cafe.project.model.IngredientTypeDto;
-import cafe.project.services.IngredientTypeService;
+import cafe.project.NayZarLinn.models.IngredientTypeDto;
+import cafe.project.NayZarLinn.services.IngredientTypeService;
 
 @Controller
 public class IngredientTypeController {
@@ -21,13 +21,13 @@ public class IngredientTypeController {
 	@GetMapping("/ingredientType")
 	public String supplierList(Model model) {
 		model.addAttribute("supplier", this.ingredientTypeService.findAll());
-		return "ingredient_type/list";
+		return "NayZarLinn/ingredient_type/list";
 	}
 
 	@GetMapping("/ingredientType/add")
 	public String addIngredientType(Model model) {
 		model.addAttribute("ingredientType", new IngredientTypeDto());
-		return "ingredient_type/add";
+		return "NayZarLinn/ingredient_type/add";
 	}
 
 	@PostMapping("/ingredientType/add")
@@ -41,7 +41,7 @@ public class IngredientTypeController {
 		IngredientTypeDto existingIngredientType = this.ingredientTypeService.findById(ingredient_type_id);
 		if (existingIngredientType != null) {
 			model.addAttribute("ingredientType", existingIngredientType);
-			return "ingredient_type/edit";
+			return "NayZarLinn/ingredient_type/edit";
 		}
 		return "redirect:/notfound";
 	}
@@ -58,7 +58,7 @@ public class IngredientTypeController {
 		IngredientTypeDto existingIngredientType = this.ingredientTypeService.findById(ingredient_type_id);
 		if (existingIngredientType != null) {
 			model.addAttribute("ingredientType", existingIngredientType);
-			return "ingredient_type/delete";
+			return "NayZarLinn/ingredient_type/delete";
 		}
 		return "redirect:/notfound";
 	}

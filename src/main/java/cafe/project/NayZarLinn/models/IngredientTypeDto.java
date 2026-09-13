@@ -1,4 +1,4 @@
-package cafe.project.model;
+package cafe.project.NayZarLinn.models;
 
 import java.time.LocalDateTime;
 

@@ -1,29 +1,18 @@
-package cafe.project.model;
+package cafe.project.NayZarLinn.repositories.entities;
 
 import java.time.LocalDateTime;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
-public class SupplierDto {
-	@NotBlank(message="Id is required")
+public class Supplier {
 	private String supplier_id;
-	@NotBlank(message="Name is required")
 	private String name;
-	@NotBlank(message="ContactInfo is required")
 	private String contact_info;
-	
 	private boolean isdeleted;
-
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
 	private LocalDateTime created_at;
 
-	public SupplierDto() {
+	public Supplier() {
 	}
 
-	public SupplierDto(String supplier_id, String name, String contact_info, boolean isdeleted,
-			LocalDateTime created_at) {
+	public Supplier(String supplier_id, String name, String contact_info, boolean isdeleted, LocalDateTime created_at) {
 		this.supplier_id = supplier_id;
 		this.name = name;
 		this.contact_info = contact_info;

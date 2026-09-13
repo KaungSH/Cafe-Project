@@ -1,12 +1,12 @@
-package cafe.project.repository;
+package cafe.project.NayZarLinn.repositories;
 
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import cafe.project.repository.entities.Supplier;
-import cafe.project.repository.mappers.SupplierMapper;
+import cafe.project.NayZarLinn.repositories.entities.Supplier;
+import cafe.project.NayZarLinn.repositories.mappers.SupplierMapper;
 
 @Repository
 public class SupplierRepository {

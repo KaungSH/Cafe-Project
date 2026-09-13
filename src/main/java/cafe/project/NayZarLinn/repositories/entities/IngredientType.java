@@ -1,4 +1,4 @@
-package cafe.project.repository.entities;
+package cafe.project.NayZarLinn.repositories.entities;
 
 import java.time.LocalDateTime;
 

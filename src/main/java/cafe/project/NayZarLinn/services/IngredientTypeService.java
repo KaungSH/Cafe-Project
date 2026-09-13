@@ -1,12 +1,12 @@
-package cafe.project.services;
+package cafe.project.NayZarLinn.services;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import cafe.project.model.IngredientTypeDto;
-import cafe.project.repository.IngredientTypeRepository;
-import cafe.project.repository.entities.IngredientType;
+import cafe.project.NayZarLinn.models.IngredientTypeDto;
+import cafe.project.NayZarLinn.repositories.IngredientTypeRepository;
+import cafe.project.NayZarLinn.repositories.entities.IngredientType;
 
 @Service
 public class IngredientTypeService {

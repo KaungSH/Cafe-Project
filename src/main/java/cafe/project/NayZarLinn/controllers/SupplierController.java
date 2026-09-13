@@ -1,4 +1,4 @@
-package cafe.project.controllers;
+package cafe.project.NayZarLinn.controllers;
 
 import java.time.LocalDateTime;
 
@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import cafe.project.model.SupplierDto;
-import cafe.project.services.SupplierService;
+import cafe.project.NayZarLinn.models.SupplierDto;
+import cafe.project.NayZarLinn.services.SupplierService;
 import jakarta.validation.Valid;
 
 @Controller
@@ -26,19 +26,19 @@ public class SupplierController {
 	@GetMapping("/supplier")
 	public String supplierList(Model model) {
 		model.addAttribute("supplier", this.supplierService.findAll());
-		return "supplier/list";
+		return "NayZarLinn/supplier/list";
 	}
 
 	@GetMapping("/supplier/add")
 	public String addSupplier(Model model) {
 		model.addAttribute("supplier", new SupplierDto());
-		return "supplier/add";
+		return "NayZarLinn/supplier/add";
 	}
 
 	@PostMapping("/supplier/add")
 	public String addSupplier(@Valid @ModelAttribute("supplier") SupplierDto supplier, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
-			return "supplier/add";
+			return "NayZarLinn/supplier/add";
 		}
 		supplier.setCreated_at(LocalDateTime.now());
 		this.supplierService.add(supplier);
@@ -50,7 +50,7 @@ public class SupplierController {
 		SupplierDto existingSup = this.supplierService.findById(supplier_id);
 		if (existingSup != null) {
 			model.addAttribute("supplier", existingSup);
-			return "supplier/edit";
+			return "NayZarLinn/supplier/edit";
 		}
 		return "redirect:/notfound";
 	}
@@ -59,7 +59,7 @@ public class SupplierController {
 	public String editSupplier(@Valid @ModelAttribute("supplier") SupplierDto supplier, BindingResult bindingResult,
 			Model model) {
 		if (bindingResult.hasErrors()) {
-			return "supplier/edit";
+			return "NayZarLinn/supplier/edit";
 		}
 		this.supplierService.edit(supplier.getSupplier_id(), supplier);
 		return "redirect:/supplier";
@@ -70,7 +70,7 @@ public class SupplierController {
 		SupplierDto existingSup = this.supplierService.findById(supplier_id);
 		if (existingSup != null) {
 			model.addAttribute("supplier", existingSup);
-			return "supplier/delete";
+			return "NayZarLinn/supplier/delete";
 		}
 		return "redirect:/notfound";
 	}
@@ -84,7 +84,7 @@ public class SupplierController {
 	@GetMapping("/supplier/deleted")
 	public String deletedSupplierList(Model model) {
 		model.addAttribute("supplier", supplierService.findDeleted());
-		return "supplier/deleted";
+		return "NayZarLinn/supplier/deleted";
 	}
 
 	@PostMapping("/supplier/restore")
