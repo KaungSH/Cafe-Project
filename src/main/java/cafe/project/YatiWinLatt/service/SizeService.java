@@ -23,8 +23,8 @@ public class SizeService {
 		return sizeRepository.findAll();
 	}
 
-	public Size getSizeById(String id) {
-		return sizeRepository.findById(id);
+	public Size getSizeById(String size_id) {
+		return sizeRepository.findById(size_id);
 	}
 
 	public void createSize(SizeEntryDto dto) {
@@ -35,8 +35,8 @@ public class SizeService {
 		sizeRepository.update(dto);
 	}
 
-	public void deleteSize(String id) {
-		sizeRepository.deleteById(id);
+	public void deleteSize(String size_id) {
+		sizeRepository.deleteById(size_id);
 	}
 
 	public List<Map<String, Object>> getAllEmployees() {

@@ -40,13 +40,13 @@ public class SizeController {
         return "redirect:/sizes";
     }
     @GetMapping("/edit/{size_id}")
-    public String showEditForm(@PathVariable("size_id") String id, Model model) {
-    	Size size = sizeService.getSizeById(id);
+    public String showEditForm(@PathVariable("size_id") String size_id, Model model) {
+    	Size size = sizeService.getSizeById(size_id);
         model.addAttribute("sizeDto", size);
         return "YatiWinLatt/sizes/edit";
     }
     @PostMapping("/edit/{size_id}")
-    public String update(@PathVariable("id") String size_id,
+    public String update(@PathVariable("size_id") String size_id,
                          @Valid @ModelAttribute("sizeDto") SizeEntryDto sizeDto,
                          BindingResult result) {
         if (result.hasFieldErrors("name") || result.hasFieldErrors("size_code")) {
