@@ -1,60 +1,98 @@
 package cafe.project.NayZarLinn.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import cafe.project.NayZarLinn.models.IngredientTypeDto;
+import cafe.project.HeinMinHtet.repositories.UnitRepository;
+import cafe.project.NayZarLinn.models.IngredientTypeEntryDto;
+import cafe.project.NayZarLinn.models.IngredientTypeListDto;
 import cafe.project.NayZarLinn.repositories.IngredientTypeRepository;
 import cafe.project.NayZarLinn.repositories.entities.IngredientType;
 
 @Service
 public class IngredientTypeService {
+	
 	private final IngredientTypeRepository repo;
+	private final UnitRepository ur;
+
+	public IngredientTypeService(IngredientTypeRepository repo,UnitRepository ur) {
+		this.repo = repo;
+		this.ur=ur;
+	}
+
+	public List<IngredientTypeListDto> findAll() {
+		List<IngredientTypeListDto> list = new ArrayList<>();
+		
+		for(IngredientType item : repo.findAll()){
+			String abbreviation = ur.findById(item.getUnit_id()).getAbbreviation();
+			
+			list.add(toListModel(item,abbreviation));
+		}
+		return list;
+	}
 	
-	public IngredientTypeService(IngredientTypeRepository repo) {
-		this.repo=repo;
+	public List<IngredientTypeListDto> findDeleted(){
+		List<IngredientTypeListDto> list = new ArrayList<>();
+	    
+	    for (IngredientType item : repo.findAll()){
+			String abbreviation = ur.findById(item.getUnit_id()).getAbbreviation();
+	        
+	        list.add(toListModel(item, abbreviation));
+	    }
+	    
+	    return list;
+	}
+
+	public IngredientTypeEntryDto findById(String ingredient_type_id) {
+		return toEntryDto(repo.findById(ingredient_type_id));
+	}
+
+	public int add(IngredientTypeEntryDto dto) {
+		return this.repo.save(toEntity(dto));
+	}
+
+	public int edit(IngredientTypeEntryDto dto) {
+		return this.repo.edit(toEntity(dto));
 	}
 	
-	public List<IngredientTypeDto> findAll() {
-		List<IngredientType> entities = this.repo.findAll();
-		List<IngredientTypeDto> ingredientType = entities.stream().map(this::toDto).toList();
-		return ingredientType;
+	//soft delete
+	public int delete(String ingredient_type_id) {
+		return this.repo.delete(ingredient_type_id);
+	}
+	
+	public int restore(String ingredient_type_id) {
+		return repo.restore(ingredient_type_id);
+	}
+	//hard delete
+	public int realDelete(String ingredient_type_id) {
+		return this.repo.realDelete(ingredient_type_id);
+	}
+	
+	public IngredientTypeListDto toListModel(IngredientType entity,String abbreviation) {
+		return new IngredientTypeListDto(
+				entity.getIngredient_type_id(),
+				entity.getName(),
+				entity.getDescription(),
+				abbreviation,
+				entity.isIsdeleted(),
+				entity.getCreated_at()
+				);
 	}
 
-	public IngredientTypeDto findById(String ingredient_type_id) {
-		IngredientType entity = this.repo.findById(ingredient_type_id);
-		if (entity == null)
-			return null;
-		return toDto(entity);
+	private IngredientTypeEntryDto toEntryDto(IngredientType entity) {
+		return new IngredientTypeEntryDto(
+				entity.getIngredient_type_id(),
+				entity.getName(),
+				entity.getDescription(),
+				entity.getUnit_id(),
+				entity.isIsdeleted(),
+				entity.getCreated_at()
+				);
 	}
 
-	public int add(IngredientTypeDto dto) {
-		IngredientType entity = toEntity(dto);
-		return this.repo.save(entity);
-	}
-
-	public int edit(String ingredient_type_id, IngredientTypeDto dto) {
-		IngredientType entity = toEntity(dto);
-		return this.repo.edit(ingredient_type_id, entity);
-	}
-
-	public int delete(String supplier_id) {
-		return this.repo.delete(supplier_id);
-	}
-
-	private IngredientTypeDto toDto(IngredientType entity) {
-		IngredientTypeDto dto = new IngredientTypeDto();
-		dto.setIngredient_type_id(entity.getIngredient_type_id());
-		dto.setName(entity.getName());
-		dto.setDescription(entity.getDescription());
-		dto.setUnit_id(entity.getUnit_id());
-		dto.setIsdeleted(entity.isIsdeleted());
-		dto.setCreated_at(entity.getCreated_at());
-		return dto;
-	}
-
-	private IngredientType toEntity(IngredientTypeDto dto) {
+	private IngredientType toEntity(IngredientTypeEntryDto dto) {
 		IngredientType entity = new IngredientType();
 		entity.setIngredient_type_id(dto.getIngredient_type_id());
 		entity.setName(dto.getName());

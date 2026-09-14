@@ -84,19 +84,19 @@ public class SupplierController {
 	@GetMapping("/supplier/deleted")
 	public String deletedSupplierList(Model model) {
 		model.addAttribute("supplier", supplierService.findDeleted());
-		return "NayZarLinn/supplier/deleted";
+		return "NayZarLinn/supplier/deletedList";
 	}
 
 	@PostMapping("/supplier/restore")
 	public String restoreSupplier(@RequestParam String supplier_id) {
 		supplierService.restore(supplier_id);
-		return "redirect:/supplier/deleted";
+		return "redirect:/supplier/deletedList";
 	}
 
 	@PostMapping("/supplier/real-delete")
 	public String realDeleteSupplier(@ModelAttribute("supplier") SupplierDto supplier) {
 		supplierService.realDelete(supplier.getSupplier_id());
-		return "redirect:/supplier/deleted";
+		return "redirect:/supplier/deletedList";
 	}
 
 }

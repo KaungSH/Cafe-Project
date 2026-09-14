@@ -1,25 +1,23 @@
-package cafe.project.NayZarLinn.repositories.entities;
+package cafe.project.NayZarLinn.models;
 
 import java.time.LocalDateTime;
 
-public class IngredientType {
+public class IngredientTypeListDto {
 	private String ingredient_type_id;
 	private String name;
 	private String description;
-	private String unit_id;
 	private String abbreviation;
 	private boolean isdeleted;
 	private LocalDateTime created_at;
 
-	public IngredientType() {
+	public IngredientTypeListDto() {
 	}
 
-	public IngredientType(String ingredient_type_id, String name, String description, String unit_id, String abbreviation,
+	public IngredientTypeListDto(String ingredient_type_id, String name, String description, String abbreviation,
 			boolean isdeleted, LocalDateTime created_at) {
 		this.ingredient_type_id = ingredient_type_id;
 		this.name = name;
 		this.description = description;
-		this.unit_id = unit_id;
 		this.abbreviation = abbreviation;
 		this.isdeleted = isdeleted;
 		this.created_at = created_at;
@@ -47,14 +45,6 @@ public class IngredientType {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public String getUnit_id() {
-		return unit_id;
-	}
-
-	public void setUnit_id(String unit_id) {
-		this.unit_id = unit_id;
 	}
 
 	public String getAbbreviation() {

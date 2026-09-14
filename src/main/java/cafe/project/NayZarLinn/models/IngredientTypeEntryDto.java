@@ -2,7 +2,7 @@ package cafe.project.NayZarLinn.models;
 
 import java.time.LocalDateTime;
 
-public class IngredientTypeDto {
+public class IngredientTypeEntryDto {
 	private String ingredient_type_id;
 	private String name;
 	private String description;
@@ -10,10 +10,10 @@ public class IngredientTypeDto {
 	private boolean isdeleted;
 	private LocalDateTime created_at;
 
-	public IngredientTypeDto() {
+	public IngredientTypeEntryDto() {
 	}
 
-	public IngredientTypeDto(String ingredient_type_id, String name, String description, String unit_id,
+	public IngredientTypeEntryDto(String ingredient_type_id, String name, String description, String unit_id,
 			boolean isdeleted, LocalDateTime created_at) {
 		this.ingredient_type_id = ingredient_type_id;
 		this.name = name;
