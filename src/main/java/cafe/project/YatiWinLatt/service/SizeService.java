@@ -1,8 +1,9 @@
 package cafe.project.YatiWinLatt.service;
 
 import cafe.project.YatiWinLatt.models.SizeEntryDto;
-import cafe.project.YatiWinLatt.models.SizeListDto;
+
 import cafe.project.YatiWinLatt.repositories.SizeRepository;
+import cafe.project.YatiWinLatt.repositories.entities.Size;
 
 import org.springframework.stereotype.Service;
 
@@ -18,11 +19,11 @@ public class SizeService {
 		this.sizeRepository = sizeRepository;
 	}
 
-	public List<SizeListDto> getAllSizes() {
+	public List<Size> getAllSizes() {
 		return sizeRepository.findAll();
 	}
 
-	public SizeEntryDto getSizeById(String id) {
+	public Size getSizeById(String id) {
 		return sizeRepository.findById(id);
 	}
 

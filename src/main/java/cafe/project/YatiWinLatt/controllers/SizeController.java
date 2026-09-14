@@ -1,6 +1,7 @@
 package cafe.project.YatiWinLatt.controllers;
 
 import cafe.project.YatiWinLatt.models.SizeEntryDto;
+import cafe.project.YatiWinLatt.repositories.entities.Size;
 import cafe.project.YatiWinLatt.service.SizeService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -40,8 +41,8 @@ public class SizeController {
     }
     @GetMapping("/edit/{size_id}")
     public String showEditForm(@PathVariable("size_id") String id, Model model) {
-    	SizeEntryDto sizeDto = sizeService.getSizeById(id);
-        model.addAttribute("sizeDto", sizeDto);
+    	Size size = sizeService.getSizeById(id);
+        model.addAttribute("sizeDto", size);
         return "YatiWinLatt/sizes/edit";
     }
     @PostMapping("/edit/{size_id}")
@@ -56,7 +57,7 @@ public class SizeController {
         return "redirect:/sizes";
     }
     @GetMapping("/delete/{size_id}")
-    public String delete(@PathVariable("id") String size_id) {
+    public String delete(@PathVariable("size_id") String size_id) {
         sizeService.deleteSize(size_id);
         return "redirect:/sizes";
     }

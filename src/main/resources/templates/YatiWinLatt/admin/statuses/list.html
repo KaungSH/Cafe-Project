@@ -30,15 +30,7 @@
         <li class="nav-item">
             <a class="nav-link" th:classappend="${selectedType == 'register'} ? 'active'" th:href="@{/admin/statuses(type='register')}">Register</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" th:classappend="${selectedType == 'order'} ? 'active'" th:href="@{/admin/statuses(type='order')}">Order Type</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" th:classappend="${selectedType == 'promo'} ? 'active'" th:href="@{/admin/statuses(type='promo')}">Promo Type</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" th:classappend="${selectedType == 'audience'} ? 'active'" th:href="@{/admin/statuses(type='audience')}">Audience Type</a>
-        </li>
+       
     </ul>
 
     <!-- Data Display Table -->
