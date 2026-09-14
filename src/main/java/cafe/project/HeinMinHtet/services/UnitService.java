@@ -3,6 +3,7 @@ package cafe.project.HeinMinHtet.services;
 
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -33,14 +34,14 @@ public class UnitService {
     public UnitDto findById(String id) {
 
         Unit entity = repo.findById(id);
-
+       
         return toDto(entity);
     }
 
     public int add(UnitDto dto) {
 
         Unit entity = toEntity(dto);
-
+        entity.setUnit_id(UUID.randomUUID().toString());
         return repo.save(entity);
     }
 
