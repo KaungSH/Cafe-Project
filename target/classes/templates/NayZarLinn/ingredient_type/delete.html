@@ -20,9 +20,10 @@
 			<dd th:text="${ingredientType.created_at}"></dd>
 		</dl>
 	</div>
-	<form method="post" th:action="@{/ingredientType/delete}" th:object="${ingredientType}">
-		<input type="hidden" th:field="${ingredientType.ingredient_type_id}" /> <input type="submit"
-			value="Delete Confrim" />
+	<form method="post" th:action="@{/ingredientType/delete}"
+		th:object="${ingredientType}">
+		<input type="hidden" th:field="${ingredientType.ingredient_type_id}" />
+		<input type="submit" value="Delete Confrim" />
 		<div>
 			<a th:href="@{/ingredientType}">Cancel</a>
 		</div>

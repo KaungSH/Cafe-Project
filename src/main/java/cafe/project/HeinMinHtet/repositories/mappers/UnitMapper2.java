@@ -9,7 +9,7 @@ import cafe.project.HeinMinHtet.repositories.entities.Unit;
 
 
 
-public class UnitMapper implements RowMapper<Unit> {
+public class UnitMapper2 implements RowMapper<Unit> {
 
     @Override
     public Unit mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -24,7 +24,8 @@ public class UnitMapper implements RowMapper<Unit> {
         unit.setIsdeleted(rs.getBoolean("isedited"));
         unit.setIsdeleted(rs.getBoolean("isdeleted"));
         
-        
+       
+        unit.setEmployee_id(rs.getString("employee_name"));
         unit.setCreated_at(
                 rs.getTimestamp("created_at").toLocalDateTime()
         );
