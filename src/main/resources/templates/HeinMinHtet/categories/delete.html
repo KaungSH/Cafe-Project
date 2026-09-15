@@ -76,11 +76,14 @@ button {
 
 		<p>Are you sure you want to delete this category?</p>
 
-		<div class="category-name" th:text="${category.name}">Category
-			Name</div>
+		 <form th:action="@{/categories/delete}"
+          th:object="${category}"
+          method="post">
 
-		<form th:action="@{/categories/delete/{id}(id=${category.category_id})}"
-			method="post">
+   
+        <input type="hidden"
+               th:field="*{category_id}">
+
 
 			<div class="buttons">
 

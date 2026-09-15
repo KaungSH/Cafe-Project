@@ -76,9 +76,14 @@ button {
 
 		<p>Are you sure you want to delete this unit?</p>
 
-		<div class="unit-name" th:text="${unit.name}">Unit Name</div>
+		 <form th:action="@{/units/delete}"
+          th:object="${unit}"
+          method="post">
 
-		<form th:action="@{/units/delete/{id}(id=${unit.unit_id})}" method="post">
+       
+        <input type="hidden"
+               th:field="*{unit_id}">
+
 
 			<div class="buttons">
 
