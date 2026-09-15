@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import cafe.project.HeinMinHtet.repositories.entities.Category;
 
-public class CategoryMapper implements RowMapper<Category> {
+public class CategoryMapper2 implements RowMapper<Category> {
 
 	@Override
 	public Category mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -23,7 +23,7 @@ public class CategoryMapper implements RowMapper<Category> {
 
 		category.setCreated_at(rs.getTimestamp("created_at").toLocalDateTime());
 
-		category.setEmployee_id(rs.getString("employee_id"));
+		category.setEmployee_id(rs.getString("employee_name"));
 
 		return category;
 	}

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import cafe.project.HeinMinHtet.repositories.entities.Unit;
 import cafe.project.HeinMinHtet.repositories.mappers.UnitMapper;
-
+import cafe.project.HeinMinHtet.repositories.mappers.UnitMapper2;
 @Repository
 public class UnitRepository {
 
@@ -20,7 +20,7 @@ public class UnitRepository {
 	// GET ALL
 	public List<Unit> findAll() {
 
-		String sql = "SELECT * FROM units WHERE isdeleted = false ";
+		String sql = "SELECT * FROM units WHERE isdeleted = false";
 
 		return jdbcTemplate.query(sql, new UnitMapper());
 	}
@@ -28,12 +28,12 @@ public class UnitRepository {
 
 		String sql = "SELECT u.*,e.name employee_name FROM units u LEFT JOIN employees e ON u.employee_id=e.employee_id WHERE isdeleted = false ";
 
-		return jdbcTemplate.query(sql, new UnitMapper());
+		return jdbcTemplate.query(sql, new UnitMapper2());
 	}
 
 	public List<Unit> findDeletedAll() {
 
-		String sql = "SELECT * FROM units WHERE isdeleted = true ";
+		String sql = "SELECT * FROM units WHERE isdeleted = true";
 
 		return jdbcTemplate.query(sql, new UnitMapper());
 	}
