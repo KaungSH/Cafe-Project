@@ -25,8 +25,14 @@ public class ProductResultSetExtractor3 implements ResultSetExtractor<List<Produ
 				product = new Product();
 				product.setProduct_id(product_id);
 				product.setDiscount_ids(new ArrayList<String>());
+				product.setDiscount_names(new ArrayList<String>());
 				product.setDiscount_value(new ArrayList<Double>());
 				
+			}
+			
+			String discount_name = rs.getString("d.discount_name");
+			if (discount_name != null) {
+				product.getDiscount_names().add(discount_name);
 			}
 			
 			String discount_id = rs.getString("d.discount_id");

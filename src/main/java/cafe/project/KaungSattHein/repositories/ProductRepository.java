@@ -70,13 +70,13 @@ public class ProductRepository {
 	}
 	
 	public Product findDiscountById(String id) {
-		String sql = "SELECT p.product_id, d.discount_id, d.discount_value FROM products p LEFT JOIN discounts_products dp ON p.product_id = dp.product_id LEFT JOIN discounts d ON dp.discount_id = d.discount_id WHERE p.product_id = ?";
+		String sql = "SELECT p.product_id, d.discount_id, d.discount_name, d.discount_value FROM products p LEFT JOIN discounts_products dp ON p.product_id = dp.product_id LEFT JOIN discounts d ON dp.discount_id = d.discount_id WHERE p.product_id = ?";
 		List<Product> entities = jdbcTemplate.query(sql, new ProductResultSetExtractor3(), id);
 		return entities.isEmpty()?null:entities.get(0);
 	}
 	
 	public Product findQuantityRequiredById(String id) {
-		String sql = "SELECT p.product_id, i.ingredient_type_id, i.quantity_required FROM products p LEFT JOIN products_ingredients i ON p.product_id = i.product_id WHERE p.product_id = ?";
+		String sql = "SELECT p.product_id, it.name ingredient_type_name, i.quantity_required, FROM products p LEFT JOIN products_ingredients i ON p.product_id = i.product_id LEFT JOIN ingredient_types it on it.ingredient_type_id = i.ingredient_type_id WHERE p.product_id = ?";
 		List<Product> entities = jdbcTemplate.query(sql, new ProductResultSetExtractor3(), id);
 		return entities.isEmpty()?null:entities.get(0);
 	}

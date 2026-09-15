@@ -24,10 +24,7 @@ public class UnitMapper implements RowMapper<Unit> {
         unit.setIsdeleted(rs.getBoolean("isedited"));
         unit.setIsdeleted(rs.getBoolean("isdeleted"));
         
-        if (!rs.getString("employee_name").equals(null) || !rs.getString("employee_name").isEmpty()) {
-            unit.setEmployee_name(rs.getString("employee_name"));
-   		}
-
+        
         unit.setCreated_at(
                 rs.getTimestamp("created_at").toLocalDateTime()
         );

@@ -10,7 +10,7 @@ import cafe.project.YatiWinLatt.models.BranchEntryDto;
 import cafe.project.YatiWinLatt.service.BranchService;
 
 @Controller
-@RequestMapping("/branches")
+@RequestMapping("/staff/branches")
 public class BranchController {
 
 	private final BranchService branchService;

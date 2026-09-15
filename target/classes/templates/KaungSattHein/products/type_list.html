@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate = "~{common/layout}">
+<head>
+<meta charset="UTF-8">
+<title>Post List - Admin</title>
+</head>
+<div layout:fragment = "content">
+	<h2>Post List</h2>
+	<a th:href = "@{/manager/products/type/add}">Add Post</a> <a th:href = "@{/manager/products/type/deleted-list}">Recover Deleted Product Types</a>
+	<table class = "table table-bordered table-striped">
+		<thead>
+			<tr>
+				<th>No.</th>
+				
+				<th>Cover Image</th>
+				
+				<th>Name</th>
+				
+				<th>Description</th>
+				
+				<th>Category</th>
+				
+				<th>Default Price</th>
+				
+				<th>Edit</th>
+				
+				<th>Created At</th>
+				
+				<th>Created By</th>
+
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="p,state:${product_types}" style = "height : 200px">
+				<td th:text = "${state.count}"></td>
+				
+				<td style="text-align: center;">
+				    <div style="align-items: center; width: 100%;">
+				        <img th:if="${p.coverimgpath != null}" 
+				             th:src="@{'/images/' + ${p.coverimgpath}}" 
+				             alt="Thumbnail Error" 
+				             style="height: 198px; width: auto; object-fit: cover; border-radius: 8px;" />
+				             
+				        <div th:unless="${p.coverimgpath != null}">No Image</div>
+				    </div>
+				</td>
+				
+				<td th:text = "${p.name}"></td>
+				
+				<td th:text = "${p.description}"></td>
+				
+				<td th:text = "${p.category_name}"></td>
+				
+				<td th:text = "${p.price}"></td>
+				
+				<td th:text = "${p.isedited}"></td>
+				
+				<td th:text = "${p.created_at}"></td>
+				
+				<td th:text = "${p.employee_name}"></td>
+				
+				<td>
+					<a th:href = "@{/}">Edit Post</a>
+					<a th:href = "@{/}">Delete Post</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+</html>

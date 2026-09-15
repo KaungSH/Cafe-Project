@@ -85,11 +85,11 @@ public class ProductService {
 	}
 	
 	private ProductDiscountModel getDiscount(Product ep) {
-		return new ProductDiscountModel(ep.getProduct_id(), ep.getDiscount_ids(), ep.getDiscount_value());
+		return new ProductDiscountModel(ep.getProduct_id(), ep.getDiscount_names(), ep.getDiscount_value(), ep.getDiscount_ids());
 	}
 	
 	private ProductQuantityRequiredModel getQuantity(Product ep) {
-		return new ProductQuantityRequiredModel(ep.getProduct_id(), ep.getIngredient_ids(), ep.getQuantity_required());
+		return new ProductQuantityRequiredModel(ep.getProduct_id(), ep.getIngredient_names(), ep.getQuantity_required());
 	}
 
 }
