@@ -1,8 +1,9 @@
 package cafe.project.YatiWinLatt.service;
 
 import cafe.project.YatiWinLatt.models.SizeEntryDto;
-import cafe.project.YatiWinLatt.models.SizeListDto;
+
 import cafe.project.YatiWinLatt.repositories.SizeRepository;
+import cafe.project.YatiWinLatt.repositories.entities.Size;
 
 import org.springframework.stereotype.Service;
 
@@ -18,12 +19,12 @@ public class SizeService {
 		this.sizeRepository = sizeRepository;
 	}
 
-	public List<SizeListDto> getAllSizes() {
+	public List<Size> getAllSizes() {
 		return sizeRepository.findAll();
 	}
 
-	public SizeEntryDto getSizeById(String id) {
-		return sizeRepository.findById(id);
+	public Size getSizeById(String size_id) {
+		return sizeRepository.findById(size_id);
 	}
 
 	public void createSize(SizeEntryDto dto) {
@@ -34,8 +35,8 @@ public class SizeService {
 		sizeRepository.update(dto);
 	}
 
-	public void deleteSize(String id) {
-		sizeRepository.deleteById(id);
+	public void deleteSize(String size_id) {
+		sizeRepository.deleteById(size_id);
 	}
 
 	public List<Map<String, Object>> getAllEmployees() {

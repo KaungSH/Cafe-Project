@@ -8,6 +8,7 @@ public class Size {
 	private String employee_id;
 	private String name;
 	private String size_code;
+	private String employee_name;
 	private boolean is_active;
 	private boolean isedited;
 	private boolean isdeleted;
@@ -16,12 +17,13 @@ public class Size {
 	public Size() {
 	}
 
-	public Size(String size_id, String employee_id, String name, String size_code, boolean is_active, boolean isedited,
+	public Size(String size_id, String employee_id, String name, String size_code,String employee_name, boolean is_active, boolean isedited,
 			boolean isdeleted, LocalDateTime created_at) {
 		this.size_id = size_id;
 		this.employee_id = employee_id;
 		this.name = name;
 		this.size_code = size_code;
+		this. employee_name=employee_name;
 		this.is_active = is_active;
 		this.isedited = isedited;
 		this.isdeleted = isdeleted;
@@ -58,6 +60,15 @@ public class Size {
 
 	public void setSize_code(String size_code) {
 		this.size_code = size_code;
+	}
+	
+
+	public String getEmployee_name() {
+		return employee_name;
+	}
+
+	public void setEmployee_name(String employee_name) {
+		this.employee_name = employee_name;
 	}
 
 	public boolean isIs_active() {

@@ -1,11 +1,13 @@
 package cafe.project.YatiWinLatt.repositories;
 
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import cafe.project.YatiWinLatt.models.SizeEntryDto;
-import cafe.project.YatiWinLatt.models.SizeListDto;
+
+import cafe.project.YatiWinLatt.repositories.entities.Size;
+
+import cafe.project.YatiWinLatt.repositories.mappers.SizeMapper2;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,16 +23,26 @@ public class SizeRepository {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	public List<SizeListDto> findAll() {
-		String sql = "SELECT s.size_id, s.size_code, s.name, s.is_active, s.created_at, e.name AS employee_name "
-				+ "FROM sizes s " + "LEFT JOIN employees e ON s.employee_id = e.employee_id "
-				+ "WHERE s.isdeleted = false " + "ORDER BY s.created_at DESC";
-		return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(SizeListDto.class));
+	public List<Size> findAll() {
+		String sql = "SELECT s.*, e.name AS employee_name \r\n"
+				+ "FROM sizes s \r\n"
+				+ "LEFT JOIN employees e ON s.employee_id = e.employee_id \r\n"
+				+ "WHERE s.isdeleted = false \r\n"
+				+ "ORDER BY s.created_at DESC";
+		return jdbcTemplate.query(sql, new SizeMapper2());
 	}
 
-	public SizeEntryDto findById(String id) {
-		String sql = "SELECT size_id, size_code, name, is_active, employee_id FROM sizes WHERE size_id = ? AND isdeleted = false";
-		return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(SizeEntryDto.class), id);
+	public Size findById(String size_id) {
+	    String sql = "SELECT s.*, e.name AS employee_name \r\n"
+	            + "FROM sizes s \r\n"
+	            + "LEFT JOIN employees e ON s.employee_id = e.employee_id \r\n"
+	            + "WHERE s.size_id = ? AND s.isdeleted = false";
+
+	    return jdbcTemplate.queryForObject(
+	            sql,
+	            new SizeMapper2(),
+	            size_id
+	    );
 	}
 
 	public int save(SizeEntryDto dto) {
@@ -46,9 +58,9 @@ public class SizeRepository {
 		return jdbcTemplate.update(sql, dto.getName(), dto.getSize_code(), dto.getIs_active(), dto.getSize_id());
 	}
 
-	public int deleteById(String id) {
+	public int deleteById(String size_id) {
 		String sql = "UPDATE sizes SET isdeleted = true WHERE size_id = ?";
-		return jdbcTemplate.update(sql, id);
+		return jdbcTemplate.update(sql, size_id);
 	}
 
 	public List<Map<String, Object>> findAllEmployees() {

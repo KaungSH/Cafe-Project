@@ -1,6 +1,7 @@
 package cafe.project.YatiWinLatt.controllers;
 
 import cafe.project.YatiWinLatt.models.SizeEntryDto;
+import cafe.project.YatiWinLatt.repositories.entities.Size;
 import cafe.project.YatiWinLatt.service.SizeService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -39,13 +40,13 @@ public class SizeController {
         return "redirect:/sizes";
     }
     @GetMapping("/edit/{size_id}")
-    public String showEditForm(@PathVariable("size_id") String id, Model model) {
-    	SizeEntryDto sizeDto = sizeService.getSizeById(id);
-        model.addAttribute("sizeDto", sizeDto);
+    public String showEditForm(@PathVariable("size_id") String size_id, Model model) {
+    	Size size = sizeService.getSizeById(size_id);
+        model.addAttribute("sizeDto", size);
         return "YatiWinLatt/sizes/edit";
     }
     @PostMapping("/edit/{size_id}")
-    public String update(@PathVariable("id") String size_id,
+    public String update(@PathVariable("size_id") String size_id,
                          @Valid @ModelAttribute("sizeDto") SizeEntryDto sizeDto,
                          BindingResult result) {
         if (result.hasFieldErrors("name") || result.hasFieldErrors("size_code")) {
@@ -56,7 +57,7 @@ public class SizeController {
         return "redirect:/sizes";
     }
     @GetMapping("/delete/{size_id}")
-    public String delete(@PathVariable("id") String size_id) {
+    public String delete(@PathVariable("size_id") String size_id) {
         sizeService.deleteSize(size_id);
         return "redirect:/sizes";
     }
