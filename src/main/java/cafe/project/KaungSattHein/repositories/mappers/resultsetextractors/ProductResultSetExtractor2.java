@@ -25,13 +25,18 @@ public class ProductResultSetExtractor2 implements ResultSetExtractor<List<Produ
 			if(product == null) {
 				product = new Product(rs.getString("product_id"), rs.getString("employee_name"),rs.getString("type_name"),
 				   		rs.getString("size_code"), rs.getDouble("price"),
-				   		rs.getBoolean("isedited"),rs.getBoolean("isdeleted"), rs.getBoolean("is_active"), rs.getObject("created_at", LocalDateTime.class), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<Double>(), new ArrayList<String>());
+				   		rs.getBoolean("isedited"),rs.getBoolean("isdeleted"), rs.getBoolean("is_active"), rs.getObject("created_at", LocalDateTime.class), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<Double>(), new ArrayList<String>(), new ArrayList<String>());
 				
 			}
 			
 			String discount_name = rs.getString("discount_name");
 			if (discount_name != null) {
 				product.getDiscount_names().add(discount_name);
+			}
+			
+			String discount_value = rs.getString("discount_value");
+			if (discount_value != null) {
+				product.getDiscount_values().add(discount_value);
 			}
 			
 			String ingredient_name = rs.getString("ingredient_name");

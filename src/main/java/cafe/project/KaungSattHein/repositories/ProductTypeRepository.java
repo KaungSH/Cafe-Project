@@ -44,7 +44,7 @@ public class ProductTypeRepository {
 	}
 	
 	public int edit(ProductType pt) {
-		String sql = "UPDATE product_types SET name = ? description = ? coverimgpth = ? price = ? category_id = ? isedited = true WHERE type_id = ?";
+		String sql = "UPDATE product_types SET name = ?, description = ?, coverimgpath = ?, price = ?, category_id = ?, isedited = true WHERE type_id = ?";
 		return jdbcTemplate.update(sql, pt.getName(), pt.getDescription(), pt.getCoverimgpath(), pt.getPrice(), pt.getCategory_id(), pt.getType_id());
 	}
 	

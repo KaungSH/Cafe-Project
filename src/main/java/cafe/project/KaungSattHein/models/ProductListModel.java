@@ -11,9 +11,26 @@ public class ProductListModel {
 	private LocalDateTime created_at;
 	
 	private List<Double> quantity_required;
-	private List<String> unit_code, discount_names, ingredient_names;
+	private List<String> unit_code, discount_names, ingredient_names, discount_values;
 	
 	public ProductListModel() {}
+	
+	public ProductListModel(String product_id, String employee_name, String type_name, String size_code, double price, boolean isedited, boolean isdeleted, boolean is_active, LocalDateTime created_at, List<Double> quantity_required, List<String> discount_names, List<String> unit_code, List<String> ingredient_names, List<String> discount_values) {
+		this.product_id = product_id;
+		this.employee_name = employee_name;
+		this.type_name = type_name;
+		this.size_code = size_code;
+		this.price = price;
+		this.isedited = isedited;
+		this.isdeleted = isdeleted;
+		this.is_active = is_active;
+		this.created_at = created_at;
+		this.quantity_required = quantity_required;
+		this.discount_names = discount_names;
+		this.ingredient_names = ingredient_names;
+		this.unit_code = unit_code;
+		this.discount_values = discount_values;
+	}
 	
 	public ProductListModel(String product_id, String employee_name, String type_name, String size_code, double price, boolean isedited, boolean isdeleted, boolean is_active, LocalDateTime created_at, List<Double> quantity_required, List<String> discount_names, List<String> unit_code, List<String> ingredient_names) {
 		this.product_id = product_id;
@@ -133,6 +150,14 @@ public class ProductListModel {
 
 	public void setUnit_code(List<String> unit_code) {
 		this.unit_code = unit_code;
+	}
+
+	public List<String> getDiscount_values() {
+		return discount_values;
+	}
+
+	public void setDiscount_values(List<String> discount_values) {
+		this.discount_values = discount_values;
 	}
 	
 	

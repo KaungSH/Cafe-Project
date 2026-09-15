@@ -12,7 +12,7 @@ public class Product {
 	private List<String> discount_ids, ingredient_ids;
 	
 	private List<Double> quantity_required, discount_value;
-	private List<String> unit_code, discount_names, ingredient_names;
+	private List<String> unit_code, discount_names, ingredient_names, discount_values;
 	private String employee_name, type_name, size_code;
 	
 	public Product() {}
@@ -55,6 +55,22 @@ public class Product {
 		this.ingredient_names = ingredient_names;
 		this.quantity_required = quantity_required;
 		this.unit_code = unit_code;
+	}
+	
+	public Product(String product_id, String employee_name, String type_name, String size_code, double price, boolean isedited, boolean isdeleted, boolean is_active, LocalDateTime created_at, List<String> discount_names, List<String> ingredient_names, List<Double> quantity_required, List<String> unit_code, List<String> discount_values) {
+		this.product_id = product_id;
+		this.employee_name = employee_name;
+		this.type_name = type_name;
+		this.size_code = size_code;
+		this.price = price;
+		this.isedited = isedited;
+		this.isdeleted = isdeleted;
+		this.created_at = created_at;
+		this.discount_names = discount_names;
+		this.ingredient_names = ingredient_names;
+		this.quantity_required = quantity_required;
+		this.unit_code = unit_code;
+		this.discount_values = discount_values;
 	}
 	
 	public Product(String product_id, String employee_id, String type_id, String size_id, double price, boolean isedited, boolean isdeleted, boolean is_active, LocalDateTime created_at) {
@@ -218,6 +234,14 @@ public class Product {
 
 	public void setDiscount_value(List<Double> discount_value) {
 		this.discount_value = discount_value;
+	}
+
+	public List<String> getDiscount_values() {
+		return discount_values;
+	}
+
+	public void setDiscount_values(List<String> discount_values) {
+		this.discount_values = discount_values;
 	}
 	
 	

@@ -20,7 +20,7 @@ public class ProductService {
 	public ProductService(ProductRepository prepo) {this.prepo = prepo;}
 	
 	public List<ProductListModel> findListAll() {
-		return prepo.findListAll().stream().map(this::toListModel).toList();
+		return prepo.findListAll().stream().map(this::toListModel2).toList();
 	}
 	
 	public List<ProductListModel> findDeletedAll() {
@@ -74,6 +74,10 @@ public class ProductService {
 	
 	private ProductListModel toListModel(Product ep) {
 		return new ProductListModel(ep.getProduct_id(), ep.getEmployee_name(), ep.getType_name(), ep.getSize_code(), ep.getPrice(), ep.isIsedited(), ep.isIsdeleted(), ep.isIs_active(), ep.getCreated_at(), ep.getQuantity_required(), ep.getDiscount_names(), ep.getUnit_code(), ep.getIngredient_names());
+	}
+	
+	private ProductListModel toListModel2(Product ep) {
+		return new ProductListModel(ep.getProduct_id(), ep.getEmployee_name(), ep.getType_name(), ep.getSize_code(), ep.getPrice(), ep.isIsedited(), ep.isIsdeleted(), ep.isIs_active(), ep.getCreated_at(), ep.getQuantity_required(), ep.getDiscount_names(), ep.getUnit_code(), ep.getIngredient_names(), ep.getDiscount_values());
 	}
 	
 	private ProductEntryModel toEntryModel(Product ep) {
