@@ -1,4 +1,4 @@
-package cafe.project.common.controllers;
+package cafe.project.HeinMinHtet.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
