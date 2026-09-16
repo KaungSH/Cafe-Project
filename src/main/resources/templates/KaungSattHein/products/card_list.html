@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>MENU - Café Луфт</title>
+
+</head>
+
+<div layout:fragment="content">
+
+	<h2 class="fw-bold text-center text-decoration-underline mb-4">
+		MENU - Café Луфт</h2>
+
+	<form method="post" th:action="@{/staff/products}"
+		th:object="${product_quantities}" id="productTypeForm">
+
+		<div class="row mt-4 g-5">
+
+			<!-- Product Type -->
+			<div class="col-md-4" th:each="p, state : ${product_types}">
+
+				<div class="card shadow-sm">
+
+					<div class="card-body">
+
+						<!-- Product Type Image -->
+						<div style="text-align: center;">
+
+							<div style="align-items: center; width: 100%;">
+
+								<img class="shadow-lg" th:if="${p.coverimgpath != null}"
+									th:src="@{'/images/' + ${p.coverimgpath}}"
+									alt="Thumbnail Error"
+									style="height: 198px; width: auto; object-fit: cover; border-radius: 8px;" />
+
+								<div th:unless="${p.coverimgpath != null}">No Image</div>
+
+							</div>
+
+						</div>
+
+						<!-- Product Type Information -->
+						<h5 class="card-title" th:text="${p.name}"></h5>
+
+						<p class="card-text" th:text="${p.category_name}"></p>
+
+						<p class="card-text" th:text="${p.description}"></p>
+
+
+						<!-- Products / Sizes -->
+						<div class="table-responsive">
+
+							<table class="table table-bordered table-sm align-middle mb-0">
+
+								<thead class="table-secondary">
+
+									<tr>
+										<th>Size Code</th>
+										<th>Price</th>
+										<th>Discounts</th>
+										<th>Add To Cart</th>
+										<th>Quantity</th>
+										<th></th>
+									</tr>
+
+								</thead>
+
+
+								<tbody>
+
+									<!-- Individual Product / Size -->
+									<th:block th:each="p2, state2 : ${p.products}">
+
+										<tr>
+
+											<!-- Size -->
+											<td th:text="${p2.size_code}">Size</td>
+
+
+											<!-- Price -->
+											<td class="text-nowrap"
+												th:text="${#numbers.formatDecimal(p2.price, 1, 'COMMA', 2, 'POINT')} + ' MMK'">
+												Price</td>
+
+
+											<!-- Discounts -->
+											<td>
+
+												<div
+													th:if="${p2.discount_names != null
+													and !p2.discount_names.empty}">
+
+													<div
+														th:each="discountName, discountState : ${p2.discount_names}"
+														class="mb-1">
+
+														<span th:text="${discountName}"> Discount </span> <span
+															th:if="${p2.discount_values != null
+																and discountState.index < p2.discount_values.size()}"
+															class="badge bg-success"
+															th:text="${#numbers.formatDecimal(
+																p2.discount_values[discountState.index],
+																1,
+																'COMMA',
+																2,
+																'POINT'
+															)} + '%'">
+															Value </span>
+
+													</div>
+
+												</div> <span
+												th:unless="${p2.discount_names != null
+														and !p2.discount_names.empty}"
+												class="text-muted"> No Discounts </span>
+
+											</td>
+
+
+											<!-- Add To Cart -->
+											<td><input type="checkbox"
+												class="form-check-input product-checkbox" name="product_ids"
+												th:value="${p2.product_id}"
+												th:id="'product-' + ${state.index} + '-' + ${state2.index}">
+
+											</td>
+
+
+											<!-- Quantity -->
+											<td><input type="number"
+												class="form-control form-control-sm product-quantity"
+												name="quantities" value="1" min="1" step="1" disabled>
+
+											</td>
+
+
+											<!-- View Ingredients -->
+											<td class="text-nowrap">
+
+												<button class="btn btn-sm btn-info text-white" type="button"
+													data-bs-toggle="collapse"
+													th:data-bs-target="'#ingredientRow-' + ${state.index} + '-' + ${state2.index}"
+													aria-expanded="false">View Ingredients ▼</button>
+
+											</td>
+
+										</tr>
+
+
+										<!-- Ingredient Details -->
+										<tr class="collapse"
+											th:id="'ingredientRow-' + ${state.index} + '-' + ${state2.index}">
+
+											<td colspan="6">
+
+												<div class="p-2">
+
+													<h6 class="fw-bold mb-2">Required Ingredients</h6>
+
+													<div
+														th:if="${p2.ingredient_names != null
+															and !p2.ingredient_names.empty}">
+
+														<table class="table table-sm table-bordered mb-0">
+
+															<thead class="table-light">
+
+																<tr>
+																	<th>Ingredient</th>
+																	<th>Quantity</th>
+																	<th>Unit</th>
+																</tr>
+
+															</thead>
+
+															<tbody>
+
+																<tr
+																	th:each="ingredientName, ingredientState : ${p2.ingredient_names}">
+
+																	<!-- Ingredient Name -->
+																	<td><strong th:text="${ingredientName}">
+																			Ingredient </strong></td>
+
+
+																	<!-- Quantity -->
+																	<td><span
+																		th:if="${p2.quantity_required != null
+																				and ingredientState.index < p2.quantity_required.size()}"
+																		th:text="${p2.quantity_required[ingredientState.index]}">
+																			Quantity </span> <span
+																		th:unless="${p2.quantity_required != null
+																				and ingredientState.index < p2.quantity_required.size()}"
+																		class="text-muted"> - </span></td>
+
+
+																	<!-- Unit -->
+																	<td><span
+																		th:if="${p2.unit_code != null
+																				and ingredientState.index < p2.unit_code.size()}"
+																		th:text="${p2.unit_code[ingredientState.index]}">
+																			Unit </span> <span
+																		th:unless="${p2.unit_code != null
+																				and ingredientState.index < p2.unit_code.size()}"
+																		class="text-muted"> - </span></td>
+
+																</tr>
+
+															</tbody>
+
+														</table>
+
+													</div>
+
+
+													<div
+														th:unless="${p2.ingredient_names != null
+															and !p2.ingredient_names.empty}"
+														class="text-muted">No required ingredients.</div>
+
+												</div>
+
+											</td>
+
+										</tr>
+
+									</th:block>
+
+								</tbody>
+
+							</table>
+
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+
+		<!-- Bottom Buttons -->
+		<div
+			class="d-flex justify-content-between align-items-center pt-3 border-top mt-4">
+
+			<input class = "btn btn-lg mb-2" style = "background-color: #ffca2c;" type = "reset" value = "Clear">
+
+			<button type="submit" class="btn btn-secondary">Go to Order
+
+			</button>
+
+		</div>
+
+	</form>
+
+
+	<!-- Quantity Enable / Disable -->
+	<script>
+		document.querySelectorAll(".product-checkbox").forEach(
+				function(checkbox) {
+
+					checkbox.addEventListener("change",
+							function() {
+
+								const row = checkbox.closest("tr");
+
+								const quantity = row
+										.querySelector(".product-quantity");
+
+								quantity.disabled = !checkbox.checked;
+
+							});
+
+				});
+	</script>
+
+</div>
+
+</html>

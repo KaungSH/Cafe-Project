@@ -11,11 +11,12 @@ public class ProductListModel {
 	private LocalDateTime created_at;
 	
 	private List<Double> quantity_required;
-	private List<String> unit_code, discount_names, ingredient_names, discount_values;
+	private List<String> unit_code, discount_names, ingredient_names;
+	private List<Double> discount_values;
 	
 	public ProductListModel() {}
 	
-	public ProductListModel(String product_id, String employee_name, String type_name, String size_code, double price, boolean isedited, boolean isdeleted, boolean is_active, LocalDateTime created_at, List<Double> quantity_required, List<String> discount_names, List<String> unit_code, List<String> ingredient_names, List<String> discount_values) {
+	public ProductListModel(String product_id, String employee_name, String type_name, String size_code, double price, boolean isedited, boolean isdeleted, boolean is_active, LocalDateTime created_at, List<Double> quantity_required, List<String> discount_names, List<String> unit_code, List<String> ingredient_names, List<Double> discount_values) {
 		this.product_id = product_id;
 		this.employee_name = employee_name;
 		this.type_name = type_name;
@@ -152,11 +153,11 @@ public class ProductListModel {
 		this.unit_code = unit_code;
 	}
 
-	public List<String> getDiscount_values() {
+	public List<Double> getDiscount_values() {
 		return discount_values;
 	}
 
-	public void setDiscount_values(List<String> discount_values) {
+	public void setDiscount_values(List<Double> discount_values) {
 		this.discount_values = discount_values;
 	}
 	

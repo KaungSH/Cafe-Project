@@ -32,6 +32,18 @@ public class ProductTypeEntryModel {
 		this.employee_id = employee_id;
 		this.coverimgname = coverimgname;
 	}
+	
+	public ProductTypeEntryModel(String type_id, String name, String description, String coverimgpath, double price, String category_id, String employee_id, String coverimgname, List<ProductEntryModel> product) {
+		this.type_id = type_id;
+		this.name = name;
+		this.description = description;
+		this.coverimgpath = coverimgpath;
+		this.price = price;
+		this.category_id = category_id;
+		this.employee_id = employee_id;
+		this.coverimgname = coverimgname;
+		this.product = product;
+	}
 
 	public String getType_id() {
 		return type_id;

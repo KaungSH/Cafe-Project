@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import cafe.project.HeinMinHtet.repositories.CategoryRepository;
-import cafe.project.KaungSattHein.models.ProductEntryModel;
 import cafe.project.KaungSattHein.models.ProductTypeEntryModel;
 import cafe.project.KaungSattHein.models.ProductTypeListModel;
 import cafe.project.KaungSattHein.repositories.ProductTypeRepository;
@@ -48,7 +47,7 @@ public class ProductTypeService {
 	        String categoryName = cr.findById(item.getCategory_id()).getName();
 	        String employeeName = er.findById(item.getEmployee_id()).getName();
 	        
-	        list.add(toListModel(item, categoryName, employeeName));
+	        list.add(toListModel3(item, categoryName, employeeName));
 	    }
 	    
 	    return list;
@@ -56,6 +55,10 @@ public class ProductTypeService {
 	
 	public ProductTypeEntryModel findById(String id) {
 		return toEntryModel(pt.findById(id));
+	}
+	
+	public ProductTypeEntryModel findById3(String id) {
+		return toEntryModel(pt.findById2(id));
 	}
 	
 	public ProductTypeEntryModel findById2(String id) {
@@ -75,11 +78,15 @@ public class ProductTypeService {
 	}
 	
 	public int edit(ProductTypeEntryModel pe) {
-		return pt.edit(toEntity(pe));
+		return pt.edit(toEntity1(pe));
 	}
 	
 	public int delete(String id) {
 		return pt.deleted(id);
+	}
+	
+	public int deletePerm(String id) {
+		return pt.deletedPerm(id);
 	}
 	
 	public int recover(String id) {
@@ -91,7 +98,11 @@ public class ProductTypeService {
 	}
 	
 	private ProductTypeListModel toListModel2(ProductType pt, String category_name, String employee_name) {
-		return new ProductTypeListModel(pt.getType_id(), pt.getName(), pt.getDescription(), pt.getCoverimgpath(), pt.getPrice(), pt.getCreated_at(), pt.isIsdeleted(), pt.isIsedited(), category_name, employee_name, ps.findAll());
+		return new ProductTypeListModel(pt.getType_id(), pt.getName(), pt.getDescription(), pt.getCoverimgpath(), pt.getPrice(), pt.getCreated_at(), pt.isIsdeleted(), pt.isIsedited(), category_name, employee_name, ps.findListAllByTypeId(pt.getType_id()));
+	}
+	
+	private ProductTypeListModel toListModel3(ProductType pt, String category_name, String employee_name) {
+		return new ProductTypeListModel(pt.getType_id(), pt.getName(), pt.getDescription(), pt.getCoverimgpath(), pt.getPrice(), pt.getCreated_at(), pt.isIsdeleted(), pt.isIsedited(), category_name, employee_name, ps.findListAllByTypeId2(pt.getType_id()));
 	}
 	
 	private ProductTypeEntryModel toEntryModel(ProductType pt) {
@@ -99,18 +110,15 @@ public class ProductTypeService {
 	}
 	
 	private ProductTypeEntryModel toEntryModel2(ProductType pt) {
-		return new ProductTypeEntryModel(pt.getType_id(), pt.getName(), pt.getDescription(), pt.getCoverimgpath(), pt.getPrice(), pt.getCategory_id(), pt.getEmployee_id(), getCoverImageFileName(pt.getCoverimgpath()));
+		return new ProductTypeEntryModel(pt.getType_id(), pt.getName(), pt.getDescription(), pt.getCoverimgpath(), pt.getPrice(), pt.getCategory_id(), pt.getEmployee_id(), getCoverImageFileName(pt.getCoverimgpath()), ps.findByTypeId(pt.getType_id()));
 	}
 	
-	private ProductType toEntity(ProductTypeEntryModel pe) {
-		return new ProductType(pe.getType_id(), pe.getName(), pe.getDescription(), pe.getCoverimgpath(), pe.getPrice(), pe.getCategory_id(), pe.getEmployee_id());
-	}
+//	private ProductType toEntity(ProductTypeEntryModel pe) {
+//		return new ProductType(pe.getType_id(), pe.getName(), pe.getDescription(), pe.getCoverimgpath(), pe.getPrice(), pe.getCategory_id(), pe.getEmployee_id());
+//	}
 	
 	private ProductType toEntity1(ProductTypeEntryModel pe) {
-		for (ProductEntryModel product : pe.getProduct()) {
-			ps.add(product);
-		}
-		return new ProductType(pe.getType_id(), pe.getName(), pe.getDescription(), pe.getCoverimgpath(), pe.getPrice(), pe.getCategory_id(), pe.getEmployee_id());
+		return new ProductType(pe.getType_id(), pe.getName(), pe.getDescription(), pe.getCoverimgpath(), pe.getPrice(), pe.getCategory_id(), pe.getEmployee_id(), pe.getProduct());
 	}
 	
 	private String getCoverImageFileName(String cover_img_path) {

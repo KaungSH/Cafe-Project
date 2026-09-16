@@ -18,14 +18,12 @@ import org.springframework.web.server.ResponseStatusException;
 
 import cafe.project.RandomString;
 import cafe.project.HeinMinHtet.services.CategoryService;
-import cafe.project.KaungSattHein.models.ProductEntryModel;
 import cafe.project.KaungSattHein.models.ProductTypeEntryModel;
 import cafe.project.KaungSattHein.models.fakes.IngredientTypesListModelFake;
+import cafe.project.KaungSattHein.repositories.entities.ProductsAndQuantities;
 import cafe.project.KaungSattHein.services.ProductService;
 import cafe.project.KaungSattHein.services.ProductTypeService;
 import cafe.project.YatiWinLatt.service.SizeService;
-import cafe.project.YinminThiriSoe.repositories.EmployeeRepository;
-import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 
 @Controller
@@ -34,34 +32,51 @@ public class ProductController {
 	private final ProductService pservice;
 	private final ProductTypeService ptservice;
 	private final CategoryService cservice;
-	private final EmployeeRepository eservice;
 	private final SizeService sservice;
 	
-	public ProductController (ProductService pservice, ProductTypeService ptservice, CategoryService cservice, EmployeeRepository eservice, SizeService sservice) {
+	public ProductController (ProductService pservice, ProductTypeService ptservice, CategoryService cservice, SizeService sservice) {
 		this.pservice = pservice;
 		this.ptservice = ptservice;
 		this.cservice = cservice;
-		this.eservice = eservice;
 		this.sservice = sservice;
 	}
 	
 	
 	
-	@GetMapping("/manager/products/type")
-	public String productTypeList(Model model, HttpSession session) {
+	@GetMapping("/manager/products")
+	public String productTypeList(Model model) {
 		model.addAttribute("product_types", ptservice.findAll());
-		model.addAttribute("products", pservice.findListAll());
-		return "KaungSattHein/products/type_list";
+		return "KaungSattHein/products/list";
 	}
 	
-	@GetMapping("/manager/products/type/add")
+	@GetMapping("/staff/products")
+	public String productTypeCardList(Model model) {
+		model.addAttribute("product_types", ptservice.findAll());
+		model.addAttribute("product_quantities", new ProductsAndQuantities());
+		return "KaungSattHein/products/card_list";
+	}
+	
+	@PostMapping("/staff/products")
+	public String productTypeCardList(@ModelAttribute("product_quantities") ProductsAndQuantities productsNo, Model model) {
+		System.out.println(productsNo.getQuantities().get(1));
+		model.addAttribute("product_quantities", productsNo);
+		return "KaungSattHein/products/card_list";
+	}
+	
+	@GetMapping("/manager/products/deleted")
+	public String productTypeDeleted(Model model) {
+		model.addAttribute("product_types", ptservice.findDeletedAll());
+		return "KaungSattHein/products/list_deleted";
+	}
+	
+	@GetMapping("/manager/products/add")
 	public String productTypeAdd(Model model) {
 		model.addAttribute("product_type", new ProductTypeEntryModel());
 		bindAvialableData(model);
-		return "KaungSattHein/products/type_add";
+		return "KaungSattHein/products/add";
 	}
 	
-	@PostMapping("/manager/products/type/add")
+	@PostMapping("/manager/products/add")
 	public String productTypeAdd(@ModelAttribute("product_type") ProductTypeEntryModel tentry,  @RequestParam(value ="coverImgPart", required = false) Part imgPart, Model model) {
 		tentry.setCoverimgpath(saveImgFile(imgPart));
 		tentry.setType_id(UUID.randomUUID().toString());
@@ -69,33 +84,77 @@ public class ProductController {
 		tentry.setEmployee_id("1");
 		
 		ptservice.add(tentry);
-		return "redirect:/";
+		return "redirect:/manager/products";
 	}
 	
-	@GetMapping("/manager/products/type/edit/{id}")
+	@GetMapping("/manager/products/edit/{id}")
 	public String productTypeEdit(@PathVariable String id, Model model) {
 		if(ptservice.findById(id) != null) {
 			model.addAttribute("product_type", ptservice.findById2(id));
 			bindAvialableData(model);
-			return "KaungSattHein/products/type_edit";
+			return "KaungSattHein/products/edit";
 		}else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product_type");
 		}
 		
 	}
 	
-	@PostMapping("/manager/products/type/edit")
+	@PostMapping("/manager/products/edit")
 	public String productTypeEdit(@ModelAttribute("product_type") ProductTypeEntryModel tentry, @RequestParam(value ="coverImgPart", required = false) Part imgPart, Model model) {
 		String file = saveImgFile(imgPart);
 		if (file == null || file.isEmpty()) {
 			ptservice.edit(tentry);
-			return "redirect:/manager/products/type";
+			return "redirect:/manager/products";
 		}
 		tentry.setCoverimgpath(file);
+		System.out.println(tentry.getProduct().get(1).isIs_active());
 		ptservice.edit(tentry);
-		return "redirect:/manager/products/type";
+		return "redirect:/manager/products";
 	}
 	
+	@GetMapping("/manager/products/delete/type/{id}")
+	public String productTypeDelete(@PathVariable String id, Model model) {
+		if(ptservice.findById(id) != null) {
+			ptservice.delete(id);
+			return "redirect:/manager/products";
+		}else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product_type");
+		}
+		
+	}
+	
+	@GetMapping("/manager/products/delete_perm/type/{id}")
+	public String productTypeDeletePerm(@PathVariable String id, Model model) {
+		if(ptservice.findById3(id) != null) {
+			ptservice.deletePerm(id);
+			return "redirect:/manager/products/deleted";
+		}else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product_type");
+		}
+		
+	}
+	
+	@GetMapping("/manager/products/delete/{id}")
+	public String productTypeDeletePro(@PathVariable String id, Model model) {
+		if(pservice.findById(id) != null) {
+			pservice.delete(id);
+			return "redirect:/manager/products";
+		}else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product_type");
+		}
+		
+	}
+	
+	@GetMapping("/manager/products/recover/type/{id}")
+	public String productTypeRecover(@PathVariable String id, Model model) {
+		if(ptservice.findById3(id) != null) {
+			ptservice.recover(id);
+			return "redirect:/manager/products/deleted";
+		}else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product_type");
+		}
+		
+	}
 	
 	private List<IngredientTypesListModelFake> ingredientgetAllFake() {
 		List<IngredientTypesListModelFake> list = new ArrayList<IngredientTypesListModelFake>();
