@@ -20,7 +20,15 @@ public class ProductService {
 	public ProductService(ProductRepository prepo) {this.prepo = prepo;}
 	
 	public List<ProductListModel> findListAll() {
-		return prepo.findListAll().stream().map(this::toListModel).toList();
+		return prepo.findListAll().stream().map(this::toListModel2).toList();
+	}
+	
+	public List<ProductListModel> findListAllByTypeId(String type_id) {
+		return prepo.findListAllByTypeId(type_id).stream().map(this::toListModel2).toList();
+	}
+	
+	public List<ProductListModel> findListAllByTypeId2(String type_id) {
+		return prepo.findListAllByTypeId3(type_id).stream().map(this::toListModel2).toList();
 	}
 	
 	public List<ProductListModel> findDeletedAll() {
@@ -44,6 +52,14 @@ public class ProductService {
 		return toEntryModel(prepo.findDetailById(id));
 	}
 	
+	public List<ProductEntryModel> findByTypeId(String type_id) {
+		List<ProductEntryModel> list = new ArrayList<ProductEntryModel>();
+		for (Product product : prepo.findDetailByTypeId(type_id)) {
+			list.add(toEntryModel(product));
+		}
+		return list;
+	}
+	
 	public ProductListModel findListById(String id) {
 		return toListModel(prepo.findListById(id));
 	}
@@ -56,8 +72,16 @@ public class ProductService {
 		return getQuantity(prepo.findQuantityRequiredById(pid));
 	}
 	
-	public int add(ProductEntryModel em) {
+	public int add(ProductEntryModel em, String id, String type_id) {
+		//to be replaced by http session
+		em.setProduct_id(id); em.setType_id(type_id); em.setEmployee_id("1");
 		return prepo.add(toEntity(em));
+	}
+	
+	public int add2(ProductEntryModel em, String id, String type_id) {
+		//to be replaced by http session
+		em.setProduct_id(id); em.setType_id(type_id); em.setEmployee_id("1");
+		return prepo.add2(toEntity(em));
 	}
 	
 	public int edit(ProductEntryModel em) {
@@ -72,8 +96,16 @@ public class ProductService {
 		return prepo.recover(id);
 	}
 	
+	public int permDelete(String id) {
+		return prepo.permDelete(id);
+	}
+	
 	private ProductListModel toListModel(Product ep) {
 		return new ProductListModel(ep.getProduct_id(), ep.getEmployee_name(), ep.getType_name(), ep.getSize_code(), ep.getPrice(), ep.isIsedited(), ep.isIsdeleted(), ep.isIs_active(), ep.getCreated_at(), ep.getQuantity_required(), ep.getDiscount_names(), ep.getUnit_code(), ep.getIngredient_names());
+	}
+	
+	private ProductListModel toListModel2(Product ep) {
+		return new ProductListModel(ep.getProduct_id(), ep.getEmployee_name(), ep.getType_name(), ep.getSize_code(), ep.getPrice(), ep.isIsedited(), ep.isIsdeleted(), ep.isIs_active(), ep.getCreated_at(), ep.getQuantity_required(), ep.getDiscount_names(), ep.getUnit_code(), ep.getIngredient_names(), ep.getDiscount_values());
 	}
 	
 	private ProductEntryModel toEntryModel(Product ep) {
@@ -85,11 +117,11 @@ public class ProductService {
 	}
 	
 	private ProductDiscountModel getDiscount(Product ep) {
-		return new ProductDiscountModel(ep.getProduct_id(), ep.getDiscount_ids(), ep.getDiscount_value());
+		return new ProductDiscountModel(ep.getProduct_id(), ep.getDiscount_names(), ep.getDiscount_values(), ep.getDiscount_ids());
 	}
 	
 	private ProductQuantityRequiredModel getQuantity(Product ep) {
-		return new ProductQuantityRequiredModel(ep.getProduct_id(), ep.getIngredient_ids(), ep.getQuantity_required());
+		return new ProductQuantityRequiredModel(ep.getProduct_id(), ep.getIngredient_names(), ep.getQuantity_required());
 	}
 
 }

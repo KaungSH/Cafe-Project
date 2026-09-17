@@ -1,6 +1,9 @@
 package cafe.project.KaungSattHein.repositories.entities;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
+import cafe.project.KaungSattHein.models.ProductEntryModel;
 
 public class ProductType {
 	
@@ -9,6 +12,8 @@ public class ProductType {
 	private LocalDateTime created_at;
 	private boolean isdeleted, isedited;
 	private String category_id, employee_id;
+	
+	private List<ProductEntryModel> products;
 	
 	public ProductType() {}
 	
@@ -34,6 +39,18 @@ public class ProductType {
 		this.category_id = category_id;
 		this.employee_id = employee_id;
 	}
+	
+	public ProductType(String type_id, String name, String description, String coverimgpath, double price, String category_id, String employee_id, List<ProductEntryModel> products) {
+		this.type_id = type_id;
+		this.name = name;
+		this.description = description;
+		this.coverimgpath = coverimgpath;
+		this.price = price;
+		this.category_id = category_id;
+		this.employee_id = employee_id;
+		this.products = products;
+	}
+
 
 	public String getType_id() {
 		return type_id;
@@ -114,5 +131,15 @@ public class ProductType {
 	public void setEmployee_id(String employee_id) {
 		this.employee_id = employee_id;
 	}
+
+	public List<ProductEntryModel> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<ProductEntryModel> products) {
+		this.products = products;
+	}
+	
+	
 	
 }

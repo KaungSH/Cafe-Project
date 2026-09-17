@@ -1,6 +1,7 @@
 package cafe.project.KaungSattHein.models;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ProductTypeListModel {
 	
@@ -9,6 +10,7 @@ public class ProductTypeListModel {
 	private LocalDateTime created_at;
 	private boolean isdeleted, isedited;
 	private String category_name, employee_name;
+	private List<ProductListModel> products;
 	
 	public ProductTypeListModel () {}
 	
@@ -23,6 +25,20 @@ public class ProductTypeListModel {
 		this.isedited = isedited;
 		this.category_name = category_name;
 		this.employee_name = employee_name;
+	}
+	
+	public ProductTypeListModel(String type_id, String name, String description, String coverimgpath, double price, LocalDateTime created_at, boolean isdeleted, boolean isedited, String category_name, String employee_name, List<ProductListModel> products) {
+		this.type_id = type_id;
+		this.name = name;
+		this.description = description;
+		this.coverimgpath = coverimgpath;
+		this.price = price;
+		this.created_at = created_at;
+		this.isdeleted = isdeleted;
+		this.isedited = isedited;
+		this.category_name = category_name;
+		this.employee_name = employee_name;
+		this.products = products;
 	}
 
 	public String getType_id() {
@@ -103,6 +119,14 @@ public class ProductTypeListModel {
 
 	public void setEmployee_name(String employee_name) {
 		this.employee_name = employee_name;
+	}
+
+	public List<ProductListModel> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<ProductListModel> products) {
+		this.products = products;
 	}
 	
 	

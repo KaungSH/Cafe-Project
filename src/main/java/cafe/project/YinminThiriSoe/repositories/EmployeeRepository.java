@@ -25,8 +25,8 @@ public class EmployeeRepository {
 	}
 
 	public List<Employee> findAllWithRelation() {
-		String sql = "SELECT \r\n" + "    e.*,\r\n" + "    es.name,\r\n" + "    g.gender_id,  \r\n"
-				+ "    er.name,    \r\n" + "    b.name    \r\n" + "FROM employees e\r\n"
+		String sql = "SELECT \r\n" + "    e.*,\r\n" + "    es.*,\r\n" + "    g.*,  \r\n"
+				+ "    er.*,    \r\n" + "    b.name    \r\n" + "FROM employees e\r\n"
 				+ "LEFT JOIN employee_statuses es \r\n" + "    ON e.employee_status_id = es.employee_status_id\r\n"
 				+ "LEFT JOIN genders g \r\n" + "    ON e.gender_id = g.gender_id\r\n"
 				+ "LEFT JOIN employee_roles er \r\n" + "    ON e.employee_role_id = er.role_id\r\n"
@@ -41,8 +41,8 @@ public class EmployeeRepository {
 	}
 
 	public Employee findByBranchWithRelations(String branchId) {
-		String sql = "SELECT \r\n" + "    e.*,\r\n" + "    es.name,\r\n" + "    g.gender_id,  \r\n"
-				+ "    er.name,    \r\n" + "    b.name    \r\n" + "FROM employees e\r\n"
+		String sql = "SELECT \r\n" + "    e.*,\r\n" + "    es.*,\r\n" + "    g.*,  \r\n"
+				+ "    er.*,    \r\n" + "    b.name    \r\n" + "FROM employees e\r\n"
 				+ "LEFT JOIN employee_statuses es \r\n" + "    ON e.employee_status_id = es.employee_status_id\r\n"
 				+ "LEFT JOIN genders g \r\n" + "    ON e.gender_id = g.gender_id\r\n"
 				+ "LEFT JOIN employee_roles er \r\n" + "    ON e.employee_role_id = er.role_id\r\n"
@@ -58,8 +58,8 @@ public class EmployeeRepository {
 	}
 
 	public Employee findByRoleWithRelations(String employeeRoleId) {
-		String sql = "SELECT \r\n" + "    e.*,\r\n" + "    es.name,\r\n" + "    g.gender_id,  \r\n"
-				+ "    er.name,    \r\n" + "    b.name    \r\n" + "FROM employees e\r\n"
+		String sql = "SELECT \r\n" + "    e.*,\r\n" + "    es.*,\r\n" + "    g.*,  \r\n"
+				+ "    er.*,    \r\n" + "    b.name    \r\n" + "FROM employees e\r\n"
 				+ "LEFT JOIN employee_statuses es \r\n" + "    ON e.employee_status_id = es.employee_status_id\r\n"
 				+ "LEFT JOIN genders g \r\n" + "    ON e.gender_id = g.gender_id\r\n"
 				+ "LEFT JOIN employee_roles er \r\n" + "    ON e.employee_role_id = er.role_id\r\n"
@@ -80,8 +80,8 @@ public class EmployeeRepository {
 	}
 
 	public Employee findByIdWithRelations(String employeeId) {
-		String sql = "SELECT \r\n" + "    e.*,\r\n" + "    es.name,\r\n" + "    g.gender_id,  \r\n"
-				+ "    er.name,    \r\n" + "    b.name    \r\n" + "FROM employees e\r\n"
+		String sql = "SELECT \r\n" + "    e.*,\r\n" + "    es.*,\r\n" + "    g.*,  \r\n"
+				+ "    er.*,    \r\n" + "    b.name    \r\n" + "FROM employees e\r\n"
 				+ "LEFT JOIN employee_statuses es \r\n" + "    ON e.employee_status_id = es.employee_status_id\r\n"
 				+ "LEFT JOIN genders g \r\n" + "    ON e.gender_id = g.gender_id\r\n"
 				+ "LEFT JOIN employee_roles er \r\n" + "    ON e.employee_role_id = er.role_id\r\n"
@@ -97,12 +97,12 @@ public class EmployeeRepository {
 	}
 
 	public Employee findByEmailWithRelations(String email) {
-		String sql = "SELECT \r\n" + "    e.*,\r\n" + "    es.name,\r\n" + "    g.gender_id,  \r\n"
-				+ "    er.name,    \r\n" + "    b.name    \r\n" + "FROM employees e\r\n"
+		String sql = "SELECT \r\n" + "    e.*,\r\n" + "    es.*,\r\n" + "    g.*,  \r\n"
+				+ "    er.*,    \r\n" + "    b.name    \r\n" + "FROM employees e\r\n"
 				+ "LEFT JOIN employee_statuses es \r\n" + "    ON e.employee_status_id = es.employee_status_id\r\n"
 				+ "LEFT JOIN genders g \r\n" + "    ON e.gender_id = g.gender_id\r\n"
 				+ "LEFT JOIN employee_roles er \r\n" + "    ON e.employee_role_id = er.role_id\r\n"
-				+ "LEFT JOIN branches b \r\n" + "    ON e.branch_id = b.branch_id WHERE e.email=?";
+				+ "LEFT JOIN branches b \r\n" + "    ON e.branch_id = b.branch_id WHERE e.email= ?";
 		List<Employee> entities = jdbcTemplate.query(sql, new EmployeeResultSetExtractor(), email);
 		return entities.isEmpty() ? null : entities.get(0);
 	}
