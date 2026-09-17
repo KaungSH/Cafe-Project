@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Edit Size - Luft Cafe</title>
+<title>Create Size - Luft Cafe</title>
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 <link rel="stylesheet"
@@ -11,8 +11,7 @@
 <style>
 :root {
 	--primary-color: #5C3D2E;
-	--accent-warm: #E0A96D;
-	--accent-hover: #C88E52;
+	--primary-hover: #432B20;
 	--bg-main: #FAF7F2;
 	--card-bg: #FFFFFF;
 	--text-color: #2D2422;
@@ -67,30 +66,30 @@ body {
 	color: #C94A29;
 }
 
-.form-control {
+.form-control, .form-select {
 	padding: 10px 12px;
 	border-radius: 8px;
 	border: 1px solid #D6CECE;
 }
 
-.form-control:focus {
+.form-control:focus, .form-select:focus {
 	border-color: var(--primary-color);
 	box-shadow: 0 0 0 0.25rem rgba(92, 61, 46, 0.15);
 }
 
-.update-btn {
-	background-color: var(--accent-warm);
-	border-color: var(--accent-warm);
-	color: #3E2723;
-	font-weight: 600;
-	border-radius: 8px;
+.save-btn {
+	background-color: var(--primary-color);
+	border-color: var(--primary-color);
+	color: white;
 	padding: 8px 20px;
+	border-radius: 8px;
+	font-weight: 600;
 }
 
-.update-btn:hover {
-	background-color: var(--accent-hover);
-	border-color: var(--accent-hover);
-	color: #2C1A14;
+.save-btn:hover {
+	background-color: var(--primary-hover);
+	border-color: var(--primary-hover);
+	color: white;
 }
 
 .btn-secondary {
@@ -114,22 +113,51 @@ body {
 <body>
 
 	<div class="page-container">
-		<!-- Title -->
+
 		<h2 class="page-title">Size Management</h2>
 
-		<!-- Form Card -->
+
 		<div class="form-card">
 			<div class="form-header">
-				<i class="fa-solid fa-pen-to-square me-2"></i>Edit Size
+				<i class="fa-solid fa-plus-circle me-2"></i>Create New Size
 			</div>
 
 			<div class="form-body">
-				<form th:action="@{/sizes/edit/{id}(id=*{size_id})}"
-					th:object="${sizeDto}" method="post" novalidate>
-					<!-- Hidden ID -->
-					<input type="hidden" th:field="*{size_id}">
+				<form th:action="@{/manager/sizes/create}" th:object="${sizeDto}"
+					method="post" novalidate>
 
 
+					<div class="mb-3">
+						<label for="employee" class="form-label"> Employee /
+							Created By <span class="required">*</span>
+						</label> <select id="employees" th:field="*{employee_id}"
+							class="form-select"
+							th:classappend="${#fields.hasErrors('employee_id')} ? 'is-invalid' : ''">
+							<option value="">-- Select Employee --</option>
+							<option th:each="emp : ${employees}"
+								th:value="${emp.employee_id}" th:text="${emp.name}">Employee
+								Name</option>
+						</select>
+						<div class="invalid-feedback"
+							th:if="${#fields.hasErrors('employee_id')}"
+							th:errors="*{employee_id}"></div>
+					</div>
+
+
+					<div class="mb-3">
+						<label for="sizeCode" class="form-label">Size Code <span
+							class="required">*</span></label> <select id="sizeCode"
+							th:field="*{size_code}" class="form-select"
+							th:classappend="${#fields.hasErrors('size_code')} ? 'is-invalid' : ''">
+							<option value="">-- Select Size Code --</option>
+							<option th:each="size : ${sizes}" th:value="${size.size_code}"
+								th:text="${size.size_code}">Size Code</option>
+						</select>
+						<div class="invalid-feedback"
+							th:if="${#fields.hasErrors('size_code')}"
+							th:errors="*{size_code}"></div>
+					</div>
+					<!--  
 					<div class="mb-3">
 						<label for="sizeCode" class="form-label"> Size Code <span
 							class="required">*</span>
@@ -139,7 +167,9 @@ body {
 						<div class="invalid-feedback"
 							th:if="${#fields.hasErrors('size_code')}"
 							th:errors="*{size_code}"></div>
-					</div>
+					</div>-->
+
+
 
 
 					<div class="mb-3">
@@ -154,7 +184,7 @@ body {
 
 
 					<div class="mb-4 form-check form-switch">
-						<input type="checkbox" th:field="*{is_active}"
+						<input type="checkbox" th:field="*{is_active}" th:value="true"
 							class="form-check-input" id="isActiveCheck" role="switch">
 						<label class="form-check-label fw-semibold" for="isActiveCheck">Is
 							Active</label>
@@ -162,11 +192,11 @@ body {
 
 
 					<div class="d-flex justify-content-end gap-2">
-						<a th:href="@{/sizes}" class="btn btn-secondary"> <i
+						<a th:href="@{/manager/sizes}" class="btn btn-secondary"> <i
 							class="fa-solid fa-xmark me-1"></i>Cancel
 						</a>
-						<button type="submit" class="btn update-btn">
-							<i class="fa-solid fa-pen me-1"></i>Update Size
+						<button type="submit" class="btn save-btn">
+							<i class="fa-solid fa-floppy-disk me-1"></i>Save Size
 						</button>
 					</div>
 				</form>

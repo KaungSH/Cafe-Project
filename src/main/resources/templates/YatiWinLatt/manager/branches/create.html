@@ -99,7 +99,7 @@ body {
 				<i class="fa-solid fa-store me-2"></i>Add New Branch
 			</h3>
 
-			<form th:action="@{/branches/create}" th:object="${branchDto}"
+			<form th:action="@{/manager/branches/create}" th:object="${branchDto}"
 				method="post" novalidate>
 
 
@@ -107,7 +107,7 @@ body {
 					<label for="name" class="form-label fw-bold">Branch Name <span
 						class="text-danger">*</span></label> <input type="text" id="name"
 						th:field="*{name}" class="form-control"
-						placeholder="e.g. Downtown Branch"
+						placeholder="Downtown Branch"
 						th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''">
 					<div class="invalid-feedback" th:if="${#fields.hasErrors('name')}"
 						th:errors="*{name}"></div>
@@ -118,7 +118,7 @@ body {
 					<label for="location" class="form-label fw-bold"> Location
 						<span class="text-danger">*</span>
 					</label> <input type="text" id="location" th:field="*{location}"
-						class="form-control" placeholder="e.g. Yangon"
+						class="form-control" placeholder="Location"
 						th:classappend="${#fields.hasErrors('location')} ? 'is-invalid' : ''">
 					<div class="invalid-feedback"
 						th:if="${#fields.hasErrors('location')}" th:errors="*{location}"></div>
@@ -176,7 +176,7 @@ body {
 
 
 				<div class="mt-4 d-flex gap-2 justify-content-end">
-					<a th:href="@{/branches}" class="btn btn-cancel"> <i
+					<a th:href="@{/manager/branches}" class="btn btn-cancel"> <i
 						class="fa-solid fa-xmark me-1"></i>Cancel
 					</a>
 					<button type="submit" class="btn btn-submit">

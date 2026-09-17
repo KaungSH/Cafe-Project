@@ -10,7 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/sizes")
+@RequestMapping("/manager/sizes")
 public class SizeController {
 
     private final SizeService sizeService;
@@ -20,13 +20,13 @@ public class SizeController {
     @GetMapping
     public String list(Model model) {
         model.addAttribute("sizes", sizeService.getAllSizes());
-        return "YatiWinLatt/sizes/list";
+        return "YatiWinLatt/manager/sizes/list";
     }
     @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("sizeDto", new SizeEntryDto());
         model.addAttribute("employees", sizeService.getAllEmployees());
-        return "YatiWinLatt/sizes/create";
+        return "YatiWinLatt/manager/sizes/create";
     }
     @PostMapping("/create")
     public String create(@Valid @ModelAttribute("sizeDto") SizeEntryDto sizeDto,
@@ -34,31 +34,31 @@ public class SizeController {
                          Model model) {
         if (result.hasErrors()) {
             model.addAttribute("employees", sizeService.getAllEmployees());
-            return "YatiWinLatt/sizes/create";
+            return "YatiWinLatt/manager/sizes/create";
         }
         sizeService.createSize(sizeDto);
-        return "redirect:/sizes";
+        return "redirect:/manager/sizes";
     }
     @GetMapping("/edit/{size_id}")
     public String showEditForm(@PathVariable("size_id") String size_id, Model model) {
     	Size size = sizeService.getSizeById(size_id);
         model.addAttribute("sizeDto", size);
-        return "YatiWinLatt/sizes/edit";
+        return "YatiWinLatt/manager/sizes/edit";
     }
     @PostMapping("/edit/{size_id}")
     public String update(@PathVariable("size_id") String size_id,
                          @Valid @ModelAttribute("sizeDto") SizeEntryDto sizeDto,
                          BindingResult result) {
         if (result.hasFieldErrors("name") || result.hasFieldErrors("size_code")) {
-            return "YatiWinLatt/sizes/edit";
+            return "YatiWinLatt/manager/sizes/edit";
         }
         sizeDto.setSize_id(size_id);
         sizeService.updateSize(sizeDto);
-        return "redirect:/sizes";
+        return "redirect:/manager/sizes";
     }
     @GetMapping("/delete/{size_id}")
     public String delete(@PathVariable("size_id") String size_id) {
         sizeService.deleteSize(size_id);
-        return "redirect:/sizes";
+        return "redirect:/manager/sizes";
     }
 }

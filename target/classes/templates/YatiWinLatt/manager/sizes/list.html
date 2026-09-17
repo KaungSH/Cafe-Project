@@ -139,7 +139,7 @@ body {
 		<!-- Page Header -->
 		<div class="top-bar">
 			<h2 class="page-title mb-0">Size Management</h2>
-			<a th:href="@{/sizes/create}" class="btn add-btn"> <i
+			<a th:href="@{/manager/sizes/create}" class="btn add-btn"> <i
 				class="fa-solid fa-plus me-1"></i>Add New Size
 			</a>
 		</div>
@@ -167,9 +167,9 @@ body {
 							class="text-secondary fw-semibold"> <i
 								class="fa-solid fa-xmark me-1"></i>Inactive
 						</span></td>
-						<td><a th:href="@{/sizes/edit/{id}(id=${s.size_id})}"
+						<td><a th:href="@{/manager/sizes/edit/{id}(id=${s.size_id})}"
 							class="btn btn-sm action-btn edit-btn">Edit</a> <a
-							th:href="@{/sizes/delete/{id}(id=${s.size_id})}"
+							th:href="@{/manager/sizes/delete/{id}(id=${s.size_id})}"
 							class="btn btn-sm action-btn delete-btn"
 							onclick="return confirm('Are you sure?');">Delete</a></td>
 					</tr>
