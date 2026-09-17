@@ -20,7 +20,7 @@ public class StatusController {
         this.statusRepository = statusRepository;
     }
 
-    // List Page Render
+
     @GetMapping
     public String showStatusList(@RequestParam(defaultValue = "branch") String type, Model model) {
         model.addAttribute("selectedType", type);
@@ -28,7 +28,7 @@ public class StatusController {
         return "YatiWinLatt/admin/statuses/list";
     }
 
-    // Open Add Form
+  
     @GetMapping("/create")
     public String showCreateForm(@RequestParam(defaultValue = "branch") String type, Model model) {
         model.addAttribute("statusType", type);
@@ -37,7 +37,7 @@ public class StatusController {
         return "YatiWinLatt/admin/statuses/create";
     }
 
-    // Open Edit Form
+   
     @GetMapping("/edit")
     public String showEditForm(@RequestParam String type, @RequestParam String id, Model model) {
         Map<String, Object> status = statusRepository.findById(type, id);
@@ -47,7 +47,7 @@ public class StatusController {
         return "YatiWinLatt/admin/statuses/create";
     }
 
-    // Direct Save (No Validation Check)
+    
     @PostMapping("/save")
     public String saveStatus(@RequestParam String statusType,
                              @RequestParam(required = false) String id,
@@ -63,8 +63,8 @@ public class StatusController {
         return "redirect:/admin/statuses?type=" + statusType;
     }
 
-    // Open Delete Page
-    @GetMapping("/delete")
+
+   /* @GetMapping("/delete")
     public String showDeleteConfirm(@RequestParam String type, 
                                     @RequestParam String id, 
                                     @RequestParam(required = false) String name, 
@@ -73,12 +73,18 @@ public class StatusController {
         model.addAttribute("statusId", id);
         model.addAttribute("statusName", name != null ? name : id);
         return "YatiWinLatt/admin/statuses/delete";
-    }
-
-    // Direct Delete Execution (No Validation Check)
-    @PostMapping("/delete-confirm")
-    public String executeDelete(@RequestParam String type, @RequestParam String id) {
+    }*/
+    
+    @GetMapping("/delete")
+    public String deleteStatus(@RequestParam String type, @RequestParam String id) {
         statusRepository.delete(type, id);
         return "redirect:/admin/statuses?type=" + type;
     }
+
+   
+  /*  @PostMapping("/delete-confirm")
+    public String executeDelete(@RequestParam String type, @RequestParam String id) {
+        statusRepository.delete(type, id);
+        return "redirect:/admin/statuses?type=" + type;
+    }*/
 }
