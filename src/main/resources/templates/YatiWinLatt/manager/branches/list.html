@@ -83,7 +83,6 @@ body {
 	background-color: #FAF5F0;
 }
 
-/* Status Styling */
 .status-active {
 	color: #2E7D32;
 	font-weight: 600;
@@ -104,7 +103,7 @@ body {
 	font-weight: 600;
 }
 
-/* Action Buttons */
+
 .btn-action-edit {
 	color: #8C592B;
 	border: 1px solid #E0A96D;
@@ -146,15 +145,15 @@ body {
 	<div class="container-fluid px-5">
 		<div class="main-card">
 
-			<!-- Page Header -->
+			
 			<div class="d-flex justify-content-between align-items-center mb-4">
 				<h2 class="page-title mb-0">Branch Management</h2>
-				<a th:href="@{/branches/create}" class="btn btn-add"> <i
+				<a th:href="@{/manager/branches/create}" class="btn btn-add"> <i
 					class="fa-solid fa-plus me-1"></i>Add New Branch
 				</a>
 			</div>
 
-			<!-- Table -->
+			
 			<div class="table-responsive">
 				<table class="custom-table">
 					<thead>
@@ -169,8 +168,8 @@ body {
 						</tr>
 					</thead>
 
-					<tr th:each="branch : ${branches}">
-						<td><span class="id-badge" th:text="${branch.branch_id}">B-001</span></td>
+					<tr th:each="branch,state : ${branches}">
+						<td><span class="id-badge" th:text="${state.count}">B-001</span></td>
 						<td th:text="${branch.name}">Main Branch</td>
 						<td th:text="${branch.location}">Yangon</td>
 						<td th:text="${branch.opening_time}">08:00</td>
@@ -178,12 +177,12 @@ body {
 						<td><span class="status-active"
 							th:text="${branch.status_name}">Active</span></td>
 						<td style="text-align: right;"><a
-							th:href="@{/branches/edit/{id}(id=${branch.branch_id})}"
+							th:href="@{/manager/branches/edit/{branch_id}(branch_id=${branch.branch_id})}"
 							class="btn-action-edit me-1">Edit</a>
 
 
 							<form
-								th:action="@{/branches/delete/{id}(id=${branch.branch_id})}"
+								th:action="@{/manager/branches/delete/{branch_id}(branch_id=${branch.branch_id})}"
 								method="post" class="d-inline">
 								<button type="submit" class="btn-action-delete"
 									onclick="return confirm('Are you sure?')">Delete</button>
@@ -192,8 +191,7 @@ body {
 
 
 					<tr th:if="${#lists.isEmpty(branches)}">
-						<td colspan="7" class="text-center text-muted py-4">No
-							branches found.</td>
+						<td colspan="7" class="text-center text-muted py-4">No branches found.</td>
 					</tr>
 					</tbody>
 				</table>

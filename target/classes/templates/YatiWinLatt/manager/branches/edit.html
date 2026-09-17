@@ -75,7 +75,7 @@ body {
 				<i class="fa-solid fa-pen-to-square me-2"></i>Edit Branch
 			</h3>
 
-			<form th:action="@{/branches/edit/{id}(id=${branch_id})}"
+			<form th:action="@{/manager/branches/edit/{branch_id}(branch_id=${branch_id})}"
 				th:object="${branchDto}" method="post">
 
 
@@ -144,7 +144,7 @@ body {
 
 
 				<div class="mt-4 d-flex gap-2 justify-content-end">
-					<a th:href="@{/branches}" class="btn btn-cancel"><i
+					<a th:href="@{/manager/branches}" class="btn btn-cancel"><i
 						class="fa-solid fa-xmark me-1"></i>Cancel</a>
 					<button type="submit" class="btn btn-submit">
 						<i class="fa-solid fa-pen me-1"></i>Update Branch
