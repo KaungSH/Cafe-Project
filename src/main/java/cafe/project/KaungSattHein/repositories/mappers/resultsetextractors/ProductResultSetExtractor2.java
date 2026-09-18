@@ -25,13 +25,18 @@ public class ProductResultSetExtractor2 implements ResultSetExtractor<List<Produ
 			if(product == null) {
 				product = new Product(rs.getString("product_id"), rs.getString("employee_name"),rs.getString("type_name"),
 				   		rs.getString("size_code"), rs.getDouble("price"),
-				   		rs.getBoolean("isedited"),rs.getBoolean("isdeleted"), rs.getBoolean("is_active"), rs.getObject("created_at", LocalDateTime.class), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<Double>(), new ArrayList<String>());
+				   		rs.getBoolean("isedited"),rs.getBoolean("isdeleted"), rs.getBoolean("is_active"), rs.getObject("created_at", LocalDateTime.class), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<Double>(), new ArrayList<String>(), new ArrayList<Double>());
 				
 			}
 			
 			String discount_name = rs.getString("discount_name");
 			if (discount_name != null) {
 				product.getDiscount_names().add(discount_name);
+			}
+			
+			Double discount_value = rs.getDouble("discount_value");
+			if (discount_value != null) {
+				product.getDiscount_values().add(discount_value);
 			}
 			
 			String ingredient_name = rs.getString("ingredient_name");
@@ -44,7 +49,7 @@ public class ProductResultSetExtractor2 implements ResultSetExtractor<List<Produ
 				product.getUnit_code().add(unit_code);
 			}
 			
-			Double quantity_required = rs.getDouble("i.quantity_required");
+			Double quantity_required = rs.getDouble("quantity_required");
 			if (quantity_required != null) {
 				product.getQuantity_required().add(quantity_required );
 			}

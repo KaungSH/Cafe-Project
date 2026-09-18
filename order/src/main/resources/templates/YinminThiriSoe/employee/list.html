@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Employee List</title>
+
+<style>
+table {
+	border-collapse: collapse;
+	width: 100%;
+	margin-top: 20px;
+}
+
+th, td {
+	border: 1px solid #ddd;
+	padding: 8px;
+	text-align: left;
+}
+
+th {
+	background-color: #f2f2f2;
+}
+
+.btn {
+	padding: 5px 10px;
+	text-decoration: none;
+	border-radius: 3px;
+}
+
+.btn-primary {
+	background-color: #007bff;
+	color: white;
+}
+
+.btn-danger {
+	background-color: #dc3545;
+	color: white;
+}
+</style>
+</head>
+<body>
+
+	<h2>Employee Management</h2>
+	<a th:href="@{/employee/add}" class="btn btn-primary">Add New
+		Employee</a>
+
+	<table>
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Email</th>
+				<th>Phone</th>
+				<th>Address</th>
+				<th>Role</th>
+				<th class="text-center">Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="emp : ${employee}">
+				<td th:text="${emp.name}">John Doe</td>
+				<td th:text="${emp.email}">john@example.com</td>
+				<td th:text="${emp.phone}">123456789</td>
+				<td th:text="${emp.address}">123 Main St</td>
+				<!-- Fixed property name to employeeRoleId -->
+				<td th:text="${emp.employeeRoleId == '1' ? 'Manager' : 'Cashier'}">1</td>
+
+				<td><a th:href="@{/employee/view/{id}(id=${emp.employeeId})}"
+					class="btn btn-primary">View</a> <a
+					th:href="@{/employee/edit/{id}(id=${emp.employeeId})}"
+					class="btn btn-primary">Edit</a> <a
+					th:href="@{/employee/delete/{id}(id=${emp.employeeId})}"
+					class="btn btn-danger"
+					onclick="return confirm('Are you sure you want to delete this employee?');">Delete</a>
+				</td>
+			</tr>
+			<tr th:if="${#lists.isEmpty(employee)}">
+				<td colspan="6" style="text-align: center;">No employees found.</td>
+			</tr>
+		</tbody>
+	</table>
+
+</body>
+</html>

@@ -1,10 +1,7 @@
 package cafe.project.YatiWinLatt.repositories;
 
-
-
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import java.util.Map;
 
@@ -23,9 +20,7 @@ public class StatusRepository {
             case "employee": return new String[]{"employee_statuses", "employee_status_id", "name"};
             case "customer": return new String[]{"customer_statuses", "customer_status_id", "name"};
             case "register": return new String[]{"register_statuses", "register_status_id", "name"};
-            case "order": return new String[]{"order_types", "order_type_id", "type_name"};
-            case "promo": return new String[]{"promo_types", "promo_type_id", "type_name"};
-            case "audience": return new String[]{"audience_types", "audience_type_id", "type_name"};
+            case "gender":return new String[]{"gender_name","gender_id"};
             default: throw new IllegalArgumentException("Invalid status type: " + type);
         }
     }
