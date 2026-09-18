@@ -1,6 +1,7 @@
 package cafe.project.NayZarLinn.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -18,48 +19,45 @@ public class IngredientTypeRepository {
 	}
 
 	public List<IngredientType> findAll() {
-		String sql = "SELECT * FROM ingredient_types";
-		List<IngredientType> entities = this.jdbcTemplate.query(sql, new IngredientTypeMapper());
-		return entities;
+		String sql = "SELECT i.*, u.abbreviation FROM ingredient_types i LEFT JOIN units u ON i.unit_id = u.unit_id WHERE i.isdeleted = 0";
+		return jdbcTemplate.query(sql, new IngredientTypeMapper());
 	}
 
-	public IngredientType findById(String ingredient_type_id) {
-		String sql = "SELECT * FROM ingredient_types WHERE ingredient_type_id=? AND isdeleted=0";
-		List<IngredientType> entities = this.jdbcTemplate.query(sql, new IngredientTypeMapper(), ingredient_type_id);
-		return entities.isEmpty() ? null : entities.get(0);
+	public List<IngredientType> findAllDeleted() {
+		String sql = "SELECT i.*, u.abbreviation FROM ingredient_types i LEFT JOIN units u ON i.unit_id = u.unit_id WHERE i.isdeleted = 1";
+		return jdbcTemplate.query(sql, new IngredientTypeMapper());
 	}
 
-	
-	public int save(IngredientType entity) {
-		String sql = "INSERT INTO ingredient_types (ingredient_type_id,name,"
-				+ "description,unit_id,isdeleted,created_at) VALUES(?,?,?,?,?,?)";
-		return this.jdbcTemplate.update(sql, entity.getIngredient_type_id(), entity.getName(), entity.getDescription(),
-				entity.getUnit_id(), entity.isIsdeleted(), entity.getCreated_at());
+	public Optional<IngredientType> findById(String id) {
+		String sql = "SELECT i.*, u.abbreviation FROM ingredient_types i LEFT JOIN units u ON i.unit_id = u.unit_id WHERE i.ingredient_type_id = ?";
+		List<IngredientType> results = jdbcTemplate.query(sql, new IngredientTypeMapper(), id);
+		return results.stream().findFirst();
 	}
 
-	public int edit(IngredientType entity) {
-		String sql = "UPDATE ingredient_types SET name=?,description=?, unit_id=?, isdeleted=?, created_at=? WHERE ingredient_type_id=?";
-		return jdbcTemplate.update(sql, entity.getName(), entity.getDescription(), entity.getUnit_id(),
-				entity.isIsdeleted(), entity.getCreated_at(),entity.getIngredient_type_id());
+	public int save(IngredientType item) {
+		String sql = "INSERT INTO ingredient_types (ingredient_type_id, name, description, unit_id, isdeleted, created_at) VALUES (?, ?, ?, ?, 0, NOW())";
+		return jdbcTemplate.update(sql, item.getIngredientTypeId(), item.getName(), item.getDescription(),
+				item.getUnitId());
 	}
 
-	public int delete(String ingredient_type_id) {
-		String sql = "UPDATE ingredient_types SET isdeleted=true WHERE ingredient_type_id=?";
-		return jdbcTemplate.update(sql, ingredient_type_id);
-	}
-	
-	public List<IngredientType> findDeleted() {
-		String sql = "SELECT * FROM ingredient_types WHERE isdeleted=0";
-		return this.jdbcTemplate.query(sql, new IngredientTypeMapper());
+	public int update(IngredientType item) {
+		String sql = "UPDATE ingredient_types SET name = ?, description = ?, unit_id = ? WHERE ingredient_type_id = ?";
+		return jdbcTemplate.update(sql, item.getName(), item.getDescription(), item.getUnitId(),
+				item.getIngredientTypeId());
 	}
 
-	public int restore(String ingredient_type_id) {
-		String sql = "UPDATE ingredient_types SET isdeleted = false WHERE ingredient_type_id=?";
-		return jdbcTemplate.update(sql, ingredient_type_id);
+	public int softDelete(String id) {
+		String sql = "UPDATE ingredient_types SET isdeleted = 1 WHERE ingredient_type_id = ?";
+		return jdbcTemplate.update(sql, id);
 	}
-	
-	public int realDelete(String ingredient_type_id) {
-		String sql = "DELETE FROM ingredient_types WHERE ingredient_type_id=?";
-		return this.jdbcTemplate.update(sql, ingredient_type_id);
+
+	public int restore(String id) {
+		String sql = "UPDATE ingredient_types SET isdeleted = 0 WHERE ingredient_type_id = ?";
+		return jdbcTemplate.update(sql, id);
+	}
+
+	public int hardDelete(String id) {
+		String sql = "DELETE FROM ingredient_types WHERE ingredient_type_id = ?";
+		return jdbcTemplate.update(sql, id);
 	}
 }

@@ -2,31 +2,92 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Delete Ingredient Type</title>
+<title>Deleted Ingredients</title>
+<style>
+body {
+	font-family: Arial, sans-serif;
+	margin: 24px;
+}
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+	margin-top: 16px;
+}
+
+th, td {
+	border: 1px solid #ccc;
+	padding: 8px 12px;
+	text-align: left;
+}
+
+th {
+	background-color: #f4f4f4;
+}
+
+.btn-restore {
+	background-color: #4CAF50;
+	color: white;
+	border: none;
+	padding: 6px 12px;
+	cursor: pointer;
+}
+
+.btn-hard-delete {
+	background-color: #f44336;
+	color: white;
+	border: none;
+	padding: 6px 12px;
+	cursor: pointer;
+}
+</style>
 </head>
 <body>
-	<h2>Delete Ingredient Type</h2>
-	<div>
-		<dl>
-			<dt>Id</dt>
-			<dd th:text="${ingredientType.ingredient_type_id}"></dd>
-			<dt>Name</dt>
-			<dd th:text="${ingredientType.name}"></dd>
-			<dt>Description</dt>
-			<dd th:text="${ingredientType.description}"></dd>
-			<dt>Unit id</dt>
-			<dd th:text="${ingredientType.unit_id}"></dd>
-			<dt>Created At</dt>
-			<dd th:text="${ingredientType.created_at}"></dd>
-		</dl>
-	</div>
-	<form method="post" th:action="@{/ingredientType/delete}"
-		th:object="${ingredientType}">
-		<input type="hidden" th:field="${ingredientType.ingredient_type_id}" />
-		<input type="submit" value="Delete Confrim" />
-		<div>
-			<a th:href="@{/ingredientType}">Cancel</a>
-		</div>
-	</form>
+	<h2>Deleted Ingredient Types (Recycle Bin)</h2>
+	<p>
+		<a th:href="@{/staff/ingredientType}">← Back to Active Ingredients</a>
+	</p>
+	<hr />
+
+	<table>
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Name</th>
+				<th>Description</th>
+				<th>Unit Abbreviation</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:if="${#lists.isEmpty(deletedIngredients)}">
+				<td colspan="5" style="text-align: center;">No deleted records
+					found.</td>
+			</tr>
+			<tr th:each="item : ${deletedIngredients}">
+				<td th:text="${item.ingredientTypeId}"></td>
+				<td th:text="${item.name}"></td>
+				<td th:text="${item.description}"></td>
+				<td
+					th:text="${item.unitAbbreviation != null ? item.unitAbbreviation : 'N/A'}"></td>
+				<td>
+					<form
+						th:action="@{/staff/ingredientType/restore/{id}(id=${item.ingredientTypeId})}"
+						method="post" style="display: inline;">
+						<button type="submit" class="btn-restore"
+							onclick="return confirm('Restore this ingredient back to active?');">
+							Restore</button>
+					</form>
+					<form
+						th:action="@{/staff/ingredientType/hard-delete/{id}(id=${item.ingredientTypeId})}"
+						method="post" style="display: inline;">
+						<button type="submit" class="btn-hard-delete"
+							onclick="return confirm('Warning: This will permanently delete this record from the database. Are you sure?');">
+							Hard Delete</button>
+					</form>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </body>
 </html>
