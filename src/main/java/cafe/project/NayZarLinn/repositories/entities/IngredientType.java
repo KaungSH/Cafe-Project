@@ -3,32 +3,33 @@ package cafe.project.NayZarLinn.repositories.entities;
 import java.time.LocalDateTime;
 
 public class IngredientType {
-	private String ingredient_type_id;
+	private String ingredientTypeId;
 	private String name;
 	private String description;
-	private String unit_id;
-	private boolean isdeleted;
-	private LocalDateTime created_at;
+	private String unitId;
+	private boolean isDeleted;
+	private String unitAbbreviation;
+	private LocalDateTime createdAt;
 
 	public IngredientType() {
 	}
 
-	public IngredientType(String ingredient_type_id, String name, String description, String unit_id, boolean isdeleted,
-			LocalDateTime created_at) {
-		this.ingredient_type_id = ingredient_type_id;
+	public IngredientType(String ingredientTypeId, String name, String description, String unitId, boolean isDeleted,
+			String unitAbbreviation) {
+		this.ingredientTypeId = ingredientTypeId;
 		this.name = name;
 		this.description = description;
-		this.unit_id = unit_id;
-		this.isdeleted = isdeleted;
-		this.created_at = created_at;
+		this.unitId = unitId;
+		this.isDeleted = isDeleted;
+		this.unitAbbreviation = unitAbbreviation;
 	}
 
-	public String getIngredient_type_id() {
-		return ingredient_type_id;
+	public String getIngredientTypeId() {
+		return ingredientTypeId;
 	}
 
-	public void setIngredient_type_id(String ingredient_type_id) {
-		this.ingredient_type_id = ingredient_type_id;
+	public void setIngredientTypeId(String ingredientTypeId) {
+		this.ingredientTypeId = ingredientTypeId;
 	}
 
 	public String getName() {
@@ -47,27 +48,39 @@ public class IngredientType {
 		this.description = description;
 	}
 
-	public String getUnit_id() {
-		return unit_id;
+	public String getUnitId() {
+		return unitId;
 	}
 
-	public void setUnit_id(String unit_id) {
-		this.unit_id = unit_id;
+	public void setUnitId(String unitId) {
+		this.unitId = unitId;
 	}
 
-	public boolean isIsdeleted() {
-		return isdeleted;
+	public boolean isDeleted() {
+		return isDeleted;
 	}
 
-	public void setIsdeleted(boolean isdeleted) {
-		this.isdeleted = isdeleted;
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
 	}
 
-	public LocalDateTime getCreated_at() {
-		return created_at;
+	public void setIsDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
 	}
 
-	public void setCreated_at(LocalDateTime created_at) {
-		this.created_at = created_at;
+	public String getUnitAbbreviation() {
+		return unitAbbreviation;
+	}
+
+	public void setUnitAbbreviation(String unitAbbreviation) {
+		this.unitAbbreviation = unitAbbreviation;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
 	}
 }

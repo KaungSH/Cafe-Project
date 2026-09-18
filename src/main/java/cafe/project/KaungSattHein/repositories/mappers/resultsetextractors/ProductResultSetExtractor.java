@@ -23,7 +23,7 @@ public class ProductResultSetExtractor implements ResultSetExtractor<List<Produc
 			String product_id = rs.getString("p.product_id");
 			Product product = productMap.get(product_id);
 			if(product == null) {
-				product = new Product(rs.getString("product_id"), rs.getString("employee_id"),rs.getString("type_id"),
+				product = new Product(rs.getString("product_id"), rs.getString("employee_id"),rs.getString("item_id"),
 				   		rs.getString("size_id"), rs.getDouble("price"),
 				   		rs.getBoolean("isedited"),rs.getBoolean("isdeleted"), rs.getBoolean("is_active"), rs.getObject("created_at", LocalDateTime.class), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<Double>());
 				
@@ -34,7 +34,7 @@ public class ProductResultSetExtractor implements ResultSetExtractor<List<Produc
 				product.getDiscount_ids().add(discount_id);
 			}
 			
-			String ingredient_id = rs.getString("i.ingredient_id");
+			String ingredient_id = rs.getString("i.ingredient_type_id");
 			if (ingredient_id != null) {
 				product.getIngredient_ids().add(ingredient_id);
 			}

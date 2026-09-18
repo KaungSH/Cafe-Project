@@ -24,14 +24,14 @@ public class ProductResultSetExtractor4 implements ResultSetExtractor<List<Produ
 			if(product == null) {
 				product = new Product();
 				product.setProduct_id(product_id);
-				product.setIngredient_ids(new ArrayList<String>());
+				product.setIngredient_names(new ArrayList<String>());
 				product.setQuantity_required(new ArrayList<Double>());
 				
 			}
 			
-			String ingredient_id = rs.getString("i.ingredient_id");
-			if (ingredient_id != null) {
-				product.getIngredient_ids().add(ingredient_id);
+			String ingredient_name = rs.getString("i.ingredient_name");
+			if (ingredient_name != null) {
+				product.getIngredient_names().add(ingredient_name);
 			}
 			
 			Double quantity_required = rs.getDouble("i.quantity_required");

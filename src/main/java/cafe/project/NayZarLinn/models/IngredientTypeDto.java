@@ -1,34 +1,28 @@
 package cafe.project.NayZarLinn.models;
 
-import java.time.LocalDateTime;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public class IngredientTypeDto {
-	private String ingredient_type_id;
+	@NotBlank(message = "ID is required")
+	@Size(max = 100, message = "ID must be 100 characters or fewer")
+	private String ingredientTypeId;
+
+	@NotBlank(message = "Name is required")
+	@Size(max = 200, message = "Name must be 200 characters or fewer")
 	private String name;
+
 	private String description;
-	private String unit_id;
-	private boolean isdeleted;
-	private LocalDateTime created_at;
 
-	public IngredientTypeDto() {
+	@NotBlank(message = "Unit ID is required")
+	private String unitId;
+
+	public String getIngredientTypeId() {
+		return ingredientTypeId;
 	}
 
-	public IngredientTypeDto(String ingredient_type_id, String name, String description, String unit_id,
-			boolean isdeleted, LocalDateTime created_at) {
-		this.ingredient_type_id = ingredient_type_id;
-		this.name = name;
-		this.description = description;
-		this.unit_id = unit_id;
-		this.isdeleted = isdeleted;
-		this.created_at = created_at;
-	}
-
-	public String getIngredient_type_id() {
-		return ingredient_type_id;
-	}
-
-	public void setIngredient_type_id(String ingredient_type_id) {
-		this.ingredient_type_id = ingredient_type_id;
+	public void setIngredientTypeId(String ingredientTypeId) {
+		this.ingredientTypeId = ingredientTypeId;
 	}
 
 	public String getName() {
@@ -47,27 +41,12 @@ public class IngredientTypeDto {
 		this.description = description;
 	}
 
-	public String getUnit_id() {
-		return unit_id;
+	public String getUnitId() {
+		return unitId;
 	}
 
-	public void setUnit_id(String unit_id) {
-		this.unit_id = unit_id;
+	public void setUnitId(String unitId) {
+		this.unitId = unitId;
 	}
 
-	public boolean isIsdeleted() {
-		return isdeleted;
-	}
-
-	public void setIsdeleted(boolean isdeleted) {
-		this.isdeleted = isdeleted;
-	}
-
-	public LocalDateTime getCreated_at() {
-		return created_at;
-	}
-
-	public void setCreated_at(LocalDateTime created_at) {
-		this.created_at = created_at;
-	}
 }
