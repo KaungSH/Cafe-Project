@@ -24,8 +24,8 @@ public class IngredientTypeService {
 	}
 
 	public IngredientType getById(String id) {
-		return repository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Ingredient not found with ID: " + id));
+		return repository.findById(id);
+				
 	}
 
 	public void create(IngredientTypeDto form) {
