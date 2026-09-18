@@ -25,7 +25,7 @@ public class EmployeeMapper implements RowMapper<Employee> {
 		employee.setDob(rs.getObject("dob", LocalDate.class));
 		employee.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
 
-		employee.setGenderId(rs.getString("gender_id"));
+		employee.setGenderId(rs.getString("gender"));
 		employee.setEmployeeRoleId(rs.getString("employee_role_id"));
 		employee.setBranchId(rs.getString("branch_id"));
 

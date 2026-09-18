@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import cafe.project.YinminThiriSoe.repositories.entities.StockImportDetail;
 
 public class StockImportDetailMapper implements RowMapper<StockImportDetail> {
+
 	@Override
 	public StockImportDetail mapRow(ResultSet rs, int rowNum) throws SQLException {
 		StockImportDetail item = new StockImportDetail();
@@ -20,5 +21,4 @@ public class StockImportDetailMapper implements RowMapper<StockImportDetail> {
 		item.setIsdeleted(rs.getBoolean("isdeleted"));
 		return item;
 	}
-
 }

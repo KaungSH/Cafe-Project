@@ -79,4 +79,9 @@ public class StockImportDetail {
 		this.isdeleted = isdeleted;
 	}
 
+	public String getIngredientTypeId() {
+		// TODO Auto-generated method stub
+		return this.ingredient_type_id;
+	}
+
 }
