@@ -1,50 +1,206 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
 <meta charset="UTF-8">
-<title>Branch List</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Branch Management - Luft Cafe</title>
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+	--primary-color: #5C3D2E;
+	--primary-hover: #432B20;
+	--bg-main: #FAF7F2;
+	--text-color: #2D2422;
+}
+
+body {
+	background-color: var(--bg-main);
+	color: var(--text-color);
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.main-card {
+	background-color: #ffffff;
+	border-radius: 12px;
+	padding: 32px 40px;
+	box-shadow: 0 4px 15px rgba(92, 61, 46, 0.05);
+	border: 1px solid #EAE3DC;
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
+
+.page-title {
+	color: var(--primary-color);
+	font-weight: 700;
+	font-size: 1.75rem;
+}
+
+.btn-add {
+	background-color: var(--primary-color);
+	color: #ffffff;
+	font-weight: 600;
+	border-radius: 8px;
+	padding: 10px 20px;
+	border: none;
+	box-shadow: 0 2px 6px rgba(92, 61, 46, 0.15);
+	transition: background-color 0.2s;
+	text-decoration: none;
+}
+
+.btn-add:hover {
+	background-color: var(--primary-hover);
+	color: #ffffff;
+}
+
+.custom-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 15px;
+}
+
+.custom-table th {
+	color: var(--primary-color);
+	font-weight: 700;
+	font-size: 0.95rem;
+	padding: 16px 14px;
+	border-bottom: 2px solid #EAE3DC;
+	background-color: #FCFAF8;
+}
+
+.custom-table td {
+	padding: 16px 14px;
+	color: var(--text-color);
+	font-size: 0.92rem;
+	vertical-align: middle;
+	border-bottom: 1px solid #F0EAE5;
+}
+
+.custom-table tbody tr:hover {
+	background-color: #FAF5F0;
+}
+
+/* Status Styling */
+.status-active {
+	color: #2E7D32;
+	font-weight: 600;
+}
+
+.status-active::before {
+	content: "✓ ";
+	margin-right: 3px;
+}
+
+.id-badge {
+	background-color: #F4EAE1;
+	color: #5C3D2E;
+	border: 1px solid #E8D5C4;
+	padding: 4px 10px;
+	border-radius: 6px;
+	font-size: 13px;
+	font-weight: 600;
+}
+
+/* Action Buttons */
+.btn-action-edit {
+	color: #8C592B;
+	border: 1px solid #E0A96D;
+	background-color: #FFFDF9;
+	border-radius: 6px;
+	padding: 5px 14px;
+	font-size: 0.85rem;
+	font-weight: 600;
+	text-decoration: none;
+	display: inline-block;
+	transition: all 0.2s;
+}
+
+.btn-action-edit:hover {
+	background-color: #E0A96D;
+	color: #FFF;
+}
+
+.btn-action-delete {
+	color: #B23B2A;
+	border: 1px solid #E6B6B0;
+	background-color: #FFFDF9;
+	border-radius: 6px;
+	padding: 5px 14px;
+	font-size: 0.85rem;
+	font-weight: 600;
+	transition: all 0.2s;
+}
+
+.btn-action-delete:hover {
+	background-color: #B23B2A;
+	color: white;
+}
+</style>
 </head>
-<body class="container py-4">
-	<div class="d-flex justify-content-between align-items-center mb-3">
-		<h2>Branch List</h2>
-		<a th:href="@{/branches/create}" class="btn btn-primary">+ Add New
-			Branch</a>
+
+<body>
+
+	<div class="container-fluid px-5">
+		<div class="main-card">
+
+			<!-- Page Header -->
+			<div class="d-flex justify-content-between align-items-center mb-4">
+				<h2 class="page-title mb-0">Branch Management</h2>
+				<a th:href="@{/branches/create}" class="btn btn-add"> <i
+					class="fa-solid fa-plus me-1"></i>Add New Branch
+				</a>
+			</div>
+
+			<!-- Table -->
+			<div class="table-responsive">
+				<table class="custom-table">
+					<thead>
+						<tr>
+							<th style="width: 10%;">ID</th>
+							<th style="width: 20%;">Name</th>
+							<th style="width: 20%;">Location</th>
+							<th style="width: 12%;">Opening Time</th>
+							<th style="width: 12%;">Closing Time</th>
+							<th style="width: 14%;">Status</th>
+							<th style="width: 12%; text-align: right;">Action</th>
+						</tr>
+					</thead>
+
+					<tr th:each="branch : ${branches}">
+						<td><span class="id-badge" th:text="${branch.branch_id}">B-001</span></td>
+						<td th:text="${branch.name}">Main Branch</td>
+						<td th:text="${branch.location}">Yangon</td>
+						<td th:text="${branch.opening_time}">08:00</td>
+						<td th:text="${branch.closing_time}">20:00</td>
+						<td><span class="status-active"
+							th:text="${branch.status_name}">Active</span></td>
+						<td style="text-align: right;"><a
+							th:href="@{/branches/edit/{id}(id=${branch.branch_id})}"
+							class="btn-action-edit me-1">Edit</a>
+
+
+							<form
+								th:action="@{/branches/delete/{id}(id=${branch.branch_id})}"
+								method="post" class="d-inline">
+								<button type="submit" class="btn-action-delete"
+									onclick="return confirm('Are you sure?')">Delete</button>
+							</form></td>
+					</tr>
+
+
+					<tr th:if="${#lists.isEmpty(branches)}">
+						<td colspan="7" class="text-center text-muted py-4">No
+							branches found.</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+
+		</div>
 	</div>
 
-	<table class="table table-hover table-bordered align-middle">
-		<thead class="table-dark">
-			<tr>
-				<th>Name</th>
-				<th>Location</th>
-				<th>Opening Time</th>
-				<th>Closing Time</th>
-				<th>Status</th>
-				<th style="width: 150px;">Actions</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr th:each="branch : ${branches}">
-				<td th:text="${branch.name}"></td>
-				<td th:text="${branch.location}"></td>
-				<td th:text="${branch.opening_time}"></td>
-				<td th:text="${branch.closing_time}"></td>
-				<td><span class="badge bg-info text-dark"
-					th:text="${branch.status_name}"></span></td>
-				<td><a th:href="@{/branches/edit/{id}(id=${branch.branch_id})}"
-					class="btn btn-warning btn-sm">Edit</a>
-					<form th:action="@{/branches/delete/{id}(id=${branch.branch_id})}"
-						method="post" class="d-inline">
-						<button type="submit" class="btn btn-danger btn-sm"
-							onclick="return confirm('Are you sure')">Delete</button>
-					</form></td>
-			</tr>
-			<tr th:if="${#lists.isEmpty(branches)}">
-				<td colspan="6" class="text-center text-muted">No branches
-					found.</td>
-			</tr>
-		</tbody>
-	</table>
 </body>
 </html>
