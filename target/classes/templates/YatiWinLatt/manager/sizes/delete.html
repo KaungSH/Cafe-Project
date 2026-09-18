@@ -78,7 +78,7 @@ body {
 					"<strong><span th:text="${statusName}"></span></strong>"
 				</p>
 
-				<!-- Direct Delete Form Submission -->
+			
 				<form th:action="@{/admin/statuses/delete-confirm}" method="post"
 					class="mt-4">
 					<input type="hidden" name="type" th:value="${statusType}">

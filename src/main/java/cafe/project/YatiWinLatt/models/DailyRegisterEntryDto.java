@@ -12,6 +12,7 @@ public class DailyRegisterEntryDto {
 	private LocalDate date;
 	private Time opened_at;
 	private Time closed_at;
+	
 	public String getRegister_id() {
 		return register_id;
 	}

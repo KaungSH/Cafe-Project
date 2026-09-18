@@ -125,7 +125,7 @@ body {
 						class="form-select"
 						th:classappend="${#fields.hasErrors('employee_id')} ? 'is-invalid' : ''">
 						<option value="">-- Select Employee --</option>
-						<option th:each="emp : ${employees}" th:value="${emp.employee_id}"
+						<option th:each="emp : ${employees}" th:value="${emp.employeeId}"
 							th:text="${emp.name}"></option>
 					</select>
 					<div class="invalid-feedback"
@@ -141,7 +141,7 @@ body {
 						th:classappend="${#fields.hasErrors('register_status_id')} ? 'is-invalid' : ''">
 						<option value="">-- Select Status --</option>
 						<option th:each="status : ${statuses}"
-							th:value="${status.register_status_id}" th:text="${status.name}">
+							th:value="${status.id}" th:text="${status.name}">
 						</option>
 					</select>
 					<div class="invalid-feedback"
@@ -156,8 +156,7 @@ body {
 						class="form-control"
 						th:classappend="${#fields.hasErrors('date')} ? 'is-invalid' : ''">
 					<div class="invalid-feedback"
-						th:if="${#fields.
- hasErrors('date')}"
+						th:if="${#fields.hasErrors('date')}"
 						th:errors="*{date}"></div>
 				</div>
 

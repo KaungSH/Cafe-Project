@@ -156,7 +156,8 @@ body {
 					</tr>
 				</thead>
 				<tbody>
-					<!-- Size Records -->
+					
+					
 					<tr th:each="s : ${sizes}">
 						<td><span class="code-badge" th:text="${s.size_code}">S</span></td>
 						<td th:text="${s.name}">Small</td>
@@ -171,10 +172,10 @@ body {
 							class="btn btn-sm action-btn edit-btn">Edit</a> <a
 							th:href="@{/manager/sizes/delete/{id}(id=${s.size_id})}"
 							class="btn btn-sm action-btn delete-btn"
-							onclick="return confirm('Are you sure?');">Delete</a></td>
+							onclick="return confirm('Are you sure you want to delete this record?');">Delete</a></td>
 					</tr>
 
-					<!-- Empty -->
+					
 					<tr th:if="${#lists.isEmpty(sizes)}">
 						<td colspan="4" class="empty-row"><i
 							class="fa-solid fa-folder-open fa-2x mb-2 d-block"></i> No size

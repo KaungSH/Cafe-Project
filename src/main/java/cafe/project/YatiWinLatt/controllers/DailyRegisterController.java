@@ -39,6 +39,7 @@ public class DailyRegisterController {
 
   @GetMapping("/create")
   public String showCreatePage(Model model) {
+	System.out.println(statusRepository.findAll("register").get(0));
     model.addAttribute("registerDto", new DailyRegisterEntryDto());
     model.addAttribute("branches", branchService.findAll());
     model.addAttribute("employees", employeeService.getAllEmployees());
@@ -55,7 +56,9 @@ public class DailyRegisterController {
 
   @GetMapping("/edit/{register_id}")
   public String showEditPage(@PathVariable("register_id") String register_id, Model model) {
+	    System.out.println("Register id = " + register_id);
     DailyRegisterEntryDto dto = service.getRegisterEntryDtoById(register_id);
+
     model.addAttribute("registerDto", dto);
 
     model.addAttribute("branches", branchService.findAll());
