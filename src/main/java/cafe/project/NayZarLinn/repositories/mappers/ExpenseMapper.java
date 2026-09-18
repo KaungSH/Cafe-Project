@@ -1,0 +1,33 @@
+package cafe.project.NayZarLinn.repositories.mappers;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+
+import org.springframework.jdbc.core.RowMapper;
+
+import cafe.project.NayZarLinn.repositories.entities.Expense;
+
+public class ExpenseMapper implements RowMapper<Expense> {
+
+	@Override
+	public Expense mapRow(ResultSet rs, int rowNum) throws SQLException {
+		
+		LocalDateTime expense_date = rs.getObject("expense_date",LocalDateTime.class);
+		
+		LocalDateTime created_at = rs.getObject("created_at",LocalDateTime.class);
+
+		return new Expense(
+				rs.getString("expense_id"),
+				rs.getString("branch_id"),
+				rs.getString("expense_category_id"),
+				rs.getDouble("amount"),
+				expense_date,
+				rs.getString("description"),
+				rs.getString("employee_id"),
+				created_at,
+				rs.getBoolean("isdeleted")
+				);
+	}
+
+}
