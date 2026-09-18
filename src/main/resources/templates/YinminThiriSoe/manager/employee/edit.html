@@ -17,7 +17,7 @@
 					</div>
 					<div class="card-body">
 						<form
-							th:action="@{/employee/edit/{id}(id=${employee.employeeId})}"
+							th:action="@{/manager/employee/edit/{id}(id=${employee.employeeId})}"
 							th:object="${employee}" method="post">
 							<div class="row mb-3">
 								<div class="col-md-6">
@@ -48,7 +48,7 @@
 								<textarea class="form-control" th:field="*{address}" rows="3"></textarea>
 							</div>
 							<div class="d-flex justify-content-end gap-2 mt-4">
-								<a th:href="@{/employees}" class="btn btn-secondary">Cancel</a>
+								<a th:href="@{/manager/employees}" class="btn btn-secondary">Cancel</a>
 								<button type="submit" class="btn btn-primary">Update
 									Employee</button>
 							</div>
