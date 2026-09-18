@@ -78,7 +78,7 @@ public class IngredientBatchController {
 	public String editIngredientBatch(@PathVariable String batchId, Model model) {
 		IngredientBatchDto existingIb = this.ingredientBatchService.findByBatchId(batchId);
 		if (existingIb != null) {
-			model.addAttribute("ingredientBatches", existingIb);
+			model.addAttribute("ingredientBatch", existingIb);
 			model.addAttribute("branches", branchRepository.findAll());
 			model.addAttribute("ingredientTypes", ingredientTypeRepository.findAll());
 			return "NayZarLinn/ingredientBatch/edit";

@@ -27,7 +27,7 @@ public class IngredientBatchDto {
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private LocalDate expireDate;
 
-	@NotBlank(message = "Please select a branch")
+	@NotBlank(message = "Please select a branch Id")
 	private String branchId;
 
 	@NotBlank(message = "Please select import detail")
@@ -43,8 +43,9 @@ public class IngredientBatchDto {
 	@NotNull(message = "Unit cost is required")
 	@DecimalMin(value = "0.0", message = "Unit cost cannot be negative")
 	private BigDecimal unitCost;
-
+	
 	private String branchName;
+	
 	private String ingredientTypeName;
 
 	public IngredientBatchDto() {

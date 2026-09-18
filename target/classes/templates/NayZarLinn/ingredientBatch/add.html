@@ -5,7 +5,7 @@
 
 <meta charset="UTF-8">
 
-<title>Edit Ingredient Batch</title>
+<title>Add Ingredient Batch</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -88,16 +88,17 @@ body {
 
 		<div class="form-card">
 
-			<h2 class="form-title">Edit Ingredient Batch</h2>
+			<h2 class="form-title">Add Ingredient Batch</h2>
 
 
-			<form th:action="@{/manager/ingredientBatch/edit}"
+			<form th:action="@{/manager/ingredientBatch/add}"
 				th:object="${ingredientBatch}" method="post">
 
 				<div class="mb-3">
 
-					<label class="form-label"> Batch Name</label> <input type="text"
-						class="form-control" th:field="*{batchId}" readonly>
+					<label class="form-label"> Batch ID </label> <input type="text"
+						class="form-control" th:field="*{batchId}"
+						placeholder="Enter Batch ID">
 
 					<div class="error" th:if="${#fields.hasErrors('batchId')}"
 						th:errors="*{batchId}"></div>
@@ -108,7 +109,8 @@ body {
 
 					<label class="form-label"> Remaining Quantity </label> <input
 						type="number" step="0.001" class="form-control"
-						th:field="*{remainingQuantity}">
+						th:field="*{remainingQuantity}"
+						placeholder="Enter Remaining Quantity">
 
 					<div class="error"
 						th:if="${#fields.hasErrors('remainingQuantity')}"
@@ -153,7 +155,7 @@ body {
 						th:errors="*{branchId}"></div>
 
 				</div>
-
+				
 				<div class="mb-3">
 
 					<label class="form-label"> Batch ID </label> <input type="text"
@@ -186,7 +188,8 @@ body {
 				<div class="mb-4">
 
 					<label class="form-label"> Unit Cost </label> <input type="number"
-						step="0.01" class="form-control" th:field="*{unitCost}">
+						step="0.01" class="form-control" th:field="*{unitCost}"
+						placeholder="Enter Unit Cost">
 
 					<div class="error" th:if="${#fields.hasErrors('unitCost')}"
 						th:errors="*{unitCost}"></div>
@@ -195,7 +198,8 @@ body {
 
 				<div class="text-center">
 
-					<button type="submit" class="btn btn-coffee px-4">Update</button>
+					<button type="submit" class="btn btn-coffee px-4">Add</button>
+
 
 					<a th:href="@{/manager/ingredientBatch}"
 						class="btn btn-outline-secondary px-4"> Cancel </a>
@@ -208,6 +212,12 @@ body {
 		</div>
 
 	</div>
+
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+		
+	</script>
 
 </body>
 
