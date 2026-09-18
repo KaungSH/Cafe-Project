@@ -12,8 +12,9 @@ import cafe.project.YatiWinLatt.service.WasteLogsService;
 import cafe.project.YatiWinLatt.service.WasteReasonService;
 import cafe.project.YinminThiriSoe.services.EmployeeService;
 import jakarta.validation.Valid;
+import cafe.project.NayZarLinn.services.IngredientBatchService;
 import cafe.project.YatiWinLatt.models.WasteLogsEntryDto;
-import cafe.project.YatiWinLatt.service.IngredientBatchService;
+
 
 @Controller
 @RequestMapping("/manager/WasteLogs")
@@ -43,7 +44,7 @@ public class WasteLogsController {
 	public String showCreateForm(Model model) {
 		model.addAttribute("wasteLog", new WasteLogsEntryDto());
 		model.addAttribute("reasons", wasteReasonService.getAllWasteReasons());
-		model.addAttribute("batches", ingredientBatchService.getAllBatches());
+		model.addAttribute("batches", ingredientBatchService.findAll());
 		model.addAttribute("employees", employeeService.getAllEmployees());
 		return "YatiWinLatt/manager/WasteLogs/create";
 	}
@@ -54,7 +55,7 @@ public class WasteLogsController {
 
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("reasons", wasteReasonService.getAllWasteReasons());
-			model.addAttribute("batches", ingredientBatchService.getAllBatches());
+			model.addAttribute("batches", ingredientBatchService.findAll());
 			model.addAttribute("employees", employeeService.getAllEmployees());
 			return "YatiWinLatt/manager/WasteLogs/create";
 		}
@@ -67,7 +68,7 @@ public class WasteLogsController {
 	public String showEditForm(@PathVariable("waste_id") String waste_id, Model model) {
 		model.addAttribute("wasteLog", wasteLogsService.getWasteLogsEntryById(waste_id));
 		model.addAttribute("reasons", wasteReasonService.getAllWasteReasons());
-		model.addAttribute("batches", ingredientBatchService.getAllBatches());
+		model.addAttribute("batches", ingredientBatchService.findAll());
 		model.addAttribute("employees", employeeService.getAllEmployees());
 		return "YatiWinLatt/manager/WasteLogs/edit";
 	}
@@ -78,7 +79,7 @@ public class WasteLogsController {
 
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("reasons", wasteReasonService.getAllWasteReasons());
-			model.addAttribute("batches", ingredientBatchService.getAllBatches());
+			model.addAttribute("batches", ingredientBatchService.findAll());
 			model.addAttribute("employees", employeeService.getAllEmployees());
 			return "YatiWinLatt/manager/WasteLogs/edit";
 		}

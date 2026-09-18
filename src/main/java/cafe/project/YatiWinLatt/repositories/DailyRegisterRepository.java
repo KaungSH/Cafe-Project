@@ -20,19 +20,22 @@ public class DailyRegisterRepository {
 	}
 
 	public List<DailyRegisterListDto> findAllDto() {
-		String sql = "SELECT dr.*, \\r\\n\"\r\n"
-				+ "				+ \"       b.name AS branch_name, \\r\\n\"\r\n"
-				+ "				+ \"       e.name AS employee_name, \\r\\n\"\r\n"
-				+ "				+ \"       s.name AS status_name\\r\\n\"\r\n"
-				+ "				+ \"FROM daily_registers dr\\r\\n\"\r\n"
-				+ "				+ \"JOIN branches b ON dr.branch_id = b.branch_id\\r\\n\"\r\n"
-				+ "				+ \"JOIN employees e ON dr.employee_id = e.employee_id\\r\\n\"\r\n"
-				+ "				+ \"JOIN register_statuses s ON dr.register_status_id = s.register_status_id\\r\\n\"\r\n"
-				+ "				+ \"WHERE dr.isdeleted = 0\\r\\n\"\r\n"
-				+ "				+ \"ORDER BY dr.date DESC, dr.opened_at DESC;\\r\\n\"\r\n"
-				+ "				+ ";
-		return jdbcTemplate.query(sql, new DailyRegisterListDtoMapper());
-	}
+        String sql = "SELECT dr.register_id,\r\n"
+        		+ "       dr.date,\r\n"
+        		+ "       dr.opened_at,\r\n"
+        		+ "       dr.closed_at,\r\n"
+        		+ "       b.name AS branch_name,\r\n"
+        		+ "       e.name AS employee_name,\r\n"
+        		+ "       s.name AS status_name\r\n"
+        		+ "FROM daily_registers dr\r\n"
+        		+ "JOIN branches b ON dr.branch_id = b.branch_id\r\n"
+        		+ "JOIN employees e ON dr.employee_id = e.employee_id\r\n"
+        		+ "JOIN register_statuses s ON dr.register_status_id = s.register_status_id\r\n"
+        		+ "WHERE dr.isdeleted = 0\r\n"
+        		+ "ORDER BY dr.date DESC, dr.opened_at DESC;\r\n"
+        		+ "";
+        return jdbcTemplate.query(sql, new DailyRegisterListDtoMapper());
+    }
 
 	public Optional<DailyRegister> findById(String register_id) {
 		String sql = "SELECT * from daily_registers where register_id = ? AND isdeleted = 0";

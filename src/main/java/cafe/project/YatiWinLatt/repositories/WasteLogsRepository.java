@@ -26,9 +26,9 @@ public class WasteLogsRepository {
 		return jdbcTemplate.query(sql, new WasteLogsListDtoMapper());
 	}
 
-	public WasteLogs findById(String id) {
+	public WasteLogs findById(String waste_id) {
 		String sql = "SELECT * FROM waste_logs WHERE waste_id = ? AND isdeleted = 0";
-		return jdbcTemplate.queryForObject(sql, new WasteLogsMapper(), id);
+		return jdbcTemplate.queryForObject(sql, new WasteLogsMapper(), waste_id);
 	}
 
 	public int save(WasteLogs entity) {
