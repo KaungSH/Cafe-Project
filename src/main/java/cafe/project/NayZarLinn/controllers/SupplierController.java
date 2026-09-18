@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import cafe.project.NayZarLinn.models.SupplierDto;
@@ -16,6 +17,7 @@ import cafe.project.NayZarLinn.services.SupplierService;
 import jakarta.validation.Valid;
 
 @Controller
+@RequestMapping("/manager")
 public class SupplierController {
 	private final SupplierService supplierService;
 
@@ -42,7 +44,7 @@ public class SupplierController {
 		}
 		supplier.setCreated_at(LocalDateTime.now());
 		this.supplierService.add(supplier);
-		return "redirect:/supplier";
+		return "redirect:/manager/supplier";
 	}
 
 	@GetMapping("/supplier/edit/{supplier_id}")
@@ -52,7 +54,7 @@ public class SupplierController {
 			model.addAttribute("supplier", existingSup);
 			return "NayZarLinn/supplier/edit";
 		}
-		return "redirect:/notfound";
+		return "";
 	}
 
 	@PostMapping("/supplier/edit")
@@ -61,8 +63,9 @@ public class SupplierController {
 		if (bindingResult.hasErrors()) {
 			return "NayZarLinn/supplier/edit";
 		}
+		supplier.setCreated_at(LocalDateTime.now());
 		this.supplierService.edit(supplier.getSupplier_id(), supplier);
-		return "redirect:/supplier";
+		return "redirect:/manager/supplier";
 	}
 
 	@GetMapping("/supplier/delete/{supplier_id}")
@@ -72,31 +75,31 @@ public class SupplierController {
 			model.addAttribute("supplier", existingSup);
 			return "NayZarLinn/supplier/delete";
 		}
-		return "redirect:/notfound";
+		return "";
 	}
 
 	@PostMapping("/supplier/delete")
 	public String deletedSupplier(@ModelAttribute("supplier") SupplierDto supplier) {
 		this.supplierService.delete(supplier.getSupplier_id());
-		return "redirect:/supplier";
+		return "redirect:/manager/supplier";
 	}
 
 	@GetMapping("/supplier/deleted")
 	public String deletedSupplierList(Model model) {
 		model.addAttribute("supplier", supplierService.findDeleted());
-		return "NayZarLinn/supplier/deleted";
+		return "NayZarLinn/supplier/deletedList";
 	}
 
 	@PostMapping("/supplier/restore")
 	public String restoreSupplier(@RequestParam String supplier_id) {
 		supplierService.restore(supplier_id);
-		return "redirect:/supplier/deleted";
+		return "redirect:/manager/supplier/deleted";
 	}
 
 	@PostMapping("/supplier/real-delete")
 	public String realDeleteSupplier(@ModelAttribute("supplier") SupplierDto supplier) {
 		supplierService.realDelete(supplier.getSupplier_id());
-		return "redirect:/supplier/deleted";
+		return "redirect:/manager/supplier/deleted";
 	}
 
 }

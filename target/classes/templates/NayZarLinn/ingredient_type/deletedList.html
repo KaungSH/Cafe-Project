@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Deleted Ingredients</title>
+</head>
+<body>
+	<h2>Deleted Ingredient Types (Recycle Bin)</h2>
+
+	<p>
+		<a th:href="@{/staff/ingredientType}">← Back to Active Ingredients</a>
+	</p>
+
+	<table border="1" cellpadding="6" cellspacing="0">
+		<thead>
+			<tr>
+				<th>No.</th>
+				<th>ID</th>
+				<th>Name</th>
+				<th>Description</th>
+				<th>Unit</th>
+				<th>Created At</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:if="${#lists.isEmpty(deletedIngredients)}">
+				<td colspan="7" style="text-align: center;">No deleted
+					ingredients found.</td>
+			</tr>
+
+			<tr th:each="i, state : ${deletedIngredients}">
+				<td th:text="${state.count}"></td>
+				<td th:text="${i.ingredientTypeId}"></td>
+				<td th:text="${i.name}"></td>
+				<td th:text="${i.description}"></td>
+				<td
+					th:text="${i.unitAbbreviation != null ? i.unitAbbreviation : '-'}"></td>
+				<td
+					th:text="${i.createdAt != null ? #temporals.format(i.createdAt, 'dd-MM-yyyy HH:mm') : '-'}"></td>
+				<td>
+					<form
+						th:action="@{/staff/ingredientType/restore/{id}(id=${i.ingredientTypeId})}"
+						method="post" style="display: inline;">
+						<button type="submit"
+							onclick="return confirm('Restore this ingredient?');">Restore</button>
+					</form> |
+					<form
+						th:action="@{/staff/ingredientType/hard-delete/{id}(id=${i.ingredientTypeId})}"
+						method="post" style="display: inline;">
+						<button type="submit"
+							onclick="return confirm('Permanently delete this record?');"
+							style="color: red;">Hard Delete</button>
+					</form>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>

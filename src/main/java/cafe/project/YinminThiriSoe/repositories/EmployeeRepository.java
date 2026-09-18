@@ -25,8 +25,8 @@ public class EmployeeRepository {
 	}
 
 	public List<Employee> findAllWithRelation() {
-		String sql = "SELECT \r\n" + "    e.*,\r\n" + "    es.*,\r\n" + "    g.*,  \r\n"
-				+ "    er.*,    \r\n" + "    b.name    \r\n" + "FROM employees e\r\n"
+		String sql = "SELECT \r\n" + "    e.*,\r\n" + "    es.name,\r\n" + "    g.gender_id,  \r\n"
+				+ "    er.name,    \r\n" + "    b.name    \r\n" + "FROM employees e\r\n"
 				+ "LEFT JOIN employee_statuses es \r\n" + "    ON e.employee_status_id = es.employee_status_id\r\n"
 				+ "LEFT JOIN genders g \r\n" + "    ON e.gender_id = g.gender_id\r\n"
 				+ "LEFT JOIN employee_roles er \r\n" + "    ON e.employee_role_id = er.role_id\r\n"
@@ -41,10 +41,10 @@ public class EmployeeRepository {
 	}
 
 	public Employee findByBranchWithRelations(String branchId) {
-		String sql = "SELECT \r\n" + "    e.*,\r\n" + "    es.*,\r\n" + "    g.*,  \r\n"
-				+ "    er.*,    \r\n" + "    b.name    \r\n" + "FROM employees e\r\n"
+		String sql = "SELECT \r\n" + "    e.*,\r\n" + "    es.name,\r\n" 
+				+ "    er.name,    \r\n" + "    b.name    \r\n" + "FROM employees e\r\n"
 				+ "LEFT JOIN employee_statuses es \r\n" + "    ON e.employee_status_id = es.employee_status_id\r\n"
-				+ "LEFT JOIN genders g \r\n" + "    ON e.gender_id = g.gender_id\r\n"
+			
 				+ "LEFT JOIN employee_roles er \r\n" + "    ON e.employee_role_id = er.role_id\r\n"
 				+ "LEFT JOIN branches b \r\n" + "    ON e.branch_id = b.branch_id WHERE b.branch_id=?";
 		List<Employee> entities = jdbcTemplate.query(sql, new EmployeeResultSetExtractor(), branchId);
@@ -58,10 +58,9 @@ public class EmployeeRepository {
 	}
 
 	public Employee findByRoleWithRelations(String employeeRoleId) {
-		String sql = "SELECT \r\n" + "    e.*,\r\n" + "    es.*,\r\n" + "    g.*,  \r\n"
-				+ "    er.*,    \r\n" + "    b.name    \r\n" + "FROM employees e\r\n"
+		String sql = "SELECT \r\n" + "    e.*,\r\n" + "    es.name,\r\n" 
+				+ "    er.name,    \r\n" + "    b.name    \r\n" + "FROM employees e\r\n"
 				+ "LEFT JOIN employee_statuses es \r\n" + "    ON e.employee_status_id = es.employee_status_id\r\n"
-				+ "LEFT JOIN genders g \r\n" + "    ON e.gender_id = g.gender_id\r\n"
 				+ "LEFT JOIN employee_roles er \r\n" + "    ON e.employee_role_id = er.role_id\r\n"
 				+ "LEFT JOIN branches b \r\n" + "    ON e.branch_id = b.branch_id WHERE e.employee_role_id=?";
 		List<Employee> entities = jdbcTemplate.query(sql, new EmployeeResultSetExtractor(), employeeRoleId);
@@ -80,10 +79,9 @@ public class EmployeeRepository {
 	}
 
 	public Employee findByIdWithRelations(String employeeId) {
-		String sql = "SELECT \r\n" + "    e.*,\r\n" + "    es.*,\r\n" + "    g.*,  \r\n"
-				+ "    er.*,    \r\n" + "    b.name    \r\n" + "FROM employees e\r\n"
+		String sql = "SELECT \r\n" + "    e.*,\r\n" + "    es.name,\r\n" 
+				+ "    er.name,    \r\n" + "    b.name    \r\n" + "FROM employees e\r\n"
 				+ "LEFT JOIN employee_statuses es \r\n" + "    ON e.employee_status_id = es.employee_status_id\r\n"
-				+ "LEFT JOIN genders g \r\n" + "    ON e.gender_id = g.gender_id\r\n"
 				+ "LEFT JOIN employee_roles er \r\n" + "    ON e.employee_role_id = er.role_id\r\n"
 				+ "LEFT JOIN branches b \r\n" + "    ON e.branch_id = b.branch_id WHERE e.employee_id=?";
 		List<Employee> entities = jdbcTemplate.query(sql, new EmployeeResultSetExtractor(), employeeId);
@@ -97,12 +95,11 @@ public class EmployeeRepository {
 	}
 
 	public Employee findByEmailWithRelations(String email) {
-		String sql = "SELECT \r\n" + "    e.*,\r\n" + "    es.*,\r\n" + "    g.*,  \r\n"
-				+ "    er.*,    \r\n" + "    b.name    \r\n" + "FROM employees e\r\n"
+		String sql = "SELECT \r\n" + "    e.*,\r\n" + "    es.name,\r\n" 
+				+ "    er.name,    \r\n" + "    b.name    \r\n" + "FROM employees e\r\n"
 				+ "LEFT JOIN employee_statuses es \r\n" + "    ON e.employee_status_id = es.employee_status_id\r\n"
-				+ "LEFT JOIN genders g \r\n" + "    ON e.gender_id = g.gender_id\r\n"
 				+ "LEFT JOIN employee_roles er \r\n" + "    ON e.employee_role_id = er.role_id\r\n"
-				+ "LEFT JOIN branches b \r\n" + "    ON e.branch_id = b.branch_id WHERE e.email= ?";
+				+ "LEFT JOIN branches b \r\n" + "    ON e.branch_id = b.branch_id WHERE e.email=?";
 		List<Employee> entities = jdbcTemplate.query(sql, new EmployeeResultSetExtractor(), email);
 		return entities.isEmpty() ? null : entities.get(0);
 	}
@@ -125,18 +122,18 @@ public class EmployeeRepository {
 			employee.setCreatedAt(LocalDateTime.now());
 		}
 
-		String sql = "INSERT INTO employees (employee_id, name, email, photopath, password, employee_status_id, phone, salary, address, dob, gender_id, employee_role_id, branch_id, created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO employees (employee_id, name, email, photopath, password, employee_status_id, phone, salary, address, dob, employee_role_id, branch_id, created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		return jdbcTemplate.update(sql, employee.getEmployeeId(), employee.getName(), employee.getEmail(),
 				employee.getPhotoPath(), employee.getPassword(), employee.getEmployeeStatusId(), employee.getPhone(),
-				employee.getSalary(), employee.getAddress(), employee.getDob(), employee.getGenderId(),
+				employee.getSalary(), employee.getAddress(), employee.getDob(), 
 				employee.getEmployeeRoleId(), employee.getBranchId(), employee.getCreatedAt());
 	}
 
 	public int updateEmployee(Employee employee) {
-		String sql = "UPDATE employees SET name = ?, email = ?, employee_status_id = ?, phone = ?, salary = ?, address = ?, dob = ?, gender_id = ?, employee_role_id = ?, branch_id = ? WHERE employee_id = ?";
+		String sql = "UPDATE employees SET name = ?, email = ?, employee_status_id = ?, phone = ?, salary = ?, address = ?, dob = ?, employee_role_id = ?, branch_id = ? WHERE employee_id = ?";
 		return jdbcTemplate.update(sql, employee.getName(), employee.getEmail(), employee.getEmployeeStatusId(),
 				employee.getPhone(), employee.getSalary(), employee.getAddress(), employee.getDob(),
-				employee.getGenderId(), employee.getEmployeeRoleId(), employee.getBranchId(), employee.getEmployeeId());
+			    employee.getEmployeeRoleId(), employee.getBranchId(), employee.getEmployeeId());
 	}
 
 	public int changeName(String employee_id, String name) {
