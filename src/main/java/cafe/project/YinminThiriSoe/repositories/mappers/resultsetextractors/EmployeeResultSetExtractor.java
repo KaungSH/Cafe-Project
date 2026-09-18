@@ -33,7 +33,6 @@ public class EmployeeResultSetExtractor implements ResultSetExtractor<List<Emplo
 				rs.getDouble("e.salary");
 				rs.getString("e.address");
 				rs.getObject("e.dob", LocalDate.class);
-				rs.getString("e.gender_id");
 				rs.getString("e.employee_role_id");
 				rs.getString("e.branch_id");
 				rs.getObject("e.created_at", LocalDate.class);

@@ -15,7 +15,7 @@ public class Employee {
 	private double salary;
 	private String address;
 	private LocalDate dob;
-	private String genderId;
+	private String gender;
 	private String employeeRoleId;
 	private String branchId;
 	private LocalDateTime createdAt;
@@ -24,7 +24,7 @@ public class Employee {
 	}
 
 	public Employee(String employeeId, String name, String email, String photoPath, String password,
-			String employeeStatusId, String phone, double salary, String address, LocalDate dob, String genderId,
+			String employeeStatusId, String phone, double salary, String address, LocalDate dob, String gender,
 			String employeeRoleId, String branchId, LocalDateTime createdAt) {
 		this.employeeId = employeeId;
 		this.name = name;
@@ -36,7 +36,7 @@ public class Employee {
 		this.salary = salary;
 		this.address = address;
 		this.dob = dob;
-		this.genderId = genderId;
+		this.gender = gender;
 		this.employeeRoleId = employeeRoleId;
 		this.branchId = branchId;
 		this.createdAt = createdAt;
@@ -122,12 +122,12 @@ public class Employee {
 		this.dob = dob;
 	}
 
-	public String getGenderId() {
-		return genderId;
+	public String getGender() {
+		return gender;
 	}
 
-	public void setGenderId(String genderId) {
-		this.genderId = genderId;
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 
 	public String getEmployeeRoleId() {

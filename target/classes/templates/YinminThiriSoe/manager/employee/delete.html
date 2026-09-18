@@ -26,8 +26,8 @@
 								th:text="${employee.phone}"></span></li>
 						</ul>
 						<div class="d-flex justify-content-end gap-2">
-							<a th:href="@{/employee}" class="btn btn-secondary">Cancel</a> <a
-								th:href="@{/employee/delete/{id}(id=${employee.employeeId})}"
+							<a th:href="@{/manager/employee}" class="btn btn-secondary">Cancel</a> <a
+								th:href="@{/manager/employee/delete/{id}(id=${employee.employeeId})}"
 								class="btn btn-danger">Yes, Delete</a>
 						</div>
 					</div>
