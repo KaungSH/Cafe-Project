@@ -1,6 +1,7 @@
 package cafe.project.HeinMinHtet.services;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -31,14 +32,14 @@ public class CategoryService {
     public CategoryDto findById(String id) {
 
         Category entity = repo.findById(id);
-
+        
         return toDto(entity);
     }
 
     public int add(CategoryDto dto) {
 
         Category entity = toEntity(dto);
-
+        entity.setCategory_id(UUID.randomUUID().toString());
         return repo.save(entity);
     }
 

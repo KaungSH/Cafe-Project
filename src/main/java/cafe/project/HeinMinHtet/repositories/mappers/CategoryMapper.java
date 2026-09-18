@@ -28,4 +28,3 @@ public class CategoryMapper implements RowMapper<Category> {
 		return category;
 	}
 }
-

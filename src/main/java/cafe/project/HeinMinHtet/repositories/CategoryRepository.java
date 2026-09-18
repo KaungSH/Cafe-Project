@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import cafe.project.HeinMinHtet.repositories.entities.Category;
 import cafe.project.HeinMinHtet.repositories.mappers.CategoryMapper;
 import cafe.project.HeinMinHtet.repositories.mappers.CategoryMapper2;
-
 @Repository
 public class CategoryRepository {
 
@@ -20,7 +19,7 @@ public class CategoryRepository {
 
 	// GET ALL
 	public List<Category> findAll() {
-		String sql = "SELECT * FROM categories WHERE isdeleted = false ";
+		String sql = "SELECT * FROM categories WHERE isdeleted = false";
 
 		return jdbcTemplate.query(sql, new CategoryMapper());
 	}
@@ -31,7 +30,7 @@ public class CategoryRepository {
 	}
 
 	public List<Category> findDeletedAll() {
-		String sql = "SELECT * FROM categories WHERE isdeleted = true ";
+		String sql = "SELECT * FROM categories WHERE isdeleted = true";
 
 		return jdbcTemplate.query(sql, new CategoryMapper());
 	}
