@@ -77,10 +77,10 @@
 
     <form th:action="@{/manager/daily-registers/update}" th:object="${registerDto}" method="post" novalidate>
 
-      <!-- Hidden Primary Key -->
+     
       <input type="hidden" th:field="*{register_id}" />
 
-      <!-- Branch Dropdown -->
+   
       <div class="mb-3">
         <label for="branch_id" class="form-label fw-bold">Branch</label>
         <select id="branch_id" th:field="*{branch_id}" class="form-select">
@@ -98,19 +98,19 @@
         <select id="employee_id" th:field="*{employee_id}" class="form-select">
           <option value="">-- Select Employee --</option>
           <option th:each="employee : ${employees}"
-                  th:value="${employee.employee_id}"
+                  th:value="${employee.employeeId}"
                   th:text="${employee.name}">
           </option>
         </select>
       </div>
 
-      <!-- Status Dropdown -->
+     
       <div class="mb-3">
         <label for="register_status_id" class="form-label fw-bold">Status</label>
         <select id="register_status_id" th:field="*{register_status_id}" class="form-select">
           <option value="">-- Select Status --</option>
           <option th:each="status : ${statuses}"
-                  th:value="${status.register_status_id}"
+                  th:value="${status.id}"
                   th:text="${status.name}">
           </option>
         </select>

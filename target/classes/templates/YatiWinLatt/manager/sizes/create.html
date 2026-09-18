@@ -144,20 +144,7 @@ body {
 					</div>
 
 
-					<div class="mb-3">
-						<label for="sizeCode" class="form-label">Size Code <span
-							class="required">*</span></label> <select id="sizeCode"
-							th:field="*{size_code}" class="form-select"
-							th:classappend="${#fields.hasErrors('size_code')} ? 'is-invalid' : ''">
-							<option value="">-- Select Size Code --</option>
-							<option th:each="size : ${sizes}" th:value="${size.size_code}"
-								th:text="${size.size_code}">Size Code</option>
-						</select>
-						<div class="invalid-feedback"
-							th:if="${#fields.hasErrors('size_code')}"
-							th:errors="*{size_code}"></div>
-					</div>
-					<!--  
+		
 					<div class="mb-3">
 						<label for="sizeCode" class="form-label"> Size Code <span
 							class="required">*</span>
@@ -167,7 +154,7 @@ body {
 						<div class="invalid-feedback"
 							th:if="${#fields.hasErrors('size_code')}"
 							th:errors="*{size_code}"></div>
-					</div>-->
+					</div>
 
 
 
