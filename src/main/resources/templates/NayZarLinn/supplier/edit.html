@@ -159,7 +159,7 @@ body {
 				<h2>Edit Supplier</h2>
 			</div>
 
-			<form method="post" th:action="@{/supplier/edit}"
+			<form method="post" th:action="@{/manager/supplier/edit}"
 				th:object="${supplier}">
 
 
@@ -240,7 +240,7 @@ body {
 
 				<div class="form-footer">
 
-					<a th:href="@{/supplier}" class="btn-cancel"> Cancel </a>
+					<a th:href="@{/manager/supplier}" class="btn-cancel"> Cancel </a>
 
 					<button type="submit" class="btn-update">Update Supplier</button>
 

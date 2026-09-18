@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate = "~{common/layout}">
+<head>
+<meta charset="UTF-8">
+<title>Edit Types - Manager</title>
+</head>
+<div layout:fragment = "content">
+	<h2>Edit <span th:text = "${dname}"></span> Type Form</h2>
+	
+	<!-- Audience Edit Form -->
+	<form th:if = "${name == 'audience'}" method = "post" th:action = "@{/manager/types/audience/edit}" th:object = "${type}">
+		<!-- Changed th:value to th:field so the ID is properly submitted -->
+		<input type = "hidden" th:field = "*{audience_type_id}"/>
+		<div>
+			<label> Name : </label>
+			<input type = "text" th:field = "*{audience_type_name}" required>
+		</div>
+		<input type = "submit" value = "Edit Type">
+	</form>
+		
+	<!-- Promo Edit Form -->
+	<form th:if = "${name == 'promo'}" method = "post" th:action = "@{/manager/types/promo/edit}" th:object = "${type}">
+		<!-- Changed th:value to th:field so the ID is properly submitted -->
+		<input type = "hidden" th:field = "*{promo_type_id}"/>
+		<div>
+			<label> Name : </label>
+			<input type = "text" th:field = "*{promo_type_name}" required>
+		</div>
+		<input type = "submit" value = "Edit Type">
+	</form>
+	
+	<form method = "get" th:action = "@{/manager/types/{type}(type = ${name})}">
+		<input type = "submit" value = "Cancel"/>
+	</form>
+</div>
+</html>

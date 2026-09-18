@@ -1,7 +1,6 @@
 package cafe.project.HeinMinHtet.repositories;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -57,24 +56,17 @@ public class OrderDetailsRepository {
 
 	// SAVE
 	public int save(OrderDetails entity) {
-		int i = 0;
+
 		String sql = "INSERT INTO order_details "
 				+ "(order_detail_id, product_id, order_id, quantity, remark) "
 				+ "VALUES (?, ?, ?, ?, ?)";
-		
-		for(String products_id : entity.getPandq().getProduct_ids()) {
-			entity.setOrder_detail_id(UUID.randomUUID().toString());
-				jdbcTemplate.update(sql,
-						
-				entity.getOrder_detail_id(),
-				products_id,
-				entity.getOrder_id(),
-				entity.getPandq().getQuantities().get(i),
-				entity.getPandq().getRemarks().get(i));
-				i++;
-		}
 
-		return i;
+		return jdbcTemplate.update(sql,
+				entity.getOrder_detail_id(),
+				entity.getProduct_id(),
+				entity.getOrder_id(),
+				entity.getQuantity(),
+				entity.getRemark());
 	}
 
 	// UPDATE
@@ -93,7 +85,6 @@ public class OrderDetailsRepository {
 				entity.getQuantity(),
 				entity.getRemark(),
 				id);
-		
 	}
 
 	// DELETE

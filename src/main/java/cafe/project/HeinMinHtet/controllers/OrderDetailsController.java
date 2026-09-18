@@ -1,9 +1,5 @@
 package cafe.project.HeinMinHtet.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cafe.project.HeinMinHtet.repositories.entities.OrderDetails;
 import cafe.project.HeinMinHtet.services.OrderDetailsService;
-
-import cafe.project.KaungSattHein.repositories.entities.ProductsAndQuantities;
 
 @Controller
 @RequestMapping("/order-details")
@@ -38,7 +32,7 @@ public class OrderDetailsController {
 				"orderDetails",
 				orderDetailsService.findAll());
 
-		return "HeinMinHtet/orderdetails/index";
+		return "HeinMinHtet/order-details/index";
 	}
 
 	
@@ -67,9 +61,9 @@ public class OrderDetailsController {
 		return "redirect:/order-details";
 	}
 
-	
+	// =========================
 	// EDIT FORM
-	
+	// =========================
 	@GetMapping("/edit/{id}")
 	public String edit(
 			@PathVariable String id,
@@ -114,42 +108,4 @@ public class OrderDetailsController {
 
 		return "redirect:/order-details";
 	}
-	public ProductsAndQuantities fakeFindAll(){
-		List<String> Product_ids = new ArrayList<String>();
-		String id1 = "fc98683c-e6c1-48e9-abb2-920238a63f7c";
-		String id2 = "bc201c0b-3b6c-4ab4-a5f8-3e5e6348cf5c";
-		String id3 = "bc201c0b-3b6c-4ab4-a5f8-3e5e6348cf5c";
-		Product_ids.add(id1);
-		Product_ids.add(id2);
-		Product_ids.add(id3);
-		List<String> remarks = new ArrayList<String>();
-		String remark1 = "Fake Remark 1";
-		String remark2 = "Fake Remark 2";
-		String remark3 = "Fake Remark 3";
-		remarks.add(remark1);
-		remarks.add(remark2);
-		remarks.add(remark3);
-		ProductsAndQuantities pandq = new ProductsAndQuantities();
-		pandq.setProduct_ids(Product_ids);
-		pandq.setRemarks(remarks);
-		List<Integer> quantities = new ArrayList<Integer>();
-		Integer i1 = 1;
-		Integer i2 = 5;
-		Integer i3 = 3;
-		quantities.add(i1);
-		quantities.add(i2);
-		quantities.add(i3);
-		pandq.setQuantities(quantities);
-		return pandq;
-		}
-	@GetMapping("/staff/order-details/add")
-	public String OrderDetailsAdd(Model model) {
-		OrderDetails orderDetails = new OrderDetails();
-		
-		orderDetails.setOrder_id("1");
-		orderDetails.setPandq(fakeFindAll());
-		orderDetailsService.save(orderDetails);
-		
-		return "redirect:/order-details";
-}
 }

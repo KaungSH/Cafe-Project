@@ -41,8 +41,6 @@ public class ProductController {
 		this.sservice = sservice;
 	}
 	
-	
-	
 	@GetMapping("/manager/products")
 	public String productTypeList(Model model) {
 		model.addAttribute("product_types", ptservice.findAll());

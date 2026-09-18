@@ -55,8 +55,8 @@ public class OrdersRepository {
 		String sql = "INSERT INTO orders "
 				+ "(order_id, employee_id, customer_id, branch_id, "
 				+ "created_time, received_time, isedited, isdeleted, "
-				+ "order_type_id, total_amount, token_number, customer_address_id) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				+ "order_type_id, total_amount) "
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		return jdbcTemplate.update(sql,
 				entity.getOrder_id(),
@@ -68,9 +68,7 @@ public class OrdersRepository {
 				entity.isIsedited(),
 				entity.isIsdeleted(),
 				entity.getOrder_type_id(),
-				entity.getTotal_amount(),
-		        entity.getToken_number(),
-		        entity.getCustomer_address_id());
+				entity.getTotal_amount());
 	}
 
 	// UPDATE
@@ -83,8 +81,6 @@ public class OrdersRepository {
 				+ "received_time = ?, "
 				+ "order_type_id = ?, "
 				+ "total_amount = ?, "
-				+ "token_number = ?,"
-				+ "customer_address_id = ?,"
 				+ "isedited = 1 "
 				+ "WHERE order_id = ?";
 
@@ -95,8 +91,6 @@ public class OrdersRepository {
 				entity.getReceived_time(),
 				entity.getOrder_type_id(),
 				entity.getTotal_amount(),
-				entity.getToken_number(),
-				entity.getCustomer_address_id(),
 				id);
 	}
 

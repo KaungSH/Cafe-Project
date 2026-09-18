@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Employee Form</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+</head>
+<body class="bg-light">
+	<div class="container mt-5 mb-5">
+		<div class="row justify-content-center">
+			<div class="col-md-8">
+				<div class="card shadow">
+					<div class="card-header bg-primary text-white">
+						<!-- Add သို့မဟုတ် Edit ပေါ်မူတည်ပြီး ခေါင်းစဉ်ပြောင်းရန် -->
+						<h4 class="mb-0"
+							th:text="${employee.employeeId == null} ? 'Add New Employee' : 'Edit Employee'"></h4>
+					</div>
+					<div class="card-body">
+						<!-- Add နဲ့ Edit အတွက် Form Action ခွဲခြားထားခြင်း -->
+						<form
+							th:action="${employee.employeeId == null} ? @{/employee/add} : @{/employee/edit/{id}(id=${employee.employeeId})}"
+							th:object="${employee}" method="post">
+
+							<!-- 1. Name and Email -->
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<label class="form-label fw-bold">Full Name</label> <input
+										type="text" class="form-control" th:field="*{name}" required />
+								</div>
+								<div class="col-md-6">
+									<label class="form-label fw-bold">Email</label> <input
+										type="email" class="form-control" th:field="*{email}" required />
+								</div>
+							</div>
+
+							<!-- 2. Password and Phone (Only for New Employee) -->
+							<div class="row mb-3" th:if="${employee.employeeId == null}">
+								<div class="col-md-6">
+									<label class="form-label fw-bold">Password</label> <input
+										type="password" class="form-control" th:field="*{password}"
+										required />
+								</div>
+								<div class="col-md-6">
+									<label class="form-label fw-bold">Phone</label> <input
+										type="text" class="form-control" th:field="*{phone}" required />
+								</div>
+							</div>
+
+							<!-- Phone Only (For Edit Employee - Password မပြင်စေချင်၍ ဖျောက်ထားသည်) -->
+							<div class="row mb-3" th:unless="${employee.employeeId == null}">
+								<div class="col-md-12">
+									<label class="form-label fw-bold">Phone</label> <input
+										type="text" class="form-control" th:field="*{phone}" required />
+								</div>
+							</div>
+
+							<!-- 3. Role Selection (Radio Buttons) -->
+							<div class="mb-3 border p-3 rounded bg-white">
+								<label class="form-label fw-bold">Employee Role</label>
+								<div class="d-flex gap-4 mt-2">
+									<div class="form-check">
+										<input class="form-check-input" type="radio"
+											th:field="*{employeeRoleId}" id="roleManager" value="1"
+											required> <label class="form-check-label"
+											for="roleManager">Manager</label>
+									</div>
+									<div class="form-check">
+										<input class="form-check-input" type="radio"
+											th:field="*{employeeRoleId}" id="roleCashier" value="2">
+										<label class="form-check-label" for="roleCashier">Cashier</label>
+									</div>
+								</div>
+							</div>
+
+							<!-- 4. Branch and Status -->
+							<div class="row mb-3">
+								<div class="col-md-6">
+									<label class="form-label fw-bold">Branch ID</label> <input
+										type="text" class="form-control" th:field="*{branchId}"
+										placeholder="e.g. 1" required />
+								</div>
+								<div class="col-md-6">
+									<label class="form-label fw-bold">Status ID</label> <input
+										type="text" class="form-control"
+										th:field="*{employeeStatusId}" placeholder="e.g. 1" required />
+								</div>
+							</div>
+
+							<!-- 5. Salary, Gender, and DOB (dob Null Error ရှင်းရန် ထည့်ထားသည်) -->
+							<div class="row mb-3">
+								<div class="col-md-4">
+									<label class="form-label fw-bold">Salary</label> <input
+										type="number" step="0.01" class="form-control"
+										th:field="*{salary}" required />
+								</div>
+								<div class="col-md-4">
+									<label class="form-label fw-bold">Gender ID</label> <input
+										type="text" class="form-control" th:field="*{genderId}"
+										placeholder="e.g. 1" required />
+								</div>
+								<div class="col-md-4">
+									<label class="form-label fw-bold">Date of Birth</label>
+									<!-- dob ကို type="date" ဖြင့်ထည့်ပေးထားပါသည် -->
+									<input type="date" class="form-control" th:field="*{dob}"
+										required />
+								</div>
+							</div>
+
+							<!-- 6. Address -->
+							<div class="mb-3">
+								<label class="form-label fw-bold">Address</label>
+								<textarea class="form-control" th:field="*{address}" rows="3"
+									required></textarea>
+							</div>
+
+							<!-- 7. Action Buttons -->
+							<div class="d-flex justify-content-end gap-2 mt-4">
+								<a th:href="@{/employee}" class="btn btn-secondary">Cancel</a>
+								<button type="submit" class="btn btn-primary px-4">
+									<span
+										th:text="${employee.employeeId == null} ? 'Save Employee' : 'Update Employee'"></span>
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

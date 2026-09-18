@@ -12,17 +12,17 @@ public class IngredientTypeMapper implements RowMapper<IngredientType> {
 
 	@Override
 	public IngredientType mapRow(ResultSet rs, int rowNum) throws SQLException {
-		
-		LocalDateTime created_at = rs.getObject("created_at", LocalDateTime.class);
-		
-		return new IngredientType(
-				rs.getString("ingredient_type_id"),
-				rs.getString("name"),
-				rs.getString("description"),
-				rs.getString("unit_id"),
-				rs.getBoolean("isdeleted"),
-				created_at
-				);
+
+		IngredientType item = new IngredientType();
+		item.setIngredientTypeId(rs.getString("ingredient_type_id"));
+		item.setName(rs.getString("name"));
+		item.setDescription(rs.getString("description"));
+		item.setUnitId(rs.getString("unit_id"));
+		item.setIsDeleted(rs.getBoolean("isdeleted"));
+		item.setUnitAbbreviation(rs.getString("abbreviation"));
+		item.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
+
+		return item;
 	}
 
 }
