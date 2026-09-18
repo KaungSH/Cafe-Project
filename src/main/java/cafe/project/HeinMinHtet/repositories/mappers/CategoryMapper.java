@@ -21,10 +21,6 @@ public class CategoryMapper implements RowMapper<Category> {
 		category.setIsedited(rs.getBoolean("isedited"));
 		category.setIsdeleted(rs.getBoolean("isdeleted"));
 
-		if (!rs.getString("employee_name").equals(null) || !rs.getString("employee_name").isEmpty()) {
-         category.setEmployee_name(rs.getString("employee_name"));
-		}
-
 		category.setCreated_at(rs.getTimestamp("created_at").toLocalDateTime());
 
 		category.setEmployee_id(rs.getString("employee_id"));
@@ -32,3 +28,4 @@ public class CategoryMapper implements RowMapper<Category> {
 		return category;
 	}
 }
+
