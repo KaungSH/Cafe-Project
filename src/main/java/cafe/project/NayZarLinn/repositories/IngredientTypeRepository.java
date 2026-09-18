@@ -1,7 +1,6 @@
 package cafe.project.NayZarLinn.repositories;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -28,10 +27,9 @@ public class IngredientTypeRepository {
 		return jdbcTemplate.query(sql, new IngredientTypeMapper());
 	}
 
-	public Optional<IngredientType> findById(String id) {
+	public IngredientType findById(String id) {
 		String sql = "SELECT i.*, u.abbreviation FROM ingredient_types i LEFT JOIN units u ON i.unit_id = u.unit_id WHERE i.ingredient_type_id = ?";
-		List<IngredientType> results = jdbcTemplate.query(sql, new IngredientTypeMapper(), id);
-		return results.stream().findFirst();
+		return jdbcTemplate.queryForObject(sql, new IngredientTypeMapper(), id);
 	}
 
 	public int save(IngredientType item) {

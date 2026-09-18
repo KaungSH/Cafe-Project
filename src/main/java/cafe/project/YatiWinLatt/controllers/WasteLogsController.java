@@ -13,7 +13,7 @@ import cafe.project.YatiWinLatt.service.WasteReasonService;
 import cafe.project.YinminThiriSoe.services.EmployeeService;
 import jakarta.validation.Valid;
 import cafe.project.YatiWinLatt.models.WasteLogsEntryDto;
-import cafe.project.YatiWinLatt.service.IngredientBatchService;
+import cafe.project.YatiWinLatt.service.IngredientBatchServiceFake;
 
 @Controller
 @RequestMapping("/manager/WasteLogs")
@@ -21,11 +21,11 @@ public class WasteLogsController {
 
 	private final WasteLogsService wasteLogsService;
 	private final WasteReasonService wasteReasonService;
-	private final IngredientBatchService ingredientBatchService;
+	private final IngredientBatchServiceFake ingredientBatchService;
 	private final EmployeeService employeeService;
 
 	public WasteLogsController(WasteLogsService wasteLogsService, WasteReasonService wasteReasonService,
-			IngredientBatchService ingredientBatchService, EmployeeService employeeService) {
+			IngredientBatchServiceFake ingredientBatchService, EmployeeService employeeService) {
 
 		this.wasteLogsService = wasteLogsService;
 		this.wasteReasonService = wasteReasonService;
