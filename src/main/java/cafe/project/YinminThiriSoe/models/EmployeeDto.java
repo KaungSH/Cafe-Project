@@ -13,7 +13,7 @@ public class EmployeeDto {
 	private String address;
 	private LocalDate dob;
 
-	private String genderName;
+	private String gender;
 	private String roleName;
 	private String statusName;
 	private String branchName;
@@ -86,12 +86,12 @@ public class EmployeeDto {
 		this.dob = dob;
 	}
 
-	public String getGenderName() {
-		return genderName;
+	public String getGender() {
+		return gender;
 	}
 
-	public void setGenderName(String genderName) {
-		this.genderName = genderName;
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 
 	public String getRoleName() {

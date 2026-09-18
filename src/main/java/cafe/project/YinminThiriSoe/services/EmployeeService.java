@@ -27,7 +27,7 @@ public class EmployeeService {
 	}
 
 	public Employee login(String email, String password) {
-		Employee employee = employeeRepository.findByEmail(email);
+		Employee employee = employeeRepository.findByEmailWithRelations(email);
 		if (employee != null && employee.getPassword().equals(password)) {
 			return employee;
 		}

@@ -11,7 +11,7 @@ public class Product {
 	private LocalDateTime created_at;
 	private List<String> discount_ids, ingredient_ids;
 	
-	private List<Double> quantity_required, discount_value;
+	private List<Double> quantity_required, discount_values;
 	private List<String> unit_code, discount_names, ingredient_names;
 	private String employee_name, type_name, size_code;
 	
@@ -29,6 +29,7 @@ public class Product {
 		this.discount_ids = discount_ids;
 		this.ingredient_ids = ingredient_ids;
 		this.quantity_required = quantity_required;
+		this.is_active = is_active;
 	}
 	
 	public Product(String product_id, String employee_id, String type_id, String size_id, double price, boolean is_active, List<String> discount_ids, List<String> ingredient_ids, List<Double> quantity_required) {
@@ -40,6 +41,7 @@ public class Product {
 		this.discount_ids = discount_ids;
 		this.ingredient_ids = ingredient_ids;
 		this.quantity_required = quantity_required;
+		this.is_active = is_active;
 	}
 	
 	public Product(String product_id, String employee_name, String type_name, String size_code, double price, boolean isedited, boolean isdeleted, boolean is_active, LocalDateTime created_at, List<String> discount_names, List<String> ingredient_names, List<Double> quantity_required, List<String> unit_code) {
@@ -55,6 +57,24 @@ public class Product {
 		this.ingredient_names = ingredient_names;
 		this.quantity_required = quantity_required;
 		this.unit_code = unit_code;
+		this.is_active = is_active;
+	}
+	
+	public Product(String product_id, String employee_name, String type_name, String size_code, double price, boolean isedited, boolean isdeleted, boolean is_active, LocalDateTime created_at, List<String> discount_names, List<String> ingredient_names, List<Double> quantity_required, List<String> unit_code, List<Double> discount_values) {
+		this.product_id = product_id;
+		this.employee_name = employee_name;
+		this.type_name = type_name;
+		this.size_code = size_code;
+		this.price = price;
+		this.isedited = isedited;
+		this.isdeleted = isdeleted;
+		this.created_at = created_at;
+		this.discount_names = discount_names;
+		this.ingredient_names = ingredient_names;
+		this.quantity_required = quantity_required;
+		this.unit_code = unit_code;
+		this.discount_values = discount_values;
+		this.is_active = is_active;
 	}
 	
 	public Product(String product_id, String employee_id, String type_id, String size_id, double price, boolean isedited, boolean isdeleted, boolean is_active, LocalDateTime created_at) {
@@ -66,6 +86,7 @@ public class Product {
 		this.isedited = isedited;
 		this.isdeleted = isdeleted;
 		this.created_at = created_at;
+		this.is_active = is_active;
 	}
 
 	public String getProduct_id() {
@@ -212,14 +233,12 @@ public class Product {
 		this.size_code = size_code;
 	}
 
-	public List<Double> getDiscount_value() {
-		return discount_value;
+	public List<Double> getDiscount_values() {
+		return discount_values;
 	}
 
-	public void setDiscount_value(List<Double> discount_value) {
-		this.discount_value = discount_value;
+	public void setDiscount_values(List<Double> discount_values) {
+		this.discount_values = discount_values;
 	}
-	
-	
 
 }

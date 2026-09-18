@@ -1,78 +1,211 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Status List</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Status List - Luft Cafe</title>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+	--primary-color: #5C3D2E;
+	--primary-hover: #432B20;
+	--bg-main: #FAF7F2;
+	--text-color: #2D2422;
+}
+
+body {
+	background-color: var(--bg-main);
+	color: var(--text-color);
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.page-title {
+	color: var(--primary-color);
+	font-weight: 700;
+	font-size: 1.75rem;
+}
+
+.btn-add {
+	background-color: var(--primary-color);
+	color: #ffffff;
+	font-weight: 600;
+	border-radius: 8px;
+	padding: 10px 20px;
+	border: none;
+	box-shadow: 0 2px 6px rgba(92, 61, 46, 0.15);
+	transition: background-color 0.2s;
+	text-decoration: none;
+}
+
+.btn-add:hover {
+	background-color: var(--primary-hover);
+	color: #ffffff;
+}
+
+/* Cafe Tabs Styling */
+.nav-tabs {
+	border-bottom: 2px solid #EAE3DC;
+}
+
+.nav-tabs .nav-link {
+	color: #8C7B75;
+	border: none;
+	padding: 10px 20px;
+	font-weight: 600;
+	border-bottom: 3px solid transparent;
+	transition: all 0.2s;
+}
+
+.nav-tabs .nav-link:hover {
+	color: var(--primary-color);
+	border-color: transparent;
+}
+
+.nav-tabs .nav-link.active {
+	color: var(--primary-color);
+	background-color: transparent;
+	border-bottom: 3px solid var(--primary-color);
+}
+
+/* Card Table Styling */
+.table-card {
+	background-color: #ffffff;
+	border-radius: 12px;
+	box-shadow: 0 4px 15px rgba(92, 61, 46, 0.05);
+	border: 1px solid #EAE3DC;
+	overflow: hidden;
+}
+
+.custom-table {
+	width: 100%;
+	margin-bottom: 0;
+}
+
+.custom-table thead th {
+	font-weight: 700;
+	color: var(--primary-color);
+	padding: 16px 24px;
+	border-bottom: 2px solid #EAE3DC;
+	background-color: #FCFAF8;
+}
+
+.custom-table tbody td {
+	padding: 16px 24px;
+	color: var(--text-color);
+	border-bottom: 1px solid #F0EAE5;
+}
+
+.custom-table tbody tr:hover {
+	background-color: #FAF5F0;
+}
+
+.id-text {
+	color: #8C7B75;
+	font-weight: 500;
+}
+
+/* Action Buttons */
+.btn-action-edit {
+	color: #8C592B;
+	border: 1px solid #E0A96D;
+	background-color: #FFFDF9;
+	border-radius: 6px;
+	padding: 5px 14px;
+	font-size: 0.85rem;
+	font-weight: 600;
+	text-decoration: none;
+	display: inline-block;
+	transition: all 0.2s;
+}
+
+.btn-action-edit:hover {
+	background-color: #E0A96D;
+	color: #FFF;
+}
+
+.btn-action-delete {
+	color: #B23B2A;
+	border: 1px solid #E6B6B0;
+	background-color: #FFFDF9;
+	border-radius: 6px;
+	padding: 5px 14px;
+	font-size: 0.85rem;
+	font-weight: 600;
+	text-decoration: none;
+	display: inline-block;
+	transition: all 0.2s;
+}
+
+.btn-action-delete:hover {
+	background-color: #B23B2A;
+	color: white;
+}
+</style>
 </head>
-<body class="bg-light">
+<body>
 
-<div class="container py-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3 class="fw-bold text-primary">Status Management</h3>
-        <a th:href="@{/admin/statuses/create(type=${selectedType != null ? selectedType : 'branch'})}" 
-           class="btn btn-primary">
-            + Add New Status
-        </a>
-    </div>
+	<div class="container py-5">
+		<!-- Header -->
+		<div class="d-flex justify-content-between align-items-center mb-4">
+			<h3 class="page-title mb-0">Status Management</h3>
+			<a
+				th:href="@{/admin/statuses/create(type=${selectedType != null ? selectedType : 'branch'})}"
+				class="btn btn-add"> <i class="fa-solid fa-plus me-1"></i>Add
+				New Status
+			</a>
+		</div>
 
-    <!-- Dynamic Category Tabs -->
-    <ul class="nav nav-tabs fw-semibold mb-3">
-        <li class="nav-item">
-            <a class="nav-link" th:classappend="${selectedType == 'branch'} ? 'active'" th:href="@{/admin/statuses(type='branch')}">Branch</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" th:classappend="${selectedType == 'employee'} ? 'active'" th:href="@{/admin/statuses(type='employee')}">Employee</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" th:classappend="${selectedType == 'customer'} ? 'active'" th:href="@{/admin/statuses(type='customer')}">Customer</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" th:classappend="${selectedType == 'register'} ? 'active'" th:href="@{/admin/statuses(type='register')}">Register</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" th:classappend="${selectedType == 'order'} ? 'active'" th:href="@{/admin/statuses(type='order')}">Order Type</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" th:classappend="${selectedType == 'promo'} ? 'active'" th:href="@{/admin/statuses(type='promo')}">Promo Type</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" th:classappend="${selectedType == 'audience'} ? 'active'" th:href="@{/admin/statuses(type='audience')}">Audience Type</a>
-        </li>
-    </ul>
 
-    <!-- Data Display Table -->
-    <div class="card shadow-sm border-0">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th style="width: 45%;" class="ps-4">ID</th>
-                            <th style="width: 35%;">Name</th>
-                            <th style="width: 20%;" class="text-center">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="st : ${statusList}">
-                            <td class="ps-4 small text-muted" th:text="${st.id}"></td>
-                            <td class="fw-medium" th:text="${st.name}"></td>
-                            <td class="text-center">
-                                <a th:href="@{/admin/statuses/edit(type=${selectedType}, id=${st.id})}" 
-                                   class="btn btn-sm btn-outline-warning me-1">Edit</a>
-                                <a th:href="@{/admin/statuses/delete(type=${selectedType}, id=${st.id}, name=${st.name})}" 
-                                   class="btn btn-sm btn-outline-danger">Delete</a>
-                            </td>
-                        </tr>
-                        <tr th:if="${#lists.isEmpty(statusList)}">
-                            <td colspan="3" class="text-center text-muted py-4">No status found.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
+		<ul class="nav nav-tabs fw-semibold mb-4">
+			<li class="nav-item"><a class="nav-link"
+				th:classappend="${selectedType == 'branch'} ? 'active'"
+				th:href="@{/admin/statuses(type='branch')}">Branch</a></li>
+			<li class="nav-item"><a class="nav-link"
+				th:classappend="${selectedType == 'employee'} ? 'active'"
+				th:href="@{/admin/statuses(type='employee')}">Employee</a></li>
+			<li class="nav-item"><a class="nav-link"
+				th:classappend="${selectedType == 'customer'} ? 'active'"
+				th:href="@{/admin/statuses(type='customer')}">Customer</a></li>
+			<li class="nav-item"><a class="nav-link"
+				th:classappend="${selectedType == 'register'} ? 'active'"
+				th:href="@{/admin/statuses(type='register')}">Register</a></li>
+		</ul>
+
+
+		<div class="table-card">
+			<div class="table-responsive">
+				<table class="table custom-table align-middle">
+					<thead>
+						<tr>
+							<th style="width: 45%;" class="ps-4">ID</th>
+							<th style="width: 35%;">Name</th>
+							<th style="width: 20%;" class="text-center">Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="st : ${statusList}">
+							<td class="ps-4 small id-text" th:text="${st.id}"></td>
+							<td class="fw-semibold" th:text="${st.name}"></td>
+							<td class="text-center"><a
+								th:href="@{/admin/statuses/edit(type=${selectedType}, id=${st.id})}"
+								class="btn-action-edit me-1">Edit</a> <a
+								th:href="@{/admin/statuses/delete(type=${selectedType}, id=${st.id})}"
+								class="btn-action-delete"
+								onclick="return confirm('Are you sure you want to delete this record?')">Delete</a></td>
+						</tr>
+						<tr th:if="${#lists.isEmpty(statusList)}">
+							<td colspan="3" class="text-center text-muted py-4">No
+								status found.</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
 
 </body>
 </html>
