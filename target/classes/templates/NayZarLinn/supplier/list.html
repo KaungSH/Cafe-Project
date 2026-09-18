@@ -150,9 +150,9 @@ body {
 				<p>Manage your coffee shop suppliers</p>
 			</div>
 			<div>
-				<a th:href="@{/supplier/add}" class="btn-add"> <i
+				<a th:href="@{/manager/supplier/add}" class="btn-add"> <i
 					class="bi bi-plus-lg"></i> Add
-				</a> <a th:href="@{/supplier/deleted}" class="btn-deleted"> <i
+				</a> <a th:href="@{/manager/supplier/deleted}" class="btn-deleted"> <i
 					class="bi bi-trash"></i> Deleted Suppliers List
 				</a>
 			</div>
@@ -175,9 +175,9 @@ body {
 					<td th:text="${s.contact_info}"></td>
 					<td th:text="${#temporals.format(s.created_at, 'MM.dd.yyyy HH:mm')}"></td>
 					<td><a
-						th:href="@{/supplier/edit/{supplier_id}(supplier_id=${s.supplier_id})}"
+						th:href="@{/manager/supplier/edit/{supplier_id}(supplier_id=${s.supplier_id})}"
 						class="btn-edit">Edit</a> <a
-						th:href="@{/supplier/delete/{supplier_id}(supplier_id=${s.supplier_id})}"
+						th:href="@{/manager/supplier/delete/{supplier_id}(supplier_id=${s.supplier_id})}"
 						class="btn-delete">Delete</a></td>
 				</tr>
 
