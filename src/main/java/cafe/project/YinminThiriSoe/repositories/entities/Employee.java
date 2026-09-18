@@ -5,6 +5,14 @@ import java.time.LocalDateTime;
 
 public class Employee {
 
+	@Override
+	public String toString() {
+		return "Employee [employeeId=" + employeeId + ", name=" + name + ", email=" + email + ", photoPath=" + photoPath
+				+ ", password=" + password + ", employeeStatusId=" + employeeStatusId + ", phone=" + phone + ", salary="
+				+ salary + ", address=" + address + ", dob=" + dob + ", genderId=" + genderId + ", employeeRoleId="
+				+ employeeRoleId + ", branchId=" + branchId + ", createdAt=" + createdAt + "]";
+	}
+
 	private String employeeId;
 	private String name;
 	private String email;

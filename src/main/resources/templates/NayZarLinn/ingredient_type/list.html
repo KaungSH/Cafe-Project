@@ -6,34 +6,52 @@
 </head>
 <body>
 	<h2>Ingredient Type List</h2>
-	<a th:href="@{/ingredientType/add}">Add new ingredient type</a>
-	<table class="table">
+
+	<p>
+		<a th:href="@{/staff/ingredientType/add}">+ Add New Ingredient</a> | <a
+			th:href="@{/staff/ingredientType/deleted}">View Deleted Ingredients</a>
+	</p>
+
+	<table border="1" cellpadding="6" cellspacing="0">
 		<thead>
 			<tr>
 				<th>No.</th>
-				<th>Id</th>
+				<th>ID</th>
 				<th>Name</th>
 				<th>Description</th>
-				<th>Unit_id</th>
-				<th>Abbreviation</th>
-				<th>CreatedAt</th>
-				<th></th>
+				<th>Unit ID</th>
+				<th>Unit</th>
+				<th>Created At</th>
+				<th>Actions</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr th:each="i,state:${ingredientType}">
+			<!-- Show message if table is empty -->
+			<tr th:if="${#lists.isEmpty(ingredients)}">
+				<td colspan="8" style="text-align: center;">No ingredients
+					found.</td>
+			</tr>
+
+			<!-- Loop over active ingredients from controller -->
+			<tr th:each="i, state : ${ingredients}">
 				<td th:text="${state.count}"></td>
-				<td th:text="${i.ingredient_type_id}"></td>
+				<td th:text="${i.ingredientTypeId}"></td>
 				<td th:text="${i.name}"></td>
 				<td th:text="${i.description}"></td>
-				<td th:text="${i.unit_id}"></td>
-				<td th:text="${i.abbreviation}"></td>
-				<td th:text="${i.created_at}"></td>
+				<td th:text="${i.unitId}"></td>
+				<td
+					th:text="${i.unitAbbreviation != null ? i.unitAbbreviation : '-'}"></td>
+				<td
+					th:text="${i.createdAt != null ? #temporals.format(i.createdAt, 'dd-MM-yyyy HH:mm') : '-'}"></td>
 				<td><a
-					th:href="@{/ingredientType/edit/{ingredient_type_id}(ingredient_type_id=${i.ingredient_type_id})}">Edit
-				</a> <a
-					th:href="@{/ingredientType/delete/{ingredient_type_id}(ingredient_type_id=${i.ingredient_type_id})}">Delete
-				</a></td>
+					th:href="@{/staff/ingredientType/edit/{id}(id=${i.ingredientTypeId})}">Edit</a>
+					|
+					<form
+						th:action="@{/staff/ingredientType/soft-delete/{id}(id=${i.ingredientTypeId})}"
+						method="post" style="display: inline;">
+						<button type="submit"
+							onclick="return confirm('Soft delete this item?');">Delete</button>
+					</form></td>
 			</tr>
 		</tbody>
 	</table>
