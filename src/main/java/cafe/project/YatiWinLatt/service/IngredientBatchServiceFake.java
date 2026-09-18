@@ -11,7 +11,7 @@ package cafe.project.YatiWinLatt.service;
 	import java.util.List;
 
 	@Service
-	public class IngredientBatchService {
+	public class IngredientBatchServiceFake {
 
 	  
 	    public List<IngredientBatchDto> getAllBatches() {

@@ -152,6 +152,8 @@
                         <td th:text="${item.branch_name}"></td>
                         <td th:text="${item.total_cost}" class="fw-bold text-success"></td>
                         <td class="text-center">
+                        	<a th:href="@{/manager/stock_import/details/{id}(id=${item.import_id})}" 
+                               class="btn btn-edit btn-sm px-3">Details</a> 
                             <a th:href="@{/manager/stock_imports/edit/{id}(id=${item.import_id})}" 
                                class="btn btn-edit btn-sm px-3">Edit</a> 
                             <a th:href="@{/manager/stock_imports/delete/{id}(id=${item.import_id})}" 

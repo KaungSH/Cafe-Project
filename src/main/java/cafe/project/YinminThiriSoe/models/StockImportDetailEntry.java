@@ -1,5 +1,7 @@
 package cafe.project.YinminThiriSoe.models;
 
+import java.time.LocalDateTime;
+
 public class StockImportDetailEntry {
 	private String import_detail_id;
 	private String import_id;
@@ -59,5 +61,6 @@ public class StockImportDetailEntry {
 	public void setUnit_cost(double unit_cost) {
 		this.unit_cost = unit_cost;
 	}
+
 
 }
