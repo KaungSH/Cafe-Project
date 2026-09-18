@@ -15,16 +15,21 @@ public class Employee {
 	private double salary;
 	private String address;
 	private LocalDate dob;
-	private String gender;
+	private String genderId;
 	private String employeeRoleId;
 	private String branchId;
 	private LocalDateTime createdAt;
-
+	
+	private String gender_name;
+	private String employee_role_name;
+	private String employee_status_name;
+	private String employee_branch_name;
+	
 	public Employee() {
 	}
 
 	public Employee(String employeeId, String name, String email, String photoPath, String password,
-			String employeeStatusId, String phone, double salary, String address, LocalDate dob, String gender,
+			String employeeStatusId, String phone, double salary, String address, LocalDate dob, String genderId,
 			String employeeRoleId, String branchId, LocalDateTime createdAt) {
 		this.employeeId = employeeId;
 		this.name = name;
@@ -36,7 +41,7 @@ public class Employee {
 		this.salary = salary;
 		this.address = address;
 		this.dob = dob;
-		this.gender = gender;
+		this.genderId = genderId;
 		this.employeeRoleId = employeeRoleId;
 		this.branchId = branchId;
 		this.createdAt = createdAt;
@@ -122,12 +127,12 @@ public class Employee {
 		this.dob = dob;
 	}
 
-	public String getGender() {
-		return gender;
+	public String getGenderId() {
+		return genderId;
 	}
 
-	public void setGender(String gender) {
-		this.gender = gender;
+	public void setGenderId(String genderId) {
+		this.genderId = genderId;
 	}
 
 	public String getEmployeeRoleId() {
@@ -153,4 +158,38 @@ public class Employee {
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
+
+	public String getGender_name() {
+		return gender_name;
+	}
+
+	public void setGender_name(String gender_name) {
+		this.gender_name = gender_name;
+	}
+
+	public String getEmployee_role_name() {
+		return employee_role_name;
+	}
+
+	public void setEmployee_role_name(String employee_role_name) {
+		this.employee_role_name = employee_role_name;
+	}
+
+	public String getEmployee_status_name() {
+		return employee_status_name;
+	}
+
+	public void setEmployee_status_name(String employee_status_name) {
+		this.employee_status_name = employee_status_name;
+	}
+
+	public String getEmployee_branch_name() {
+		return employee_branch_name;
+	}
+
+	public void setEmployee_branch_name(String employee_branch_name) {
+		this.employee_branch_name = employee_branch_name;
+	}
+	
+	
 }
