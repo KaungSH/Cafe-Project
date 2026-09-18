@@ -31,8 +31,8 @@ public class BranchService {
 		return entities.stream().map(this::toListDto).toList();
 	}
 
-	public BranchEntryDto findById(String id) {
-		Branch entity = this.branchRepository.findByIdWithRelation(id);
+	public BranchEntryDto findById(String branch_id) {
+		Branch entity = this.branchRepository.findByIdWithRelation(branch_id);
 		if (entity == null) {
 			return null;
 		}
@@ -58,22 +58,22 @@ public class BranchService {
 		return this.branchRepository.save(entity) > 0;
 	}
 
-	public boolean edit(String id, BranchEntryDto dto) {
-		Branch existingBranch = this.branchRepository.findById(id);
+	public boolean edit(String branch_id, BranchEntryDto dto) {
+		Branch existingBranch = this.branchRepository.findById(branch_id);
 		if (existingBranch == null) {
 			return false;
 		}
 
 		Branch entity = toEntity(dto);
-		return this.branchRepository.edit(id, entity) > 0;
+		return this.branchRepository.edit(branch_id, entity) > 0;
 	}
 
-	public boolean delete(String id) {
-		Branch existingBranch = this.branchRepository.findById(id);
+	public boolean delete(String branch_id) {
+		Branch existingBranch = this.branchRepository.findById(branch_id);
 		if (existingBranch == null) {
 			return false;
 		}
-		return this.branchRepository.delete(id) > 0;
+		return this.branchRepository.delete(branch_id) > 0;
 	}
 
 	private BranchListDto toListDto(Branch entity) {
