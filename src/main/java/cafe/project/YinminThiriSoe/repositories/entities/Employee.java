@@ -19,7 +19,12 @@ public class Employee {
 	private String employeeRoleId;
 	private String branchId;
 	private LocalDateTime createdAt;
-
+	
+	private String gender_name;
+	private String employee_role_name;
+	private String employee_status_name;
+	private String employee_branch_name;
+	
 	public Employee() {
 	}
 
@@ -153,4 +158,38 @@ public class Employee {
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
+
+	public String getGender_name() {
+		return gender_name;
+	}
+
+	public void setGender_name(String gender_name) {
+		this.gender_name = gender_name;
+	}
+
+	public String getEmployee_role_name() {
+		return employee_role_name;
+	}
+
+	public void setEmployee_role_name(String employee_role_name) {
+		this.employee_role_name = employee_role_name;
+	}
+
+	public String getEmployee_status_name() {
+		return employee_status_name;
+	}
+
+	public void setEmployee_status_name(String employee_status_name) {
+		this.employee_status_name = employee_status_name;
+	}
+
+	public String getEmployee_branch_name() {
+		return employee_branch_name;
+	}
+
+	public void setEmployee_branch_name(String employee_branch_name) {
+		this.employee_branch_name = employee_branch_name;
+	}
+	
+	
 }

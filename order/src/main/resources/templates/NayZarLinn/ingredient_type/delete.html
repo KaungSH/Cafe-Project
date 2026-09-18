@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Delete Ingredient Type</title>
+</head>
+<body>
+	<h2>Delete Ingredient Type</h2>
+	<div>
+		<dl>
+			<dt>Id</dt>
+			<dd th:text="${ingredientType.ingredient_type_id}"></dd>
+			<dt>Name</dt>
+			<dd th:text="${ingredientType.name}"></dd>
+			<dt>Description</dt>
+			<dd th:text="${ingredientType.description}"></dd>
+			<dt>Unit id</dt>
+			<dd th:text="${ingredientType.unit_id}"></dd>
+			<dt>Created At</dt>
+			<dd th:text="${ingredientType.created_at}"></dd>
+		</dl>
+	</div>
+	<form method="post" th:action="@{/ingredientType/delete}" th:object="${ingredientType}">
+		<input type="hidden" th:field="${ingredientType.ingredient_type_id}" /> <input type="submit"
+			value="Delete Confrim" />
+		<div>
+			<a th:href="@{/ingredientType}">Cancel</a>
+		</div>
+	</form>
+</body>
+</html>
