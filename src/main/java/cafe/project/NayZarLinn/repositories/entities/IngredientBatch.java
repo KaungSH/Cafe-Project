@@ -19,6 +19,7 @@ public class IngredientBatch {
 	private BigDecimal unitCost;
 	private String branchName;
 	private String ingredientTypeName;
+	
 
 	public IngredientBatch() {
 	}

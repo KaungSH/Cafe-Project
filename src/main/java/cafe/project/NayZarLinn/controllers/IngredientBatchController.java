@@ -33,6 +33,13 @@ public class IngredientBatchController {
 		this.ingredientTypeRepository = ingredientTypeRepository;
 	}
 
+	@GetMapping("/batches-expiry")
+	public String batchesAndExpiry(Model model) {
+		model.addAttribute(ingredientBatchService.getBatchesAndExpiry());
+		return "NayZarLinn/ingredientBatch/batchesAndExpiry";
+
+	}
+
 	@GetMapping
 	public String ingredientBatchList(Model model) {
 		model.addAttribute("ingredientBatch", this.ingredientBatchService.findAll());
