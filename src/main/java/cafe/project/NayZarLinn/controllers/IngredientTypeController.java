@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cafe.project.HeinMinHtet.repositories.UnitRepository;
 import cafe.project.NayZarLinn.models.IngredientTypeDto;
 import cafe.project.NayZarLinn.repositories.entities.IngredientType;
 import cafe.project.NayZarLinn.services.IngredientTypeService;
@@ -19,9 +20,11 @@ import jakarta.validation.Valid;
 public class IngredientTypeController {
 
 	private final IngredientTypeService service;
+	private final UnitRepository unitRepository;
 
-	public IngredientTypeController(IngredientTypeService service) {
+	public IngredientTypeController(IngredientTypeService service, UnitRepository unitRepository) {
 		this.service = service;
+		this.unitRepository = unitRepository;
 	}
 
 	@GetMapping
@@ -39,12 +42,14 @@ public class IngredientTypeController {
 	@GetMapping("/add")
 	public String showAddForm(Model model) {
 		model.addAttribute("ingredientForm", new IngredientTypeDto());
+		model.addAttribute("units", unitRepository.findAll());
 		return "NayZarLinn/ingredient_type/add";
 	}
 
 	@PostMapping("/add")
-	public String add(@Valid @ModelAttribute("ingredientForm") IngredientTypeDto form, BindingResult result) {
+	public String add(@Valid @ModelAttribute("ingredientForm") IngredientTypeDto form, BindingResult result,Model model) {
 		if (result.hasErrors()) {
+			model.addAttribute("units", unitRepository.findAll());
 			return "NayZarLinn/ingredient_type/add";
 		}
 		service.create(form);
@@ -59,16 +64,18 @@ public class IngredientTypeController {
 		form.setIngredientTypeId(item.getIngredientTypeId());
 		form.setName(item.getName());
 		form.setDescription(item.getDescription());
-		form.setUnitId(item.getUnitId());
 
 		model.addAttribute("ingredientForm", form);
+
+		model.addAttribute("units", unitRepository.findAll());
 		return "NayZarLinn/ingredient_type/edit";
 	}
 
 	@PostMapping("/edit/{id}")
 	public String update(@PathVariable String id, @Valid @ModelAttribute("ingredientForm") IngredientTypeDto form,
-			BindingResult result) {
+			BindingResult result,Model model) {
 		if (result.hasErrors()) {
+			model.addAttribute("units", unitRepository.findAll());
 			return "NayZarLinn/ingredient_type/edit";
 		}
 		service.update(id, form);

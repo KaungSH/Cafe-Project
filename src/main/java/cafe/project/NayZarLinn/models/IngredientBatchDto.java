@@ -9,10 +9,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 public class IngredientBatchDto {
 
-	@NotBlank(message = "Batch ID is requird")
+	@NotBlank(message = "Ingredient Bath ID is required")
+	@Pattern(regexp = "^IB-.*$", message = "Ingredient Type ID must start with IB-")
 	private String batchId;
 
 	@NotNull(message = "Remaining quantity is required")

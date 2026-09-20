@@ -157,28 +157,18 @@ body {
 			<div class="form-header">
 
 				<h2>Edit Supplier</h2>
+
 			</div>
+
 
 			<form method="post" th:action="@{/manager/supplier/edit}"
 				th:object="${supplier}">
 
-
 				<div class="form-body">
 
-					<div class="form-row">
+					<!-- Supplier ID is kept but hidden -->
+					<input type="hidden" th:field="*{supplier_id}">
 
-						<div class="form-label-box">Supplier ID</div>
-
-						<div class="dash">-</div>
-
-						<div class="input-box">
-
-							<input type="text" class="form-control" th:field="*{supplier_id}"
-								readonly>
-
-						</div>
-
-					</div>
 
 					<div class="form-row">
 
@@ -198,6 +188,7 @@ body {
 
 					</div>
 
+
 					<div class="form-row">
 
 						<div class="form-label-box">Contact Info</div>
@@ -216,6 +207,7 @@ body {
 						</div>
 
 					</div>
+
 
 					<div class="form-row">
 
@@ -237,6 +229,7 @@ body {
 
 
 				</div>
+
 
 				<div class="form-footer">
 
