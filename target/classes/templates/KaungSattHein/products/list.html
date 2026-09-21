@@ -34,6 +34,16 @@
 		<div class="d-flex justify-content-between align-items-center mb-3">
 
 			<h2 class="mb-0">Products List - Manager</h2>
+			<form method="post" th:action="@{/manager/products/search}" th:object="${keywordmodel}" id="search" class="d-flex gap-2 align-items-center">
+			    <input type="text" 
+			           th:field="*{keyword}" 
+			           class="form-control" 
+			           placeholder="Search products..." 
+			           aria-label="Search">
+			    <button type="submit" class="btn btn-submit">
+			        <i class="fa-solid fa-magnifying-glass me-1"></i> Search
+			    </button>
+			</form>
 
 			<div class="d-flex gap-2">
 

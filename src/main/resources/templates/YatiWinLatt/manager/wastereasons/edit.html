@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate = "~{common/layout}">
+<head>
+<meta charset="UTF-8">
+<title>Edit Reason - Manager</title>
+</head>
+<div layout:fragment = "content">
+	<h2>Edit Waste Reasons Form</h2>
+	<form method = "post" th:action = "@{/manager/wastereasons/edit}" th:object = "${reason}">
+	<input type = "hidden" th:field = "*{waste_reason_id}">
+	
+		<div>
+			<label> Reason Name : </label>
+			<input type = "text" th:field = "*{reason_name}" required>
+		</div>
+		
+		<input type = "submit" value = "Edit Reason">
+	</form>
+	<form method = "get" th:action = "@{/manager/wastereasons}">
+			<input type = "submit" value = "Cancel"/>
+	</form>
+</div>
+</html>

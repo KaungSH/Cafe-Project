@@ -79,7 +79,7 @@
                 <label class="form-label">Ingredient Batch</label>
                 <select th:field="*{batch_id}" class="form-select">
                     <option value="">Select Batch</option>
-                    <option th:each="b : ${batches}" th:value="${b.batch_id}" th:text="${b.batch_id}"></option>
+                    <option th:each="b : ${batches}" th:value="${b.batchId}" th:text="${b.batchId}"></option>
                 </select>
                 <div class="text-danger small mt-1" th:if="${#fields.hasErrors('batch_id')}" th:errors="*{batch_id}"></div>
             </div>

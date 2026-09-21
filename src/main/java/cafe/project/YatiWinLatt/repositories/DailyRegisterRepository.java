@@ -7,6 +7,7 @@ import cafe.project.YatiWinLatt.repositories.entities.DailyRegister;
 import cafe.project.YatiWinLatt.repositories.mappers.DailyRegisterListDtoMapper;
 import cafe.project.YatiWinLatt.repositories.mappers.DailyRegisterMapper;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +42,12 @@ public class DailyRegisterRepository {
 		String sql = "SELECT * from daily_registers where register_id = ? AND isdeleted = 0";
 		List<DailyRegister> list = jdbcTemplate.query(sql, new DailyRegisterMapper(), register_id);
 		return list.stream().findFirst();
+	}
+	
+	public DailyRegister findByDate(LocalDate date) {
+		String sql = "SELECT * from daily_registers where date = ? AND isdeleted = 0";
+		List<DailyRegister> entities = jdbcTemplate.query(sql, new DailyRegisterMapper(), date);
+		return entities.isEmpty()?null:entities.get(0);
 	}
 
 	public int save(DailyRegister register) {
