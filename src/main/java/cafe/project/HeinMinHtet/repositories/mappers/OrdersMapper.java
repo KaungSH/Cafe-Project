@@ -20,6 +20,7 @@ public class OrdersMapper implements RowMapper<Orders> {
 		order.setEmployee_id(rs.getString("employee_id"));
 		order.setCustomer_id(rs.getString("customer_id"));
 		order.setBranch_id(rs.getString("branch_id"));
+		order.setRegister_id(rs.getString("register_id")); 
 		order.setCreated_time(
 				rs.getTimestamp("created_time") != null ? rs.getTimestamp("created_time").toLocalDateTime() : null);
 		order.setReceived_time(
@@ -51,6 +52,7 @@ public class OrdersMapper implements RowMapper<Orders> {
 		dto.setEmployee_id(entity.getEmployee_id());
 		dto.setCustomer_id(entity.getCustomer_id());
 		dto.setBranch_id(entity.getBranch_id());
+		dto.setRegister_id(entity.getRegister_id()); 
 		dto.setCreated_time(entity.getCreated_time());
 		dto.setReceived_time(entity.getReceived_time());
 		dto.setIsedited(entity.isIsedited());

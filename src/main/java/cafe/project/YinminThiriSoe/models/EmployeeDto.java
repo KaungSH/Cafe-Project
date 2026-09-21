@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class EmployeeDto {
-	private String id;
+	private String employee_id;
 	private String name;
 	private String email;
 	private String photoPath;
