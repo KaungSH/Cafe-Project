@@ -1,48 +1,57 @@
 package cafe.project.HeinMinHtet.services;
 
+
+
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+
 import cafe.project.HeinMinHtet.repositories.OrdersRepository;
 import cafe.project.HeinMinHtet.repositories.entities.Orders;
+import cafe.project.HeinMinHtet.repositories.mappers.OrdersMapper;
 
 @Service
 public class OrdersService {
 
-	private final OrdersRepository ordersRepository;
+  private final OrdersRepository ordersRepository;
 
-	public OrdersService(OrdersRepository ordersRepository) {
-		this.ordersRepository = ordersRepository;
-	}
+  public OrdersService(OrdersRepository ordersRepository) {
+    this.ordersRepository = ordersRepository;
+  }
 
-	// Get all orders
-	public List<Orders> findAll() {
-		return ordersRepository.findAll();
-	}
+  public List<Orders> getAllOrders() {
+    List<Orders> entities = ordersRepository.findAll();
+    return OrdersMapper.toDTOList(entities);
+  }
 
-	// Get deleted orders
-	public List<Orders> findDeletedAll() {
-		return ordersRepository.findDeletedAll();
-	}
+  public Orders getOrderById(String order_id) {
+    Orders entity = ordersRepository.findById(order_id);
+    return OrdersMapper.toDTO(entity);
+  }
+  
 
-	// Get order by ID
-	public Orders findById(String id) {
-		return ordersRepository.findById(id);
-	}
+ public boolean saveOrder(Orders order) {
+   order.setCreated_time(java.time.LocalDateTime.now());
+   order.setIsedited(false);
+   order.setIsdeleted(false);
 
-	// Add order
-	public int save(Orders order) {
-		return ordersRepository.save(order);
-	}
+   return ordersRepository.save(order) > 0;
+ }
 
-	// Update order
-	public int edit(String id, Orders order) {
-		return ordersRepository.edit(id, order);
-	}
+  public boolean updateOrder(String id, Orders dto) {
+    Orders entity = new Orders();
+    entity.setEmployee_id(dto.getEmployee_id());
+    entity.setCustomer_id(dto.getCustomer_id());
+    entity.setBranch_id(dto.getBranch_id());
+    entity.setReceived_time(dto.getReceived_time());
+    entity.setOrder_type_id(dto.getOrder_type_id());
+    entity.setTotal_amount(dto.getTotal_amount());
 
-	// Delete order
-	public int delete(String id) {
-		return ordersRepository.delete(id);
-	}
+    return ordersRepository.edit(id, entity) > 0;
+  }
+
+  public boolean deleteOrder(String order_id) {
+    return ordersRepository.delete(order_id) > 0;
+  }
 }

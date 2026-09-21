@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Discount</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="card-title mb-0"><i class="bi bi-plus-circle me-2"></i>Create New Discount</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form th:action="@{/manager/discounts/save}" th:object="${discountForm}" method="post">
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="name" class="form-label fw-bold">Discount Name <span class="text-danger">*</span></label>
+                                <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="e.g., Member Special 10%" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="discountValue" class="form-label fw-bold">Discount Value <span class="text-danger">*</span></label>
+                                <input type="number" step="0.01" th:field="*{discount_value}" class="form-control" id="discountValue" placeholder="e.g., 1000.00 or 10.00" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                          
+                            <div class="col-md-6">
+                                <label for="promo_type_id" class="form-label fw-bold">Promo Type <span class="text-danger">*</span></label>
+                                <select th:field="*{promo_type_id}" class="form-select" id="promo_type_id" required>
+                                    <option value="" disabled selected>-- Select Promo Type --</option>
+                                 
+                                    <option th:each="promo : ${promoTypes}" 
+                                            th:value="${promo.id}" 
+                                            th:text="${promo.typeName}">Percentage</option>
+                                </select>
+                            </div>
+                            
+                         
+                            <div class="col-md-6">
+                                <label for="audience_type_id" class="form-label fw-bold">Audience Type <span class="text-danger">*</span></label>
+                                <select th:field="*{audience_type_id}" class="form-select" id="audience_type_id" required>
+                                    <option value="" disabled selected>-- Select Target Audience --</option>
+                                  
+                                    <option th:each="audience : ${audienceTypes}" 
+                                            th:value="${audience.id}" 
+                                            th:text="${audience.typeName}">All Customers</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="startdate" class="form-label fw-bold">Start Date <span class="text-danger">*</span></label>
+                                <input type="date" th:field="*{startdate}" class="form-control" id="startdate" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="enddate" class="form-label fw-bold">End Date <span class="text-danger">*</span></label>
+                                <input type="date" th:field="*{enddate}" class="form-control" id="enddate" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label fw-bold">Description</label>
+                            <textarea th:field="*{description}" class="form-control" id="description" rows="3" placeholder="Add promotion details..."></textarea>
+                        </div>
+
+                        <div class="mb-4 form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="is_active" th:field="*{is_active}" th:value="1" checked>
+                            <label class="form-check-label fw-bold" for="is_active">Set Promotion Active Immediately</label>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a th:href="@{/manager/discounts}" class="btn btn-outline-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i> Save Discount</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

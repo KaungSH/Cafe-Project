@@ -3,6 +3,8 @@ package cafe.project.HeinMinHtet.repositories.entities;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import cafe.project.HeinMinHtet.models.OrderStatus;
+
 public class Orders {
 
 	private String order_id;
@@ -15,12 +17,16 @@ public class Orders {
 	private boolean isdeleted;
 	private String order_type_id;
 	private BigDecimal total_amount;
+	private int tokenNumber;
+	private String customerAddress_id;
+	
+	private OrderStatus orderStatus;
 	
 	public Orders() {}
 	
 	public Orders(String order_id,String employee_id,String customer_id,
 			String branch_id,LocalDateTime created_time,LocalDateTime received_time,
-			boolean isedited,boolean isdeleted,String order_type_id,BigDecimal total_amount) {
+			boolean isedited,boolean isdeleted,String order_type_id,BigDecimal total_amount,int tokenNumber,String customerAddress_id,OrderStatus orderStatus) {
 		this.order_id=order_id;
 		this.employee_id=employee_id;
 		this.customer_id=customer_id;
@@ -31,6 +37,9 @@ public class Orders {
 		this.isdeleted=isdeleted;
 		this.order_type_id=order_type_id;
 		this.total_amount=total_amount;
+		this.tokenNumber=tokenNumber;	
+		this.customerAddress_id=customerAddress_id;
+		this.orderStatus=orderStatus;
 		
 	}
 
@@ -113,6 +122,31 @@ public class Orders {
 	public void setTotal_amount(BigDecimal total_amount) {
 		this.total_amount = total_amount;
 	}
+
+	public int getTokenNumber() {
+		return tokenNumber;
+	}
+
+	public String getCustomerAddress_id() {
+		return customerAddress_id;
+	}
+
+	public void setTokenNumber(int tokenNumber) {
+		this.tokenNumber = tokenNumber;
+	}
+
+	public void setCustomerAddress_id(String customerAddress_id) {
+		this.customerAddress_id = customerAddress_id;
+	}
+
+	public OrderStatus getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(OrderStatus orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+
 	
 
 }
