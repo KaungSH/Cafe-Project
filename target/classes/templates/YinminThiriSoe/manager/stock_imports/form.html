@@ -2,144 +2,247 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title th:text="${stockImport.import_id == null} ? 'Add Stock Import | Coffee Shop' : 'Edit Stock Import | Coffee Shop'"></title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<title
+	th:text="${stockImport.import_id == null} ? 'Record a stock delivery | Coffee Shop' : 'Edit Stock Import | Coffee Shop'"></title>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+<link
+	href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap"
+	rel="stylesheet">
 
 <style>
-    /* Coffee Shop Theme Custom CSS for Form */
-    body {
-        background-color: #f9f4ef;
-        font-family: 'Nunito', sans-serif;
-        color: #4a3018;
-    }
+body {
+	background-color: #f9f4ef;
+	font-family: 'Nunito', sans-serif;
+	color: #4a3018;
+}
 
-    .form-container {
-        background-color: #ffffff;
-        border-radius: 20px;
-        padding: 40px;
-        box-shadow: 0 10px 30px rgba(92, 58, 33, 0.08);
-        max-width: 600px; /* Form ကို အလယ်မှာ ကျစ်ကျစ်လျစ်လျစ်ဖြစ်အောင် */
-        margin: 50px auto;
-    }
+.form-container {
+	background-color: #ffffff;
+	border-radius: 20px;
+	padding: 40px;
+	box-shadow: 0 10px 30px rgba(92, 58, 33, 0.08);
+	max-width: 750px;
+	margin: 40px auto;
+}
 
-    h2 {
-        color: #5c3a21;
-        font-weight: 700;
-        text-align: center;
-        margin-bottom: 30px;
-    }
+h2, h4 {
+	color: #5c3a21;
+	font-weight: 700;
+}
 
-    .form-label {
-        font-weight: 600;
-        color: #6d4c41;
-        margin-bottom: 8px;
-    }
+.form-label {
+	font-weight: 600;
+	color: #6d4c41;
+	font-size: 0.9rem;
+	margin-bottom: 6px;
+}
 
-    /* Input Box ဒီဇိုင်းများ */
-    .form-control, .form-select {
-        border-radius: 12px;
-        border: 1px solid #e6d5c3;
-        padding: 12px 15px;
-        transition: all 0.3s ease;
-        background-color: #fcf9f5;
-    }
+.form-control, .form-select {
+	border-radius: 12px;
+	border: 1px solid #e6d5c3;
+	padding: 10px 14px;
+	transition: all 0.3s ease;
+	background-color: #fcf9f5;
+}
 
-    .form-control:focus, .form-select:focus {
-        border-color: #a87b51;
-        box-shadow: 0 0 0 4px rgba(168, 123, 81, 0.15);
-        background-color: #ffffff;
-    }
+.form-control:focus, .form-select:focus {
+	border-color: #a87b51;
+	box-shadow: 0 0 0 4px rgba(168, 123, 81, 0.15);
+	background-color: #ffffff;
+}
 
-    /* ခလုတ် ဒီဇိုင်းများ */
-    .btn-coffee-primary {
-        background-color: #a87b51;
-        color: white;
-        border: none;
-        border-radius: 12px;
-        padding: 12px;
-        font-weight: 700;
-        width: 100%;
-        transition: all 0.3s ease;
-        margin-top: 10px;
-        margin-bottom: 10px;
-    }
+.detail-row {
+	background-color: #fcf9f5;
+	border: 1px solid #e6d5c3;
+	border-radius: 14px;
+	padding: 20px;
+	margin-bottom: 15px;
+	position: relative;
+}
 
-    .btn-coffee-primary:hover {
-        background-color: #8c633e;
-        color: white;
-        transform: translateY(-2px);
-    }
+.btn-add-line {
+	background-color: transparent;
+	color: #5c3a21;
+	border: 1px dashed #a87b51;
+	border-radius: 10px;
+	padding: 8px 16px;
+	font-weight: 600;
+	transition: all 0.3s ease;
+}
 
-    .btn-coffee-secondary {
-        background-color: #e6d5c3;
-        color: #5c3a21;
-        border: none;
-        border-radius: 12px;
-        padding: 12px;
-        font-weight: 700;
-        width: 100%;
-        display: block;
-        text-align: center;
-        text-decoration: none;
-        transition: all 0.3s ease;
-    }
+.btn-add-line:hover {
+	background-color: #f2e6dc;
+	color: #4a3018;
+}
 
-    .btn-coffee-secondary:hover {
-        background-color: #d4bda5;
-        color: #4a3018;
-    }
+.btn-coffee-primary {
+	background-color: #a87b51;
+	color: white;
+	border: none;
+	border-radius: 12px;
+	padding: 12px 24px;
+	font-weight: 700;
+	transition: all 0.3s ease;
+}
+
+.btn-coffee-primary:hover {
+	background-color: #8c633e;
+	color: white;
+	transform: translateY(-2px);
+}
+
+.btn-coffee-secondary {
+	background-color: #e6d5c3;
+	color: #5c3a21;
+	border: none;
+	border-radius: 12px;
+	padding: 12px 24px;
+	font-weight: 700;
+	text-decoration: none;
+	transition: all 0.3s ease;
+}
+
+.btn-coffee-secondary:hover {
+	background-color: #d4bda5;
+	color: #4a3018;
+}
 </style>
 </head>
 <body>
-    <div class="container">
-        <div class="form-container">
-            <h2 th:text="${stockImport.import_id == null} ? '☕ Add Stock Import' : '☕ Edit Stock Import'"></h2>
+	<div class="container">
+		<div class="form-container">
+			<div class="d-flex justify-content-between align-items-center mb-4">
+				<h2
+					th:text="${stockImport.import_id == null} ? '☕ Record a stock delivery' : '☕ Edit Stock Delivery'"></h2>
+				<a th:href="@{/manager/stock_imports}" class="btn-close"
+					aria-label="Close"></a>
+			</div>
 
-            <form th:action="${stockImport.import_id == null} ? @{/manager/stock_imports/add} : @{/manager/stock_imports/edit}"
-                  th:object="${stockImport}" method="post">
+			<form
+				th:action="${stockImport.import_id == null} ? @{/manager/stock_imports/add} : @{/manager/stock_imports/edit}"
+				th:object="${stockImport}" method="post">
 
-                <input type="hidden" th:field="*{import_id}" th:if="${stockImport.import_id != null}" />
+				<input type="hidden" th:field="*{import_id}"
+					th:if="${stockImport.import_id != null}" />
 
-                <div class="mb-3">
-                    <label class="form-label">Import Date & Time</label> 
-                    <input type="datetime-local" class="form-control" th:field="*{imported_at}" required />
-                </div>
+				<div class="row">
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Import Date & Time</label> <input
+							type="datetime-local" class="form-control"
+							th:field="*{imported_at}" required />
+					</div>
 
-                <div class="mb-3">
-                    <label class="form-label">Supplier</label> 
-                    <select class="form-select" th:field="*{supplier_id}" required>
-                        <option value="" disabled selected>-- Select Supplier --</option>
-                        <option th:each="sup : ${suppliers}" th:value="${sup.supplier_id}" th:text="${sup.name}"></option>
-                    </select>
-                </div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Supplier</label> <select
+							class="form-select" th:field="*{supplier_id}" required>
+							<option value="" disabled selected>-- Select Supplier --</option>
+							<option th:each="sup : ${suppliers}"
+								th:value="${sup.supplier_id}" th:text="${sup.name}"></option>
+						</select>
+					</div>
+				</div>
 
-                <div class="mb-3">
-                    <label class="form-label">Employee</label> 
-                    <select class="form-select" th:field="*{employee_id}" required>
-                        <option value="" disabled selected>-- Select Employee --</option>
-                        <option th:each="emp : ${employees}" th:value="${emp.employeeId}" th:text="${emp.name}"></option>
-                    </select>
-                </div>
+				<div class="row">
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Employee</label> <select
+							class="form-select" th:field="*{employee_id}" required>
+							<option value="" disabled selected>-- Select Employee --</option>
+							<option th:each="emp : ${employees}" th:value="${emp.employeeId}"
+								th:text="${emp.name}"></option>
+						</select>
+					</div>
 
-                <div class="mb-3">
-                    <label class="form-label">Branch</label> 
-                    <select class="form-select" th:field="*{branch_id}" required>
-                        <option value="" disabled selected>-- Select Branch --</option>
-                        <option th:each="br : ${branches}" th:value="${br.branch_id}" th:text="${br.name}"></option>
-                    </select>
-                </div>
+					<div class="col-md-6 mb-3">
+						<label class="form-label">Branch</label> <select
+							class="form-select" th:field="*{branch_id}" required>
+							<option value="" disabled selected>-- Select Branch --</option>
+							<option th:each="br : ${branches}" th:value="${br.branch_id}"
+								th:text="${br.name}"></option>
+						</select>
+					</div>
+				</div>
 
-                <div class="mb-4">
-                    <label class="form-label">Total Amount</label> 
-                    <input type="number" step="0.01" class="form-control" th:field="*{total_cost}" placeholder="e.g. 15000.00" required />
-                </div>
+				<hr class="my-4" style="border-color: #e6d5c3;">
 
-                <button type="submit" class="btn btn-coffee-primary">Save Import</button>
-                <a th:href="@{/manager/stock_imports}" class="btn btn-coffee-secondary">Cancel</a>
-            </form>
-        </div>
-    </div>
+				<h4 class="mb-3"
+					style="font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.5px;">What
+					Arrived</h4>
+
+				<!-- Item Detail Row (Index 0) -->
+				<div class="detail-row">
+					<div class="row align-items-end">
+						<div class="col-md-4 mb-3 mb-md-0">
+							<label class="form-label">Ingredient</label> <select
+								class="form-select" name="details[0].ingredient_type_id"
+								required>
+								<option value="" disabled selected>-- Select Ingredient
+									--</option>
+								<option th:each="ing : ${ingredients}"
+									th:value="${ing.ingredientTypeId}" th:text="${ing.name}"></option>
+							</select>
+						</div>
+
+						<div class="col-md-3 mb-3 mb-md-0">
+							<label class="form-label">Qty</label> <input type="number"
+								step="0.001" class="form-control"
+								name="details[0].quantity_ordered" placeholder="0.0" required />
+						</div>
+
+						<div class="col-md-3 mb-3 mb-md-0">
+							<label class="form-label">Unit Cost</label> <input type="number"
+								step="0.001" class="form-control" name="details[0].unit_cost"
+								placeholder="0.00" required />
+						</div>
+				</div>
+
+					<div class="row mt-3">
+						<div class="col-md-12">
+							<label class="form-label">Expiration Date (printed on the
+								delivery)</label> 1<input type="date" class="form-control"
+								name="details[0].expireDate" required />
+						</div>
+					</div>
+				</div>
+
+					<div class="mb-4">
+					<label class="form-label">Total Amount</label> <input type="number"
+						step="0.01" class="form-control" th:field="*{total_cost}"
+						placeholder="0.00" required />
+				</div>
+
+				<div class="d-flex justify-content-between align-items-center mt-4">
+					<a th:href="@{/manager/stock_imports}"
+						class="btn btn-coffee-secondary">Cancel</a>
+					<button type="submit" class="btn btn-coffee-primary">Record
+						Import</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+<script>
+        function calculateTotal() {
+            let unitCostInput = document.querySelector('input[name="details[0].unit_cost"]');
+            let totalInput = document.querySelector('input[name="total_cost"]');
+
+            if (unitCostInput && totalInput) {
+                let unitCost = parseFloat(unitCostInput.value) || 0;
+                
+                let total = unitCost * 100;
+                
+                totalInput.value = total.toFixed(2);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            let unitCostInput = document.querySelector('input[name="details[0].unit_cost"]');
+
+            if (unitCostInput) {
+                unitCostInput.addEventListener('input', calculateTotal);
+            }
+        });
+    </script>
 </body>
 </html>

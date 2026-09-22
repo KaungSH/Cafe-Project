@@ -90,7 +90,7 @@ public class IngredientBatchController {
 			model.addAttribute("ingredientTypes", ingredientTypeRepository.findAll());
 			return "NayZarLinn/ingredientBatch/edit";
 		}
-		return "redirect:/manager/ingredientBatch";
+		return "redirect:/error/404";
 	}
 
 	@PostMapping("/edit")
@@ -103,7 +103,7 @@ public class IngredientBatchController {
 		}
 		ingredientBatch.setCreatedAt(LocalDateTime.now());
 		this.ingredientBatchService.edit(ingredientBatch.getBatchId(), ingredientBatch);
-		return "redirect:/manager/ingredientBatch";
+		return "redirect:/error/404";
 	}
 
 	@GetMapping("/delete/{batchId}")
@@ -114,7 +114,7 @@ public class IngredientBatchController {
 			return "NayZarLinn/ingredientBatch/delete";
 		}
 		model.addAttribute("ingredientBatch", existingIb);
-		return "";
+		return "redirect:/error/404";
 	}
 
 	@PostMapping("/delete")

@@ -13,6 +13,8 @@ public class ExpenseDto {
 	private String employee_id;
 	private LocalDateTime created_at;
 	private Boolean isdeleted;
+	private String branch_name;
+	private String category_name;
 
 	public ExpenseDto() {
 	}
@@ -22,10 +24,10 @@ public class ExpenseDto {
 			Boolean isdeleted) {
 		this.expense_id = expense_id;
 		this.branch_id = branch_id;
-		this.created_at = created_at;
+		this.expense_category_id = expense_category_id;
 		this.amount = amount;
-		this.expense_date = expense_date;
 		this.description = description;
+		this.expense_date = expense_date;
 		this.employee_id = employee_id;
 		this.created_at = created_at;
 		this.isdeleted = isdeleted;
@@ -102,4 +104,21 @@ public class ExpenseDto {
 	public void setIsdeleted(Boolean isdeleted) {
 		this.isdeleted = isdeleted;
 	}
+
+	public String getBranch_name() {
+		return branch_name;
+	}
+
+	public void setBranch_name(String branch_name) {
+		this.branch_name = branch_name;
+	}
+
+	public String getCategory_name() {
+		return category_name;
+	}
+
+	public void setCategory_name(String category_name) {
+		this.category_name = category_name;
+	}
+
 }

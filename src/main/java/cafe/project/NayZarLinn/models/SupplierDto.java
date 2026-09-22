@@ -7,8 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class SupplierDto {
-	@NotBlank(message = "Supplier Type ID is required")
-	@Pattern(regexp = "^SUP-.*$", message = "Ingredient Type ID must start with SUP-")
+
 	private String supplier_id;
 	@NotBlank(message = "Name is required")
 	private String name;

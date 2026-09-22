@@ -1,6 +1,7 @@
 package cafe.project.NayZarLinn.repositories;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -18,12 +19,13 @@ public class ExpenseRepository {
 	}
 
 	public List<Expense> findAll() {
-		String sql = "SELECT e.expense_date As date, e.description, e.created_at, e.amount,\r\n"
-				+ "b.Name As brandName,\r\n"
+		String sql = "SELECT e.*,"
+				+ "b.name As branch,\r\n"
 				+ "ec.category_name\r\n"
 				+ "FROM expenses e\r\n"
 				+ "LEFT JOIN branches b ON e.branch_id = b.branch_id \r\n"
-				+ "LEFT JOIN expense_categories ec ON e.expense_category_id = ec.expense_category_id";
+				+ "LEFT JOIN expense_categories ec ON e.expense_category_id = ec.expense_category_id"
+				+ " WHERE b.isdeleted = 0";
 		List<Expense> entities = this.jdbcTemplate.query(sql, new ExpenseMapper());
 		return entities;
 	}
@@ -45,7 +47,7 @@ public class ExpenseRepository {
 				+ "(expense_id, branch_id, expense_categories, amount, expense_date, description, employee_id, created_at, isdeleted)\r\n"
 				+ "VALUES(?,?,?,?,?,?,?,?,?)";
 		return this.jdbcTemplate.update(sql,
-				entity.getExpense_id(),
+				UUID.randomUUID().toString(),
 				entity.getBranch_id(),
 				entity.getExpense_category_id(),
 				entity.getAmount(),
@@ -81,17 +83,23 @@ public class ExpenseRepository {
 	}
 
 	public List<Expense> DeletedList() {
-		String sql = "";
-		return null;
+		String sql = "SELECT e.*,\r\n"
+				+ "b.Name As brandName,\r\n"
+				+ "ec.category_name\r\n"
+				+ "FROM expenses e\r\n"
+				+ "LEFT JOIN branches b ON e.branch_id = b.branch_id \r\n"
+				+ "LEFT JOIN expense_categories ec ON e.expense_category_id = ec.expense_category_id\r\n"
+				+ "WHERE b.isdeleted = 1";
+		return this.jdbcTemplate.query(sql, new ExpenseMapper());
 	}
 	
 	public int restore(String expense_id) {
-		String sql = "";
-		return 0;
+		String sql = "UPDATE expenses SET isdeleted = 0 WHERE expense_id=?;";
+		return jdbcTemplate.update(sql, expense_id);
 	}
 	
 	public int hardDelete(String expense_id) {
-		String sql = "";
-		return 0;
+		String sql = "DELETE FROM expenses WHERE expense_id=?";
+		return jdbcTemplate.update(sql, expense_id);
 	}
 }

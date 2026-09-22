@@ -29,11 +29,11 @@ public class StockImportDetailRepository {
 
 	public int add(StockImportDetail entity) {
 		String sql = "INSERT INTO stock_import_details "
-				+ "(import_detail_id, import_id, ingredient_type_id, quantity_ordered, unit_cost, line_total, isdeleted) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
+				+ "(import_detail_id, import_id, ingredient_type_id, quantity_ordered, unit_cost, line_total) "
+				+ "VALUES (?, ?, ?, ?, ?, ?)";
 		return jdbcTemplate.update(sql, entity.getImport_detail_id(), entity.getImport_id(),
 				entity.getIngredient_type_id(), entity.getQuantity_ordered(), entity.getUnit_cost(),
-				entity.getLine_total(), entity.isIsdeleted());
+				entity.getLine_total());
 	}
 
 	public int edit(StockImportDetail entity) {

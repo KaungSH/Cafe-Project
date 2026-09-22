@@ -19,14 +19,13 @@ public class IngredientBatch {
 	private BigDecimal unitCost;
 	private String branchName;
 	private String ingredientTypeName;
-	
 
 	public IngredientBatch() {
 	}
 
 	public IngredientBatch(String batchId, BigDecimal remainingQuantity, LocalDate manufacturedDate,
 			LocalDate expireDate, String branchId, String importDetailId, Boolean isExpired, Boolean isDeleted,
-			LocalDateTime createdAt, String ingredientTypeId, BigDecimal unitCost,String branchName,
+			LocalDateTime createdAt, String ingredientTypeId, BigDecimal unitCost, String branchName,
 			String ingredientTypeName) {
 		this.batchId = batchId;
 		this.remainingQuantity = remainingQuantity;

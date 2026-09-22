@@ -39,6 +39,15 @@ public class IngredientBatchRepository {
 		return jdbcTemplate.query(sql, new BatchesAndExpiryMapper());
 
 	}
+	
+	public IngredientBatch findByImportDetailId(String importDetailId) {
+		String sql = "SELECT ib.*, b.name AS branch_name,it.name AS ingredient_type_name\r\n"
+				+ "FROM ingredient_batches ib LEFT JOIN branches b ON ib.branch_id = b.branch_id \r\n"
+				+ "LEFT JOIN ingredient_types it ON ib.ingredient_type_id = it.ingredient_type_id\r\n"
+				+ "WHERE ib.import_detail_id = ? AND ib.isdeleted = 0";
+		List<IngredientBatch> entities = this.jdbcTemplate.query(sql, new IngredientBatchMapper(), importDetailId);
+		return entities.isEmpty() ? null : entities.get(0);
+	}
 
 	public IngredientBatch findByBatchId(String batchId) {
 		String sql = " SELECT ib.*, \r\n" + "b.name AS branch_name,\r\n" + "it.name AS ingredient_type_name\r\n"
