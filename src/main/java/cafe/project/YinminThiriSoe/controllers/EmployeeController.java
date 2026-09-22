@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import cafe.project.YinminThiriSoe.models.employeemanagement.LoginModel;
 import cafe.project.YinminThiriSoe.repositories.entities.Employee;
 import cafe.project.YinminThiriSoe.services.EmployeeService;
+import cafe.project.employeemanagement.models.LoginDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
-@Controller
+
 @RequestMapping("/manager/employee")
 public class EmployeeController {
 
@@ -33,12 +33,12 @@ public class EmployeeController {
 
 	@GetMapping("/login")
 	public String loginPage(Model model) {
-		model.addAttribute("loginModel", new LoginModel());
+		model.addAttribute("loginModel", new LoginDto());
 		return "YinminThiriSoe/manager/employee/login";
 	}
 
 	@PostMapping("/login")
-	public String login(@Valid @ModelAttribute("loginModel") LoginModel loginModel,
+	public String login(@Valid @ModelAttribute("loginModel") LoginDto loginModel,
 			org.springframework.validation.BindingResult bindingResult, HttpSession session, HttpServletRequest request,
 			Model model) {
 		if (bindingResult.hasErrors()) {

@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate = "~{layouts/public_layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<div layout:fragment = "content">
+<h2><strong th:text = "${message}"></strong><br> 403 Forbidden</h2>
+	<a th:href="@{/}" class="btn btn-dark">Go Back to Home.</a>
+</div>
+</html>
