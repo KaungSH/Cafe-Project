@@ -12,13 +12,12 @@ import cafe.project.HeinMinHtet.repositories.mappers.OrdersMapper;
 public class OrdersRepository {
 
 	private final JdbcTemplate jdbcTemplate;
-	
 
 	public OrdersRepository(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-
+	// GET ALL
 	public List<Orders> findAll() {
 
 		String sql = "SELECT * FROM orders WHERE isdeleted = false";
@@ -34,6 +33,7 @@ public class OrdersRepository {
 	}
 	
 
+	// GET DELETED ALL
 	public List<Orders> findDeletedAll() {
 
 		String sql = "SELECT * FROM orders WHERE isdeleted = true";
@@ -41,17 +41,15 @@ public class OrdersRepository {
 		return jdbcTemplate.query(sql, new OrdersMapper());
 	}
 
-	
+	// GET BY ID
 	public Orders findById(String id) {
 
 		String sql = "SELECT * FROM orders WHERE order_id = ?";
 
 		return jdbcTemplate.queryForObject(sql, new OrdersMapper(), id);
 	}
-	
-	
-	
 
+	// SAVE
 	public int save(Orders entity) {
 
 		String sql = "INSERT INTO orders "
@@ -73,6 +71,7 @@ public class OrdersRepository {
 				entity.getTotal_amount());
 	}
 
+	// UPDATE
 	public int edit(String id, Orders entity) {
 
 		String sql = "UPDATE orders SET "
@@ -95,7 +94,7 @@ public class OrdersRepository {
 				id);
 	}
 
-
+	// SOFT DELETE
 	public int delete(String id) {
 
 		String sql = "UPDATE orders SET isdeleted = 1 WHERE order_id = ?";

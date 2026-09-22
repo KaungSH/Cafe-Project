@@ -16,7 +16,18 @@
 
 	<h2 class="fw-bold text-center text-decoration-underline mb-4">
 		MENU - Café Луфт</h2>
-
+		
+	<form method="post" th:action="@{/staff/products/search}" th:object="${keywordmodel}" id="search" class="d-flex gap-2 align-items-center">
+	    <input type="text" 
+	           th:field="*{keyword}" 
+	           class="form-control" 
+	           placeholder="Search products..." 
+	           aria-label="Search">
+	    <button type="submit" class="btn btn-submit">
+	        <i class="fa-solid fa-magnifying-glass me-1"></i> Search
+	    </button>
+	</form>
+	
 	<form method="post" th:action="@{/staff/products}"
 		th:object="${product_quantities}" id="productTypeForm">
 

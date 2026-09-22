@@ -119,7 +119,7 @@
       <!-- Date -->
       <div class="mb-3">
         <label for="date" class="form-label fw-bold">Date</label>
-        <input type="date" id="date" th:field="*{date}" class="form-control">
+        <input type="date" id="date" name="date" th:value="${#temporals.format(registerDto.date, 'yyyy-MM-dd')}" class="form-control">
       </div>
 
       <!-- Opened At -->

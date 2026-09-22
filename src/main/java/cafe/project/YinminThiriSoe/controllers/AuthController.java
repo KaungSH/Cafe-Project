@@ -1,20 +1,19 @@
 package cafe.project.YinminThiriSoe.controllers;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import cafe.project.YinminThiriSoe.models.employeemanagement.LoginModel;
 import cafe.project.YinminThiriSoe.repositories.entities.Employee;
 import cafe.project.YinminThiriSoe.services.EmployeeService;
+import cafe.project.employeemanagement.models.LoginDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
-@Controller
+//@Controller
 public class AuthController {
 
 	private final EmployeeService employeeService;
@@ -25,12 +24,12 @@ public class AuthController {
 
 	@GetMapping("/employee/login")
 	public String loginPage(Model model) {
-		model.addAttribute("loginModel", new LoginModel());
+		model.addAttribute("loginModel", new LoginDto());
 		return "YinminThiriSoe/employee/login";
 	}
 
 	@PostMapping("/employee/login")
-	public String login(@Valid @ModelAttribute("loginModel") LoginModel loginModel, BindingResult bindingResult,
+	public String login(@Valid @ModelAttribute("loginModel") LoginDto loginModel, BindingResult bindingResult,
 			HttpSession session, HttpServletRequest request, Model model) {
 
 		if (bindingResult.hasErrors()) {

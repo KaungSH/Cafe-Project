@@ -40,6 +40,32 @@ public class ProductTypeService {
 	    return list;
 	}
 	
+	public List<ProductTypeListModel> searchByName(String keyword){
+		List<ProductTypeListModel> list = new ArrayList<>();
+	    
+	    for (ProductType item : pt.searchByName(keyword)) {
+	        String categoryName = cr.findById(item.getCategory_id()).getName();
+	        String employeeName = er.findById(item.getEmployee_id()).getName();
+	        
+	        list.add(toListModel2(item, categoryName, employeeName));
+	    }
+	    
+	    return list;
+	}
+	
+	public List<ProductTypeListModel> searchDeletedByName(String keyword){
+		List<ProductTypeListModel> list = new ArrayList<>();
+	    
+	    for (ProductType item : pt.searchDeletedByName(keyword)) {
+	        String categoryName = cr.findById(item.getCategory_id()).getName();
+	        String employeeName = er.findById(item.getEmployee_id()).getName();
+	        
+	        list.add(toListModel3(item, categoryName, employeeName));
+	    }
+	    
+	    return list;
+	}
+	
 	public List<ProductTypeListModel> findDeletedAll(){
 		List<ProductTypeListModel> list = new ArrayList<>();
 	    

@@ -29,6 +29,18 @@ public class ProductTypeRepository {
 		return jdbcTemplate.query(sql, new ProductTypeMapper());
 	}
 	
+	public List<ProductType> searchByName(String keyword) {
+	    String searchKeyword = "%" + keyword + "%";
+	    String sql = "SELECT * FROM product_types WHERE name LIKE ? AND isdeleted = false";
+	    return jdbcTemplate.query(sql, new ProductTypeMapper(), searchKeyword);
+	}
+	
+	public List<ProductType> searchDeletedByName(String keyword) {
+	    String searchKeyword = "%" + keyword + "%";
+		String sql = "SELECT * FROM product_types WHERE name LIKE ? AND isdeleted = true";
+		return jdbcTemplate.query(sql, new ProductTypeMapper(), searchKeyword);
+	}
+	
 	public ProductType findById(String id) {
 		String sql = "SELECT * FROM product_types WHERE isdeleted = false AND type_id = ?";
 		return jdbcTemplate.queryForObject(sql, new ProductTypeMapper(), id);
