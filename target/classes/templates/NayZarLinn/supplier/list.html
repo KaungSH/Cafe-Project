@@ -264,20 +264,15 @@ body {
 		<table class="table">
 			<thead>
 				<tr>
-					<th>Supplier_id</th>
 					<th>Name</th>
 					<th>Contact_Info</th>
-					<th>Created_at</th>
 					<th></th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr th:each="s, state: ${supplier}">
-					<td th:text="${s.supplier_id}"></td>
 					<td th:text="${s.name}"></td>
 					<td th:text="${s.contact_info}"></td>
-					<td
-						th:text="${#temporals.format(s.created_at, 'MM.dd.yyyy HH:mm')}"></td>
 					<td><a
 						th:href="@{/manager/supplier/edit/{supplier_id}(supplier_id=${s.supplier_id})}"
 						class="btn-edit">Edit</a> <a

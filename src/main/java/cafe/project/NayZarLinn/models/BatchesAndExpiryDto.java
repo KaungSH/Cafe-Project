@@ -16,13 +16,14 @@ public class BatchesAndExpiryDto {
 	private String importDetailId;
 	private BigDecimal quantityOrdered;
 	private BigDecimal lineTotal;
+	private String unit_abbreviation;
 
 	public BatchesAndExpiryDto() {
 	}
 
 	public BatchesAndExpiryDto(String batchId, String ingredientTypeName, LocalDate manufacturedDate,
 			LocalDate expireDate, BigDecimal remainingQty, BigDecimal unitCost, String importDetailId,
-			BigDecimal quantityOrdered, BigDecimal lineTotal) {
+			BigDecimal quantityOrdered, BigDecimal lineTotal, String unit_abbreviation) {
 		this.batchId = batchId;
 		this.ingredientTypeName = ingredientTypeName;
 		this.manufacturedDate = manufacturedDate;
@@ -32,6 +33,7 @@ public class BatchesAndExpiryDto {
 		this.importDetailId = importDetailId;
 		this.quantityOrdered = quantityOrdered;
 		this.lineTotal = lineTotal;
+		this.unit_abbreviation = unit_abbreviation;
 	}
 
 	public String getBatchId() {
@@ -120,6 +122,14 @@ public class BatchesAndExpiryDto {
 
 	public void setLineTotal(BigDecimal lineTotal) {
 		this.lineTotal = lineTotal;
+	}
+
+	public String getUnit_abbreviation() {
+		return unit_abbreviation;
+	}
+
+	public void setUnit_abbreviation(String unit_abbreviation) {
+		this.unit_abbreviation = unit_abbreviation;
 	}
 
 }

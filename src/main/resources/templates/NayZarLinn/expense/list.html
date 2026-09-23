@@ -1,18 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
-
 <meta charset="UTF-8">
-
 <title>Expense List</title>
-
-<!-- Bootstrap -->
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
 	rel="stylesheet">
-
-<!-- Bootstrap Icons -->
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
@@ -30,7 +23,6 @@ body {
 	margin: auto;
 }
 
-/* Header */
 .expense-header {
 	display: flex;
 	justify-content: space-between;
@@ -51,7 +43,6 @@ body {
 	font-size: 16px;
 }
 
-/* Buttons */
 .add-button {
 	background-color: #95612e;
 	color: white;
@@ -84,7 +75,6 @@ body {
 	color: #3f2d20;
 }
 
-/* Table */
 table {
 	width: 100%;
 	border-collapse: separate;
@@ -123,7 +113,6 @@ tbody tr:hover {
 	background-color: #f7efe4;
 }
 
-/* Actions */
 .actions {
 	white-space: nowrap;
 }
@@ -161,11 +150,15 @@ tbody tr:hover {
 	color: #3f2d20;
 }
 
-/* Empty message */
 .empty-message {
 	text-align: center;
 	padding: 30px;
 	color: #806c5b;
+}
+
+.date-column {
+	min-width: 150px;
+	white-space: nowrap;
 }
 </style>
 
@@ -176,14 +169,12 @@ tbody tr:hover {
 
 	<div class="container">
 
-		<!-- ================= HEADER ================= -->
-
 		<div class="expense-header">
 
 			<div class="expense-title">
 
 				<h2>
-					<i class="bi bi-cup-hot"></i> Expense List
+					 Expense List
 				</h2>
 
 				<p>Manage Expenses</p>
@@ -193,20 +184,14 @@ tbody tr:hover {
 
 			<div>
 
-				<!-- Add -->
-				<a th:href="@{/manager/expense/add}" class="add-button"> Add </a>
-
-
-				<!-- Deleted List -->
-				<a th:href="@{/manager/expense/deleted}" class="deleted-button">
+				<a th:href="@{/manager/expense/add}" class="add-button"> Add </a> <a
+					th:href="@{/manager/expense/deleted}" class="deleted-button">
 					Deleted Expenses List </a>
 
 			</div>
 
 		</div>
 
-
-		<!-- ================= EXPENSE TABLE ================= -->
 
 		<table>
 
@@ -233,48 +218,43 @@ tbody tr:hover {
 
 			<tbody>
 
-
-				<!-- No Data -->
-
 				<tr th:if="${#lists.isEmpty(expense)}">
 
 					<td colspan="6" class="empty-message">No expense found.</td>
 
 				</tr>
 
-
 				<tr th:each="e : ${expense}">
 
-					<!-- Date -->
-					<td th:text="${#temporals.format(e.expense_date, 'dd-MM-yy')}">Date</td>
+					<td th:text="${#temporals.format(e.expense_date, 'MMM dd, yyyy')}">Date</td>
 
-					<!-- Brand / Branch Name -->
 					<td th:text="${e.branch_name}">Branch</td>
 
-					<!-- Category Name -->
 					<td th:text="${e.category_name}">Category</td>
 
-					<!-- Description -->
 					<td th:text="${e.description}">Description</td>
 
-					<!-- Amount -->
+
 					<td th:text="${e.amount}">Amount</td>
 
 					<td class="actions"><a
 						th:href="@{/manager/expense/edit/{expense_id}(expense_id=${e.expense_id})}"
-						class="edit-button"> Edit </a> <a
-						th:href="@{/manager/expense/delete/{expense_id}(expense_id=${e.expense_id})}"
-						class="delete-button"> Delete </a></td>
+						class="edit-button"> Edit </a>
+						<form th:action="@{/manager/expense/delete}" method="post"
+							style="display: inline;"
+							onsubmit="return confirm('Are you sure you want to delete this expense?');">
 
+							<input type="hidden" name="expense_id" th:value="${e.expense_id}">
+
+							<button type="submit" class="delete-button">Delete</button>
+
+						</form></td>
 				</tr>
 			</tbody>
 
 		</table>
 
 	</div>
-
-
-	<!-- Bootstrap JS -->
 
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">

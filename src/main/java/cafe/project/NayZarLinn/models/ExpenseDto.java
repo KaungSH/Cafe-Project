@@ -2,13 +2,26 @@ package cafe.project.NayZarLinn.models;
 
 import java.time.LocalDateTime;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class ExpenseDto {
 
 	private String expense_id;
+	@NotBlank(message = "Please select a branch")
 	private String branch_id;
+	@NotBlank(message = "Please select a category")
 	private String expense_category_id;
+	@NotNull(message = "Unit cost is required")
+	@DecimalMin(value = "0.0", message = "Unit cost cannot be negative")
 	private double amount;
+	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
+	@NotNull(message = "Expense Date is required")
 	private LocalDateTime expense_date;
+	
 	private String description;
 	private String employee_id;
 	private LocalDateTime created_at;

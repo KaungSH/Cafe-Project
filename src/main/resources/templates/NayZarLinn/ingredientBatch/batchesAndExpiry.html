@@ -379,7 +379,9 @@ body {
 							th:text="${#temporals.format(batch.expireDate, 'MMM dd, yyyy')}">
 						</span></td>
 
-						<td><span th:text="${batch.remainingQty}"> </span></td>
+						<td><span
+							th:text="${batch.remainingQty.stripTrailingZeros().toPlainString()}"></span>
+							<span th:text="${batch.unit_abbreviation}"></span></td>
 
 						<td>$ <span th:text="${batch.unitCost}"> </span>
 

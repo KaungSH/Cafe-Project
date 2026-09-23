@@ -161,14 +161,11 @@ body {
 			</div>
 
 
-			<form method="post" th:action="@{/manager/supplier/edit}"
-				th:object="${supplier}">
+			<form th:action="@{/manager/supplier/edit}"
+				th:object="${supplier}" method="post">
+				<input type="hidden" name="supplier_id" th:value="${supplier.supplier_id}">
 
 				<div class="form-body">
-
-					<!-- Supplier ID is kept but hidden -->
-					<input type="hidden" th:field="*{supplier_id}">
-
 
 					<div class="form-row">
 
@@ -208,28 +205,7 @@ body {
 
 					</div>
 
-
-					<div class="form-row">
-
-						<div class="form-label-box">Created At</div>
-
-						<div class="dash">-</div>
-
-						<div class="input-box">
-
-							<input type="datetime-local" class="form-control"
-								th:field="*{created_at}">
-
-							<div class="error" th:if="${#fields.hasErrors('created_at')}"
-								th:errors="*{created_at}"></div>
-
-						</div>
-
-					</div>
-
-
 				</div>
-
 
 				<div class="form-footer">
 
@@ -238,7 +214,6 @@ body {
 					<button type="submit" class="btn-update">Update Supplier</button>
 
 				</div>
-
 
 			</form>
 

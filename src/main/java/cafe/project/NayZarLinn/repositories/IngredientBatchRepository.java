@@ -29,17 +29,18 @@ public class IngredientBatchRepository {
 	}
 
 	public List<BatchesAndExpiryDto> batchesAndExpiry() {
-		String sql = "SELECT ib.batch_id,\r\n" + "    it.name AS ingredient_type_name,\r\n"
-				+ "    ib.manufactured_date,\r\n" + "    ib.expire_date,\r\n" + "    ib.remaining_quantity,\r\n"
-				+ "    ib.unit_cost,\r\n" + "    sid.import_detail_id,\r\n" + "    sid.quantity_ordered,\r\n"
-				+ "    sid.line_total\r\n" + "FROM ingredient_batches ib\r\n" + "INNER JOIN ingredient_types it\r\n"
-				+ "    ON ib.ingredient_type_id = it.ingredient_type_id\r\n" + "INNER JOIN stock_import_details sid\r\n"
-				+ "    ON ib.import_detail_id = sid.import_detail_id\r\n" + "WHERE ib.isdeleted = 0\r\n"
-				+ "ORDER BY ib.expire_date ASC";
+		String sql = "SELECT ib.batch_id,\r\n" + "it.name AS ingredient_type_name, \r\n"
+				+ "u.abbreviation AS unit_abbreviation, \r\n" + "ib.manufactured_date, \r\n" + "ib.expire_date, \r\n"
+				+ "ib.remaining_quantity, \r\n" + "ib.unit_cost, \r\n" + "sid.import_detail_id, \r\n"
+				+ "sid.quantity_ordered, \r\n" + "sid.line_total \r\n" + "FROM ingredient_batches ib \r\n"
+				+ "INNER JOIN ingredient_types it \r\n" + "ON ib.ingredient_type_id = it.ingredient_type_id \r\n"
+				+ "INNER JOIN units u \r\n" + "ON it.unit_id = u.unit_id \r\n"
+				+ "INNER JOIN stock_import_details sid \r\n" + "ON ib.import_detail_id = sid.import_detail_id \r\n"
+				+ "WHERE ib.isdeleted = 0 \r\n" + "ORDER BY ib.expire_date DESC;";
 		return jdbcTemplate.query(sql, new BatchesAndExpiryMapper());
 
 	}
-	
+
 	public IngredientBatch findByImportDetailId(String importDetailId) {
 		String sql = "SELECT ib.*, b.name AS branch_name,it.name AS ingredient_type_name\r\n"
 				+ "FROM ingredient_batches ib LEFT JOIN branches b ON ib.branch_id = b.branch_id \r\n"

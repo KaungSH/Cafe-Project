@@ -29,7 +29,7 @@ public class IngredientBatchDto {
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private LocalDate expireDate;
 
-	@NotBlank(message = "Please select a branch Id")
+	@NotBlank(message = "Please select a branch")
 	private String branchId;
 
 	@NotBlank(message = "Please select import detail")

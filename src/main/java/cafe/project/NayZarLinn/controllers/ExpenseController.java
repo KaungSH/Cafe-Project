@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import cafe.project.NayZarLinn.models.ExpenseDto;
+import cafe.project.NayZarLinn.repositories.ExpenseCategoryRepository;
 import cafe.project.NayZarLinn.services.ExpenseService;
+import cafe.project.YatiWinLatt.repositories.BranchRepository;
 import jakarta.validation.Valid;
 
 @Controller
@@ -21,88 +23,90 @@ import jakarta.validation.Valid;
 public class ExpenseController {
 
 	private final ExpenseService expenseService;
+	private final BranchRepository branchRepository;
+	private final ExpenseCategoryRepository expenseCategoryRepository;
 
-	public ExpenseController(ExpenseService expenseService) {
+	public ExpenseController(ExpenseService expenseService, BranchRepository branchRepository,
+			ExpenseCategoryRepository expenseCategoryRepository) {
 		this.expenseService = expenseService;
+		this.branchRepository = branchRepository;
+		this.expenseCategoryRepository = expenseCategoryRepository;
 	}
-	
+
 	@GetMapping
 	public String ExpenseList(Model model) {
 		model.addAttribute("expense", this.expenseService.findAll());
 		return "NayzarLinn/expense/list";
 	}
-	
+
 	@GetMapping("/add")
 	public String addExpense(Model model) {
 		model.addAttribute("expense", new ExpenseDto());
+		model.addAttribute("branches", branchRepository.findAll());
+		model.addAttribute("expenseCategories", expenseCategoryRepository.findAll());
 		return "NayZarLinn/expense/add";
 	}
-	
+
 	@PostMapping("/add")
-	public String addExpense(@Valid @ModelAttribute("expense") ExpenseDto expense,
-			BindingResult bindingResult, Model model) {
-		if(bindingResult.hasErrors()) {
+	public String addExpense(@Valid @ModelAttribute("expense") ExpenseDto expense, BindingResult bindingResult,
+			Model model) {
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("branches", branchRepository.findAll());
+			model.addAttribute("expenseCategories", expenseCategoryRepository.findAll());
 			return "NayZarLinn/expense/add";
 		}
 		expense.setCreated_at(LocalDateTime.now());
-		this.expenseService.add(expense);
+		expenseService.add(expense);
 		return "redirect:/manager/expense";
 	}
-	
+
 	@GetMapping("/edit/{expense_id}")
-	public String editExpense(@PathVariable String expense_id,Model model) {
-		ExpenseDto existingEp = this.expenseService.findById(expense_id);
-		if(existingEp != null) {
-			model.addAttribute("expense",existingEp);
-			return "NayZarLinn/Expense/edit";
+	public String editExpense(@PathVariable String expense_id, Model model) {
+		ExpenseDto existingEp = expenseService.findById(expense_id);
+		if (existingEp != null) {
+			model.addAttribute("expense", existingEp);
+			model.addAttribute("branches", branchRepository.findAll());
+			model.addAttribute("expenseCategories", expenseCategoryRepository.findAll());
+			return "NayZarLinn/expense/edit";
 		}
-		return "redirect:/error/404";
+		return "redirect:/manager/expense";
 	}
-	
-	@PostMapping("edit")
-	public String editExpense(@Valid @ModelAttribute("expense") ExpenseDto expense,
-			BindingResult bindingResult) {
-		if(bindingResult.hasErrors()) {
+
+	@PostMapping("/edit")
+	public String editExpense(@Valid @ModelAttribute("expense") ExpenseDto expense, BindingResult bindingResult,
+			Model model) {
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("branches", branchRepository.findAll());
+			model.addAttribute("expenseCategories", expenseCategoryRepository.findAll());
 			return "NayZarLinn/expense/edit";
 		}
 		expense.setCreated_at(LocalDateTime.now());
-		this.expenseService.edit(expense.getExpense_id(), expense);
-		return "redirect:/error/404";
+		expenseService.edit(expense.getExpense_id(), expense);
+		return "redirect:/manager/expense";
 	}
-	
-	@GetMapping("delete/{expense_id}")
-	public String deleteExpense(@PathVariable String expense_id,Model model) {
-		ExpenseDto existingEp = this.expenseService.findById(expense_id);
-		if(existingEp != null) {
-			model.addAttribute("expense", existingEp);
-			return "NayZarLinn/expense/delete";
-		}
-		model.addAttribute("expense", existingEp);
-		return "redirect:/error/404";
-	}
-	
+
 	@PostMapping("/delete")
-	public String deletedExpense(@ModelAttribute("expense") ExpenseDto expense) {
-		this.expenseService.delete(expense.getExpense_id());
-		return "redirct:/manager/expense";
+	public String deletedExpense(@RequestParam String expense_id) {
+		expenseService.delete(expense_id);
+		return "redirect:/manager/expense";
 	}
-	
+
 	@GetMapping("/deleted")
 	public String deletedExpenseList(Model model) {
 		model.addAttribute("expense", expenseService.deletedList());
 		return "NayZarLinn/expense/deletedList";
 	}
-	
-	@PostMapping("restore")
+
+	@PostMapping("/restore")
 	public String restoreSupplier(@RequestParam String expense_id) {
 		expenseService.restore(expense_id);
 		return "redirect:/manager/expense/deleted";
 	}
-	
-	@PostMapping("real-delete")
+
+	@PostMapping("/real-delete")
 	public String realDeleteExpense(@ModelAttribute("expense") ExpenseDto expense) {
 		expenseService.hardDelete(expense.getExpense_id());
 		return "redirect:/manager/expense/deleted";
 	}
-	
+
 }

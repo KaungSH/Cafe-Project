@@ -19,22 +19,17 @@ public class ExpenseRepository {
 	}
 
 	public List<Expense> findAll() {
-		String sql = "SELECT e.*,"
-				+ "b.name As branch,\r\n"
-				+ "ec.category_name\r\n"
-				+ "FROM expenses e\r\n"
+		String sql = "SELECT e.*," + "b.name As branch_name,\r\n" + "ec.category_name\r\n" + "FROM expenses e\r\n"
 				+ "LEFT JOIN branches b ON e.branch_id = b.branch_id \r\n"
 				+ "LEFT JOIN expense_categories ec ON e.expense_category_id = ec.expense_category_id"
-				+ " WHERE b.isdeleted = 0";
+				+ " WHERE e.isdeleted = 0";
 		List<Expense> entities = this.jdbcTemplate.query(sql, new ExpenseMapper());
 		return entities;
 	}
 
 	public Expense findById(String expense_id) {
-		String sql = "SELECT e.expense_date As date, e.description, e.created_at, e.amount,\r\n"
-				+ "b.Name As brandName,\r\n"
-				+ "ec.category_name\r\n"
-				+ "FROM expenses e\r\n"
+		String sql = "SELECT e.*,\r\n"
+				+ "b.Name As branch_name,\r\n" + "ec.category_name\r\n" + "FROM expenses e\r\n"
 				+ "LEFT JOIN branches b ON e.branch_id = b.branch_id \r\n"
 				+ "LEFT JOIN expense_categories ec ON e.expense_category_id = ec.expense_category_id\r\n"
 				+ "WHERE e.expense_id = ? AND e.isdeleted = 0";
@@ -44,37 +39,21 @@ public class ExpenseRepository {
 
 	public int save(Expense entity) {
 		String sql = "INSERT INTO expenses \r\n"
-				+ "(expense_id, branch_id, expense_categories, amount, expense_date, description, employee_id, created_at, isdeleted)\r\n"
+				+ "(expense_id, branch_id, expense_category_id, amount, expense_date, description, employee_id, created_at, isdeleted)\r\n"
 				+ "VALUES(?,?,?,?,?,?,?,?,?)";
-		return this.jdbcTemplate.update(sql,
-				UUID.randomUUID().toString(),
-				entity.getBranch_id(),
-				entity.getExpense_category_id(),
-				entity.getAmount(),
-				entity.getExpense_date(),
-				entity.getDescription(),
-				entity.getEmployee_id(),
-				entity.getCreated_at(),
-				entity.getIsdeleted()
-				);
+		return this.jdbcTemplate.update(sql, UUID.randomUUID().toString(), entity.getBranch_id(),
+				entity.getExpense_category_id(), entity.getAmount(), entity.getExpense_date(), entity.getDescription(),
+				entity.getEmployee_id(), entity.getCreated_at(), 0);
 	}
 
 	public int edit(String expense_id, Expense entity) {
-		String sql = "UPDATE expenses SET \r\n"
-				+ "branch_id=?, expense_categories=?, amount=?, \r\n"
+		String sql = "UPDATE expenses SET \r\n" + "branch_id=?, expense_category_id=?, amount=?, \r\n"
 				+ "expense_date=?, description=?,employee_id=?, \r\n"
 				+ "created_at=?, isdeleted =? WHERE expense_id=?\r\n";
-				
-		return this.jdbcTemplate.update(sql,
-				entity.getBranch_id(),
-				entity.getExpense_category_id(),
-				entity.getAmount(),
-				entity.getExpense_date(),
-				entity.getDescription(),
-				entity.getEmployee_id(),
-				entity.getCreated_at(),
-				entity.getIsdeleted(),
-				expense_id);
+
+		return this.jdbcTemplate.update(sql, entity.getBranch_id(), entity.getExpense_category_id(), entity.getAmount(),
+				entity.getExpense_date(), entity.getDescription(), entity.getEmployee_id(), entity.getCreated_at(),
+				0, expense_id);
 	}
 
 	public int softDelete(String expense_id) {
@@ -83,21 +62,18 @@ public class ExpenseRepository {
 	}
 
 	public List<Expense> DeletedList() {
-		String sql = "SELECT e.*,\r\n"
-				+ "b.Name As brandName,\r\n"
-				+ "ec.category_name\r\n"
-				+ "FROM expenses e\r\n"
+		String sql = "SELECT e.*,\r\n" + "b.Name As branch_name,\r\n" + "ec.category_name\r\n" + "FROM expenses e\r\n"
 				+ "LEFT JOIN branches b ON e.branch_id = b.branch_id \r\n"
 				+ "LEFT JOIN expense_categories ec ON e.expense_category_id = ec.expense_category_id\r\n"
-				+ "WHERE b.isdeleted = 1";
+				+ "WHERE e.isdeleted = 1";
 		return this.jdbcTemplate.query(sql, new ExpenseMapper());
 	}
-	
+
 	public int restore(String expense_id) {
 		String sql = "UPDATE expenses SET isdeleted = 0 WHERE expense_id=?;";
 		return jdbcTemplate.update(sql, expense_id);
 	}
-	
+
 	public int hardDelete(String expense_id) {
 		String sql = "DELETE FROM expenses WHERE expense_id=?";
 		return jdbcTemplate.update(sql, expense_id);

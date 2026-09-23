@@ -40,6 +40,8 @@ public class BatchesAndExpiryMapper implements ResultSetExtractor<List<BatchesAn
 			dto.setQuantityOrdered(rs.getBigDecimal("quantity_ordered"));
 
 			dto.setLineTotal(rs.getBigDecimal("line_total"));
+			
+			dto.setUnit_abbreviation(rs.getString("unit_abbreviation"));
 
 			long daysLeft = ChronoUnit.DAYS.between(LocalDate.now(), dto.getExpireDate());
 

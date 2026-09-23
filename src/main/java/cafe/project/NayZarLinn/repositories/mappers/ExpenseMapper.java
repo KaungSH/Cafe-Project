@@ -21,7 +21,7 @@ public class ExpenseMapper implements RowMapper<Expense> {
 				rs.getString("expense_category_id"), rs.getDouble("amount"), expense_date, rs.getString("description"),
 				rs.getString("employee_id"), created_at, rs.getBoolean("isdeleted"));
 
-		expense.setBranch_name(rs.getString("branch"));
+		expense.setBranch_name(rs.getString("branch_name"));
 		expense.setCategory_name(rs.getString("category_name"));
 
 		return expense;
