@@ -27,7 +27,7 @@ public class ManagerInterceptor  implements HandlerInterceptor {
             return false;
         }
         LoginDto user = (LoginDto) session.getAttribute("loggedInUser");
-        if (!user.getEmployee_role().equals("MANAGER") || user.getEmployee_role().equals("ADMIN")) {
+        if (!user.getEmployee_role().equals("MANAGER") && !user.getEmployee_role().equals("ADMIN")) {
         	throw new ResponseStatusException(HttpStatus.FORBIDDEN, "NOT ENOUGH PERMISSION!!!");
         }
 

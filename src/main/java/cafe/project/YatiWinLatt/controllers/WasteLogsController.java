@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cafe.project.YatiWinLatt.service.WasteLogsService;
-import cafe.project.YinminThiriSoe.services.EmployeeService;
+import cafe.project.services.EmployeeService;
 import jakarta.validation.Valid;
 import cafe.project.NayZarLinn.models.IngredientBatchDto;
 import cafe.project.NayZarLinn.services.IngredientBatchService;
@@ -52,7 +52,7 @@ public class WasteLogsController {
 		model.addAttribute("wasteLog", new WasteLogsEntryDto());
 		model.addAttribute("reasons", wasteReasonRepository.findReasonsAll());
 		model.addAttribute("batches", ingredientBatchService.findAll());
-		model.addAttribute("employees", employeeService.getAllEmployees());
+		model.addAttribute("employees", employeeService.getAllEmployeeListDto());
 		return "YatiWinLatt/manager/WasteLogs/create1";
 	}
 	
@@ -62,7 +62,7 @@ public class WasteLogsController {
 		model.addAttribute("wasteLog", entryDto);
 		model.addAttribute("reasons", wasteReasonRepository.findReasonsAll());
 		model.addAttribute("batches", ingredientBatchService.findAll());
-		model.addAttribute("employees", employeeService.getAllEmployees());
+		model.addAttribute("employees", employeeService.getAllEmployeeListDto());
 		return "YatiWinLatt/manager/WasteLogs/create";
 	}
 
@@ -73,7 +73,7 @@ public class WasteLogsController {
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("reasons", wasteReasonRepository.findReasonsAll());
 			model.addAttribute("batches", ingredientBatchService.findAll());
-			model.addAttribute("employees", employeeService.getAllEmployees());
+			model.addAttribute("employees", employeeService.getAllEmployeeListDto());
 			return "YatiWinLatt/manager/WasteLogs/create";
 		}
 
@@ -86,7 +86,7 @@ public class WasteLogsController {
 		model.addAttribute("wasteLog", wasteLogsService.getWasteLogsEntryById(waste_id));
 		model.addAttribute("reasons", wasteReasonRepository.findReasonsAll());
 		model.addAttribute("batches", ingredientBatchService.findAll());
-		model.addAttribute("employees", employeeService.getAllEmployees());
+		model.addAttribute("employees", employeeService.getAllEmployeeListDto());
 		return "YatiWinLatt/manager/WasteLogs/edit";
 	}
 
@@ -97,7 +97,7 @@ public class WasteLogsController {
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("reasons", wasteReasonRepository.findReasonsAll());
 			model.addAttribute("batches", ingredientBatchService.findAll());
-			model.addAttribute("employees", employeeService.getAllEmployees());
+			model.addAttribute("employees", employeeService.getAllEmployeeListDto());
 			return "YatiWinLatt/manager/WasteLogs/edit";
 		}
 

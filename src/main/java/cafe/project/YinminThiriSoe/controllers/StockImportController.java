@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import cafe.project.NayZarLinn.services.SupplierService;
 import cafe.project.YatiWinLatt.service.BranchService;
 import cafe.project.YinminThiriSoe.models.StockImportEntryModel;
-import cafe.project.YinminThiriSoe.services.EmployeeService;
+import cafe.project.services.EmployeeService;
 import cafe.project.YinminThiriSoe.services.StockImportService;
 
 @Controller
@@ -50,7 +50,7 @@ public class StockImportController {
 	public String showAddForm(Model model) {
 		model.addAttribute("stockImport", new StockImportEntryModel());
 		model.addAttribute("suppliers", supplierService.findAll());
-		model.addAttribute("employees", employeeService.getAllEmployees());
+		model.addAttribute("employees", employeeService.getAllEmployeeListDto());
 		model.addAttribute("branches", branchService.findAll());
 		return "YinminThiriSoe/manager/stock_imports/form";
 	}
@@ -75,7 +75,7 @@ public class StockImportController {
 		}
 		model.addAttribute("stockImport", existing);
 		model.addAttribute("suppliers", supplierService.findAll());
-		model.addAttribute("employees", employeeService.getAllEmployees());
+		model.addAttribute("employees", employeeService.getAllEmployeeListDto());
 		model.addAttribute("branches", branchService.findAll());
 		return "YinminThiriSoe/manager/stock_imports/form";
 	}
