@@ -1,4 +1,4 @@
-package cafe.project.YatiWinLatt.controllers;
+package cafe.project.controllers;
 
 import java.sql.Time;
 import java.time.LocalDate;
@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import cafe.project.YatiWinLatt.models.DailyRegisterEntryDto;
 import cafe.project.YatiWinLatt.service.DailyRegisterService;
-import cafe.project.YinminThiriSoe.services.EmployeeService;
+import cafe.project.services.EmployeeService;
 import cafe.project.YatiWinLatt.service.BranchService;
 import cafe.project.YatiWinLatt.repositories.StatusRepository;
 
@@ -45,7 +45,7 @@ public class DailyRegisterController {
 	System.out.println(statusRepository.findAll("register").get(0));
     model.addAttribute("registerDto", new DailyRegisterEntryDto());
     model.addAttribute("branches", branchService.findAll());
-    model.addAttribute("employees", employeeService.getAllEmployees());
+    model.addAttribute("employees", employeeService.getAllEmployeeListDto());
     model.addAttribute("statuses", statusRepository.findAll("register"));
 
     return "YatiWinLatt/manager/daily_registers/create";
@@ -65,7 +65,7 @@ public class DailyRegisterController {
 	dto.setOpened_at(Time.valueOf(java.time.LocalTime.now()));
     model.addAttribute("registerDto", dto);
     model.addAttribute("branches", branchService.findAll());
-    model.addAttribute("employees", employeeService.getAllEmployees());
+    model.addAttribute("employees", employeeService.getAllEmployeeListDto());
     model.addAttribute("statuses", statusRepository.findAll("register"));
 
     return "YatiWinLatt/manager/daily_registers/openshift";
@@ -86,7 +86,7 @@ public class DailyRegisterController {
 	dto.setClosed_at(Time.valueOf(java.time.LocalTime.now()));
     model.addAttribute("registerDto", dto);
     model.addAttribute("branches", branchService.findAll());
-    model.addAttribute("employees", employeeService.getAllEmployees());
+    model.addAttribute("employees", employeeService.getAllEmployeeListDto());
     model.addAttribute("statuses", statusRepository.findAll("register"));
 
     return "YatiWinLatt/manager/daily_registers/closeshift";
@@ -107,7 +107,7 @@ public class DailyRegisterController {
     model.addAttribute("registerDto", dto);
 
     model.addAttribute("branches", branchService.findAll());
-    model.addAttribute("employees", employeeService.getAllEmployees());
+    model.addAttribute("employees", employeeService.getAllEmployeeListDto());
     model.addAttribute("statuses", statusRepository.findAll("register"));
 
     return "YatiWinLatt/manager/daily_registers/edit";

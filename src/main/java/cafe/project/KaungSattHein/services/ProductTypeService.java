@@ -10,7 +10,7 @@ import cafe.project.KaungSattHein.models.ProductTypeEntryModel;
 import cafe.project.KaungSattHein.models.ProductTypeListModel;
 import cafe.project.KaungSattHein.repositories.ProductTypeRepository;
 import cafe.project.KaungSattHein.repositories.entities.ProductType;
-import cafe.project.YinminThiriSoe.repositories.EmployeeRepository;
+import cafe.project.repositories.EmployeeRepository;
 
 @Service
 public class ProductTypeService {

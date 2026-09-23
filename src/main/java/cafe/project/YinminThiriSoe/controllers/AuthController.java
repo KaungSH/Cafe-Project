@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import cafe.project.YinminThiriSoe.repositories.entities.Employee;
-import cafe.project.YinminThiriSoe.services.EmployeeService;
 import cafe.project.employeemanagement.models.LoginDto;
+import cafe.project.repositories.entities.Employee;
+import cafe.project.services.EmployeeService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
