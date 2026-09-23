@@ -1,6 +1,7 @@
 package cafe.project.NayZarLinn.repositories;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -31,7 +32,7 @@ public class SupplierRepository {
 
 	public int save(Supplier entity) {
 		String sql = "INSERT INTO suppliers (supplier_id,name,contact_info,isdeleted,created_at) VALUES (?,?,?,?,?)";
-		return this.jdbcTemplate.update(sql, entity.getSupplier_id(), entity.getName(), entity.getContact_info(),
+		return this.jdbcTemplate.update(sql, UUID.randomUUID().toString(), entity.getName(), entity.getContact_info(),
 				entity.isIsdeleted(), entity.getCreated_at());
 
 	}

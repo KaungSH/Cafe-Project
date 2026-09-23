@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import cafe.project.NayZarLinn.models.BatchesAndExpiryDto;
 import cafe.project.NayZarLinn.models.IngredientBatchDto;
 import cafe.project.NayZarLinn.repositories.IngredientBatchRepository;
 import cafe.project.NayZarLinn.repositories.entities.IngredientBatch;
@@ -22,6 +23,10 @@ public class IngredientBatchService {
 		List<IngredientBatch> entities = this.repo.findAll();
 		List<IngredientBatchDto> batches = entities.stream().map(this::toDto).toList();
 		return batches;
+	}
+
+	public List<BatchesAndExpiryDto> getBatchesAndExpiry() {
+		return repo.batchesAndExpiry();
 	}
 
 	public IngredientBatchDto findByBatchId(String batchId) {

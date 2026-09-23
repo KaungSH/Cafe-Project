@@ -1,6 +1,7 @@
 package cafe.project.YinminThiriSoe.repositories.entities;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class StockImport {
 	private String import_id;
@@ -10,6 +11,8 @@ public class StockImport {
 	private String employee_id;
 	private String branch_id;
 	private boolean isdeleted;
+
+	private List<StockImportDetail> stockImportDetails;
 
 	public StockImport() {
 	}
@@ -23,6 +26,14 @@ public class StockImport {
 		this.employee_id = employee_id;
 		this.branch_id = branch_id;
 		this.isdeleted = isdeleted;
+	}
+
+	public List<StockImportDetail> getStockImportDetails() {
+		return stockImportDetails;
+	}
+
+	public void setStockImportDetails(List<StockImportDetail> stockImportDetails) {
+		this.stockImportDetails = stockImportDetails;
 	}
 
 	public String getImport_id() {

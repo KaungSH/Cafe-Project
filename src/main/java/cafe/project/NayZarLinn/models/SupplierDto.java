@@ -2,18 +2,19 @@ package cafe.project.NayZarLinn.models;
 
 import java.time.LocalDateTime;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class SupplierDto {
-	@NotBlank(message="Id is required")
+
 	private String supplier_id;
-	@NotBlank(message="Name is required")
+	@NotBlank(message = "Name is required")
 	private String name;
-	@NotBlank(message="ContactInfo is required")
+	@NotBlank(message = "Contact info is required")
+	@Pattern(regexp = "^.+\\s/\\s(09[0-9]{9}|\\+[0-9]{8,15})$", message = "Enter address and phone like Yangon / 09765473828")
 	private String contact_info;
-	
+
 	private boolean isdeleted;
 
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)

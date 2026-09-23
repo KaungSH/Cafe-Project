@@ -29,7 +29,16 @@
 </head>
 <body>
 	<div th:replace = "~{common/fragments/header :: header}"></div>
-	<div layout:fragment = "content" class="px-4 my-5"></div>
+	<div class = "container-fluid" th:if = "${session.loggedInUser.employee_role == 'MANAGER' || session.loggedInUser.employee_role == 'ADMIN'}">
+		<div class = "row">
+			<div class = "col-md-1 p-0">
+				<div th:replace = "~{common/fragments/sidebar::sidebar}"></div>
+			</div>
+			<div class = "col-md-11 p-4"  layout:fragment="content">
+			</div>
+		</div>
+	</div>
+	<div layout:fragment = "content" class="px-4 my-5" th:if = "${session.loggedInUser.employee_role == 'STAFF'}"></div>
 	<div th:replace = "~{common/fragments/footer :: footer}"></div>
 </body>
 </html>
