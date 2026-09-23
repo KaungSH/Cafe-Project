@@ -16,7 +16,7 @@ import cafe.project.YatiWinLatt.repositories.BranchRepository;
 import cafe.project.YinminThiriSoe.models.StockImportDetailEntry;
 import cafe.project.YinminThiriSoe.models.StockImportEntryModel;
 import cafe.project.YinminThiriSoe.models.StockImportListModel;
-import cafe.project.YinminThiriSoe.repositories.EmployeeRepository;
+import cafe.project.repositories.EmployeeRepository;
 import cafe.project.YinminThiriSoe.repositories.StockImportDetailRepository;
 import cafe.project.YinminThiriSoe.repositories.StockImportRepository;
 import cafe.project.YinminThiriSoe.repositories.entities.StockImport;
