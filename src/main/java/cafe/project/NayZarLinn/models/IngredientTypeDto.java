@@ -1,11 +1,12 @@
 package cafe.project.NayZarLinn.models;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class IngredientTypeDto {
-	@NotBlank(message = "ID is required")
-	@Size(max = 100, message = "ID must be 100 characters or fewer")
+	@NotBlank(message = "Ingredient Type ID is required")
+	@Pattern(regexp = "^IT-.*$", message = "Ingredient Type ID must start with IT-")
 	private String ingredientTypeId;
 
 	@NotBlank(message = "Name is required")
@@ -14,7 +15,7 @@ public class IngredientTypeDto {
 
 	private String description;
 
-	@NotBlank(message = "Unit ID is required")
+	@NotBlank(message = "Unit is required")
 	private String unitId;
 
 	public String getIngredientTypeId() {

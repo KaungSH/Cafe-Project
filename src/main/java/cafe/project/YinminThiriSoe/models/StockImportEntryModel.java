@@ -1,6 +1,7 @@
 package cafe.project.YinminThiriSoe.models;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -15,6 +16,8 @@ public class StockImportEntryModel {
 	private String employee_id;
 	private String branch_id;
 
+	private List<StockImportDetailEntry> details;
+	
 	public StockImportEntryModel() {
 	}
 
@@ -26,6 +29,14 @@ public class StockImportEntryModel {
 		this.supplier_id = supplier_id;
 		this.employee_id = employee_id;
 		this.branch_id = branch_id;
+	}
+
+	public List<StockImportDetailEntry> getDetails() {
+		return details;
+	}
+
+	public void setDetails(List<StockImportDetailEntry> details) {
+		this.details = details;
 	}
 
 	public String getImport_id() {

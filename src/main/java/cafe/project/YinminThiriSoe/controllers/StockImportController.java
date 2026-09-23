@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cafe.project.NayZarLinn.services.IngredientTypeService;
 import cafe.project.NayZarLinn.services.SupplierService;
 import cafe.project.YatiWinLatt.service.BranchService;
 import cafe.project.YinminThiriSoe.models.StockImportEntryModel;
@@ -25,13 +26,15 @@ public class StockImportController {
 	private final SupplierService supplierService;
 	private final EmployeeService employeeService;
 	private final BranchService branchService;
+	private final IngredientTypeService ingredientTypeService;
 
 	public StockImportController(StockImportService stockImportService, SupplierService supplierService,
-			EmployeeService employeeService, BranchService branchService) {
+			EmployeeService employeeService, BranchService branchService,IngredientTypeService ingredientTypeService) {
 		this.stockImportService = stockImportService;
 		this.supplierService = supplierService;
 		this.employeeService = employeeService;
 		this.branchService = branchService;
+		this.ingredientTypeService=ingredientTypeService;
 	}
 
 	@GetMapping
@@ -52,6 +55,7 @@ public class StockImportController {
 		model.addAttribute("suppliers", supplierService.findAll());
 		model.addAttribute("employees", employeeService.getAllEmployeeListDto());
 		model.addAttribute("branches", branchService.findAll());
+		model.addAttribute("ingredients", ingredientTypeService.getAllActive());
 		return "YinminThiriSoe/manager/stock_imports/form";
 	}
 
@@ -62,6 +66,17 @@ public class StockImportController {
 		}
 		if (model.getImported_at() == null) {
 			model.setImported_at(LocalDateTime.now());
+		}
+
+		System.out.println("=== ADD STOCK IMPORT DEBUG ===");
+		if (model.getDetails() != null) {
+			System.out.println("Total Details Count: " + model.getDetails().size());
+			for (var detail : model.getDetails()) {
+				System.out.println(" - Ingredient Type ID: " + detail.getIngredient_type_id() + ", Quantity: "
+						+ detail.getQuantity_ordered() + ", Expiry: " + detail.getExpireDate());
+			}
+		} else {
+			System.out.println(" - Details list is NULL!");
 		}
 		stockImportService.add(model);
 		return "redirect:/manager/stock_imports";
@@ -82,6 +97,10 @@ public class StockImportController {
 
 	@PostMapping("/edit")
 	public String edit(@ModelAttribute("stockImport") StockImportEntryModel entryModel) {
+		System.out.println("=== EDIT STOCK IMPORT DEBUG ===");
+		if (entryModel.getDetails() != null) {
+			System.out.println("Editing Details Count: " + entryModel.getDetails().size());
+		}
 		stockImportService.edit(entryModel);
 		return "redirect:/manager/stock_imports";
 	}

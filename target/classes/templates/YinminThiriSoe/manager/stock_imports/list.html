@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <title>Stock Imports | Coffee Shop</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-<!-- Google Fonts ဖြင့် စာလုံးလှလှလေးထည့်ခြင်း -->
+
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
-    /* Coffee Shop Theme Custom CSS */
+   
     body {
-        background-color: #f9f4ef; /* နို့နှစ်ရောင်ဖျော့ဖျော့ နောက်ခံ */
-        font-family: 'Nunito', sans-serif; /* ခေတ်မီသော စာလုံးစတိုင် */
+        background-color: #f9f4ef;
+        font-family: 'Nunito', sans-serif; 
         color: #4a3018; 
     }
 
@@ -19,19 +19,18 @@
         background-color: #ffffff;
         border-radius: 20px;
         padding: 30px;
-        box-shadow: 0 10px 30px rgba(92, 58, 33, 0.08); /* ကော်ဖီရောင် အရိပ်ဖျော့ဖျော့ */
+        box-shadow: 0 10px 30px rgba(92, 58, 33, 0.08); 
         margin-top: 50px;
         margin-bottom: 50px;
     }
 
     h2 {
-        color: #5c3a21; /* ကော်ဖီစေ့အရောင် ရင့်ရင့် */
+        color: #5c3a21;
         font-weight: 700;
     }
 
-    /* ခလုတ် ဒီဇိုင်းများ */
     .btn-coffee-primary {
-        background-color: #a87b51; /* ကာရာမယ်လ် (Caramel) အရောင် */
+        background-color: #a87b51; 
         color: white;
         border: none;
         border-radius: 12px;
@@ -61,7 +60,6 @@
         color: #4a3018;
     }
 
-    /* ဇယား (Table) ဒီဇိုင်း */
     .table {
         border-collapse: separate;
         border-spacing: 0;
@@ -93,7 +91,6 @@
     .table tbody tr:last-child td:first-child { border-bottom-left-radius: 15px; }
     .table tbody tr:last-child td:last-child { border-bottom-right-radius: 15px; }
 
-    /* Action ခလုတ်လေးများ */
     .btn-edit {
         background-color: #d4a373;
         color: white;
@@ -143,7 +140,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- state.count ကိုသုံးပြီး 1,2,3 အစဉ်လိုက်ပြထားသည် -->
+                    
                     <tr th:each="item, state : ${imports}">
                         <td th:text="${state.count}" class="fw-bold"></td>
                         <td th:text="${#temporals.format(item.imported_at, 'yyyy-MM-dd HH:mm')}"></td>
@@ -152,6 +149,8 @@
                         <td th:text="${item.branch_name}"></td>
                         <td th:text="${item.total_cost}" class="fw-bold text-success"></td>
                         <td class="text-center">
+                        	<a th:href="@{/manager/stock_import/details/{id}(id=${item.import_id})}" 
+                               class="btn btn-edit btn-sm px-3">Details</a> 
                             <a th:href="@{/manager/stock_imports/edit/{id}(id=${item.import_id})}" 
                                class="btn btn-edit btn-sm px-3">Edit</a> 
                             <a th:href="@{/manager/stock_imports/delete/{id}(id=${item.import_id})}" 
@@ -160,7 +159,6 @@
                         </td>
                     </tr>
                     
-                    <!-- Data မရှိခဲ့လျှင် ပြမည့်စာသား -->
                     <tr th:if="${#lists.isEmpty(imports)}">
                         <td colspan="7" class="text-center py-4 text-muted">No stock imports found.</td>
                     </tr>
