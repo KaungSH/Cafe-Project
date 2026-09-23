@@ -10,7 +10,7 @@ import cafe.project.KaungSattHein.models.ProductTypeEntryModel;
 import cafe.project.KaungSattHein.models.ProductTypeListModel;
 import cafe.project.KaungSattHein.repositories.ProductTypeRepository;
 import cafe.project.KaungSattHein.repositories.entities.ProductType;
-import cafe.project.YinminThiriSoe.repositories.EmployeeRepository;
+import cafe.project.repositories.EmployeeRepository;
 
 @Service
 public class ProductTypeService {
@@ -35,6 +35,32 @@ public class ProductTypeService {
 	        String employeeName = er.findById(item.getEmployee_id()).getName();
 	        
 	        list.add(toListModel2(item, categoryName, employeeName));
+	    }
+	    
+	    return list;
+	}
+	
+	public List<ProductTypeListModel> searchByName(String keyword){
+		List<ProductTypeListModel> list = new ArrayList<>();
+	    
+	    for (ProductType item : pt.searchByName(keyword)) {
+	        String categoryName = cr.findById(item.getCategory_id()).getName();
+	        String employeeName = er.findById(item.getEmployee_id()).getName();
+	        
+	        list.add(toListModel2(item, categoryName, employeeName));
+	    }
+	    
+	    return list;
+	}
+	
+	public List<ProductTypeListModel> searchDeletedByName(String keyword){
+		List<ProductTypeListModel> list = new ArrayList<>();
+	    
+	    for (ProductType item : pt.searchDeletedByName(keyword)) {
+	        String categoryName = cr.findById(item.getCategory_id()).getName();
+	        String employeeName = er.findById(item.getEmployee_id()).getName();
+	        
+	        list.add(toListModel3(item, categoryName, employeeName));
 	    }
 	    
 	    return list;

@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.UUID;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import cafe.project.NayZarLinn.repositories.entities.IngredientBatch;
 import cafe.project.YatiWinLatt.models.WasteLogsListDto;
 import cafe.project.YatiWinLatt.repositories.entities.WasteLogs;
 import cafe.project.YatiWinLatt.repositories.mappers.WasteLogsListDtoMapper;
 import cafe.project.YatiWinLatt.repositories.mappers.WasteLogsMapper;
+import cafe.project.NayZarLinn.repositories.mappers.IngredientBatchMapper;
 
 @Repository
 public class WasteLogsRepository {
@@ -26,9 +29,9 @@ public class WasteLogsRepository {
 		return jdbcTemplate.query(sql, new WasteLogsListDtoMapper());
 	}
 
-	public WasteLogs findById(String id) {
+	public WasteLogs findById(String waste_id) {
 		String sql = "SELECT * FROM waste_logs WHERE waste_id = ? AND isdeleted = 0";
-		return jdbcTemplate.queryForObject(sql, new WasteLogsMapper(), id);
+		return jdbcTemplate.queryForObject(sql, new WasteLogsMapper(), waste_id);
 	}
 
 	public int save(WasteLogs entity) {
@@ -50,5 +53,11 @@ public class WasteLogsRepository {
 	public int softDelete(String waste_id) {
 		String sql = "UPDATE waste_logs SET isdeleted = 1 WHERE waste_id = ?";
 		return jdbcTemplate.update(sql, waste_id);
+	}
+	
+	public List<IngredientBatch> findExpiredBatchToday() {
+		String sql = "SELECT ib.*, b.name AS branch_name, it.name AS ingredient_type_name FROM ingredient_batches ib LEFT JOIN branches b ON ib.branch_id = b.branch_id LEFT JOIN ingredient_types it ON ib.ingredient_type_id = it.ingredient_type_id WHERE ib.expire_date = CURRENT_DATE AND ib.isdeleted = 0";
+		return jdbcTemplate.query(sql, new IngredientBatchMapper());
+		
 	}
 }
