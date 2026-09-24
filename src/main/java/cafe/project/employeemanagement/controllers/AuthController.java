@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import cafe.project.YatiWinLatt.service.BranchService;
+import cafe.project.services.BranchService;
+import cafe.project.services.DailyRegisterService;
 import cafe.project.services.EmployeeService;
 import cafe.project.employeemanagement.models.LoginDto;
 import cafe.project.employeemanagement.services.EmployeeManagementService;
-import cafe.project.entities.DailyRegisterService;
 import cafe.project.models.DailyRegisterEntryDto;
 import cafe.project.repositories.StatusRepository;
 import jakarta.servlet.http.HttpServletRequest;
