@@ -3,10 +3,10 @@ package cafe.project.services;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import cafe.project.repositories.entities.DailyRegister;
 import cafe.project.models.DailyRegisterEntryDto;
 import cafe.project.models.DailyRegisterListDto;
 import cafe.project.repositories.DailyRegisterRepository;
-import cafe.project.repositories.entities.DailyRegister;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -107,5 +107,9 @@ public class DailyRegisterService {
 	
 	public void recoverRegister(String register_id) {
 		repository.recover(register_id);
+	}
+	
+	public void hardDeleteRegister(String register_id) {
+		repository.hardDelete(register_id);
 	}
 }

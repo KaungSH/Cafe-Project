@@ -70,4 +70,19 @@ public class UnitRepository {
 
 		return jdbcTemplate.update(sql, id);
 	}
+	
+	public int restore(String unit_id) {
+		
+		String sql = "UPDATE units SET isdeleted = 0 WHERE unit_id = ?";
+		
+		return jdbcTemplate.update(sql,unit_id);
+	}
+	
+	public int hardDelete(String unit_id) {
+		
+		String sql = "DELETE FROM units WHERE unit_id = ?";
+		
+		return jdbcTemplate.update(sql,unit_id);
+	}
+	
 }

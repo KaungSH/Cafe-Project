@@ -3,8 +3,8 @@ package cafe.project.repositories;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import cafe.project.models.DailyRegisterListDto;
 import cafe.project.repositories.entities.DailyRegister;
+import cafe.project.models.DailyRegisterListDto;
 import cafe.project.repositories.mappers.DailyRegisterListDtoMapper;
 import cafe.project.repositories.mappers.DailyRegisterMapper;
 
@@ -107,6 +107,11 @@ public class DailyRegisterRepository {
 	
 	public int recover(String register_id) {
 		String sql = "UPDATE daily_registers set isdeleted = 0 where register_id = ?";
+		return jdbcTemplate.update(sql, register_id);
+	}
+	
+	public int hardDelete(String register_id) {
+		String sql="DELETE FROM daily_registers WHERE register_id";
 		return jdbcTemplate.update(sql, register_id);
 	}
 }

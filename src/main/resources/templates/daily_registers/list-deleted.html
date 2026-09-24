@@ -94,6 +94,13 @@
                  onclick="return confirm('Are you sure you want to recover this record?');">
                 <i class="fa-solid fa-trash"></i>
               </a>
+              
+              <a th:href="@{/manager/daily-registers//hardDelete/{register_id}/{register_id}(register_id=${reg.register_id})}" 
+                 class="btn btn-sm btn-outline-danger"
+                 onclick="return confirm('Are you sure you want to delete this record?');">
+                <i class="fa-solid fa-trash"></i>
+              </a>
+              
             </td>
           </tr>
           <tr th:if="${#lists.isEmpty(registers)}">
