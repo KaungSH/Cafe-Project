@@ -30,7 +30,7 @@ public class PaymentController {
                 paymentService.findAll()
         );
 
-        return "HeinMinHtet/payments/index";
+        return "payments/index";
     }
 
     // ADD FORM
@@ -39,7 +39,7 @@ public class PaymentController {
 
         model.addAttribute("payment", new Payment());
 
-        return "HeinMinHtet/payments/add";
+        return "payments/add";
     }
 
     // SAVE
@@ -68,7 +68,7 @@ public class PaymentController {
                     existingPayment
             );
 
-            return "HeinMinHtet/payments/edit";
+            return "payments/edit";
         }
 
         return "redirect:/payments";

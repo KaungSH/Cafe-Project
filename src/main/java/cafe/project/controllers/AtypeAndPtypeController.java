@@ -27,7 +27,7 @@ public class AtypeAndPtypeController {
 		model.addAttribute("types", repo.findTypesAll(false));
 		model.addAttribute("name", "audience");
 		model.addAttribute("dname", "Audience");
-		return "KaungSattHein/types/list";
+		return "types/list";
 	}
 	
 	@GetMapping("/promo")
@@ -35,7 +35,7 @@ public class AtypeAndPtypeController {
 		model.addAttribute("types", repo.findTypesAll(true));
 		model.addAttribute("name", "promo");
 		model.addAttribute("dname", "Promo");
-		return "KaungSattHein/types/list";
+		return "types/list";
 	}
 	
 	@GetMapping("/add/{name}")
@@ -47,7 +47,7 @@ public class AtypeAndPtypeController {
 		} else {
 			model.addAttribute("dname", "Audience");
 		}
-		return "KaungSattHein/types/add";
+		return "types/add";
 	}
 	
 	@PostMapping("/add")
@@ -68,7 +68,7 @@ public class AtypeAndPtypeController {
 		model.addAttribute("type", repo.findTypeById(id, true));
 		model.addAttribute("name", "promo");
 		model.addAttribute("dname", "Promo");
-		return "KaungSattHein/types/edit";
+		return "types/edit";
 	}
 	
 	@PostMapping("/promo/edit")
@@ -82,7 +82,7 @@ public class AtypeAndPtypeController {
 		model.addAttribute("type", repo.findTypeById(id, false));
 		model.addAttribute("name", "audience");
 		model.addAttribute("dname", "Audience");
-		return "KaungSattHein/types/edit";
+		return "types/edit";
 	}
 	
 	@PostMapping("/audience/edit")

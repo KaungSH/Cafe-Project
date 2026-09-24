@@ -29,6 +29,7 @@ public class DailyRegisterController {
 	
 	@GetMapping("/{sort}")
 	public String showListPageAll(@PathVariable("sort") String sort, Model model) {
+		
 		if(sort.equals("closed")) {
 			model.addAttribute("registers", service.getAllClosed());
 			return "daily_registers/list-all";
@@ -87,5 +88,7 @@ public class DailyRegisterController {
 		service.hardDeleteRegister(dto.getRegister_id());
 		return "redietct:/manager/daily-registers";
 	}
+	
+	
 	
 }

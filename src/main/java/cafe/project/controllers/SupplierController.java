@@ -28,19 +28,19 @@ public class SupplierController {
 	@GetMapping("/supplier")
 	public String supplierList(Model model) {
 		model.addAttribute("supplier", this.supplierService.findAll());
-		return "NayZarLinn/supplier/list";
+		return "supplier/list";
 	}
 
 	@GetMapping("/supplier/add")
 	public String addSupplier(Model model) {
 		model.addAttribute("supplier", new SupplierDto());
-		return "NayZarLinn/supplier/add";
+		return "supplier/add";
 	}
 
 	@PostMapping("/supplier/add")
 	public String addSupplier(@Valid @ModelAttribute("supplier") SupplierDto supplier, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
-			return "NayZarLinn/supplier/add";
+			return "supplier/add";
 		}
 		supplier.setCreated_at(LocalDateTime.now());
 		this.supplierService.add(supplier);
@@ -52,7 +52,7 @@ public class SupplierController {
 		SupplierDto existingSup = this.supplierService.findById(supplier_id);
 		if (existingSup != null) {
 			model.addAttribute("supplier", existingSup);
-			return "NayZarLinn/supplier/edit";
+			return "supplier/edit";
 		}
 		return "";
 	}
@@ -61,7 +61,7 @@ public class SupplierController {
 	public String editSupplier(@Valid @ModelAttribute("supplier") SupplierDto supplier, BindingResult bindingResult,
 			Model model) {
 		if (bindingResult.hasErrors()) {
-			return "NayZarLinn/supplier/edit";
+			return "supplier/edit";
 		}
 		supplier.setCreated_at(LocalDateTime.now());
 		this.supplierService.edit(supplier.getSupplier_id(), supplier);
@@ -73,7 +73,7 @@ public class SupplierController {
 		SupplierDto existingSup = this.supplierService.findById(supplier_id);
 		if (existingSup != null) {
 			model.addAttribute("supplier", existingSup);
-			return "NayZarLinn/supplier/delete";
+			return "supplier/delete";
 		}
 		return "";
 	}
@@ -87,7 +87,7 @@ public class SupplierController {
 	@GetMapping("/supplier/deleted")
 	public String deletedSupplierList(Model model) {
 		model.addAttribute("supplier", supplierService.findDeleted());
-		return "NayZarLinn/supplier/deletedList";
+		return "supplier/deletedList";
 	}
 
 	@PostMapping("/supplier/restore")

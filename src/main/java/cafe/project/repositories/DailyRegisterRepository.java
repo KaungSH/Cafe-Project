@@ -4,11 +4,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import cafe.project.repositories.entities.DailyRegister;
+import cafe.project.common.repositories.DeleteRecordRepository;
+import cafe.project.common.repositories.entities.DeleteRecord;
 import cafe.project.models.DailyRegisterListDto;
 import cafe.project.repositories.mappers.DailyRegisterListDtoMapper;
 import cafe.project.repositories.mappers.DailyRegisterMapper;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,9 +19,11 @@ import java.util.Optional;
 public class DailyRegisterRepository {
 
 	private final JdbcTemplate jdbcTemplate;
+	private final DeleteRecordRepository deleteRecordRepo;
 
-	public DailyRegisterRepository(JdbcTemplate jdbcTemplate) {
+	public DailyRegisterRepository(JdbcTemplate jdbcTemplate, DeleteRecordRepository deleteRecordRepo) {
 		this.jdbcTemplate = jdbcTemplate;
+		this.deleteRecordRepo = deleteRecordRepo;
 	}
 
 	public List<DailyRegisterListDto> findAllDto() {
@@ -101,6 +106,7 @@ public class DailyRegisterRepository {
 	}
 
 	public int delete(String register_id) {
+		setDailyReports(register_id);
 		String sql = "UPDATE daily_registers set isdeleted = 1 where register_id = ?";
 		return jdbcTemplate.update(sql, register_id);
 	}
@@ -114,4 +120,24 @@ public class DailyRegisterRepository {
 		String sql="DELETE FROM daily_registers WHERE register_id";
 		return jdbcTemplate.update(sql, register_id);
 	}
+	
+	private int setDailyReports(String register_id) {
+		return jdbcTemplate.update("UPDATE daily_reports SET register_id = 'deleted' WHERE register_id = ?", register_id);
+	}
+	
+	private int recordDelete() {
+		return 0;
+	}
+	
+	private List<String> getChildIds(String register_id) {
+		List<String> child_ids = new ArrayList<String>();
+		for(DeleteRecord dr : deleteRecordRepo.getChildIds(register_id, "register_id", "daily_reports", "report_id")) {
+			for(String child_id : dr.getChild_ids()) {
+				child_ids.add(child_id);
+			}
+		}
+		
+		return child_ids;
+	}
+	
 }

@@ -26,20 +26,20 @@ public class ExpenseCategoryController {
 	@GetMapping
 	public String ExpenseCategoryList(Model model) {
 		model.addAttribute("expense", this.expenseCategoryService.findAll());
-		return "NayZarLinn/expensecategory/list";
+		return "expensecategory/list";
 	}
 
 	@GetMapping("/add")
 	public String addExpenseCategory(Model model) {
 		model.addAttribute("expensecategory", new ExpenseCategoryDto());
-		return "NayZarLinn/expensecategory/add";
+		return "expensecategory/add";
 	}
 
 	@PostMapping("/add")
 	public String addSupplier(@Valid @ModelAttribute("expensecategory") ExpenseCategoryDto expensecategory,
 			BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
-			return "NayZarLinn/expensecategory/add";
+			return "expensecategory/add";
 		}
 		expenseCategoryService.add(expensecategory);
 		return "redirect:/manager/expensecategory";
@@ -50,7 +50,7 @@ public class ExpenseCategoryController {
 		ExpenseCategoryDto existingEC = this.expenseCategoryService.findById(expense_category_id);
 		if (existingEC != null) {
 			model.addAttribute("expensecategory", existingEC);
-			return "NayZarLinn/expensecategory/edit";
+			return "expensecategory/edit";
 		}
 		return "redirect:/manager/expensecategory";
 	}
@@ -59,7 +59,7 @@ public class ExpenseCategoryController {
 	public String editExpensecategory(@Valid @ModelAttribute("expensecategory") ExpenseCategoryDto expensecategory,
 			BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
-			return "NayZarLinn/ExpenseCategoryDto/edit";
+			return "ExpenseCategoryDto/edit";
 		}
 		this.expenseCategoryService.edit(expensecategory.getExpense_category_id(), expensecategory);
 		return "redirect:/manager/expensecategory";

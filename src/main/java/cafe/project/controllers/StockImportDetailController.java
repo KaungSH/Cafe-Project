@@ -34,7 +34,7 @@ public class StockImportDetailController {
 	public String listDetails(@PathVariable("importId") String importId, Model model) {
 		model.addAttribute("details", detailService.findDetailsByImportId(importId));
 		model.addAttribute("importId", importId);
-		return "YinminThiriSoe/manager/stock_import_details/list";
+		return "stock_import_details/list";
 	}
 
 	@GetMapping("/add/{importId}")
@@ -44,7 +44,7 @@ public class StockImportDetailController {
 
 		model.addAttribute("detailForm", form);
 		model.addAttribute("ingredients", ingredientTypeService.getAllActive());
-		return "YinminThiriSoe/manager/stock_import_details/add";
+		return "stock_import_details/add";
 	}
 
 	@PostMapping("/add")
@@ -61,7 +61,7 @@ public class StockImportDetailController {
 		model.addAttribute("detailForm", form);
 		model.addAttribute("ingredients", ingredientTypeService.getAllActive());
 		// ✅ FIXED: "stock_import_detail/edit" → "stock_import_details/edit"
-		return "YinminThiriSoe/manager/stock_import_details/edit";
+		return "stock_import_details/edit";
 	}
 
 	@PostMapping("/edit")

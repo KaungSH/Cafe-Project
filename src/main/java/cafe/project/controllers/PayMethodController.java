@@ -27,7 +27,7 @@ public class PayMethodController {
 	@GetMapping
 	public String listPayMethods(Model model) {
 		model.addAttribute("payMethods", payMethodService.getAllPayMethodsWithRelations());
-		return "YinminThiriSoe/manager/paymethod/list";
+		return "paymethod/list";
 	}
 
 	// ---------- Add ----------
@@ -35,7 +35,7 @@ public class PayMethodController {
 	@GetMapping("/add")
 	public String showAddForm(Model model) {
 		model.addAttribute("payMethod", new PayMethod());
-		return "YinminThiriSoe/manager/paymethod/add";
+		return "paymethod/add";
 	}
 
 	@PostMapping("/add")
@@ -50,7 +50,7 @@ public class PayMethodController {
 	public String showEditForm(@PathVariable("method_id") String methodId, Model model) {
 		PayMethod pm = payMethodService.getPayMethodById(methodId);
 		model.addAttribute("payMethod", pm);
-		return "YinminThiriSoe/manager/paymethod/edit";
+		return "paymethod/edit";
 	}
 
 	@PostMapping("/edit/{method_id}")
@@ -66,7 +66,7 @@ public class PayMethodController {
 	public String viewPayMethod(@PathVariable("method_id") String methodId, Model model) {
 		PayMethodDto dto = payMethodService.getPayMethodByIdWithRelations(methodId);
 		model.addAttribute("payMethod", dto);
-		return "YinminThiriSoe/manager/paymethod/view";
+		return "paymethod/view";
 	}
 
 	// ---------- Delete (Soft) ----------

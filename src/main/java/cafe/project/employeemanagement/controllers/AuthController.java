@@ -75,8 +75,17 @@ public class AuthController {
 	public String openShift(Model model, HttpSession session) {
 		System.out.println(statusRepository.findAll("register").get(0));
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-		DailyRegisterEntryDto dto = new DailyRegisterEntryDto();
 		
+		DailyRegisterEntryDto dto = registerService.getRegisterEntryDtoByDate(LocalDate.now(), ldto.getEmployee_id());
+		
+		if (dto != null) {
+			if(ldto.getEmployee_role().equals("MANAGER")) {
+				return "redirect:/manager/daily-registers/all";
+			}
+			return "redirect:/";
+		}
+		
+		dto = new DailyRegisterEntryDto();
 		dto.setDate(LocalDate.now());
 		dto.setOpened_at(Time.valueOf(java.time.LocalTime.now()));
 		dto.setRegister_status_id(statusRepository.findAll2("register").get(0).getStatus_id());
@@ -92,8 +101,6 @@ public class AuthController {
 
 	@PostMapping("/openshift")
 	public String openShift(@ModelAttribute("registerDto") DailyRegisterEntryDto dto, HttpSession session) {
-		// Place Holder Time
-		dto.setClosed_at(dto.getOpened_at());
 		registerService.saveRegister(dto);
 		if(((LoginDto) session.getAttribute("loggedInUser")).getEmployee_role().equals("MANAGER")) {
 			return "redirect:/manager/daily-registers/all";

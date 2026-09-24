@@ -36,7 +36,7 @@ public class ExpenseController {
 	@GetMapping
 	public String ExpenseList(Model model) {
 		model.addAttribute("expense", this.expenseService.findAll());
-		return "NayzarLinn/expense/list";
+		return "expense/list";
 	}
 
 	@GetMapping("/add")
@@ -44,7 +44,7 @@ public class ExpenseController {
 		model.addAttribute("expense", new ExpenseDto());
 		model.addAttribute("branches", branchRepository.findAll());
 		model.addAttribute("expenseCategories", expenseCategoryRepository.findAll());
-		return "NayZarLinn/expense/add";
+		return "expense/add";
 	}
 
 	@PostMapping("/add")
@@ -53,7 +53,7 @@ public class ExpenseController {
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("branches", branchRepository.findAll());
 			model.addAttribute("expenseCategories", expenseCategoryRepository.findAll());
-			return "NayZarLinn/expense/add";
+			return "expense/add";
 		}
 		expense.setCreated_at(LocalDateTime.now());
 		expenseService.add(expense);
@@ -67,7 +67,7 @@ public class ExpenseController {
 			model.addAttribute("expense", existingEp);
 			model.addAttribute("branches", branchRepository.findAll());
 			model.addAttribute("expenseCategories", expenseCategoryRepository.findAll());
-			return "NayZarLinn/expense/edit";
+			return "expense/edit";
 		}
 		return "redirect:/manager/expense";
 	}
@@ -78,7 +78,7 @@ public class ExpenseController {
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("branches", branchRepository.findAll());
 			model.addAttribute("expenseCategories", expenseCategoryRepository.findAll());
-			return "NayZarLinn/expense/edit";
+			return "expense/edit";
 		}
 		expense.setCreated_at(LocalDateTime.now());
 		expenseService.edit(expense.getExpense_id(), expense);
@@ -94,7 +94,7 @@ public class ExpenseController {
 	@GetMapping("/deleted")
 	public String deletedExpenseList(Model model) {
 		model.addAttribute("expense", expenseService.deletedList());
-		return "NayZarLinn/expense/deletedList";
+		return "expense/deletedList";
 	}
 
 	@PostMapping("/restore")

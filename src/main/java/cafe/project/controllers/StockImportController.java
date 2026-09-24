@@ -40,13 +40,13 @@ public class StockImportController {
 	@GetMapping
 	public String list(Model model) {
 		model.addAttribute("imports", stockImportService.findAll());
-		return "YinminThiriSoe/manager/stock_imports/list";
+		return "stock_imports/list";
 	}
 
 	@GetMapping("/deleted")
 	public String deletedList(Model model) {
 		model.addAttribute("imports", stockImportService.findDeletedAll());
-		return "YinminThiriSoe/manager/stock_imports/delete";
+		return "stock_imports/delete";
 	}
 
 	@GetMapping("/add")
@@ -56,7 +56,7 @@ public class StockImportController {
 		model.addAttribute("employees", employeeService.getAllEmployeeListDto());
 		model.addAttribute("branches", branchService.findAll());
 		model.addAttribute("ingredients", ingredientTypeService.getAllActive());
-		return "YinminThiriSoe/manager/stock_imports/form";
+		return "stock_imports/form";
 	}
 
 	@PostMapping("/add")
@@ -92,7 +92,7 @@ public class StockImportController {
 		model.addAttribute("suppliers", supplierService.findAll());
 		model.addAttribute("employees", employeeService.getAllEmployeeListDto());
 		model.addAttribute("branches", branchService.findAll());
-		return "YinminThiriSoe/manager/stock_imports/form";
+		return "stock_imports/form";
 	}
 
 	@PostMapping("/edit")

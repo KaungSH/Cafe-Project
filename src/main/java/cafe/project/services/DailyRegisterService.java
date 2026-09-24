@@ -18,7 +18,6 @@ public class DailyRegisterService {
 
 	private final DailyRegisterRepository repository;
 
-
 	public DailyRegisterService(DailyRegisterRepository repository) {
 		this.repository = repository;
 	}
@@ -40,8 +39,7 @@ public class DailyRegisterService {
 	}
 
 	public DailyRegisterEntryDto getRegisterEntryDtoById(String register_id) {
-		DailyRegister entity = repository.findById(register_id)
-				.orElseThrow(() -> new IllegalArgumentException("Register not found."));
+		DailyRegister entity = repository.findById(register_id).orElseThrow(() -> new IllegalArgumentException("Register not found."));
 
 		DailyRegisterEntryDto dto = new DailyRegisterEntryDto();
 		dto.setRegister_id(entity.getRegister_id());
@@ -57,6 +55,10 @@ public class DailyRegisterService {
 	
 	public DailyRegisterEntryDto getRegisterEntryDtoByDate(LocalDate date, String employee_id) {
 		DailyRegister entity = repository.findByDate(date, employee_id);
+		
+		if(entity == null) {
+			return null;
+		}
 
 		DailyRegisterEntryDto dto = new DailyRegisterEntryDto();
 		dto.setRegister_id(entity.getRegister_id());
@@ -87,8 +89,7 @@ public class DailyRegisterService {
 	}
 
 	public void updateRegister(DailyRegisterEntryDto dto) {
-		DailyRegister entity = repository.findById(dto.getRegister_id())
-				.orElseThrow(() -> new IllegalArgumentException("Register not found."));
+		DailyRegister entity = repository.findById(dto.getRegister_id()).orElseThrow(() -> new IllegalArgumentException("Register not found."));
 
 		entity.setBranch_id(dto.getBranch_id());
 		entity.setEmployee_id(dto.getEmployee_id());

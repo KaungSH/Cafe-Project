@@ -30,7 +30,7 @@ public class DiscountController {
 	public String listDiscounts(Model model) {
 		List<DiscountListModel> discounts = discountService.getAllDiscounts();
 		model.addAttribute("discounts", discounts);
-		return "KaungSattHein/discount/list";
+		return "discount/list";
 	}
 
 	@GetMapping("/create")
@@ -41,7 +41,7 @@ public class DiscountController {
 
 		model.addAttribute("audienceTypes", repo.findTypesAll(false));
 
-		return "KaungSattHein/discount/create";
+		return "discount/create";
 	}
 
 	@PostMapping("/save")
@@ -62,7 +62,7 @@ public class DiscountController {
 		model.addAttribute("promoTypes", repo.findTypesAll(true));
 		model.addAttribute("audienceTypes", repo.findTypesAll(false));
 
-		return "KaungSattHein/discount/edit";
+		return "discount/edit";
 	}
 
 	@GetMapping("/delete/{id}")
