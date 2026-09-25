@@ -7,6 +7,8 @@ public class DeleteRecord {
 	private String parent_id, parent_table_name, child_id, child_table_name;
 	private List<String> child_ids;
 	
+	public DeleteRecord() {}
+	
 	public DeleteRecord(String parent_id, String parent_table_name, String child_id, String child_table_name) {
 		this.parent_id = parent_id;
 		this.parent_table_name = parent_table_name;

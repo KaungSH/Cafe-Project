@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import cafe.project.services.BranchService;
 import cafe.project.services.DailyRegisterService;
-import cafe.project.services.EmployeeService;
 import cafe.project.employeemanagement.models.LoginDto;
 import cafe.project.employeemanagement.services.EmployeeManagementService;
 import cafe.project.models.DailyRegisterEntryDto;
@@ -25,16 +24,19 @@ public class AuthController {
 	private final EmployeeManagementService service;
 	private final DailyRegisterService registerService;
 	private final StatusRepository statusRepository;
+	private final BranchService branchService;
 	
-	public AuthController(EmployeeManagementService userService, DailyRegisterService registerService, BranchService branchService, EmployeeService employeeService, StatusRepository statusRepository) {
+	public AuthController(EmployeeManagementService userService, DailyRegisterService registerService, BranchService branchService, StatusRepository statusRepository) {
 		this.service = userService;
 		this.registerService = registerService;
 		this.statusRepository = statusRepository;
+		this.branchService = branchService;
 	}
 	
 	@GetMapping("/login")
 	public String loginPage(Model model) {
 		model.addAttribute("user", new LoginDto());
+		model.addAttribute("branches", branchService.findAll());
 		return "common/user/login";
 	}
 	
@@ -52,10 +54,22 @@ public class AuthController {
 			return "common/user/login";
 		}
 		
+		DailyRegisterEntryDto dto = registerService.getRegisterEntryDtoByDate(LocalDate.now(), ldto.getEmployee_id());
+		
+		if (dto != null) {
+			System.out.println("1111");
+			if(!ldto.getBranch_id().equals(dto.getBranch_id())) {
+				model.addAttribute("error", "You Are Not Allowed to Login to that Branch because You are already Logged into an another Branch.");
+				return "common/user/login";
+			}
+		}
+		
 		oldsession.invalidate();
 		HttpSession session = request.getSession(true);
+		ldto2.setBranch_id(ldto.getBranch_id());
 		session.setAttribute("loggedInUser", ldto2);
 		System.out.println(ldto2.getEmployee_name());
+		System.out.println(ldto2.getBranch_id());
 		System.out.println("SESSION ID: " + session.getId());
 		System.out.println("USER: " + session.getAttribute("loggedInUser"));
 		if(ldto2.getEmployee_role().equals("Admin")) {
@@ -92,7 +106,7 @@ public class AuthController {
 		dto.setBranch_id(ldto.getBranch_id());
 		dto.setEmployee_id(ldto.getEmployee_id());
 		model.addAttribute("registerDto", dto);
-		model.addAttribute("branch", ldto.getBranch_name());
+		model.addAttribute("branch", branchService.findById(ldto.getBranch_id()).getName());
 		model.addAttribute("employee", ldto.getEmployee_name());
 		model.addAttribute("status", statusRepository.findAll2("register").get(0).getName());
 
@@ -116,7 +130,7 @@ public class AuthController {
 		dto.setClosed_at(Time.valueOf(java.time.LocalTime.now()));
 		model.addAttribute("registerDto", dto);
 		dto.setRegister_status_id(statusRepository.findAll2("register").get(1).getStatus_id());
-		model.addAttribute("branch", ldto.getBranch_name());
+		model.addAttribute("branch", branchService.findById(ldto.getBranch_id()).getName());
 		model.addAttribute("employee", ldto.getEmployee_name());
 		model.addAttribute("status", statusRepository.findAll2("register").get(1).getName());
 

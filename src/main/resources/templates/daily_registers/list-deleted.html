@@ -85,17 +85,13 @@
             <td th:text="${reg.opened_at}">08:00:00</td>
             <td th:text="${reg.status_name == 'CLOSED' ? reg.closed_at : 'Not Closed Yet'}">17:00:00</td>
             <td class="text-center">
-              <a th:href="@{/manager/daily-registers/edit/{register_id}(register_id=${reg.register_id})}" 
-                 class="btn btn-sm btn-outline-warning me-1">
-                <i class="fa-solid fa-pen-to-square"></i>
-              </a>
               <a th:href="@{/manager/daily-registers/recover/{register_id}(register_id=${reg.register_id})}" 
                  class="btn btn-sm btn-outline-danger"
                  onclick="return confirm('Are you sure you want to recover this record?');">
-                <i class="fa-solid fa-trash"></i>
+                <i class="fa-solid fa-pen-to-square"></i>
               </a>
               
-              <a th:href="@{/manager/daily-registers//hardDelete/{register_id}/{register_id}(register_id=${reg.register_id})}" 
+              <a th:href="@{/manager/daily-registers/hardDelete/{register_id}(register_id=${reg.register_id})}" 
                  class="btn btn-sm btn-outline-danger"
                  onclick="return confirm('Are you sure you want to delete this record?');">
                 <i class="fa-solid fa-trash"></i>

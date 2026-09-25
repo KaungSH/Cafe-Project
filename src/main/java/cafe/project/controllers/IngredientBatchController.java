@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import cafe.project.models.IngredientBatchDto;
-import cafe.project.repositories.BranchRepository;
 import cafe.project.repositories.IngredientTypeRepository;
 import cafe.project.services.IngredientBatchService;
+import cafe.project.repositories.BranchRepository;
 import jakarta.validation.Valid;
 
 @Controller
@@ -36,14 +36,14 @@ public class IngredientBatchController {
 	@GetMapping("/batches-expiry")
 	public String batchesAndExpiry(Model model) {
 		model.addAttribute(ingredientBatchService.getBatchesAndExpiry());
-		return "ingredientBatch/batchesAndExpiry";
+		return "NayZarLinn/ingredientBatch/batchesAndExpiry";
 
 	}
 
 	@GetMapping
 	public String ingredientBatchList(Model model) {
 		model.addAttribute("ingredientBatch", this.ingredientBatchService.findAll());
-		return "ingredientBatch/list";
+		return "NayZarLinn/ingredientBatch/list";
 	}
 
 	@GetMapping("/add")
@@ -51,7 +51,7 @@ public class IngredientBatchController {
 		model.addAttribute("ingredientBatch", new IngredientBatchDto());
 		model.addAttribute("branches", branchRepository.findAll());
 		model.addAttribute("ingredientTypes", ingredientTypeRepository.findAll());
-		return "ingredientBatch/add";
+		return "NayZarLinn/ingredientBatch/add";
 	}
 
 	@PostMapping("/add")
@@ -60,7 +60,7 @@ public class IngredientBatchController {
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("branches", branchRepository.findAll());
 			model.addAttribute("ingredientTypes", ingredientTypeRepository.findAll());
-			return "ingredientBatch/add";
+			return "NayZarLinn/ingredientBatch/add";
 		}
 		ingredientBatch.setCreatedAt(LocalDateTime.now());
 		this.ingredientBatchService.add(ingredientBatch);
@@ -70,7 +70,7 @@ public class IngredientBatchController {
 	@GetMapping("/expired")
 	public String expiredIngredientBatchList(Model model) {
 		model.addAttribute("ingredientBatch", ingredientBatchService.findExpired());
-		return "ingredientBatch/expiredList";
+		return "NayZarLinn/ingredientBatch/expiredList";
 	}
 
 	@PostMapping("/expired/delete")
@@ -88,7 +88,7 @@ public class IngredientBatchController {
 			model.addAttribute("ingredientBatch", existingIb);
 			model.addAttribute("branches", branchRepository.findAll());
 			model.addAttribute("ingredientTypes", ingredientTypeRepository.findAll());
-			return "ingredientBatch/edit";
+			return "NayZarLinn/ingredientBatch/edit";
 		}
 		return "redirect:/error/404";
 	}
@@ -99,7 +99,7 @@ public class IngredientBatchController {
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("branches", branchRepository.findAll());
 			model.addAttribute("ingredientTypes", ingredientTypeRepository.findAll());
-			return "ingredientBatch/edit";
+			return "NayZarLinn/ingredientBatch/edit";
 		}
 		ingredientBatch.setCreatedAt(LocalDateTime.now());
 		this.ingredientBatchService.edit(ingredientBatch.getBatchId(), ingredientBatch);
@@ -111,7 +111,7 @@ public class IngredientBatchController {
 		IngredientBatchDto existingIb = this.ingredientBatchService.findByBatchId(batchId);
 		if (existingIb != null) {
 			model.addAttribute("ingredientBatch", existingIb);
-			return "ingredientBatch/delete";
+			return "NayZarLinn/ingredientBatch/delete";
 		}
 		model.addAttribute("ingredientBatch", existingIb);
 		return "redirect:/error/404";
@@ -126,7 +126,7 @@ public class IngredientBatchController {
 	@GetMapping("/deleted")
 	public String deletedingredientBatchList(Model model) {
 		model.addAttribute("ingredientBatch", ingredientBatchService.findDeleted());
-		return "ingredientBatch/deletedList";
+		return "NayZarLinn/ingredientBatch/deletedList";
 	}
 
 	@PostMapping("/restore")

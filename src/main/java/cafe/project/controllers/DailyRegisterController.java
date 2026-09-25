@@ -1,5 +1,8 @@
 package cafe.project.controllers;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -7,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import cafe.project.services.EmployeeService;
 import cafe.project.services.DailyRegisterService;
 import cafe.project.models.DailyRegisterEntryDto;
+import cafe.project.models.DailyRegisterListDto;
 import cafe.project.repositories.StatusRepository;
 import cafe.project.services.BranchService;
 
@@ -83,12 +87,30 @@ public class DailyRegisterController {
 		return "redirect:/manager/daily-registers/deleted";
 	}
 	
-	@PostMapping("/hardDelete/{register_id}")
+	@GetMapping("/hardDelete/{register_id}")
 	public String realDeleteRegister(@ModelAttribute("registerDto") DailyRegisterEntryDto dto) {
 		service.hardDeleteRegister(dto.getRegister_id());
 		return "redietct:/manager/daily-registers";
 	}
 	
+	@GetMapping("/timedSoftDelete")
+	public String timedSoftDelete() {
+		for (DailyRegisterListDto listDto : service.getAllRegisters()){
+			if (ChronoUnit.DAYS.between(listDto.getDate(), LocalDate.now()) >= 30) {
+				service.deleteRegister(listDto.getRegister_id());
+			}
+		}
+		return "redietct:/manager/daily-registers";
+	}
 	
+	@GetMapping("/timedHardDelete")
+	public String timedHardDelete() {
+		for (DailyRegisterListDto listDto : service.getAllDeleted()){
+			if (ChronoUnit.DAYS.between(listDto.getDate(), LocalDate.now()) >= 90) {
+				service.hardDeleteRegister(listDto.getRegister_id());
+			}
+		}
+		return "redietct:/manager/daily-registers";
+	}
 	
 }

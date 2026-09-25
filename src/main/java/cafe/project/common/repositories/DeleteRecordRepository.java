@@ -39,7 +39,7 @@ public class DeleteRecordRepository {
 	}
 	
 	public List<DeleteRecord> getChildIds(String parent_id, String parent_id_name, String child_table_name, String child_id_name) {
-		return jdbcTemplate.query("SELECT ? parent_id, ? child_id FROM ? WHERE ? = ?", new DeleteRecordResultSetExtractor(), parent_id_name, child_id_name, child_table_name, parent_id_name, parent_id);
+		return jdbcTemplate.query("SELECT " + parent_id_name + " parent_id, " + child_id_name + " child_id FROM " + child_table_name + " WHERE " + parent_id_name + " = ?", new DeleteRecordResultSetExtractor(), parent_id);
 	}
 
 }

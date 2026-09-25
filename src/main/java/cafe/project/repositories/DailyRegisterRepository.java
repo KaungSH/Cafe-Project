@@ -106,17 +106,23 @@ public class DailyRegisterRepository {
 	}
 
 	public int delete(String register_id) {
+		recordDelete(register_id);
 		setDailyReports(register_id);
 		String sql = "UPDATE daily_registers set isdeleted = 1 where register_id = ?";
 		return jdbcTemplate.update(sql, register_id);
 	}
 	
 	public int recover(String register_id) {
+		for(DeleteRecord dr : deleteRecordRepo.getByParentId(register_id)) {
+			jdbcTemplate.update("UPDATE daily_reports SET register_id = ? WHERE register_id = 'deleted' AND report_id = ?", dr.getParent_id(), dr.getChild_id());
+		}
+		deleteRecordRepo.deleteByParentId(register_id);
 		String sql = "UPDATE daily_registers set isdeleted = 0 where register_id = ?";
 		return jdbcTemplate.update(sql, register_id);
 	}
 	
 	public int hardDelete(String register_id) {
+		deleteRecordRepo.deleteByParentId(register_id);
 		String sql="DELETE FROM daily_registers WHERE register_id";
 		return jdbcTemplate.update(sql, register_id);
 	}
@@ -125,8 +131,15 @@ public class DailyRegisterRepository {
 		return jdbcTemplate.update("UPDATE daily_reports SET register_id = 'deleted' WHERE register_id = ?", register_id);
 	}
 	
-	private int recordDelete() {
-		return 0;
+	private int recordDelete(String register_id) {
+		int i = 0;
+		for (String childId : getChildIds(register_id)) {
+			DeleteRecord dr = new DeleteRecord();
+			dr.setParent_id(register_id); dr.setParent_table_name("daily_registers"); dr.setChild_id(childId); dr.setChild_table_name("daily_reports");
+			deleteRecordRepo.recordDelete(dr);
+			i++;
+		}
+		return i;
 	}
 	
 	private List<String> getChildIds(String register_id) {
