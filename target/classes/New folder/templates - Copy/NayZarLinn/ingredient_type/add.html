@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Add Ingredient Type</title>
+</head>
+<body>
+	<h2>Add New Ingredient Type</h2>
+	<form th:action="@{/staff/ingredientType/add}" th:object="${ingredientForm}"
+		method="post">
+		<div>
+			<label for="ingredientTypeId">ID:</label><br /> <input type="text"
+				id="ingredientTypeId" th:field="*{ingredientTypeId}" /> <span
+				th:if="${#fields.hasErrors('ingredientTypeId')}"
+				th:errors="*{ingredientTypeId}" style="color: red;"></span>
+		</div>
+		<br />
+		<div>
+			<label for="name">Name:</label><br /> <input type="text" id="name"
+				th:field="*{name}" /> <span th:if="${#fields.hasErrors('name')}"
+				th:errors="*{name}" style="color: red;"></span>
+		</div>
+		<br />
+		<div>
+			<label for="description">Description:</label><br />
+			<textarea id="description" th:field="*{description}"></textarea>
+		</div>
+		<br />
+		<div>
+			<label for="unitId">Unit ID (Must match an existing unit):</label><br />
+			<input type="text" id="unitId" th:field="*{unitId}" /> <span
+				th:if="${#fields.hasErrors('unitId')}" th:errors="*{unitId}"
+				style="color: red;"></span>
+		</div>
+		<br />
+		<button type="submit">Save</button>
+		<a th:href="@{/staff/ingredientType}">Cancel</a>
+	</form>
+</body>
+</html>

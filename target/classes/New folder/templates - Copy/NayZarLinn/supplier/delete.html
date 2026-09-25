@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Delete Supplier</title>
+
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<style>
+body {
+	background-color: #FFF8E8;
+	font-family: Arial, sans-serif;
+	color: #5A351F;
+}
+
+.form-container {
+	width: 90%;
+	max-width: 750px;
+	margin: 60px auto;
+}
+
+.form-card {
+	background-color: white;
+	border-radius: 14px;
+	border: 1px solid #E5D2B8;
+	box-shadow: 0 8px 25px rgba(74, 44, 26, 0.10);
+	overflow: hidden;
+}
+
+.form-header {
+	padding: 25px 30px;
+	border-bottom: 1px solid #EADBC8;
+}
+
+.form-header h2 {
+	margin: 0;
+	color: #5A351F;
+	font-weight: 700;
+}
+
+.form-header p {
+	margin: 5px 0 0;
+	color: #8A6A50;
+	font-size: 14px;
+}
+
+.form-body {
+	padding: 30px;
+}
+
+.form-row {
+	display: flex;
+	align-items: center;
+	margin-bottom: 22px;
+}
+
+.form-label-box {
+	width: 150px;
+	font-weight: 600;
+	color: #5A351F;
+}
+
+.dash {
+	width: 25px;
+	text-align: center;
+	color: #8A6A50;
+	font-weight: bold;
+}
+
+.input-box {
+	flex: 1;
+}
+
+.form-control {
+	height: 45px;
+	border: 1px solid #DCC8AE;
+	border-radius: 8px;
+	font-size: 14px;
+}
+
+.form-control:read-only {
+	background-color: #F8F0E4;
+	color: #6B5140;
+}
+
+.form-footer {
+	padding: 20px 30px;
+	border-top: 1px solid #EADBC8;
+	display: flex;
+	justify-content: flex-end;
+	gap: 10px;
+}
+
+.btn-cancel {
+	color: #5A351F;
+	border: 1px solid #5A351F;
+	background: white;
+	padding: 9px 20px;
+	border-radius: 7px;
+	text-decoration: none;
+}
+
+.btn-delete {
+	color: white;
+	background: #9B3A2E;
+	border: 1px solid #9B3A2E;
+	padding: 9px 20px;
+	border-radius: 7px;
+}
+
+.btn-delete:hover {
+	background: #7F2E25;
+	color: white;
+}
+
+@media ( max-width : 600px) {
+	.form-row {
+		display: block;
+	}
+	.form-label-box {
+		width: 100%;
+		margin-bottom: 7px;
+	}
+	.dash {
+		display: none;
+	}
+}
+</style>
+
+</head>
+
+
+<body>
+
+	<div class="form-container">
+
+		<div class="form-card">
+
+			<div class="form-header">
+
+				<h2>Delete Supplier</h2>
+
+				<p>Please confirm that you want to delete this supplier</p>
+
+			</div>
+
+			<form method="post" th:action="@{/manager/supplier/delete}"
+				th:object="${supplier}">
+
+				<div class="form-body">
+
+					<div class="form-row">
+
+						<div class="form-label-box">Supplier ID</div>
+
+						<div class="dash">-</div>
+
+						<div class="input-box">
+
+							<input type="hidden" th:field="*{supplier_id}"> <input
+								type="text" class="form-control"
+								th:value="${supplier.supplier_id}" readonly>
+
+						</div>
+
+					</div>
+
+					<div class="form-row">
+
+						<div class="form-label-box">Name</div>
+
+						<div class="dash">-</div>
+
+						<div class="input-box">
+
+							<input type="text" class="form-control"
+								th:value="${supplier.name}" readonly>
+
+						</div>
+
+					</div>
+
+					<div class="form-row">
+
+						<div class="form-label-box">Contact Info</div>
+
+						<div class="dash">-</div>
+
+						<div class="input-box">
+
+							<input type="text" class="form-control"
+								th:value="${supplier.contact_info}" readonly>
+
+						</div>
+
+					</div>
+
+					<div class="form-row">
+
+						<div class="form-label-box">Created At</div>
+
+						<div class="dash">-</div>
+
+						<div class="input-box">
+
+							<input type="datetime-local" class="form-control"
+								th:value="${#temporals.format(supplier.created_at, 'yyyy-MM-dd''T''HH:mm')}"
+								readonly>
+
+						</div>
+
+					</div>
+
+
+				</div>
+
+				<div class="form-footer">
+
+					<a th:href="@{/manager/supplier}" class="btn-cancel"> Cancel </a>
+
+					<button type="submit" class="btn-delete"
+						onclick="return confirm('Are you sure you want to delete this supplier?');">
+
+						Delete Supplier</button>
+
+				</div>
+
+			</form>
+
+		</div>
+
+	</div>
+
+</body>
+
+</html>
