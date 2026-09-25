@@ -28,8 +28,14 @@
 </style>
 </head>
 <body>
-	<div th:replace = "~{common/fragments/header :: header}"></div>
-	<div layout:fragment = "content" class="px-4 my-5"></div>
-	<div th:replace = "~{common/fragments/footer :: footer}"></div>
+	<div class="d-flex">
+   
+    <div th:replace="~{common/fragments/sidebar :: sidebar}"></div>
+
+    
+    <div class="flex-grow-1 p-4" layout:fragment="content">
+       
+    </div>
+</div>
 </body>
 </html>
