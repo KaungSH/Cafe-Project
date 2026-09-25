@@ -30,19 +30,19 @@ public class EmployeeController {
   @GetMapping
   public String listEmployees(Model model) {
     model.addAttribute("employees", employeeService.getAllEmployeeListDto());
-    return "YinminThiriSoe/manager/employee/list";
+    return "employee/list";
   }
 
   @GetMapping("/add")
   public String showAddForm(Model model) {
     model.addAttribute("employeeDto", new EmployeeEntryDto());
-    return "YinminThiriSoe/manager/employee/form";
+    return "employee/form";
   }
 
   @PostMapping("/add")
   public String addEmployee(@Valid @ModelAttribute("employeeDto") EmployeeEntryDto dto, BindingResult result) {
     if (result.hasErrors()) {
-      return "YinminThiriSoe/manager/employee/form";
+      return "employee/form";
     }
     employeeService.createEmployee(dto);
     return "redirect:/manager/employee";

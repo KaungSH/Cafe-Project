@@ -1,14 +1,18 @@
 package cafe.project.controllers;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import cafe.project.services.EmployeeService;
-import cafe.project.entities.DailyRegisterService;
+import cafe.project.services.DailyRegisterService;
 import cafe.project.models.DailyRegisterEntryDto;
+import cafe.project.models.DailyRegisterListDto;
 import cafe.project.repositories.StatusRepository;
-import cafe.project.YatiWinLatt.service.BranchService;
+import cafe.project.services.BranchService;
 
 @Controller
 @RequestMapping("/manager/daily-registers")
@@ -29,6 +33,7 @@ public class DailyRegisterController {
 	
 	@GetMapping("/{sort}")
 	public String showListPageAll(@PathVariable("sort") String sort, Model model) {
+		
 		if(sort.equals("closed")) {
 			model.addAttribute("registers", service.getAllClosed());
 			return "daily_registers/list-all";
@@ -81,4 +86,31 @@ public class DailyRegisterController {
 		service.recoverRegister(register_id);
 		return "redirect:/manager/daily-registers/deleted";
 	}
+	
+	@GetMapping("/hardDelete/{register_id}")
+	public String realDeleteRegister(@ModelAttribute("registerDto") DailyRegisterEntryDto dto) {
+		service.hardDeleteRegister(dto.getRegister_id());
+		return "redietct:/manager/daily-registers";
+	}
+	
+	@GetMapping("/timedSoftDelete")
+	public String timedSoftDelete() {
+		for (DailyRegisterListDto listDto : service.getAllRegisters()){
+			if (ChronoUnit.DAYS.between(listDto.getDate(), LocalDate.now()) >= 30) {
+				service.deleteRegister(listDto.getRegister_id());
+			}
+		}
+		return "redietct:/manager/daily-registers";
+	}
+	
+	@GetMapping("/timedHardDelete")
+	public String timedHardDelete() {
+		for (DailyRegisterListDto listDto : service.getAllDeleted()){
+			if (ChronoUnit.DAYS.between(listDto.getDate(), LocalDate.now()) >= 90) {
+				service.hardDeleteRegister(listDto.getRegister_id());
+			}
+		}
+		return "redietct:/manager/daily-registers";
+	}
+	
 }

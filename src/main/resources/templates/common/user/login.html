@@ -42,6 +42,21 @@
                                 <input type="password" id="password" class="form-control" th:field="*{password}" placeholder="Enter Password" required>
                             </div>
                             
+                            <!-- Branch -->
+                            <div class="mb-4">
+
+                                <label for="branch" class="form-label fw-semibold">
+                                    Current Branch
+                                </label>
+
+                                <select id="branch" class="form-select" th:field="*{branch_id}">
+                                    <option value="0" disabled>
+                                        --- Select Your Current Branch ---
+                                    </option>
+                                    <option th:if="${b.branch_id != 'deleted'}" th:each="b : ${branches}" th:value="${b.branch_id}" th:text="${b.name}"></option>
+                                </select>
+                            </div>
+                            
                             <!-- Buttons -->
                             <div class="d-flex justify-content-between align-items-center pt-3 border-top">
 

@@ -1,57 +1,261 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+    <meta charset="UTF-8">
+    <title>Coffee Shop Sidebar</title>
 </head>
+
 <body>
+
 <div th:fragment="sidebar">
-<div class="bg-light border-end min-vh-100 d-flex flex-column">
-	<div class="list-group rounded-0">
-		<a href="/"  class="list-group-item list-group-item-action">
-			Home
-		</a>
-		<a href="/manager/employee"  class="list-group-item list-group-item-action">
-			Employees
-		</a>
-		<a href="/manager/daily-registers/all"  class="list-group-item list-group-item-action">
-			Daily Registers
-		</a>
-		<a href="/manager/ingredientBatch"  class="list-group-item list-group-item-action">
-			Ingredient Batch
-		</a>
-		<a href="/categories"  class="list-group-item list-group-item-action">
-			Product - Categories
-		</a>
-		<a href="/units"  class="list-group-item list-group-item-action">
-			Units
-		</a>
-		<a href="/manager/products"  class="list-group-item list-group-item-action">
-			Products List
-		</a>
-		<a href="/manager/supplier"  class="list-group-item list-group-item-action">
-			Suppliers
-		</a>
-		<a href="/staff/ingredientType"  class="list-group-item list-group-item-action">
-			Ingredients Types
-		</a>
-		<a href="/manager/WasteLogs"  class="list-group-item list-group-item-action">
-			Waste Logs
-		</a>
-		<a href="/manager/wastereasons"  class="list-group-item list-group-item-action">
-			Waste Reasons
-		</a>
-		<a href="/manager/ingredientBatch"  class="list-group-item list-group-item-action">
-			Ingredient Batch
-		</a>
-		<a href="/manager/paymethod"  class="list-group-item list-group-item-action">
-			Pay Methods
-		</a>
-		<a href="/manager/stock_imports"  class="list-group-item list-group-item-action">
-			Stock Imports
-		</a>
-	</div>
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Sidebar -->
+    <div class="bg-light border-end min-vh-100 d-flex flex-column p-2"
+         style="width: 250px;">
+
+        <!-- ================= BRAND ================= -->
+        <div class="d-flex align-items-center px-3 py-3">
+
+            <div class="rounded-circle bg-warning d-flex align-items-center justify-content-center me-2"
+                 style="width:42px; height:42px;">
+
+                <i class="bi bi-cup-hot-fill text-white fs-5"></i>
+
+            </div>
+
+            <div>
+                <div class="fw-bold fs-5 text-dark">
+                    Coffee House
+                </div>
+
+                <small class="text-muted">
+                    POS System
+                </small>
+            </div>
+
+        </div>
+
+        <hr class="my-2">
+
+        <!-- ================= MAIN MENU ================= -->
+        <small class="text-uppercase text-muted fw-bold px-3 mb-2">
+            Main Menu
+        </small>
+
+        <ul class="nav nav-pills flex-column mb-3">
+
+            <!-- Dashboard -->
+            <li class="nav-item">
+                <a th:href="@{/}"
+                   class="nav-link text-dark">
+
+                    <i class="bi bi-speedometer2 me-2 text-primary"></i>
+                    Dashboard
+
+                </a>
+            </li>
+
+            <!-- POS -->
+            <li class="nav-item">
+                <a th:href="@{/orders}"
+                   class="nav-link text-dark">
+
+                    <i class="bi bi-cart-check-fill me-2 text-success"></i>
+                    Orders & POS
+
+                </a>
+            </li>
+
+        </ul>
+
+
+        <!-- ================= MENU MANAGEMENT ================= -->
+        <small class="text-uppercase text-muted fw-bold px-3 mb-2">
+            Menu Management
+        </small>
+
+        <ul class="nav nav-pills flex-column mb-3">
+
+            <!-- Categories -->
+            <li>
+                <a th:href="@{/categories}"
+                   class="nav-link text-dark">
+
+                    <i class="bi bi-tags-fill me-2 text-primary"></i>
+                    Categories
+
+                </a>
+            </li>
+
+            <!-- Product Types -->
+            <li>
+                <a th:href="@{/product-types}"
+                   class="nav-link text-dark">
+
+                    <i class="bi bi-grid-fill me-2 text-info"></i>
+                    Product Types
+
+                </a>
+            </li>
+
+            <!-- Products -->
+            <li>
+                <a th:href="@{/products}"
+                   class="nav-link text-dark">
+
+                    <i class="bi bi-cup-straw me-2 text-warning"></i>
+                    Products
+
+                </a>
+            </li>
+
+            <!-- Units -->
+            <li>
+                <a th:href="@{/units}"
+                   class="nav-link text-dark">
+
+                    <i class="bi bi-rulers me-2 text-secondary"></i>
+                    Units
+
+                </a>
+            </li>
+
+        </ul>
+
+
+        <!-- ================= INVENTORY ================= -->
+        <small class="text-uppercase text-muted fw-bold px-3 mb-2">
+            Inventory
+        </small>
+
+        <ul class="nav nav-pills flex-column mb-3">
+
+            <!-- Ingredients -->
+            <li>
+                <a th:href="@{/ingredients}"
+                   class="nav-link text-dark">
+
+                    <i class="bi bi-boxes me-2 text-secondary"></i>
+                    Ingredients
+
+                </a>
+            </li>
+
+            <!-- Stock Imports -->
+            <li>
+                <a th:href="@{/stock-imports}"
+                   class="nav-link text-dark">
+
+                    <i class="bi bi-truck me-2 text-danger"></i>
+                    Stock Imports
+
+                </a>
+            </li>
+
+            <!-- Waste -->
+            <li>
+                <a th:href="@{/waste-logs}"
+                   class="nav-link text-dark">
+
+                    <i class="bi bi-trash3-fill me-2 text-danger"></i>
+                    Waste Logs
+
+                </a>
+            </li>
+
+        </ul>
+
+
+        <!-- ================= REPORTS ================= -->
+        <small class="text-uppercase text-muted fw-bold px-3 mb-2">
+            Reports
+        </small>
+
+        <ul class="nav nav-pills flex-column mb-auto">
+
+            <li>
+                <a th:href="@{/reports}"
+                   class="nav-link text-dark">
+
+                    <i class="bi bi-bar-chart-line-fill me-2 text-primary"></i>
+                    Daily Reports
+
+                </a>
+            </li>
+
+        </ul>
+
+
+        <!-- ================= ADMIN ================= -->
+        <div th:if="${session.loggedInUser != null 
+                    and session.loggedInUser.role == 'ADMIN'}">
+
+            <hr class="my-2">
+
+            <small class="text-uppercase text-muted fw-bold px-3 mb-2">
+                Administration
+            </small>
+
+            <ul class="nav nav-pills flex-column mb-3">
+
+                <li>
+                    <a th:href="@{/employees}"
+                       class="nav-link text-dark">
+
+                        <i class="bi bi-people-fill me-2 text-dark"></i>
+                        Employees
+
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <!-- ================= USER PROFILE ================= -->
+        <hr class="mt-auto mb-2">
+
+        <div class="px-3 py-2">
+
+            <div class="d-flex align-items-center">
+
+                <i class="bi bi-person-circle fs-3 me-2 text-secondary"></i>
+
+                <div>
+
+                    <strong
+                        th:text="${session.loggedInUser != null
+                        ? session.loggedInUser.name
+                        : 'Staff'}">
+                        Staff
+                    </strong>
+
+                    <br>
+
+                    <small class="text-muted"
+                           th:text="${session.loggedInUser != null
+                           ? session.loggedInUser.role
+                           : 'STAFF'}">
+                        STAFF
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
-</div>
+
 </body>
 </html>
+

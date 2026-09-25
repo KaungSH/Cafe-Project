@@ -7,7 +7,8 @@ import java.sql.SQLException;
 import java.sql.Time;
 
 import org.springframework.jdbc.core.RowMapper;
-import cafe.project.YatiWinLatt.repositories.entities.DailyRegister;
+
+import cafe.project.repositories.entities.DailyRegister;
 
 public class DailyRegisterMapper implements RowMapper<DailyRegister> {
 
