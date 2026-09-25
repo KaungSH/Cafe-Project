@@ -8,8 +8,8 @@
 			
             <a class="navbar-brand"
                th:href="@{/}">
-               <img th:src="@{/images/logo.jpg}" alt="Favicon" style="width: 32px; height: 32px;" class = "shadow-lg" />
-                Cafe Project
+               <img th:src="@{/favicon.ico}" alt="Favicon" style="width: 32px; height: 32px;" class = "shadow-lg" />
+                Café Луфт
             </a>
 
             <button class="navbar-toggler"
@@ -25,11 +25,63 @@
                  id="navbarContent">
 
                 <ul class="navbar-nav ms-auto">
+                
+                    <li class="nav-item" th:if = "${session.loggedInUser.employee_role == 'STAFF'}">
+                        <a class="nav-link"
+                           th:href="@{/staff/products}">
+                            Menu
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item" th:if = "${session.loggedInUser.employee_role == 'MANAGER' || session.loggedInUser.employee_role == 'ADMIN'}">
+                        <a class="nav-link"
+                           th:href="@{/manager/products}">
+                            Products
+                        </a>
+                    </li>
+
+                    <li class="nav-item" th:if = "${session.loggedInUser == null}">
+                        <a class="nav-link"
+                           th:href="@{/signup}">
+                            SignUp
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item" th:if = "${session.loggedInUser != null}">
+                   	<a class="nav-link"
+                           th:href="@{/signup}">
+                            AddAcc
+                    </a>
+                    </li>
+                    
+                     <li class="nav-item" th:if = "${session.loggedInUser == null}">
+                        <a class="nav-link"
+                           th:href="@{/login}">
+                            Log In
+                        </a>
+                    </li>
+                    
+                     <li class="nav-item" th:if = "${session.loggedInUser != null}">
+                        <a class="nav-link"
+                           th:href="@{/logout}" onclick="return confirm('Are you sure you want to log out?');">
+                           Log Out
+                        </a>
+                    </li>
+
+					<li class="nav-item" th:if = "${session.loggedInUser != null}">
+                        <a class="nav-link"
+                           th:href="@{/pedit}">
+                           <strong th:text="${session.loggedInUser.employee_name}"></strong>
+                           <strong th:text="${session.loggedInUser.employee_role}"></strong>
+                            
+				    		
+                        </a>
+                        
+                    </li>
 
                 </ul>
 
             </div>
-
         </div>
 
     </nav>

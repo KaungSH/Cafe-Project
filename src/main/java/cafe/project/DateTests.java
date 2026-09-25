@@ -8,6 +8,7 @@ import java.time.LocalTime;
 public class DateTests {
 
 	public static void main(String[] args) {
+		
 		LocalDateTime datetime = LocalDateTime.now();
 		LocalTime time = LocalTime.now();
 		LocalDate date = LocalDate.now();
