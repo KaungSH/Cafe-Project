@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Edit Expense</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<style>
+body {
+	background: rgba(0, 0, 0, 0.25);
+	font-family: Arial, sans-serif;
+}
+
+.edit-box {
+	width: 700px;
+	max-width: 95%;
+	margin: 50px auto;
+	background: #fffaf3;
+	border-radius: 25px;
+	box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+	overflow: hidden;
+}
+
+.edit-header {
+	padding: 25px 28px;
+	border-bottom: 1px solid #e5d7c6;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.edit-header h2 {
+	margin: 0;
+	font-family: Georgia, serif;
+	font-size: 25px;
+	font-weight: bold;
+	color: #3d3025;
+}
+
+.close-btn {
+	border: none;
+	background: transparent;
+	font-size: 32px;
+	color: #806f5c;
+	cursor: pointer;
+	line-height: 1;
+}
+
+.close-btn:hover {
+	color: #4d3a29;
+}
+
+.edit-body {
+	padding: 28px;
+}
+
+.form-label {
+	font-weight: 600;
+	color: #756452;
+	margin-bottom: 8px;
+}
+
+.form-control, .form-select {
+	height: 53px;
+	border: 1px solid #e5cfb5;
+	border-radius: 10px;
+	background: white;
+	font-size: 16px;
+}
+
+textarea.form-control {
+	height: 100px;
+	resize: vertical;
+}
+
+.form-control:focus, .form-select:focus {
+	border-color: #a66b35;
+	box-shadow: 0 0 0 0.15rem rgba(166, 107, 53, 0.15);
+}
+
+.footer {
+	padding: 20px 28px;
+	border-top: 1px solid #e5d7c6;
+	display: flex;
+	justify-content: flex-end;
+	gap: 12px;
+}
+
+.cancel-btn {
+	background: white;
+	border: 1px solid #e5cfb5;
+	border-radius: 10px;
+	padding: 13px 25px;
+	font-weight: 600;
+	font-size: 16px;
+	text-decoration: none;
+	color: #222;
+}
+
+.cancel-btn:hover {
+	background: #f5eee5;
+	color: #222;
+}
+
+.save-btn {
+	background: #965d29;
+	color: white;
+	border: none;
+	border-radius: 10px;
+	padding: 13px 25px;
+	font-weight: 600;
+	font-size: 16px;
+}
+
+.save-btn:hover {
+	background: #75471f;
+}
+
+.error {
+	color: #c0392b;
+	font-size: 13px;
+	margin-top: 5px;
+}
+</style>
+</head>
+
+<body>
+
+	<div class="edit-box">
+
+		<div class="edit-header">
+
+			<h2>Edit Expense</h2>
+
+			<a th:href="@{/manager/expense}" class="close-btn"
+				style="text-decoration: none;"> &times; </a>
+
+		</div>
+
+		<form th:action="@{/manager/expense/edit}" th:object="${expense}"
+			method="post">
+
+			<div class="edit-body">
+
+				<input type="hidden" th:field="*{expense_id}">
+
+				<div class="row g-3">
+
+					<div class="col-md-6">
+
+						<label class="form-label"> Branch </label> <select
+							class="form-select" th:field="*{branch_id}">
+
+							<option value="">Select Branch</option>
+
+							<option th:each="branch : ${branches}"
+								th:value="${branch.branch_id}" th:text="${branch.name}">
+							</option>
+
+						</select>
+
+						<div class="error" th:if="${#fields.hasErrors('branch_id')}"
+							th:errors="*{branch_id}"></div>
+
+					</div>
+
+
+					<div class="col-md-6 mb-3">
+
+						<label class="form-label"> Category </label> <select
+							class="form-select" th:field="*{expense_category_id}">
+
+							<option value="">Select Category</option>
+
+							<option th:each="category : ${expenseCategories}"
+								th:value="${category.expense_category_id}"
+								th:text="${category.category_name}"></option>
+
+						</select>
+
+						<div class="error"
+							th:if="${#fields.hasErrors('expense_category_id')}"
+							th:errors="*{expense_category_id}"></div>
+
+					</div>
+
+				</div>
+
+
+				<div class="row g-3 mt-1">
+
+					<div class="col-md-6">
+
+						<label class="form-label"> Amount </label> <input type="number"
+							class="form-control" th:field="*{amount}" step="0.01"
+							placeholder="Enter amount">
+
+						<div class="error" th:if="${#fields.hasErrors('amount')}"
+							th:errors="*{amount}"></div>
+
+					</div>
+
+					<div class="col-md-6">
+
+						<label class="form-label"> Date </label> <input
+							type="datetime-local" class="form-control"
+							th:field="*{expense_date}">
+
+						<div class="error" th:if="${#fields.hasErrors('expense_date')}"
+							th:errors="*{expense_date}"></div>
+
+					</div>
+
+				</div>
+
+				<div class="mt-3">
+
+					<label class="form-label"> Description </label>
+
+					<textarea class="form-control" th:field="*{description}"
+						placeholder="Enter description"></textarea>
+
+					<div class="error" th:if="${#fields.hasErrors('description')}"
+						th:errors="*{description}"></div>
+
+				</div>
+
+			</div>
+
+
+			<div class="footer">
+
+				<a th:href="@{/manager/expense}" class="cancel-btn"> Cancel </a>
+
+				<button type="submit" class="save-btn">Save changes</button>
+
+			</div>
+
+		</form>
+
+	</div>
+
+</body>
+</html>

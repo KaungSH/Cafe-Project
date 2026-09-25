@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Unit Management</title>
+
+<style>
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	font-family: Arial, sans-serif;
+	background: #f5f6fa;
+}
+
+.container {
+	width: 90%;
+	margin: 40px auto;
+}
+
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 25px;
+}
+
+h1 {
+	color: #333;
+}
+
+.btn {
+	padding: 10px 18px;
+	background: #3498db;
+	color: white;
+	text-decoration: none;
+	border-radius: 6px;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	background: white;
+	box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+	padding: 14px;
+	border-bottom: 1px solid #ddd;
+}
+
+th {
+	background: #34495e;
+	color: white;
+	text-align: left;
+}
+
+.restore {
+	color: #2980b9;
+	text-decoration: none;
+	margin-right: 10px;
+}
+
+.delete {
+	color: #e74c3c;
+	text-decoration: none;
+}
+
+.empty {
+	text-align: center;
+	padding: 30px;
+}
+</style>
+</head>
+
+<body>
+
+	<div class="container">
+
+		<div class="header">
+
+			<h1>Unit Deleted-List</h1>
+
+			<a href="/units" class="btn"> Back to unit list </a>
+
+		</div>
+
+		<table>
+
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Unit Name</th>
+					<th>Abbreviation</th>
+					<th>Active</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+
+			<tbody>
+
+				<tr th:each="unit : ${units}">
+
+					<td th:text="${unit.unit_id}"></td>
+
+					<td th:text="${unit.name}"></td>
+
+					<td th:text="${unit.abbreviation}"></td>
+
+					<td th:text="${unit.is_active ? 'Active' : 'Inactive'}"></td>
+
+					<td>
+						<form th:action="@{/units/restore}" method="post"
+							style="display: inline;">
+							<input type="hidden" name="id" th:value="${unit.unit_id}">
+							<button type="submit" class="restore">Restore</button>
+						</form>
+
+						<form th:action="@{/units/real-delete}" method="post"
+							style="display: inline;"
+							onsubmit="return confirm('Are you sure you want to permanently delete this unit?');">
+							<input type="hidden" name="id" th:value="${unit.unit_id}">
+							<button type="submit" class="delete">Delete</button>
+						</form>
+					</td>
+
+				</tr>
+
+				<tr th:if="${#lists.isEmpty(units)}">
+					<td colspan="5" class="empty">No units found.</td>
+				</tr>
+
+			</tbody>
+
+		</table>
+
+	</div>
+
+</body>
+</html>
+
