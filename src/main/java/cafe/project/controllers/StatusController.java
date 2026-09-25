@@ -20,7 +20,7 @@ public class StatusController {
 	public String showStatusList(@RequestParam(defaultValue = "branch") String type, Model model) {
 		model.addAttribute("selectedType", type);
 		model.addAttribute("statusList", statusRepository.findAll(type));
-		return "YatiWinLatt/admin/statuses/list";
+		return "statuses/list";
 	}
 
 }

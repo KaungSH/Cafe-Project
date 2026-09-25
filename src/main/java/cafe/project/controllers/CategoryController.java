@@ -31,7 +31,7 @@ public class CategoryController {
 
 		model.addAttribute("categories", this.categoryService.findAllByRelation());
 
-		return "HeinMinHtet/categories/list";
+		return "categories/list";
 	}
 
 	@GetMapping("/categories/add")
@@ -40,7 +40,7 @@ public class CategoryController {
 		model.addAttribute("category", new CategoryDto());
 		model.addAttribute("branches",branchService.findAll());
 		
-		return "HeinMinHtet/categories/add";
+		return "categories/add";
 	}
 
 	@PostMapping("/categories/add")
@@ -68,7 +68,7 @@ public class CategoryController {
 			model.addAttribute("category", existingCategory);
 			model.addAttribute("branches",branchService.findAll());
 
-			return "HeinMinHtet/categories/edit";
+			return "categories/edit";
 		}
 
 		return "redirect:/notfound";
@@ -91,7 +91,7 @@ public class CategoryController {
 
 			model.addAttribute("category", existingCategory);
 
-			return "HeinMinHtet/categories/delete";
+			return "categories/delete";
 		}
 
 		return "redirect:/notfound";
@@ -108,7 +108,7 @@ public class CategoryController {
 	@GetMapping("/categories/deleted-list")
 	public String categoryDeletedList(Model model) {
 		model.addAttribute("categories", this.categoryService.deletedList());
-		return "HeinMinHtet/categories/deleted-list";
+		return "categories/deleted-list";
 	}
 	
 	@PostMapping("/categories/restore")

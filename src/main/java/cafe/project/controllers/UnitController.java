@@ -25,7 +25,7 @@ public class UnitController {
 
 		model.addAttribute("units", this.unitService.findAll());
 
-		return "HeinMinHtet/units/list";
+		return "units/list";
 	}
 
 	@GetMapping("/units/add")
@@ -33,7 +33,7 @@ public class UnitController {
 
 		model.addAttribute("unit", new UnitDto());
 
-		return "HeinMinHtet/units/add";
+		return "units/add";
 	}
 
 	@PostMapping("/units/add")
@@ -53,7 +53,7 @@ public class UnitController {
 
 			model.addAttribute("unit", existingUnit);
 
-			return "HeinMinHtet/units/edit";
+			return "units/edit";
 		}
 
 		return "redirect:/notfound";
@@ -76,7 +76,7 @@ public class UnitController {
 
 			model.addAttribute("unit", existingUnit);
 
-			return "HeinMinHtet/units/delete";
+			return "units/delete";
 		}
 
 		return "redirect:/notfound";
@@ -95,7 +95,7 @@ public class UnitController {
 
 		model.addAttribute("units", this.unitService.deletedList());
 
-		return "HeinMinHtet/units/deleted-list";
+		return "units/deleted-list";
 	}
 	
 	@PostMapping("/units/restore")
