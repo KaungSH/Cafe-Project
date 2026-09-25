@@ -1,11 +1,11 @@
-package cafe.project.YatiWinLatt.repositories;
+package cafe.project.repositories;
 
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import cafe.project.YatiWinLatt.repositories.entities.BranchStatus;
-import cafe.project.YatiWinLatt.repositories.mappers.BranchStatusMapper;
+import cafe.project.repositories.entities.BranchStatus;
+import cafe.project.repositories.mappers.BranchStatusMapper;
 
 @Repository
 public class BranchStatusRepository {

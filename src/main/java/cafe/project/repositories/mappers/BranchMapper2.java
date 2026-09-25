@@ -1,4 +1,4 @@
-package cafe.project.YatiWinLatt.repositories.mappers;
+package cafe.project.repositories.mappers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
 
-import cafe.project.YatiWinLatt.repositories.entities.Branch;
+import cafe.project.repositories.entities.Branch;
 
 public class BranchMapper2 implements RowMapper<Branch> {
 

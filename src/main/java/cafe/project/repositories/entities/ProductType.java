@@ -1,9 +1,9 @@
-package cafe.project.KaungSattHein.repositories.entities;
+package cafe.project.repositories.entities;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import cafe.project.KaungSattHein.models.ProductEntryModel;
+import cafe.project.models.ProductEntryModel;
 
 public class ProductType {
 	

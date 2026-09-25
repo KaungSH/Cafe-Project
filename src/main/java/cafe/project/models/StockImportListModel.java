@@ -1,4 +1,4 @@
-package cafe.project.YinminThiriSoe.models;
+package cafe.project.models;
 
 import java.time.LocalDateTime;
 

@@ -56,6 +56,18 @@ public class UnitService {
 
         return repo.delete(id);
     }
+    
+    public List<UnitDto> deletedList(){
+    	return this.repo.findDeletedAll().stream().map(this::toDto).toList();
+    }
+    
+    public int restore(String id) {
+    	return this.repo.restore(id);
+    }
+    
+    public int hardDelete(String id) {
+    	return this.repo.hardDelete(id);
+    }
 
     private UnitDto toDto(Unit entity) {
 

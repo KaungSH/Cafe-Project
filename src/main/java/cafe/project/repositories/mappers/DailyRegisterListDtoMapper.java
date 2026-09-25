@@ -1,4 +1,4 @@
-package cafe.project.YatiWinLatt.repositories.mappers;
+package cafe.project.repositories.mappers;
 
 
 import java.sql.Date;
@@ -7,7 +7,8 @@ import java.sql.SQLException;
 import java.sql.Time;
 
 import org.springframework.jdbc.core.RowMapper;
-import cafe.project.YatiWinLatt.models.DailyRegisterListDto;
+
+import cafe.project.models.DailyRegisterListDto;
 
 public class DailyRegisterListDtoMapper implements RowMapper<DailyRegisterListDto> {
 

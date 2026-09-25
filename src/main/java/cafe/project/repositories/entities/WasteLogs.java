@@ -1,4 +1,4 @@
-package cafe.project.YatiWinLatt.repositories.entities;
+package cafe.project.repositories.entities;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

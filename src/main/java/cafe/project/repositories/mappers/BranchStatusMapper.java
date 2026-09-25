@@ -1,10 +1,10 @@
-package cafe.project.YatiWinLatt.repositories.mappers;
+package cafe.project.repositories.mappers;
 
 	import java.sql.ResultSet;
 	import java.sql.SQLException;
 	import org.springframework.jdbc.core.RowMapper;
 
-import cafe.project.YatiWinLatt.repositories.entities.BranchStatus;
+import cafe.project.repositories.entities.BranchStatus;
 
 	public class BranchStatusMapper implements RowMapper<BranchStatus> {
 	    @Override

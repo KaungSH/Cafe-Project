@@ -29,7 +29,7 @@ public class OrdersController {
 
 		model.addAttribute("orders", ordersService.findAll());
 
-		return "HeinMinHtet/orders/index";
+		return "orders/index";
 	}
 
 	
@@ -40,7 +40,7 @@ public class OrdersController {
 
 		model.addAttribute("order", new Orders());
 
-		return "HeinMinHtet/orders/add";
+		return "orders/add";
 	}
 
 	// =========================
@@ -67,7 +67,7 @@ public class OrdersController {
 		if (existingOrder != null) {
 			model.addAttribute("order", existingOrder);
 
-			return "HeinMinHtet/orders/edit";
+			return "orders/edit";
 		}
 
 		return "redirect:/orders";

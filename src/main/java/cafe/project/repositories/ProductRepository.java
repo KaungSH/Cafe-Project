@@ -1,4 +1,4 @@
-package cafe.project.KaungSattHein.repositories;
+package cafe.project.repositories;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import cafe.project.KaungSattHein.repositories.entities.Product;
-import cafe.project.KaungSattHein.repositories.mappers.ProductMapper;
+import cafe.project.repositories.entities.Product;
+import cafe.project.repositories.mappers.ProductMapper;
 import cafe.project.repositories.mappers.resultsetextractors.ProductResultSetExtractor;
 import cafe.project.repositories.mappers.resultsetextractors.ProductResultSetExtractor2;
 import cafe.project.repositories.mappers.resultsetextractors.ProductResultSetExtractor3;

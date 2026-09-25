@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import cafe.project.models.UnitDto;
 import cafe.project.services.UnitService;
@@ -24,7 +25,7 @@ public class UnitController {
 
 		model.addAttribute("units", this.unitService.findAll());
 
-		return "HeinMinHtet/units/list";
+		return "units/list";
 	}
 
 	@GetMapping("/units/add")
@@ -32,7 +33,7 @@ public class UnitController {
 
 		model.addAttribute("unit", new UnitDto());
 
-		return "HeinMinHtet/units/add";
+		return "units/add";
 	}
 
 	@PostMapping("/units/add")
@@ -52,7 +53,7 @@ public class UnitController {
 
 			model.addAttribute("unit", existingUnit);
 
-			return "HeinMinHtet/units/edit";
+			return "units/edit";
 		}
 
 		return "redirect:/notfound";
@@ -75,7 +76,7 @@ public class UnitController {
 
 			model.addAttribute("unit", existingUnit);
 
-			return "HeinMinHtet/units/delete";
+			return "units/delete";
 		}
 
 		return "redirect:/notfound";
@@ -87,5 +88,29 @@ public class UnitController {
 		this.unitService.delete(unit.getUnit_id());
 
 		return "redirect:/units";
+	}
+	
+	@GetMapping("/units/deleted-list")
+	public String unitDeleteList(Model model) {
+
+		model.addAttribute("units", this.unitService.deletedList());
+
+		return "units/deleted-list";
+	}
+	
+	@PostMapping("/units/restore")
+	public String restoreUnit(@RequestParam String id) {
+		
+		unitService.restore(id);
+		
+		return "redirect:/units/deleted-list";
+	}
+	
+	@PostMapping("/units/real-delete")
+	public String realDeleteUnit(@RequestParam String id) {
+		
+		unitService.hardDelete(id);
+		
+		return "redirect:/units/deleted-list";
 	}
 }

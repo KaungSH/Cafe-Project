@@ -157,28 +157,10 @@ body {
 			</div>
 
 
-			<form method="post" th:action="@{/manager/supplier/add}"
+			<form method="post" th:action="@{/manager/suppliers/add}"
 				th:object="${supplier}">
 
 				<div class="form-body">
-
-					<div class="form-row">
-
-						<div class="form-label-box">Supplier ID</div>
-
-						<div class="dash">-</div>
-
-						<div class="input-box">
-
-							<input type="text" class="form-control" th:field="*{supplier_id}"
-								placeholder="Enter supplier ID">
-
-							<div class="error" th:if="${#fields.hasErrors('supplier_id')}"
-								th:errors="*{supplier_id}"></div>
-
-						</div>
-
-					</div>
 
 					<div class="form-row">
 
@@ -220,7 +202,7 @@ body {
 
 				<div class="form-footer">
 
-					<a th:href="@{/manager/supplier}" class="btn-cancel"> Cancel </a>
+					<a th:href="@{/manager/suppliers}" class="btn-cancel"> Cancel </a>
 
 					<button type="submit" class="btn-add">Add Supplier</button>
 

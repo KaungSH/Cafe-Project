@@ -1,9 +1,8 @@
-package cafe.project.YatiWinLatt.service;
+package cafe.project.services;
 
-import cafe.project.YatiWinLatt.models.SizeEntryDto;
-
-import cafe.project.YatiWinLatt.repositories.SizeRepository;
-import cafe.project.YatiWinLatt.repositories.entities.Size;
+import cafe.project.models.SizeEntryDto;
+import cafe.project.repositories.SizeRepository;
+import cafe.project.repositories.entities.Size;
 
 import org.springframework.stereotype.Service;
 
@@ -20,26 +19,39 @@ public class SizeService {
 	}
 
 	public List<Size> getAllSizes() {
-		return sizeRepository.findAll();
-	}
+	    return sizeRepository.findAll();
+	  }
 
-	public Size getSizeById(String size_id) {
-		return sizeRepository.findById(size_id);
-	}
+	  public List<Size> getDeletedSizes() {
+	    return sizeRepository.findDeletedAll();
+	  }
 
-	public void createSize(SizeEntryDto dto) {
-		sizeRepository.save(dto);
-	}
+	  public Size getSizeById(String size_id) {
+	    return sizeRepository.findById(size_id);
+	  }
 
-	public void updateSize(SizeEntryDto dto) {
-		sizeRepository.update(dto);
-	}
+	  public void createSize(SizeEntryDto dto) {
+	    sizeRepository.save(dto);
+	  }
 
-	public void deleteSize(String size_id) {
-		sizeRepository.deleteById(size_id);
-	}
+	  public void updateSize(SizeEntryDto dto) {
+	    sizeRepository.update(dto);
+	  }
 
-	public List<Map<String, Object>> getAllEmployees() {
-		return sizeRepository.findAllEmployees();
-	}
+	  public void deleteSize(String size_id) {
+	    sizeRepository.deleteById(size_id);
+	  }
+
+	  public void restoreSize(String size_id) {
+	    sizeRepository.restoreById(size_id);
+	  }
+
+	  public void hardDeleteSize(String size_id) {
+	    sizeRepository.hardDeleteById(size_id);
+	  }
+
+	  public List<Map<String, Object>> getAllEmployees() {
+	    return sizeRepository.findAllEmployees();
+	  }
+	
 }

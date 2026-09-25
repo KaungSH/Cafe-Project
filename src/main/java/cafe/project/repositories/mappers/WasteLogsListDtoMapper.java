@@ -1,11 +1,11 @@
-package cafe.project.YatiWinLatt.repositories.mappers;
+package cafe.project.repositories.mappers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import org.springframework.jdbc.core.RowMapper;
 
-import cafe.project.YatiWinLatt.models.WasteLogsListDto;
+import cafe.project.models.WasteLogsListDto;
 
 public class WasteLogsListDtoMapper implements RowMapper<WasteLogsListDto> {
 

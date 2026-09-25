@@ -1,4 +1,4 @@
-package cafe.project.KaungSattHein.repositories;
+package cafe.project.repositories;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -7,11 +7,11 @@ import java.util.UUID;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import cafe.project.KaungSattHein.models.ProductEntryModel;
-import cafe.project.KaungSattHein.models.ProductListModel;
-import cafe.project.KaungSattHein.repositories.entities.ProductType;
-import cafe.project.KaungSattHein.repositories.mappers.ProductTypeMapper;
-import cafe.project.KaungSattHein.services.ProductService;
+import cafe.project.models.ProductEntryModel;
+import cafe.project.models.ProductListModel;
+import cafe.project.repositories.entities.ProductType;
+import cafe.project.repositories.mappers.ProductTypeMapper;
+import cafe.project.services.ProductService;
 
 @Repository
 public class ProductTypeRepository {
@@ -27,6 +27,18 @@ public class ProductTypeRepository {
 	public List<ProductType> findAll() {
 		String sql = "SELECT * FROM product_types WHERE isdeleted = false ORDER BY created_at DESC";
 		return jdbcTemplate.query(sql, new ProductTypeMapper());
+	}
+	
+	public List<ProductType> searchByName(String keyword) {
+	    String searchKeyword = "%" + keyword + "%";
+	    String sql = "SELECT * FROM product_types WHERE name LIKE ? AND isdeleted = false";
+	    return jdbcTemplate.query(sql, new ProductTypeMapper(), searchKeyword);
+	}
+	
+	public List<ProductType> searchDeletedByName(String keyword) {
+	    String searchKeyword = "%" + keyword + "%";
+		String sql = "SELECT * FROM product_types WHERE name LIKE ? AND isdeleted = true";
+		return jdbcTemplate.query(sql, new ProductTypeMapper(), searchKeyword);
 	}
 	
 	public ProductType findById(String id) {

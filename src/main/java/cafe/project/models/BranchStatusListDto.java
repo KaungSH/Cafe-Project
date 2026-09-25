@@ -1,4 +1,4 @@
-package cafe.project.YatiWinLatt.models;
+package cafe.project.models;
 
 public class BranchStatusListDto {
 	private String branch_status_id;

@@ -1,4 +1,4 @@
-package cafe.project.YinminThiriSoe.models;
+package cafe.project.models;
 
 public class StockImportDetailList {
 	private String import_detail_id;

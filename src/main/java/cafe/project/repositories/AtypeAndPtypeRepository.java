@@ -1,4 +1,4 @@
-package cafe.project.KaungSattHein.repositories;
+package cafe.project.repositories;
 
 import java.util.List;
 import java.util.UUID;
@@ -6,9 +6,9 @@ import java.util.UUID;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import cafe.project.KaungSattHein.repositories.entities.AtypeAndPtype;
-import cafe.project.KaungSattHein.repositories.mappers.AudienceTypeMapper;
-import cafe.project.KaungSattHein.repositories.mappers.PromoTypeMapper;
+import cafe.project.repositories.entities.AtypeAndPtype;
+import cafe.project.repositories.mappers.AudienceTypeMapper;
+import cafe.project.repositories.mappers.PromoTypeMapper;
 
 @Repository
 public class AtypeAndPtypeRepository {

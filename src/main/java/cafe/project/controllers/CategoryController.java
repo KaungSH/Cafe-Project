@@ -6,40 +6,54 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import cafe.project.employeemanagement.models.LoginDto;
 import cafe.project.models.CategoryDto;
+import cafe.project.services.BranchService;
 import cafe.project.services.CategoryService;
+import jakarta.servlet.http.HttpSession;
 
 
 @Controller
 public class CategoryController {
 
 	private final CategoryService categoryService;
+	private final BranchService branchService;
 
-	public CategoryController(CategoryService categoryService) {
+	public CategoryController(CategoryService categoryService,BranchService branchService) {
 		this.categoryService = categoryService;
+		this.branchService=branchService;
 	}
 
 	@GetMapping("/categories")
 	public String categoryList(Model model) {
 
-		model.addAttribute("categories", this.categoryService.findAll());
+		model.addAttribute("categories", this.categoryService.findAllByRelation());
 
-		return "HeinMinHtet/categories/list";
+		return "categories/list";
 	}
 
 	@GetMapping("/categories/add")
 	public String addCategory(Model model) {
 
 		model.addAttribute("category", new CategoryDto());
-
-		return "HeinMinHtet/categories/add";
+		model.addAttribute("branches",branchService.findAll());
+		
+		return "categories/add";
 	}
 
 	@PostMapping("/categories/add")
-	public String addCategory(@ModelAttribute("category") CategoryDto category, Model model) {
-
+	public String addCategory(@ModelAttribute("category") CategoryDto category, Model model,HttpSession session) {
+		
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		String employeeID = ldto.getEmployee_id();
+		
+		category.setEmployee_id(employeeID);
+		
 		this.categoryService.add(category);
+		
+		
 
 		return "redirect:/categories";
 	}
@@ -52,8 +66,9 @@ public class CategoryController {
 		if (existingCategory != null) {
 
 			model.addAttribute("category", existingCategory);
+			model.addAttribute("branches",branchService.findAll());
 
-			return "HeinMinHtet/categories/edit";
+			return "categories/edit";
 		}
 
 		return "redirect:/notfound";
@@ -76,7 +91,7 @@ public class CategoryController {
 
 			model.addAttribute("category", existingCategory);
 
-			return "HeinMinHtet/categories/delete";
+			return "categories/delete";
 		}
 
 		return "redirect:/notfound";
@@ -88,5 +103,23 @@ public class CategoryController {
 		this.categoryService.delete(category.getCategory_id());
 
 		return "redirect:/categories";
+	}
+	
+	@GetMapping("/categories/deleted-list")
+	public String categoryDeletedList(Model model) {
+		model.addAttribute("categories", this.categoryService.deletedList());
+		return "categories/deleted-list";
+	}
+	
+	@PostMapping("/categories/restore")
+	public String restoreCategory(@RequestParam String id) {
+		categoryService.restore(id);
+		return "redirect:/categories/deleted-list";
+	}
+	
+	@PostMapping("/categories/real-delete")
+	public String realDeleteCategory(@RequestParam String id) {
+		categoryService.hardDelete(id);
+		return "redirect:/categories/deleted-list";
 	}
 }

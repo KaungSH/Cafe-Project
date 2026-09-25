@@ -1,4 +1,4 @@
-package cafe.project.KaungSattHein.repositories.mappers;
+package cafe.project.repositories.mappers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.jdbc.core.RowMapper;
 
-import cafe.project.KaungSattHein.repositories.entities.Product;
+import cafe.project.repositories.entities.Product;
 
 public class ProductMapper implements RowMapper<Product> {
 

@@ -1,4 +1,7 @@
-package cafe.project.YinminThiriSoe.models;
+package cafe.project.models;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class StockImportDetailEntry {
 	private String import_detail_id;
@@ -6,6 +9,7 @@ public class StockImportDetailEntry {
 	private String ingredient_type_id;
 	private double quantity_ordered;
 	private double unit_cost;
+	private LocalDate expireDate;
 
 	public StockImportDetailEntry() {
 	}
@@ -17,7 +21,6 @@ public class StockImportDetailEntry {
 		this.ingredient_type_id = ingredient_type_id;
 		this.quantity_ordered = quantity_ordered;
 		this.unit_cost = unit_cost;
-
 	}
 
 	public String getImport_detail_id() {
@@ -60,4 +63,11 @@ public class StockImportDetailEntry {
 		this.unit_cost = unit_cost;
 	}
 
+	public LocalDate getExpireDate() {
+		return expireDate;
+	}
+
+	public void setExpireDate(LocalDate expireDate) {
+		this.expireDate = expireDate;
+	}
 }

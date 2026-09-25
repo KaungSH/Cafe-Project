@@ -1,4 +1,4 @@
-package cafe.project.KaungSattHein.controllers;
+package cafe.project.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import cafe.project.KaungSattHein.repositories.AtypeAndPtypeRepository;
-import cafe.project.KaungSattHein.repositories.entities.AtypeAndPtype;
+import cafe.project.repositories.AtypeAndPtypeRepository;
+import cafe.project.repositories.entities.AtypeAndPtype;
 
 @Controller
 @RequestMapping("/manager/types")
@@ -27,7 +27,7 @@ public class AtypeAndPtypeController {
 		model.addAttribute("types", repo.findTypesAll(false));
 		model.addAttribute("name", "audience");
 		model.addAttribute("dname", "Audience");
-		return "KaungSattHein/types/list";
+		return "types/list";
 	}
 	
 	@GetMapping("/promo")
@@ -35,7 +35,7 @@ public class AtypeAndPtypeController {
 		model.addAttribute("types", repo.findTypesAll(true));
 		model.addAttribute("name", "promo");
 		model.addAttribute("dname", "Promo");
-		return "KaungSattHein/types/list";
+		return "types/list";
 	}
 	
 	@GetMapping("/add/{name}")
@@ -47,7 +47,7 @@ public class AtypeAndPtypeController {
 		} else {
 			model.addAttribute("dname", "Audience");
 		}
-		return "KaungSattHein/types/add";
+		return "types/add";
 	}
 	
 	@PostMapping("/add")
@@ -68,7 +68,7 @@ public class AtypeAndPtypeController {
 		model.addAttribute("type", repo.findTypeById(id, true));
 		model.addAttribute("name", "promo");
 		model.addAttribute("dname", "Promo");
-		return "KaungSattHein/types/edit";
+		return "types/edit";
 	}
 	
 	@PostMapping("/promo/edit")
@@ -82,7 +82,7 @@ public class AtypeAndPtypeController {
 		model.addAttribute("type", repo.findTypeById(id, false));
 		model.addAttribute("name", "audience");
 		model.addAttribute("dname", "Audience");
-		return "KaungSattHein/types/edit";
+		return "types/edit";
 	}
 	
 	@PostMapping("/audience/edit")

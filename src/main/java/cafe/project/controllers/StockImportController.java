@@ -1,4 +1,4 @@
-package cafe.project.YinminThiriSoe.controllers;
+package cafe.project.controllers;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -11,11 +11,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import cafe.project.NayZarLinn.services.SupplierService;
-import cafe.project.YatiWinLatt.service.BranchService;
-import cafe.project.YinminThiriSoe.models.StockImportEntryModel;
-import cafe.project.YinminThiriSoe.services.EmployeeService;
-import cafe.project.YinminThiriSoe.services.StockImportService;
+import cafe.project.services.BranchService;
+import cafe.project.services.EmployeeService;
+import cafe.project.services.IngredientTypeService;
+import cafe.project.services.StockImportService;
+import cafe.project.services.SupplierService;
+import cafe.project.models.StockImportEntryModel;
 
 @Controller
 @RequestMapping("/manager/stock_imports")
@@ -25,34 +26,37 @@ public class StockImportController {
 	private final SupplierService supplierService;
 	private final EmployeeService employeeService;
 	private final BranchService branchService;
+	private final IngredientTypeService ingredientTypeService;
 
 	public StockImportController(StockImportService stockImportService, SupplierService supplierService,
-			EmployeeService employeeService, BranchService branchService) {
+			EmployeeService employeeService, BranchService branchService,IngredientTypeService ingredientTypeService) {
 		this.stockImportService = stockImportService;
 		this.supplierService = supplierService;
 		this.employeeService = employeeService;
 		this.branchService = branchService;
+		this.ingredientTypeService=ingredientTypeService;
 	}
 
 	@GetMapping
 	public String list(Model model) {
 		model.addAttribute("imports", stockImportService.findAll());
-		return "YinminThiriSoe/manager/stock_imports/list";
+		return "stock_imports/list";
 	}
 
 	@GetMapping("/deleted")
 	public String deletedList(Model model) {
 		model.addAttribute("imports", stockImportService.findDeletedAll());
-		return "YinminThiriSoe/manager/stock_imports/delete";
+		return "stock_imports/delete";
 	}
 
 	@GetMapping("/add")
 	public String showAddForm(Model model) {
 		model.addAttribute("stockImport", new StockImportEntryModel());
 		model.addAttribute("suppliers", supplierService.findAll());
-		model.addAttribute("employees", employeeService.getAllEmployees());
+		model.addAttribute("employees", employeeService.getAllEmployeeListDto());
 		model.addAttribute("branches", branchService.findAll());
-		return "YinminThiriSoe/manager/stock_imports/form";
+		model.addAttribute("ingredients", ingredientTypeService.getAllActive());
+		return "stock_imports/form";
 	}
 
 	@PostMapping("/add")
@@ -62,6 +66,17 @@ public class StockImportController {
 		}
 		if (model.getImported_at() == null) {
 			model.setImported_at(LocalDateTime.now());
+		}
+
+		System.out.println("=== ADD STOCK IMPORT DEBUG ===");
+		if (model.getDetails() != null) {
+			System.out.println("Total Details Count: " + model.getDetails().size());
+			for (var detail : model.getDetails()) {
+				System.out.println(" - Ingredient Type ID: " + detail.getIngredient_type_id() + ", Quantity: "
+						+ detail.getQuantity_ordered() + ", Expiry: " + detail.getExpireDate());
+			}
+		} else {
+			System.out.println(" - Details list is NULL!");
 		}
 		stockImportService.add(model);
 		return "redirect:/manager/stock_imports";
@@ -75,13 +90,17 @@ public class StockImportController {
 		}
 		model.addAttribute("stockImport", existing);
 		model.addAttribute("suppliers", supplierService.findAll());
-		model.addAttribute("employees", employeeService.getAllEmployees());
+		model.addAttribute("employees", employeeService.getAllEmployeeListDto());
 		model.addAttribute("branches", branchService.findAll());
-		return "YinminThiriSoe/manager/stock_imports/form";
+		return "stock_imports/form";
 	}
 
 	@PostMapping("/edit")
 	public String edit(@ModelAttribute("stockImport") StockImportEntryModel entryModel) {
+		System.out.println("=== EDIT STOCK IMPORT DEBUG ===");
+		if (entryModel.getDetails() != null) {
+			System.out.println("Editing Details Count: " + entryModel.getDetails().size());
+		}
 		stockImportService.edit(entryModel);
 		return "redirect:/manager/stock_imports";
 	}

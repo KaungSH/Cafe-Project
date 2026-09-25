@@ -1,4 +1,4 @@
-package cafe.project.YatiWinLatt.models;
+package cafe.project.models;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 	    private String reason_name;
 	    private BigDecimal quantity_lost;
 	    private BigDecimal financial_loss;
-	    private String name; //emp-name
+	    private String name; //employee-name
 	    private LocalDateTime logged_at;
 	    private String notes;
 

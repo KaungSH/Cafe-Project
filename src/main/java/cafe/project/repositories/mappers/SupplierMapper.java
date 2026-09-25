@@ -1,4 +1,4 @@
-package cafe.project.NayZarLinn.repositories.mappers;
+package cafe.project.repositories.mappers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.jdbc.core.RowMapper;
 
-import cafe.project.NayZarLinn.repositories.entities.Supplier;
+import cafe.project.repositories.entities.Supplier;
 
 public class SupplierMapper implements RowMapper<Supplier> {
 

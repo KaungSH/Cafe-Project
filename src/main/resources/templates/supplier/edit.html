@@ -157,28 +157,15 @@ body {
 			<div class="form-header">
 
 				<h2>Edit Supplier</h2>
+
 			</div>
 
-			<form method="post" th:action="@{/manager/supplier/edit}"
-				th:object="${supplier}">
 
+			<form th:action="@{/manager/suppliers/edit}"
+				th:object="${supplier}" method="post">
+				<input type="hidden" name="supplier_id" th:value="${supplier.supplier_id}">
 
 				<div class="form-body">
-
-					<div class="form-row">
-
-						<div class="form-label-box">Supplier ID</div>
-
-						<div class="dash">-</div>
-
-						<div class="input-box">
-
-							<input type="text" class="form-control" th:field="*{supplier_id}"
-								readonly>
-
-						</div>
-
-					</div>
 
 					<div class="form-row">
 
@@ -197,6 +184,7 @@ body {
 						</div>
 
 					</div>
+
 
 					<div class="form-row">
 
@@ -217,35 +205,15 @@ body {
 
 					</div>
 
-					<div class="form-row">
-
-						<div class="form-label-box">Created At</div>
-
-						<div class="dash">-</div>
-
-						<div class="input-box">
-
-							<input type="datetime-local" class="form-control"
-								th:field="*{created_at}">
-
-							<div class="error" th:if="${#fields.hasErrors('created_at')}"
-								th:errors="*{created_at}"></div>
-
-						</div>
-
-					</div>
-
-
 				</div>
 
 				<div class="form-footer">
 
-					<a th:href="@{/manager/supplier}" class="btn-cancel"> Cancel </a>
+					<a th:href="@{/manager/suppliers}" class="btn-cancel"> Cancel </a>
 
 					<button type="submit" class="btn-update">Update Supplier</button>
 
 				</div>
-
 
 			</form>
 

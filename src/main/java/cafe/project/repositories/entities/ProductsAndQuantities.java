@@ -1,4 +1,4 @@
-package cafe.project.KaungSattHein.repositories.entities;
+package cafe.project.repositories.entities;
 
 import java.util.List;
 

@@ -32,7 +32,7 @@ public class OrderDetailsController {
 				"orderDetails",
 				orderDetailsService.findAll());
 
-		return "HeinMinHtet/order-details/index";
+		return "order-details/index";
 	}
 
 	
@@ -45,7 +45,7 @@ public class OrderDetailsController {
 				"orderDetail",
 				new OrderDetails());
 
-		return "HeinMinHtet/order-details/add";
+		return "order-details/add";
 	}
 
 	
@@ -78,7 +78,7 @@ public class OrderDetailsController {
 					"orderDetail",
 					existingOrderDetail);
 
-			return "HeinMinHtet/order-details/edit";
+			return "order-details/edit";
 		}
 
 		return "redirect:/order-details";

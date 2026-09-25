@@ -1,4 +1,4 @@
-package cafe.project.KaungSattHein.controllers;
+package cafe.project.controllers;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,13 +17,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import cafe.project.RandomString;
-import cafe.project.KaungSattHein.models.ProductTypeEntryModel;
-import cafe.project.KaungSattHein.repositories.entities.ProductsAndQuantities;
-import cafe.project.KaungSattHein.services.ProductService;
-import cafe.project.KaungSattHein.services.ProductTypeService;
-import cafe.project.YatiWinLatt.service.SizeService;
-import cafe.project.models.fakes.IngredientTypesListModelFake;
+import cafe.project.models.IngredientTypesListModelFake;
+import cafe.project.models.ProductTypeEntryModel;
+import cafe.project.models.SearchKeyword;
+import cafe.project.repositories.entities.ProductsAndQuantities;
 import cafe.project.services.CategoryService;
+import cafe.project.services.ProductService;
+import cafe.project.services.ProductTypeService;
+import cafe.project.services.SizeService;
 import jakarta.servlet.http.Part;
 
 @Controller
@@ -43,35 +44,57 @@ public class ProductController {
 	
 	@GetMapping("/manager/products")
 	public String productTypeList(Model model) {
+		model.addAttribute("keywordmodel", new SearchKeyword());
 		model.addAttribute("product_types", ptservice.findAll());
-		return "KaungSattHein/products/list";
+		return "products/list";
+	}
+	
+	@PostMapping("/manager/products/search")
+	public String searchProductTypeList(@ModelAttribute("keywordmodel") SearchKeyword key, Model model) {
+		model.addAttribute("product_types", ptservice.searchByName(key.getKeyword()));
+		return "products/list";
 	}
 	
 	@GetMapping("/staff/products")
 	public String productTypeCardList(Model model) {
+		model.addAttribute("keywordmodel", new SearchKeyword());
 		model.addAttribute("product_types", ptservice.findAll());
 		model.addAttribute("product_quantities", new ProductsAndQuantities());
-		return "KaungSattHein/products/card_list";
+		return "products/card_list";
+	}
+	
+	@PostMapping("/staff/products/search")
+	public String searchProductTypeCardList(@ModelAttribute("keywordmodel") SearchKeyword key, Model model) {
+		model.addAttribute("product_types", ptservice.searchByName(key.getKeyword()));
+		model.addAttribute("product_quantities", new ProductsAndQuantities());
+		return "products/card_list";
 	}
 	
 	@PostMapping("/staff/products")
 	public String productTypeCardList(@ModelAttribute("product_quantities") ProductsAndQuantities productsNo, Model model) {
 		System.out.println(productsNo.getQuantities().get(1));
 		model.addAttribute("product_quantities", productsNo);
-		return "KaungSattHein/products/card_list";
+		return "products/card_list";
 	}
 	
 	@GetMapping("/manager/products/deleted")
 	public String productTypeDeleted(Model model) {
+		model.addAttribute("keywordmodel", new SearchKeyword());
 		model.addAttribute("product_types", ptservice.findDeletedAll());
-		return "KaungSattHein/products/list_deleted";
+		return "products/list_deleted";
+	}
+	
+	@PostMapping("/manager/products/deleted/search")
+	public String searchProductTypeDeleted(@ModelAttribute("keywordmodel") SearchKeyword key, Model model) {
+		model.addAttribute("product_types", ptservice.searchDeletedByName(key.getKeyword()));
+		return "products/list_deleted";
 	}
 	
 	@GetMapping("/manager/products/add")
 	public String productTypeAdd(Model model) {
 		model.addAttribute("product_type", new ProductTypeEntryModel());
 		bindAvialableData(model);
-		return "KaungSattHein/products/add";
+		return "products/add";
 	}
 	
 	@PostMapping("/manager/products/add")
@@ -90,7 +113,7 @@ public class ProductController {
 		if(ptservice.findById(id) != null) {
 			model.addAttribute("product_type", ptservice.findById2(id));
 			bindAvialableData(model);
-			return "KaungSattHein/products/edit";
+			return "products/edit";
 		}else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product_type");
 		}

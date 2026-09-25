@@ -1,4 +1,4 @@
-package cafe.project.NayZarLinn.repositories.entities;
+package cafe.project.repositories.entities;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -25,7 +25,7 @@ public class IngredientBatch {
 
 	public IngredientBatch(String batchId, BigDecimal remainingQuantity, LocalDate manufacturedDate,
 			LocalDate expireDate, String branchId, String importDetailId, Boolean isExpired, Boolean isDeleted,
-			LocalDateTime createdAt, String ingredientTypeId, BigDecimal unitCost,String branchName,
+			LocalDateTime createdAt, String ingredientTypeId, BigDecimal unitCost, String branchName,
 			String ingredientTypeName) {
 		this.batchId = batchId;
 		this.remainingQuantity = remainingQuantity;

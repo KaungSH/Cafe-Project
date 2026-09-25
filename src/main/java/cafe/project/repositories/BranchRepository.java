@@ -1,12 +1,12 @@
-package cafe.project.YatiWinLatt.repositories;
+package cafe.project.repositories;
 
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import cafe.project.YatiWinLatt.repositories.entities.Branch;
-import cafe.project.YatiWinLatt.repositories.mappers.BranchMapper;
-import cafe.project.YatiWinLatt.repositories.mappers.BranchMapper2;
+import cafe.project.repositories.entities.Branch;
+import cafe.project.repositories.mappers.BranchMapper;
+import cafe.project.repositories.mappers.BranchMapper2;
 
 @Repository
 public class BranchRepository {

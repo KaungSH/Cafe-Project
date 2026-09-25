@@ -1,4 +1,4 @@
-package cafe.project.YatiWinLatt.models;
+package cafe.project.models;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

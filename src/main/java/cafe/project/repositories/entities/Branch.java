@@ -1,4 +1,4 @@
-package cafe.project.YatiWinLatt.repositories.entities;
+package cafe.project.repositories.entities;
 
 import java.sql.Time;
 import java.time.LocalDateTime;

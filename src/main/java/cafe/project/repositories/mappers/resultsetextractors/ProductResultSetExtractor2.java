@@ -11,7 +11,7 @@ import java.util.Map;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
-import cafe.project.KaungSattHein.repositories.entities.Product;
+import cafe.project.repositories.entities.Product;
 
 public class ProductResultSetExtractor2 implements ResultSetExtractor<List<Product>>{
 

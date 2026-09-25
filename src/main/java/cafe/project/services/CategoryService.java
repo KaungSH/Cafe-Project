@@ -28,6 +28,10 @@ public class CategoryService {
                 .map(this::toDto)
                 .toList();
     }
+    
+    public List<Category> findAllByRelation(){
+    	return repo.findAllByRelation();
+    }
 
     public CategoryDto findById(String id) {
 
@@ -54,6 +58,18 @@ public class CategoryService {
 
         return repo.delete(id);
     }
+    
+    public List<CategoryDto> deletedList(){
+    	return this.repo.findDeletedAll().stream().map(this::toDto).toList();			
+    }
+    
+    public int restore(String id) {
+    	return this.repo.restore(id);
+    }
+    
+    public int hardDelete(String id) {
+    	return this.repo.hardDelete(id);
+    }
 
     private CategoryDto toDto(Category entity) {
 
@@ -67,6 +83,7 @@ public class CategoryService {
         dto.setIsdeleted(entity.getIsdeleted());
         dto.setCreated_at(entity.getCreated_at());
         dto.setEmployee_id(entity.getEmployee_id());
+        dto.setBranch_id(entity.getBranch_id());
 
         return dto;
     }
@@ -83,6 +100,7 @@ public class CategoryService {
         entity.setIsdeleted(dto.getIsdeleted());
         entity.setCreated_at(dto.getCreated_at());
         entity.setEmployee_id(dto.getEmployee_id());
+        entity.setBranch_id(dto.getBranch_id());
 
         return entity;
     }

@@ -1,11 +1,11 @@
-package cafe.project.KaungSattHein.repositories.mappers;
+package cafe.project.repositories.mappers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
 
-import cafe.project.KaungSattHein.repositories.entities.AtypeAndPtype;
+import cafe.project.repositories.entities.AtypeAndPtype;
 
 
 public class AudienceTypeMapper implements RowMapper<AtypeAndPtype>  {

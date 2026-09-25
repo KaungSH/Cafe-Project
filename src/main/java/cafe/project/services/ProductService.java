@@ -1,16 +1,16 @@
-package cafe.project.KaungSattHein.services;
+package cafe.project.services;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import cafe.project.KaungSattHein.models.ProductDiscountModel;
-import cafe.project.KaungSattHein.models.ProductEntryModel;
-import cafe.project.KaungSattHein.models.ProductListModel;
-import cafe.project.KaungSattHein.models.ProductQuantityRequiredModel;
-import cafe.project.KaungSattHein.repositories.ProductRepository;
-import cafe.project.KaungSattHein.repositories.entities.Product;
+import cafe.project.models.ProductDiscountModel;
+import cafe.project.models.ProductEntryModel;
+import cafe.project.models.ProductListModel;
+import cafe.project.models.ProductQuantityRequiredModel;
+import cafe.project.repositories.ProductRepository;
+import cafe.project.repositories.entities.Product;
 
 @Service
 public class ProductService {

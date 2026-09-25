@@ -1,12 +1,14 @@
-package cafe.project.NayZarLinn.repositories;
+package cafe.project.repositories;
 
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import cafe.project.NayZarLinn.repositories.entities.IngredientBatch;
-import cafe.project.NayZarLinn.repositories.mappers.IngredientBatchMapper;
+import cafe.project.models.BatchesAndExpiryDto;
+import cafe.project.repositories.entities.IngredientBatch;
+import cafe.project.repositories.mappers.BatchesAndExpiryMapper;
+import cafe.project.repositories.mappers.IngredientBatchMapper;
 
 @Repository
 public class IngredientBatchRepository {
@@ -24,6 +26,28 @@ public class IngredientBatchRepository {
 				+ " WHERE ib.isdeleted = 0";
 		List<IngredientBatch> entities = this.jdbcTemplate.query(sql, new IngredientBatchMapper());
 		return entities;
+	}
+
+	public List<BatchesAndExpiryDto> batchesAndExpiry() {
+		String sql = "SELECT ib.batch_id,\r\n" + "it.name AS ingredient_type_name, \r\n"
+				+ "u.abbreviation AS unit_abbreviation, \r\n" + "ib.manufactured_date, \r\n" + "ib.expire_date, \r\n"
+				+ "ib.remaining_quantity, \r\n" + "ib.unit_cost, \r\n" + "sid.import_detail_id, \r\n"
+				+ "sid.quantity_ordered, \r\n" + "sid.line_total \r\n" + "FROM ingredient_batches ib \r\n"
+				+ "INNER JOIN ingredient_types it \r\n" + "ON ib.ingredient_type_id = it.ingredient_type_id \r\n"
+				+ "INNER JOIN units u \r\n" + "ON it.unit_id = u.unit_id \r\n"
+				+ "INNER JOIN stock_import_details sid \r\n" + "ON ib.import_detail_id = sid.import_detail_id \r\n"
+				+ "WHERE ib.isdeleted = 0 \r\n" + "ORDER BY ib.expire_date DESC;";
+		return jdbcTemplate.query(sql, new BatchesAndExpiryMapper());
+
+	}
+
+	public IngredientBatch findByImportDetailId(String importDetailId) {
+		String sql = "SELECT ib.*, b.name AS branch_name,it.name AS ingredient_type_name\r\n"
+				+ "FROM ingredient_batches ib LEFT JOIN branches b ON ib.branch_id = b.branch_id \r\n"
+				+ "LEFT JOIN ingredient_types it ON ib.ingredient_type_id = it.ingredient_type_id\r\n"
+				+ "WHERE ib.import_detail_id = ? AND ib.isdeleted = 0";
+		List<IngredientBatch> entities = this.jdbcTemplate.query(sql, new IngredientBatchMapper(), importDetailId);
+		return entities.isEmpty() ? null : entities.get(0);
 	}
 
 	public IngredientBatch findByBatchId(String batchId) {
@@ -67,10 +91,8 @@ public class IngredientBatchRepository {
 
 	public int updateExpiredStatus() {
 
-		String sql = "UPDATE ingredient_batches \r\n" 
-				 + "SET isexpired = 1\r\n"
-				 + "WHERE expire_date <= CURRENT_DATE \r\n"  
-				 + "AND isdeleted = 0";
+		String sql = "UPDATE ingredient_batches \r\n" + "SET isexpired = 1\r\n"
+				+ "WHERE expire_date <= CURRENT_DATE \r\n" + "AND isdeleted = 0";
 
 		return this.jdbcTemplate.update(sql);
 	}
@@ -91,9 +113,7 @@ public class IngredientBatchRepository {
 	}
 
 	public int restore(String batchId) {
-		String sql = "UPDATE ingredient_batches \r\n"
-				+ "SET isdeleted = 0\r\n"
-				+ "WHERE batch_id = ? \r\n"
+		String sql = "UPDATE ingredient_batches \r\n" + "SET isdeleted = 0\r\n" + "WHERE batch_id = ? \r\n"
 				+ "AND isexpired = 0";
 		return jdbcTemplate.update(sql, batchId);
 	}

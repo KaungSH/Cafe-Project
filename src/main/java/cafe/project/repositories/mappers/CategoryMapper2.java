@@ -23,7 +23,11 @@ public class CategoryMapper2 implements RowMapper<Category> {
 
 		category.setCreated_at(rs.getTimestamp("created_at").toLocalDateTime());
 
-		category.setEmployee_id(rs.getString("employee_name"));
+		category.setEmployee_id(rs.getString("employee_id"));
+		category.setEmployee_name(rs.getString("employee_name"));
+		
+		category.setBranch_id(rs.getString("branch_name"));
+		category.setBranch_name(rs.getString("branch_name"));
 
 		return category;
 	}

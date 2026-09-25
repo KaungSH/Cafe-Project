@@ -1,82 +1,116 @@
-package cafe.project.YatiWinLatt.controllers;
+package cafe.project.controllers;
+
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import cafe.project.YatiWinLatt.models.DailyRegisterEntryDto;
-import cafe.project.YatiWinLatt.service.DailyRegisterService;
-import cafe.project.YinminThiriSoe.services.EmployeeService;
-import cafe.project.YatiWinLatt.service.BranchService;
-import cafe.project.YatiWinLatt.repositories.StatusRepository;
 
+import cafe.project.services.EmployeeService;
+import cafe.project.services.DailyRegisterService;
+import cafe.project.models.DailyRegisterEntryDto;
+import cafe.project.models.DailyRegisterListDto;
+import cafe.project.repositories.StatusRepository;
+import cafe.project.services.BranchService;
 
 @Controller
 @RequestMapping("/manager/daily-registers")
 public class DailyRegisterController {
 
-  private final DailyRegisterService service;
-  private final BranchService branchService;
-  private final EmployeeService employeeService;
-  private final StatusRepository statusRepository;
+	private final DailyRegisterService service;
+	private final BranchService branchService;
+	private final EmployeeService employeeService;
+	private final StatusRepository statusRepository;
 
-  public DailyRegisterController(
-      DailyRegisterService service,
-      BranchService branchService,
-      EmployeeService employeeService,
-      StatusRepository statusRepository) {
-	  
-    this.service = service;
-    this.branchService = branchService;
-    this.employeeService = employeeService;
-    this.statusRepository = statusRepository;
-  }
+	public DailyRegisterController(DailyRegisterService service, BranchService branchService, EmployeeService employeeService, StatusRepository statusRepository) {
 
-  @GetMapping
-  public String showListPage(Model model) {
-    model.addAttribute("registers", service.getAllRegisters());
-    return "YatiWinLatt/manager/daily_registers/list";
-  }
+		this.service = service;
+		this.branchService = branchService;
+		this.employeeService = employeeService;
+		this.statusRepository = statusRepository;
+	}
+	
+	@GetMapping("/{sort}")
+	public String showListPageAll(@PathVariable("sort") String sort, Model model) {
+		
+		if(sort.equals("closed")) {
+			model.addAttribute("registers", service.getAllClosed());
+			return "daily_registers/list-all";
+		}
+		if(sort.equals("opened")) {
+			model.addAttribute("registers", service.getAllOpened());
+			return "daily_registers/list-all";
+		}
+		model.addAttribute("registers", service.getAllRegisters());
+		return "daily_registers/list-all";
+	}
+	
+	@GetMapping("/deleted")
+	public String showListPageDeleted(Model model) {
+		model.addAttribute("registers", service.getAllDeleted());
+		return "daily_registers/list-deleted";
+	}
+	
 
-  @GetMapping("/create")
-  public String showCreatePage(Model model) {
-	System.out.println(statusRepository.findAll("register").get(0));
-    model.addAttribute("registerDto", new DailyRegisterEntryDto());
-    model.addAttribute("branches", branchService.findAll());
-    model.addAttribute("employees", employeeService.getAllEmployees());
-    model.addAttribute("statuses", statusRepository.findAll("register"));
+	@GetMapping("/edit/{register_id}")
+	public String showEditPage(@PathVariable("register_id") String register_id, Model model) {
+		System.out.println("Register id = " + register_id);
+		System.out.println("Register date = " + service.getRegisterEntryDtoById(register_id).getDate());
+		DailyRegisterEntryDto dto = service.getRegisterEntryDtoById(register_id);
 
-    return "YatiWinLatt/manager/daily_registers/create";
-  }
+		model.addAttribute("registerDto", dto);
 
-  @PostMapping("/save")
-  public String saveRegister(@ModelAttribute("registerDto") DailyRegisterEntryDto dto) {
-    service.saveRegister(dto);
-    return "redirect:/manager/daily-registers";
-  }
+		model.addAttribute("branches", branchService.findAll());
+		model.addAttribute("employees", employeeService.getAllEmployeeListDto());
+		model.addAttribute("statuses", statusRepository.findAll("register"));
 
-  @GetMapping("/edit/{register_id}")
-  public String showEditPage(@PathVariable("register_id") String register_id, Model model) {
-	    System.out.println("Register id = " + register_id);
-    DailyRegisterEntryDto dto = service.getRegisterEntryDtoById(register_id);
+		return "daily_registers/edit";
+	}
 
-    model.addAttribute("registerDto", dto);
+	@PostMapping("/update")
+	public String updateRegister(@ModelAttribute("registerDto") DailyRegisterEntryDto dto) {
+		System.out.println("Register date DTO = " + dto.getDate());
+		service.updateRegister(dto);
+		return "redirect:/manager/daily-registers";
+	}
 
-    model.addAttribute("branches", branchService.findAll());
-    model.addAttribute("employees", employeeService.getAllEmployees());
-    model.addAttribute("statuses", statusRepository.findAll("register"));
-
-    return "YatiWinLatt/manager/daily_registers/edit";
-  }
-
-  @PostMapping("/update")
-  public String updateRegister(@ModelAttribute("registerDto") DailyRegisterEntryDto dto) {
-    service.updateRegister(dto);
-    return "redirect:/manager/daily-registers";
-  }
-
-  @GetMapping("/delete/{register_id}")
-  public String deleteRegister(@PathVariable("register_id") String register_id) {
-    service.deleteRegister(register_id);
-    return "redirect:/manager/daily-registers";
-  }
+	@GetMapping("/delete/{register_id}")
+	public String deleteRegister(@PathVariable("register_id") String register_id) {
+		service.deleteRegister(register_id);
+		return "redirect:/manager/daily-registers/all";
+	}
+	
+	@GetMapping("/recover/{register_id}")
+	public String recoverRegister(@PathVariable("register_id") String register_id) {
+		service.recoverRegister(register_id);
+		return "redirect:/manager/daily-registers/deleted";
+	}
+	
+	@GetMapping("/hardDelete/{register_id}")
+	public String realDeleteRegister(@ModelAttribute("registerDto") DailyRegisterEntryDto dto) {
+		service.hardDeleteRegister(dto.getRegister_id());
+		return "redietct:/manager/daily-registers";
+	}
+	
+	@GetMapping("/timedSoftDelete")
+	public String timedSoftDelete() {
+		for (DailyRegisterListDto listDto : service.getAllRegisters()){
+			if (ChronoUnit.DAYS.between(listDto.getDate(), LocalDate.now()) >= 30) {
+				service.deleteRegister(listDto.getRegister_id());
+			}
+		}
+		return "redietct:/manager/daily-registers";
+	}
+	
+	@GetMapping("/timedHardDelete")
+	public String timedHardDelete() {
+		for (DailyRegisterListDto listDto : service.getAllDeleted()){
+			if (ChronoUnit.DAYS.between(listDto.getDate(), LocalDate.now()) >= 90) {
+				service.hardDeleteRegister(listDto.getRegister_id());
+			}
+		}
+		return "redietct:/manager/daily-registers";
+	}
+	
 }

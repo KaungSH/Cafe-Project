@@ -1,53 +1,117 @@
-package cafe.project.YatiWinLatt.service;
+package cafe.project.services;
 
+import java.util.List;
 
+import org.springframework.stereotype.Service;
 
-	import cafe.project.YatiWinLatt.models.IngredientBatchDto;
-	import org.springframework.stereotype.Service;
+import cafe.project.models.BatchesAndExpiryDto;
+import cafe.project.models.IngredientBatchDto;
+import cafe.project.repositories.IngredientBatchRepository;
+import cafe.project.repositories.entities.IngredientBatch;
 
-	import java.math.BigDecimal;
-	import java.time.LocalDate;
-	import java.util.ArrayList;
-	import java.util.List;
+@Service
+public class IngredientBatchService {
 
-	@Service
-	public class IngredientBatchService {
+	private final IngredientBatchRepository repo;
 
-	  
-	    public List<IngredientBatchDto> getAllBatches() {
-	        List<IngredientBatchDto> list = new ArrayList<>();
-
-	        list.add(new IngredientBatchDto(
-	            "BATCH-001", 
-	            new BigDecimal("50.000"), 
-	            LocalDate.of(2026, 1, 10), 
-	            LocalDate.of(2026, 12, 31), 
-	            "BR-001", 
-	            "ING-001", 
-	            new BigDecimal("12000.00")
-	        ));
-
-	        list.add(new IngredientBatchDto(
-	            "BATCH-002", 
-	            new BigDecimal("20.500"), 
-	            LocalDate.of(2026, 2, 15), 
-	            LocalDate.of(2026, 8, 20), 
-	            "BR-001", 
-	            "ING-002", 
-	            new BigDecimal("45000.00")
-	        ));
-
-	        list.add(new IngredientBatchDto(
-	            "BATCH-003", 
-	            new BigDecimal("100.000"), 
-	            LocalDate.of(2026, 3, 1), 
-	            LocalDate.of(2027, 3, 1), 
-	            "BR-002", 
-	            "ING-003", 
-	            new BigDecimal("8500.00")
-	        ));
-
-	        return list;
-	    }
+	public IngredientBatchService(IngredientBatchRepository repo) {
+		this.repo = repo;
 	}
 
+	public List<IngredientBatchDto> findAll() {
+		this.repo.updateExpiredStatus();
+		List<IngredientBatch> entities = this.repo.findAll();
+		List<IngredientBatchDto> batches = entities.stream().map(this::toDto).toList();
+		return batches;
+	}
+
+	public List<BatchesAndExpiryDto> getBatchesAndExpiry() {
+		return repo.batchesAndExpiry();
+	}
+
+	public IngredientBatchDto findByBatchId(String batchId) {
+		IngredientBatch entity = this.repo.findByBatchId(batchId);
+		if (entity == null)
+			return null;
+		return toDto(entity);
+	}
+
+	public List<IngredientBatchDto> findExpired() {
+		this.repo.updateExpiredStatus();
+		List<IngredientBatch> entities = this.repo.findExpired();
+		List<IngredientBatchDto> batches = entities.stream().map(this::toDto).toList();
+		return batches;
+	}
+
+	public int add(IngredientBatchDto dto) {
+		IngredientBatch entity = toEntity(dto);
+		return this.repo.save(entity);
+	}
+
+	public int edit(String batchId, IngredientBatchDto dto) {
+		IngredientBatch entity = toEntity(dto);
+		return this.repo.edit(batchId, entity);
+	}
+
+	public int delete(String batchId) {
+		return this.repo.softDelete(batchId);
+	}
+
+	public int softDeleteExpired(String batchId) {
+		return this.repo.softDeleteExpired(batchId);
+	}
+
+	public void updateExpiredStatus() {
+		this.repo.updateExpiredStatus();
+	}
+
+	public List<IngredientBatchDto> findDeleted() {
+		return this.repo.DeletedList().stream().map(this::toDto).toList();
+	}
+
+	public int restore(String batchId) {
+		return this.repo.restore(batchId);
+	}
+
+	public int hardDelete(String batchId) {
+		return this.repo.hardDelete(batchId);
+	}
+
+	private IngredientBatchDto toDto(IngredientBatch entity) {
+
+		IngredientBatchDto dto = new IngredientBatchDto();
+
+		dto.setBatchId(entity.getBatchId());
+		dto.setRemainingQuantity(entity.getRemainingQuantity());
+		dto.setManufacturedDate(entity.getManufacturedDate());
+		dto.setExpireDate(entity.getExpireDate());
+		dto.setBranchId(entity.getBranchId());
+		dto.setImportDetailId(entity.getImportDetailId());
+		dto.setIngredientTypeId(entity.getIngredientTypeId());
+		dto.setUnitCost(entity.getUnitCost());
+		dto.setIsExpired(entity.getIsExpired());
+		dto.setIsDeleted(entity.getIsDeleted());
+		dto.setCreatedAt(entity.getCreatedAt());
+
+		return dto;
+	}
+
+	private IngredientBatch toEntity(IngredientBatchDto dto) {
+
+		IngredientBatch entity = new IngredientBatch();
+
+		entity.setBatchId(dto.getBatchId());
+		entity.setRemainingQuantity(dto.getRemainingQuantity());
+		entity.setManufacturedDate(dto.getManufacturedDate());
+		entity.setExpireDate(dto.getExpireDate());
+		entity.setBranchId(dto.getBranchId());
+		entity.setImportDetailId(dto.getImportDetailId());
+		entity.setIngredientTypeId(dto.getIngredientTypeId());
+		entity.setUnitCost(dto.getUnitCost());
+		entity.setIsExpired(dto.getIsExpired());
+		entity.setIsDeleted(dto.getIsDeleted());
+		entity.setCreatedAt(dto.getCreatedAt());
+
+		return entity;
+	}
+}

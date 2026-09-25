@@ -1,12 +1,15 @@
-package cafe.project.YatiWinLatt.service;
+package cafe.project.services;
 
 
 
 import org.springframework.stereotype.Service;
-import cafe.project.YatiWinLatt.models.WasteLogsEntryDto;
-import cafe.project.YatiWinLatt.models.WasteLogsListDto;
-import cafe.project.YatiWinLatt.repositories.WasteLogsRepository;
-import cafe.project.YatiWinLatt.repositories.entities.WasteLogs;
+
+import cafe.project.models.IngredientBatchDto;
+import cafe.project.models.WasteLogsEntryDto;
+import cafe.project.models.WasteLogsListDto;
+import cafe.project.repositories.WasteLogsRepository;
+import cafe.project.repositories.entities.IngredientBatch;
+import cafe.project.repositories.entities.WasteLogs;
 
 import java.util.List;
 
@@ -23,6 +26,10 @@ public class WasteLogsService {
 
     public List<WasteLogsListDto> getAllWasteLogs() {
         return wasteLogsRepository.findAll();
+    }
+    
+    public List<IngredientBatchDto> getTodayExpired() {
+    	return wasteLogsRepository.findExpiredBatchToday().stream().map(this::toDto).toList();
     }
 
     public WasteLogsEntryDto getWasteLogsEntryById(String waste_id) {
@@ -68,4 +75,24 @@ public class WasteLogsService {
     public void deleteWasteLog(String waste_id) {
         wasteLogsRepository.softDelete(waste_id);
     }
+    
+    private IngredientBatchDto toDto(IngredientBatch entity) {
+
+		IngredientBatchDto dto = new IngredientBatchDto();
+
+		dto.setBatchId(entity.getBatchId());
+		dto.setRemainingQuantity(entity.getRemainingQuantity());
+		dto.setManufacturedDate(entity.getManufacturedDate());
+		dto.setExpireDate(entity.getExpireDate());
+		dto.setBranchId(entity.getBranchId());
+		dto.setImportDetailId(entity.getImportDetailId());
+		dto.setIngredientTypeId(entity.getIngredientTypeId());
+		dto.setUnitCost(entity.getUnitCost());
+		dto.setIsExpired(entity.getIsExpired());
+		dto.setIsDeleted(entity.getIsDeleted());
+		dto.setCreatedAt(entity.getCreatedAt());
+
+		return dto;
+	}
+    
 }

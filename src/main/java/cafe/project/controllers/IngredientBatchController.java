@@ -1,4 +1,4 @@
-package cafe.project.NayZarLinn.controllers;
+package cafe.project.controllers;
 
 import java.time.LocalDateTime;
 
@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import cafe.project.NayZarLinn.models.IngredientBatchDto;
-import cafe.project.NayZarLinn.repositories.IngredientTypeRepository;
-import cafe.project.NayZarLinn.services.IngredientBatchService;
-import cafe.project.YatiWinLatt.repositories.BranchRepository;
+import cafe.project.models.IngredientBatchDto;
+import cafe.project.repositories.IngredientTypeRepository;
+import cafe.project.services.IngredientBatchService;
+import cafe.project.repositories.BranchRepository;
 import jakarta.validation.Valid;
 
 @Controller
@@ -31,6 +31,13 @@ public class IngredientBatchController {
 		this.ingredientBatchService = ingredientBatchService;
 		this.branchRepository = branchRepository;
 		this.ingredientTypeRepository = ingredientTypeRepository;
+	}
+
+	@GetMapping("/batches-expiry")
+	public String batchesAndExpiry(Model model) {
+		model.addAttribute(ingredientBatchService.getBatchesAndExpiry());
+		return "NayZarLinn/ingredientBatch/batchesAndExpiry";
+
 	}
 
 	@GetMapping
@@ -83,7 +90,7 @@ public class IngredientBatchController {
 			model.addAttribute("ingredientTypes", ingredientTypeRepository.findAll());
 			return "NayZarLinn/ingredientBatch/edit";
 		}
-		return "redirect:/manager/ingredientBatch";
+		return "redirect:/error/404";
 	}
 
 	@PostMapping("/edit")
@@ -96,7 +103,7 @@ public class IngredientBatchController {
 		}
 		ingredientBatch.setCreatedAt(LocalDateTime.now());
 		this.ingredientBatchService.edit(ingredientBatch.getBatchId(), ingredientBatch);
-		return "redirect:/manager/ingredientBatch";
+		return "redirect:/error/404";
 	}
 
 	@GetMapping("/delete/{batchId}")
@@ -107,7 +114,7 @@ public class IngredientBatchController {
 			return "NayZarLinn/ingredientBatch/delete";
 		}
 		model.addAttribute("ingredientBatch", existingIb);
-		return "";
+		return "redirect:/error/404";
 	}
 
 	@PostMapping("/delete")

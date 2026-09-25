@@ -2,118 +2,114 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Category</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Category</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<style>
+* {
+	box-sizing: border-box;
+}
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f6f9;
-        }
+body {
+	margin: 0;
+	font-family: Arial, sans-serif;
+	background: #f4f6f9;
+}
 
-        .container {
-            width: 500px;
-            margin: 70px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
+.container {
+	width: 500px;
+	margin: 70px auto;
+	background: white;
+	padding: 30px;
+	border-radius: 12px;
+	box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
 
-        h2 {
-            text-align: center;
-            margin-bottom: 25px;
-        }
+h2 {
+	text-align: center;
+	margin-bottom: 25px;
+}
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
+label {
+	display: block;
+	margin-bottom: 8px;
+	font-weight: bold;
+}
 
-        input,
-        textarea {
-            width: 100%;
-            padding: 11px;
-            margin-bottom: 18px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 15px;
-        }
+input, textarea {
+	width: 100%;
+	padding: 11px;
+	margin-bottom: 18px;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	font-size: 15px;
+}
 
-        textarea {
-            height: 120px;
-            resize: vertical;
-        }
+textarea {
+	height: 120px;
+	resize: vertical;
+}
 
-        .buttons {
-            display: flex;
-            gap: 10px;
-        }
+.buttons {
+	display: flex;
+	gap: 10px;
+}
 
-        button,
-        .cancel {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            text-align: center;
-            text-decoration: none;
-            cursor: pointer;
-            font-size: 15px;
-        }
+button, .cancel {
+	flex: 1;
+	padding: 12px;
+	border: none;
+	border-radius: 6px;
+	text-align: center;
+	text-decoration: none;
+	cursor: pointer;
+	font-size: 15px;
+}
 
-        button {
-            background: #198754;
-            color: white;
-        }
+button {
+	background: #198754;
+	color: white;
+}
 
-        .cancel {
-            background: #6c757d;
-            color: white;
-        }
-    </style>
+.cancel {
+	background: #6c757d;
+	color: white;
+}
+</style>
 </head>
 
 <body>
 
-<div class="container">
+	<div class="container">
 
-    <h2>Edit Category</h2>
+		<h2>Edit Category</h2>
 
-    <form th:action="@{/categories/edit/{id}(id=${category.category_id})}"
-          th:object="${category}"
-          method="post">
+		<form th:action="@{/categories/edit}"
+			th:object="${category}" method="post">
 
-        <input type="hidden" th:field="*{category_id}">
+			<input type="hidden" th:field="*{category_id}"> <label>Category
+				Name</label> <input type="text" th:field="*{name}"
+				placeholder="Enter category name" required> <label>Description</label>
+			<textarea th:field="*{description}" placeholder="Enter description"></textarea>
 
-        <label>Category Name</label>
-        <input type="text"
-               th:field="*{name}"
-               placeholder="Enter category name"
-               required>
+			<label>Branch</label> <select class="from-control"
+				th:field="*{branch_id}">
+				<option value="">-- Select Branch --</option>
+				<option th:each="branch : ${branches}"
+					th:value="${branch.branch_id}" th:text="${branch.name}">
+				</option>
+			</select>
 
-        <label>Description</label>
-        <textarea th:field="*{description}"
-                  placeholder="Enter description"></textarea>
+			<div class="buttons">
+				<button type="submit">Update</button>
 
-        <div class="buttons">
-            <button type="submit">Update</button>
+				<a th:href="@{/categories}" class="cancel"> Cancel </a>
+			</div>
 
-            <a th:href="@{/categories}" class="cancel">
-                Cancel
-            </a>
-        </div>
+		</form>
 
-    </form>
-
-</div>
+	</div>
 
 </body>
 </html>

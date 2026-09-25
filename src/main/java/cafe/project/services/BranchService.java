@@ -1,4 +1,4 @@
-package cafe.project.YatiWinLatt.service;
+package cafe.project.services;
 
 import java.sql.Time;
 import java.time.LocalDateTime;
@@ -7,13 +7,13 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import cafe.project.YatiWinLatt.models.BranchEntryDto;
-import cafe.project.YatiWinLatt.models.BranchListDto;
-import cafe.project.YatiWinLatt.models.BranchStatusListDto;
-import cafe.project.YatiWinLatt.repositories.BranchRepository;
-import cafe.project.YatiWinLatt.repositories.BranchStatusRepository;
-import cafe.project.YatiWinLatt.repositories.entities.Branch;
-import cafe.project.YatiWinLatt.repositories.entities.BranchStatus;
+import cafe.project.models.BranchEntryDto;
+import cafe.project.models.BranchListDto;
+import cafe.project.models.BranchStatusListDto;
+import cafe.project.repositories.BranchRepository;
+import cafe.project.repositories.BranchStatusRepository;
+import cafe.project.repositories.entities.Branch;
+import cafe.project.repositories.entities.BranchStatus;
 
 @Service
 public class BranchService {

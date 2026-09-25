@@ -1,4 +1,4 @@
-package cafe.project.KaungSattHein.models;
+package cafe.project.models;
 
 import java.time.LocalDateTime;
 import java.util.List;
