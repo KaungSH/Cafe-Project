@@ -22,25 +22,18 @@ public class SizeRepository {
 	}
 
 	public List<Size> findAll() {
-		String sql = "SELECT s.*, e.name AS employee_name \r\n"
-				+ "FROM sizes s \r\n"
-				+ "LEFT JOIN employees e ON s.employee_id = e.employee_id \r\n"
-				+ "WHERE s.isdeleted = false \r\n"
+		String sql = "SELECT s.*, e.name AS employee_name \r\n" + "FROM sizes s \r\n"
+				+ "LEFT JOIN employees e ON s.employee_id = e.employee_id \r\n" + "WHERE s.isdeleted = false \r\n"
 				+ "ORDER BY s.created_at DESC";
 		return jdbcTemplate.query(sql, new SizeMapper2());
 	}
 
 	public Size findById(String size_id) {
-	    String sql = "SELECT s.*, e.name AS employee_name \r\n"
-	            + "FROM sizes s \r\n"
-	            + "LEFT JOIN employees e ON s.employee_id = e.employee_id \r\n"
-	            + "WHERE s.size_id = ? AND s.isdeleted = false";
+		String sql = "SELECT s.*, e.name AS employee_name \r\n" + "FROM sizes s \r\n"
+				+ "LEFT JOIN employees e ON s.employee_id = e.employee_id \r\n"
+				+ "WHERE s.size_id = ? AND s.isdeleted = false";
 
-	    return jdbcTemplate.queryForObject(
-	            sql,
-	            new SizeMapper2(),
-	            size_id
-	    );
+		return jdbcTemplate.queryForObject(sql, new SizeMapper2(), size_id);
 	}
 
 	public int save(SizeEntryDto dto) {
@@ -56,8 +49,25 @@ public class SizeRepository {
 		return jdbcTemplate.update(sql, dto.getName(), dto.getSize_code(), dto.getIs_active(), dto.getSize_id());
 	}
 
-	public int deleteById(String size_id) {
+	public int deleteById(String size_id) {// soft
 		String sql = "UPDATE sizes SET isdeleted = true WHERE size_id = ?";
+		return jdbcTemplate.update(sql, size_id);
+	}
+
+	public List<Size> findDeletedAll() {
+		String sql = "SELECT s.*, e.name AS employee_name " + "FROM sizes s "
+				+ "LEFT JOIN employees e ON s.employee_id = e.employee_id " + "WHERE s.isdeleted = true "
+				+ "ORDER BY s.created_at DESC";
+		return jdbcTemplate.query(sql, new SizeMapper2());
+	}
+
+	public int restoreById(String size_id) {
+		String sql = "UPDATE sizes SET isdeleted = false WHERE size_id = ?";
+		return jdbcTemplate.update(sql, size_id);
+	}
+
+	public int hardDeleteById(String size_id) {
+		String sql = "DELETE FROM sizes WHERE size_id = ?";
 		return jdbcTemplate.update(sql, size_id);
 	}
 
@@ -66,4 +76,5 @@ public class SizeRepository {
 		String sql = "SELECT employee_id, name FROM employees";
 		return jdbcTemplate.queryForList(sql);
 	}
+
 }

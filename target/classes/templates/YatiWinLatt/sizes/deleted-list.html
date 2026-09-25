@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Size Management - Luft Cafe</title>
+<title>Recycle Bin - Luft Cafe</title>
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 <link rel="stylesheet"
@@ -26,20 +26,6 @@ body {
 	color: #6c757d;
 	font-size: 0.85rem;
 	text-transform: uppercase;
-	letter-spacing: 0.5px;
-}
-
-.btn-custom-primary {
-	background-color: #5c5470;
-	color: #fff;
-	border: none;
-	border-radius: 8px;
-	padding: 8px 16px;
-}
-
-.btn-custom-primary:hover {
-	background-color: #352f44;
-	color: #fff;
 }
 
 .btn-custom-secondary {
@@ -60,16 +46,13 @@ body {
 	<div class="container">
 		<div class="card-box">
 			<div class="d-flex justify-content-between align-items-center mb-4">
-				<h3 class="fw-bold text-secondary mb-0">Size Management</h3>
-				<div>
-					<a th:href="@{/manager/sizes/deleted}"
-						class="btn btn-custom-secondary me-2"> <i
-						class="fa-solid fa-trash-can me-1"></i> Recycle Bin
-					</a> <a th:href="@{/manager/sizes/create}"
-						class="btn btn-custom-primary"> <i
-						class="fa-solid fa-plus me-1"></i> Add New Size
-					</a>
-				</div>
+				<h3 class="fw-bold text-danger mb-0">
+					<i class="fa-solid fa-trash-can me-2"></i>Recycle Bin (Deleted
+					Sizes)
+				</h3>
+				<a th:href="@{/manager/sizes}" class="btn btn-custom-secondary">
+					<i class="fa-solid fa-arrow-left me-1"></i> Back to Size List
+				</a>
 			</div>
 
 			<div class="table-responsive">
@@ -78,7 +61,6 @@ body {
 						<tr class="border-bottom">
 							<th>Size Code</th>
 							<th>Name</th>
-							<th>Status</th>
 							<th>Created By</th>
 							<th class="text-center">Action</th>
 						</tr>
@@ -87,25 +69,21 @@ body {
 						<tr th:each="s : ${sizes}" class="border-bottom">
 							<td><span class="badge bg-light text-dark border px-2 py-1"
 								th:text="${s.size_code}">SZ-01</span></td>
-							<td th:text="${s.name}" class="fw-semibold">Medium</td>
-							<td><span th:if="${s.is_active}"
-								class="text-success fw-medium"><i
-									class="fa-solid fa-check me-1"></i>Active</span> <span
-								th:unless="${s.is_active}" class="text-muted"><i
-									class="fa-solid fa-xmark me-1"></i>Inactive</span></td>
+							<td th:text="${s.name}" class="fw-semibold">Large</td>
 							<td th:text="${s.employee_name != null ? s.employee_name : '-'}"
 								class="text-secondary">Admin</td>
 							<td class="text-center"><a
-								th:href="@{/manager/sizes/edit/{id}(id=${s.size_id})}"
-								class="btn btn-sm btn-light border me-1 text-secondary">Edit</a>
-								<a th:href="@{/manager/sizes/delete/{id}(id=${s.size_id})}"
-								class="btn btn-sm btn-light border text-danger"
-								onclick="return confirm('Are you sure you want to move this size to recycle bin?');">Delete</a>
-							</td>
+								th:href="@{/manager/sizes/recover/{id}(id=${s.size_id})}"
+								class="btn btn-sm btn-outline-success me-1"> <i
+									class="fa-solid fa-rotate-left me-1"></i> Restore
+							</a> <a th:href="@{/manager/sizes/hard-delete/{id}(id=${s.size_id})}"
+								class="btn btn-sm btn-outline-danger"> <i
+									class="fa-solid fa-xmark me-1"></i> Permanently Delete
+							</a></td>
 						</tr>
 						<tr th:if="${#lists.isEmpty(sizes)}">
-							<td colspan="5" class="text-center text-muted py-4">No size
-								records found.</td>
+							<td colspan="4" class="text-center text-muted py-4">No
+								deleted sizes in recycle bin.</td>
 						</tr>
 					</tbody>
 				</table>

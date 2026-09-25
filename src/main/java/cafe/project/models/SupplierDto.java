@@ -12,7 +12,7 @@ public class SupplierDto {
 	@NotBlank(message = "Name is required")
 	private String name;
 	@NotBlank(message = "Contact info is required")
-	@Pattern(regexp = "^.+\\s/\\s(09[0-9]{9}|\\+[0-9]{8,15})$", message = "Enter address and phone like Yangon / 09765473828")
+	@Pattern(regexp = "^.+\\s/\\s(09[0-9]{9}|\\+[0-9]{8,15})$", message = "Enter address and phone like Location / 09********* ")
 	private String contact_info;
 
 	private boolean isdeleted;

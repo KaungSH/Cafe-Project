@@ -161,7 +161,7 @@ body {
 			</div>
 
 
-			<form th:action="@{/manager/supplier/edit}"
+			<form th:action="@{/manager/suppliers/edit}"
 				th:object="${supplier}" method="post">
 				<input type="hidden" name="supplier_id" th:value="${supplier.supplier_id}">
 
@@ -209,7 +209,7 @@ body {
 
 				<div class="form-footer">
 
-					<a th:href="@{/manager/supplier}" class="btn-cancel"> Cancel </a>
+					<a th:href="@{/manager/suppliers}" class="btn-cancel"> Cancel </a>
 
 					<button type="submit" class="btn-update">Update Supplier</button>
 
