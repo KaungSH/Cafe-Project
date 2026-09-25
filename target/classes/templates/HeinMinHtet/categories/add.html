@@ -71,7 +71,6 @@ button {
 }
 </style>
 </head>
-
 <body>
 
 	<div class="form-box">
@@ -85,8 +84,12 @@ button {
 				placeholder="Enter category name" required> <label>Description</label>
 
 			<textarea th:field="*{description}" placeholder="Enter description"></textarea>
-
-			<label> <input type="checkbox" th:field="*{is_active}">
+			<label>Branch</label> <select class="from-control"
+				th:field="*{branch_id}">
+				<option value="">-- Select Branch --</option>
+				<option th:each="branch : ${branches}"
+					th:value="${branch.branch_id}" th:text="${branch.name}"></option>
+			</select> <label> <input type="checkbox" th:field="*{is_active}">
 				Active
 			</label>
 

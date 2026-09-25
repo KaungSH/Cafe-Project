@@ -13,12 +13,14 @@ public class Category {
 	private LocalDateTime created_at;
 	private String employee_id;
 	private String employee_name;
+	private String branch_id;
+	private String branch_name;
 
 	public Category() {
 	}
 
 	public Category(String category_id, String name, String description, boolean is_active, boolean isedited,
-			boolean isdeleted, LocalDateTime created_at, String employee_id) {
+			boolean isdeleted, LocalDateTime created_at, String employee_id, String branch_id) {
 		this.category_id = category_id;
 		this.name = name;
 		this.description = description;
@@ -27,6 +29,7 @@ public class Category {
 		this.isdeleted = isdeleted;
 		this.created_at = created_at;
 		this.employee_id = employee_id;
+		this.branch_id = branch_id;
 	}
 
 	public String getCategory_id() {
@@ -99,6 +102,22 @@ public class Category {
 
 	public void setEmployee_name(String employee_name) {
 		this.employee_name = employee_name;
+	}
+
+	public String getBranch_id() {
+		return branch_id;
+	}
+
+	public void setBranch_id(String branch_id) {
+		this.branch_id = branch_id;
+	}
+
+	public String getBranch_name() {
+		return branch_name;
+	}
+
+	public void setBranch_name(String branch_name) {
+		this.branch_name = branch_name;
 	}
 
 }

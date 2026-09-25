@@ -89,14 +89,17 @@ th {
 			<h1>Category Management</h1>
 
 			<a href="/categories/add" class="btn"> + Add Category </a>
+			<a href="/categories/deleted-list" class="btn"> Deleted List </a>
 		</div>
 
 		<table>
 
 			<thead>
 				<tr>
-					<th>ID</th>
+					<th>No.</th>
 					<th>Name</th>
+					<th>Branch</th>
+					<th>Employee</th>
 					<th>Description</th>
 					<th>Active</th>
 					<th>Action</th>
@@ -105,12 +108,16 @@ th {
 
 			<tbody>
 
-				<tr th:each="category : ${categories}">
+				<tr th:each="category, state : ${categories}">
 
-					<td th:text="${category.category_id}"></td>
+					<td th:text="${state.count}"></td>
 
 					<td th:text="${category.name}"></td>
-
+					
+					<td th:text="${category.branch_name}"></td>
+					
+					<td th:text="${category.employee_name}"></td>
+					
 					<td th:text="${category.description}"></td>
 
 					<td th:text="${category.is_active ? 'Active' : 'Inactive'}"></td>

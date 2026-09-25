@@ -12,11 +12,13 @@ public class CategoryDto {
 	private boolean isdeleted;
 	private LocalDateTime created_at;
 	private String employee_id;
+	private String branch_id;
+	private String branch_name;
 	
 	public CategoryDto() {}
 	
 	public CategoryDto(String category_id,String name,String description,
-			boolean is_active,boolean isedited,boolean isdeleted,LocalDateTime created_at,String employee_id) {
+			boolean is_active,boolean isedited,boolean isdeleted,LocalDateTime created_at,String employee_id,String branch_id,String branch_name) {
 		this.category_id=category_id;
 		this.name=name;
 		this.description=description;
@@ -25,6 +27,8 @@ public class CategoryDto {
 		this.isdeleted=isdeleted;
 		this.created_at=created_at;
 		this.employee_id=employee_id;
+		this.branch_id=branch_id;
+		this.branch_name=branch_name;
 	}
 
 	public String getCategory_id() {
@@ -91,7 +95,22 @@ public class CategoryDto {
 		this.employee_id = employee_id;
 	}
 
-	
+	public String getBranch_id() {
+		return branch_id;
+	}
+
+	public void setBranch_id(String branch_id) {
+		this.branch_id = branch_id;
+	}
+
+	public String getBranch_name() {
+		return branch_name;
+	}
+
+	public void setBranch_name(String branch_name) {
+		this.branch_name = branch_name;
+	}
+
 }
 
 

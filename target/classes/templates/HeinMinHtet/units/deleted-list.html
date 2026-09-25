@@ -61,7 +61,7 @@ th {
 	text-align: left;
 }
 
-.edit {
+.restore {
 	color: #2980b9;
 	text-decoration: none;
 	margin-right: 10px;
@@ -85,11 +85,9 @@ th {
 
 		<div class="header">
 
-			<h1>Unit Management</h1>
+			<h1>Unit Deleted-List</h1>
 
-			<a href="/units/add" class="btn"> + Add Unit </a>
-			
-			<a href="/units/deleted-list" class = "btn">Delete List</a>
+			<a href="/units" class="btn"> Back to unit list </a>
 
 		</div>
 
@@ -117,10 +115,20 @@ th {
 
 					<td th:text="${unit.is_active ? 'Active' : 'Inactive'}"></td>
 
-					<td><a class="edit"
-						th:href="@{/units/edit/{id}(id=${unit.unit_id})}"> Edit </a> <a
-						class="delete" th:href="@{/units/delete/{id}(id=${unit.unit_id})}">
-							Delete </a></td>
+					<td>
+						<form th:action="@{/units/restore}" method="post"
+							style="display: inline;">
+							<input type="hidden" name="id" th:value="${unit.unit_id}">
+							<button type="submit" class="restore">Restore</button>
+						</form>
+
+						<form th:action="@{/units/real-delete}" method="post"
+							style="display: inline;"
+							onsubmit="return confirm('Are you sure you want to permanently delete this unit?');">
+							<input type="hidden" name="id" th:value="${unit.unit_id}">
+							<button type="submit" class="delete">Delete</button>
+						</form>
+					</td>
 
 				</tr>
 
