@@ -3,11 +3,3 @@ target/
 
 # Java compiled files
 *.class
-
-# Eclipse metadata
-.classpath
-.project
-.settings/
-
-# Eclipse generated files
-bin/
