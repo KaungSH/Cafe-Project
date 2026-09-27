@@ -26,7 +26,25 @@ public class DailyRegisterRepository {
 		this.deleteRecordRepo = deleteRecordRepo;
 	}
 
-	public List<DailyRegisterListDto> findAllDto() {
+	public List<DailyRegisterListDto> findAllDto(String branch_id) {
+        String sql = "SELECT dr.register_id,\r\n"
+        		+ "       dr.date,\r\n"
+        		+ "       dr.opened_at,\r\n"
+        		+ "       dr.closed_at,\r\n"
+        		+ "       b.name AS branch_name,\r\n"
+        		+ "       e.name AS employee_name,\r\n"
+        		+ "       s.name AS status_name\r\n"
+        		+ "FROM daily_registers dr\r\n"
+        		+ "JOIN branches b ON dr.branch_id = b.branch_id\r\n"
+        		+ "JOIN employees e ON dr.employee_id = e.employee_id\r\n"
+        		+ "JOIN register_statuses s ON dr.register_status_id = s.register_status_id\r\n"
+        		+ "WHERE dr.isdeleted = 0 AND dr.register_id != 'deleted' AND dr.branch_id = ?\r\n"
+        		+ "ORDER BY dr.date DESC, dr.opened_at DESC;\r\n"
+        		+ "";
+        return jdbcTemplate.query(sql, new DailyRegisterListDtoMapper(), branch_id);
+    }
+	
+	public List<DailyRegisterListDto> findAllDtoAdmin() {
         String sql = "SELECT dr.register_id,\r\n"
         		+ "       dr.date,\r\n"
         		+ "       dr.opened_at,\r\n"
@@ -44,7 +62,7 @@ public class DailyRegisterRepository {
         return jdbcTemplate.query(sql, new DailyRegisterListDtoMapper());
     }
 	
-	public List<DailyRegisterListDto> findAllDeleted() {
+	public List<DailyRegisterListDto> findAllDeleted(String branch_id) {
         String sql = "SELECT dr.register_id,\r\n"
         		+ "       dr.date,\r\n"
         		+ "       dr.opened_at,\r\n"
@@ -56,30 +74,42 @@ public class DailyRegisterRepository {
         		+ "JOIN branches b ON dr.branch_id = b.branch_id\r\n"
         		+ "JOIN employees e ON dr.employee_id = e.employee_id\r\n"
         		+ "JOIN register_statuses s ON dr.register_status_id = s.register_status_id\r\n"
-        		+ "WHERE dr.isdeleted = 1\r\n"
+        		+ "WHERE dr.isdeleted = 1 AND dr.register_id != 'deleted' AND dr.branch_id = ?\r\n"
         		+ "ORDER BY dr.date DESC, dr.opened_at DESC;\r\n"
         		+ "";
-        return jdbcTemplate.query(sql, new DailyRegisterListDtoMapper());
+        return jdbcTemplate.query(sql, new DailyRegisterListDtoMapper(), branch_id);
     }
 	
-	public List<DailyRegisterListDto> findAllOpened() {
-        String sql = "SELECT dr.register_id, dr.date, dr.opened_at, dr.closed_at, b.name AS branch_name, e.name AS employee_name, s.name AS status_name FROM daily_registers dr JOIN branches b ON dr.branch_id = b.branch_id JOIN employees e ON dr.employee_id = e.employee_id JOIN register_statuses s ON dr.register_status_id = s.register_status_id WHERE dr.isdeleted = 0 AND s.name = 'OPENED' ORDER BY dr.date DESC, dr.opened_at DESC;";
-        return jdbcTemplate.query(sql, new DailyRegisterListDtoMapper());
+	public List<DailyRegisterListDto> findAllOpened(String branch_id) {
+        String sql = "SELECT dr.register_id, dr.date, dr.opened_at, dr.closed_at, b.name AS branch_name, e.name AS employee_name, s.name AS status_name FROM daily_registers dr JOIN branches b ON dr.branch_id = b.branch_id JOIN employees e ON dr.employee_id = e.employee_id JOIN register_statuses s ON dr.register_status_id = s.register_status_id WHERE dr.isdeleted = 0 AND s.name = 'OPENED' AND dr.register_id != 'deleted' AND dr.branch_id= ? ORDER BY dr.date DESC, dr.opened_at DESC;";
+        return jdbcTemplate.query(sql, new DailyRegisterListDtoMapper(), branch_id);
     }
 	
-	public List<DailyRegisterListDto> findAllClosed() {
-        String sql = "SELECT dr.register_id, dr.date, dr.opened_at, dr.closed_at, b.name AS branch_name, e.name AS employee_name, s.name AS status_name FROM daily_registers dr JOIN branches b ON dr.branch_id = b.branch_id JOIN employees e ON dr.employee_id = e.employee_id JOIN register_statuses s ON dr.register_status_id = s.register_status_id WHERE dr.isdeleted = 0 AND s.name = 'CLOSED' ORDER BY dr.date DESC, dr.opened_at DESC;";
-        return jdbcTemplate.query(sql, new DailyRegisterListDtoMapper());
+	public List<DailyRegisterListDto> findAllClosed(String branch_id) {
+        String sql = "SELECT dr.register_id, dr.date, dr.opened_at, dr.closed_at, b.name AS branch_name, e.name AS employee_name, s.name AS status_name FROM daily_registers dr JOIN branches b ON dr.branch_id = b.branch_id JOIN employees e ON dr.employee_id = e.employee_id JOIN register_statuses s ON dr.register_status_id = s.register_status_id WHERE dr.isdeleted = 0 AND s.name = 'CLOSED' AND dr.register_id != 'deleted' AND dr.branch_id = ? ORDER BY dr.date DESC, dr.opened_at DESC;";
+        return jdbcTemplate.query(sql, new DailyRegisterListDtoMapper(), branch_id);
     }
 
 	public Optional<DailyRegister> findById(String register_id) {
-		String sql = "SELECT * from daily_registers where register_id = ? AND isdeleted = 0";
+		String sql = "SELECT * FROM daily_registers where register_id = ? AND isdeleted = 0";
 		List<DailyRegister> list = jdbcTemplate.query(sql, new DailyRegisterMapper(), register_id);
 		return list.stream().findFirst();
 	}
 	
 	public DailyRegister findByDate(LocalDate date, String employee_id) {
 		String sql = "SELECT * from daily_registers where date = ? AND isdeleted = 0 AND employee_id = ?";
+		List<DailyRegister> entities = jdbcTemplate.query(sql, new DailyRegisterMapper(), date, employee_id);
+		return entities.isEmpty()?null:entities.get(0);
+	}
+	
+	public DailyRegister findByDateOpened(LocalDate date, String employee_id) {
+		String sql = "SELECT d.*, s.name AS status_name from daily_registers d JOIN register_statuses s ON d.register_status_id = s.register_status_id where date = ? AND isdeleted = 0 AND employee_id = ? AND s.name = 'OPENED'";
+		List<DailyRegister> entities = jdbcTemplate.query(sql, new DailyRegisterMapper(), date, employee_id);
+		return entities.isEmpty()?null:entities.get(0);
+	}
+	
+	public DailyRegister findByDateClosed(LocalDate date, String employee_id) {
+		String sql = "SELECT d.*, s.name AS status_name from daily_registers d JOIN register_statuses s ON d.register_status_id = s.register_status_id where date = ? AND isdeleted = 0 AND employee_id = ? AND s.name = 'CLOSED'";
 		List<DailyRegister> entities = jdbcTemplate.query(sql, new DailyRegisterMapper(), date, employee_id);
 		return entities.isEmpty()?null:entities.get(0);
 	}
@@ -123,7 +153,7 @@ public class DailyRegisterRepository {
 	
 	public int hardDelete(String register_id) {
 		deleteRecordRepo.deleteByParentId(register_id);
-		String sql="DELETE FROM daily_registers WHERE register_id";
+		String sql="DELETE FROM daily_registers WHERE register_id = ?";
 		return jdbcTemplate.update(sql, register_id);
 	}
 	

@@ -10,7 +10,6 @@ import cafe.project.models.DiscountListModel;
 import cafe.project.repositories.entities.Discount;
 import cafe.project.repositories.mappers.resultsetextractors.DiscountListModelResultSetExtractor;
 import cafe.project.repositories.mappers.resultsetextractors.DiscountResultSetExtractor;
-import cafe.project.repositories.mappers.DiscountMapper;
 
 @Repository
 public class DiscountRepository {

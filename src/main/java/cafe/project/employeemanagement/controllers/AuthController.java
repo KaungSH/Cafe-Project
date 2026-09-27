@@ -3,11 +3,13 @@ package cafe.project.employeemanagement.controllers;
 import java.sql.Time;
 import java.time.LocalDate;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.server.ResponseStatusException;
 
 import cafe.project.services.BranchService;
 import cafe.project.services.DailyRegisterService;
@@ -42,26 +44,38 @@ public class AuthController {
 	
 	@PostMapping("/login")
 	public String loginPage(@ModelAttribute("user") LoginDto ldto, HttpSession oldsession, HttpServletRequest request, Model model) {
+		System.out.println("Password - " + ldto.getPassword());
+		System.out.println("Email - " + ldto.getEmail());
 		LoginDto ldto2 = service.findByLogin(ldto);
 		
 		if (ldto2 == null) {
-			model.addAttribute("error", "Invalid Email or Password.");
+			model.addAttribute("error", "Invalid credentials. Please verify your email and password and try again.");
+			model.addAttribute("branches", branchService.findAll());
 			return "common/user/login";
 		}
 		
 		if (!ldto2.getEmployee_status().equals("NORMAL")) {
-			model.addAttribute("error", "You Are Not Allowed to Login.");
+			model.addAttribute("error", "Access denied: Account inactive (Fired/On Leave).");
+			model.addAttribute("branches", branchService.findAll());
 			return "common/user/login";
 		}
 		
-		DailyRegisterEntryDto dto = registerService.getRegisterEntryDtoByDate(LocalDate.now(), ldto.getEmployee_id());
+		DailyRegisterEntryDto dto = registerService.getRegisterEntryDtoByDateOpened(LocalDate.now(), ldto2.getEmployee_id());
 		
 		if (dto != null) {
-			System.out.println("1111");
 			if(!ldto.getBranch_id().equals(dto.getBranch_id())) {
-				model.addAttribute("error", "You Are Not Allowed to Login to that Branch because You are already Logged into an another Branch.");
+				model.addAttribute("error", "Cannot switch branches; an open register already exists for today.");
+				model.addAttribute("branches", branchService.findAll());
 				return "common/user/login";
 			}
+		}
+		
+		DailyRegisterEntryDto dto2 = registerService.getRegisterEntryDtoByDateClosed(LocalDate.now(), ldto2.getEmployee_id());
+		
+		if (dto2 != null) {
+				model.addAttribute("error", "Login unavailable: The register has already been closed.");
+				model.addAttribute("branches", branchService.findAll());
+				return "common/user/login";
 		}
 		
 		oldsession.invalidate();
@@ -72,7 +86,7 @@ public class AuthController {
 		System.out.println(ldto2.getBranch_id());
 		System.out.println("SESSION ID: " + session.getId());
 		System.out.println("USER: " + session.getAttribute("loggedInUser"));
-		if(ldto2.getEmployee_role().equals("Admin")) {
+		if(ldto2.getEmployee_role().equals("ADMIN")) {
 			return "redirect:/";
 		}
 		return "redirect:/openshift";
@@ -94,9 +108,13 @@ public class AuthController {
 		
 		if (dto != null) {
 			if(ldto.getEmployee_role().equals("MANAGER")) {
-				return "redirect:/manager/daily-registers/all";
+				return "redirect:/manager-only/daily-registers/all";
 			}
 			return "redirect:/";
+		}
+		
+		if(ldto.getEmployee_role().equals("ADMIN")) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Administrators cannot create a register!");
 		}
 		
 		dto = new DailyRegisterEntryDto();
@@ -117,7 +135,7 @@ public class AuthController {
 	public String openShift(@ModelAttribute("registerDto") DailyRegisterEntryDto dto, HttpSession session) {
 		registerService.saveRegister(dto);
 		if(((LoginDto) session.getAttribute("loggedInUser")).getEmployee_role().equals("MANAGER")) {
-			return "redirect:/manager/daily-registers/all";
+			return "redirect:/manager-only/daily-registers/all";
 		}
 		return "redirect:/";
 	}
@@ -126,7 +144,13 @@ public class AuthController {
 	public String closeShift(Model model, HttpSession session) {
 		System.out.println(statusRepository.findAll("register").get(0));
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-		DailyRegisterEntryDto dto = registerService.getRegisterEntryDtoByDate(LocalDate.now(), ldto.getEmployee_id());
+		if(ldto.getEmployee_role().equals("ADMIN")) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Administrators cannot close a register!");
+		}
+		DailyRegisterEntryDto dto = registerService.getRegisterEntryDtoByDateOpened(LocalDate.now(), ldto.getEmployee_id());
+		if(dto == null) {
+			return "redirect:/login";
+		}
 		dto.setClosed_at(Time.valueOf(java.time.LocalTime.now()));
 		model.addAttribute("registerDto", dto);
 		dto.setRegister_status_id(statusRepository.findAll2("register").get(1).getStatus_id());
@@ -140,10 +164,7 @@ public class AuthController {
 	@PostMapping("/closeshift")
 	public String closeShift(@ModelAttribute("registerDto") DailyRegisterEntryDto dto, HttpSession session) {
 		registerService.updateRegister(dto);
-		if(((LoginDto) session.getAttribute("loggedInUser")).getEmployee_role().equals("MANAGER")) {
-			return "redirect:/manager/daily-registers/all";
-		}
-		return "redirect:/";
+		return "redirect:/logout";
 	}
 	
 }

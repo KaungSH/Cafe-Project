@@ -62,10 +62,12 @@ public class ProductTypeRepository {
 	}
 	
 	public int add(ProductType pt) {
-		String sql = "INSERT INTO product_types(type_id, name, description, coverimgpath, price, created_at, category_id, isdeleted, isedited, employee_id) VALUES(?, ?, ?, ?, ?, ?, ?, false, false, ?)";
-		int i =  jdbcTemplate.update(sql, pt.getType_id(), pt.getName(), pt.getDescription(), pt.getCoverimgpath(), pt.getPrice(), LocalDateTime.now(), pt.getCategory_id(), pt.getEmployee_id());
+		String sql = "INSERT INTO product_types(type_id, name, description, coverimgpath, price, created_at, category_id, isdeleted, isedited, employee_id, branches_branch_id) VALUES(?, ?, ?, ?, ?, ?, ?, false, false, ?, ?)";
+		//"1" is to replaced with an actual branch validated branch id.
+		int i =  jdbcTemplate.update(sql, pt.getType_id(), pt.getName(), pt.getDescription(), pt.getCoverimgpath(), pt.getPrice(), LocalDateTime.now(), pt.getCategory_id(), pt.getEmployee_id(), "1");
 		for(ProductEntryModel product : pt.getProducts()) {
 			pservice.add(product, UUID.randomUUID().toString(), pt.getType_id());
+			i++;
 		}
 		
 		return i;

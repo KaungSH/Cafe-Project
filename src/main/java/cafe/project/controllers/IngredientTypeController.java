@@ -30,27 +30,27 @@ public class IngredientTypeController {
 	@GetMapping
 	public String list(Model model) {
 		model.addAttribute("ingredients", service.getAllActive());
-		return "NayZarLinn/ingredient_type/list";
+		return "ingredient_type/list";
 	}
 
 	@GetMapping("/deleted")
 	public String deletedList(Model model) {
 		model.addAttribute("deletedIngredients", service.getAllDeleted());
-		return "NayZarLinn/ingredient_type/deletedlist";
+		return "ingredient_type/deletedlist";
 	}
 
 	@GetMapping("/add")
 	public String showAddForm(Model model) {
 		model.addAttribute("ingredientForm", new IngredientTypeDto());
 		model.addAttribute("units", unitRepository.findAll());
-		return "NayZarLinn/ingredient_type/add";
+		return "ingredient_type/add";
 	}
 
 	@PostMapping("/add")
 	public String add(@Valid @ModelAttribute("ingredientForm") IngredientTypeDto form, BindingResult result,Model model) {
 		if (result.hasErrors()) {
 			model.addAttribute("units", unitRepository.findAll());
-			return "NayZarLinn/ingredient_type/add";
+			return "ingredient_type/add";
 		}
 		service.create(form);
 		return "redirect:/staff/ingredientType";
@@ -68,7 +68,7 @@ public class IngredientTypeController {
 		model.addAttribute("ingredientForm", form);
 
 		model.addAttribute("units", unitRepository.findAll());
-		return "NayZarLinn/ingredient_type/edit";
+		return "ingredient_type/edit";
 	}
 
 	@PostMapping("/edit/{id}")
@@ -76,7 +76,7 @@ public class IngredientTypeController {
 			BindingResult result,Model model) {
 		if (result.hasErrors()) {
 			model.addAttribute("units", unitRepository.findAll());
-			return "NayZarLinn/ingredient_type/edit";
+			return "ingredient_type/edit";
 		}
 		service.update(id, form);
 		return "redirect:/staff/ingredientType";

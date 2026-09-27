@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import cafe.project.employeemanagement.models.LoginDto;
@@ -16,6 +17,7 @@ import jakarta.servlet.http.HttpSession;
 
 
 @Controller
+@RequestMapping("/manager-only")
 public class CategoryController {
 
 	private final CategoryService categoryService;
@@ -27,18 +29,18 @@ public class CategoryController {
 	}
 
 	@GetMapping("/categories")
-	public String categoryList(Model model) {
-
-		model.addAttribute("categories", this.categoryService.findAllByRelation());
+	public String categoryList(Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		model.addAttribute("categories", this.categoryService.findAllByRelation(ldto.getBranch_id()));
 
 		return "categories/list";
 	}
 
 	@GetMapping("/categories/add")
-	public String addCategory(Model model) {
-
+	public String addCategory(Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		model.addAttribute("category", new CategoryDto());
-		model.addAttribute("branches",branchService.findAll());
+		model.addAttribute("branch", branchService.findById(ldto.getBranch_id()).getName());
 		
 		return "categories/add";
 	}
@@ -50,12 +52,12 @@ public class CategoryController {
 		String employeeID = ldto.getEmployee_id();
 		
 		category.setEmployee_id(employeeID);
-		
+		category.setBranch_id(ldto.getBranch_id());
 		this.categoryService.add(category);
 		
 		
 
-		return "redirect:/categories";
+		return "redirect:/manager-only/categories";
 	}
 
 	@GetMapping("/categories/edit/{id}")
@@ -79,7 +81,7 @@ public class CategoryController {
 
 		this.categoryService.edit(category.getCategory_id(), category);
 
-		return "redirect:/categories";
+		return "redirect:/manager-only/categories";
 	}
 
 	@GetMapping("/categories/delete/{id}")
@@ -89,37 +91,32 @@ public class CategoryController {
 
 		if (existingCategory != null) {
 
-			model.addAttribute("category", existingCategory);
+			this.categoryService.delete(existingCategory.getCategory_id());
 
-			return "categories/delete";
+			return "redirect:/manager-only/categories";
 		}
 
 		return "redirect:/notfound";
 	}
 
-	@PostMapping("/categories/delete")
-	public String deleteCategory(@ModelAttribute("category") CategoryDto category) {
-
-		this.categoryService.delete(category.getCategory_id());
-
-		return "redirect:/categories";
-	}
+	
 	
 	@GetMapping("/categories/deleted-list")
-	public String categoryDeletedList(Model model) {
-		model.addAttribute("categories", this.categoryService.deletedList());
+	public String categoryDeletedList(Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		model.addAttribute("categories", this.categoryService.deletedList(ldto.getBranch_id()));
 		return "categories/deleted-list";
 	}
 	
 	@PostMapping("/categories/restore")
 	public String restoreCategory(@RequestParam String id) {
 		categoryService.restore(id);
-		return "redirect:/categories/deleted-list";
+		return "redirect:/manager-only/categories/deleted-list";
 	}
 	
 	@PostMapping("/categories/real-delete")
 	public String realDeleteCategory(@RequestParam String id) {
 		categoryService.hardDelete(id);
-		return "redirect:/categories/deleted-list";
+		return "redirect:/manager-only/categories/deleted-list";
 	}
 }

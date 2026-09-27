@@ -8,18 +8,21 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import cafe.project.common.interceptors.AdminInterceptor;
 import cafe.project.common.interceptors.LoginInterceptor;
 import cafe.project.common.interceptors.ManagerInterceptor;
+import cafe.project.common.interceptors.ManagerOnlyInterceptor;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 	
 	private final LoginInterceptor login;
 	private final AdminInterceptor admin;
-	private final ManagerInterceptor superadmin;
+	private final ManagerInterceptor manager;
+	private final ManagerOnlyInterceptor onlyMan;
 	
-	public WebConfig(LoginInterceptor login, AdminInterceptor admin, ManagerInterceptor superadmin) {
+	public WebConfig(LoginInterceptor login, AdminInterceptor admin, ManagerInterceptor superadmin, ManagerOnlyInterceptor onlyMan) {
 		this.login = login;
 		this.admin = admin;
-		this.superadmin = superadmin;
+		this.manager = superadmin;
+		this.onlyMan = onlyMan;
 	}
 
 
@@ -39,7 +42,9 @@ public class WebConfig implements WebMvcConfigurer {
 		public void addInterceptors(InterceptorRegistry registry) {
 			registry.addInterceptor(login).addPathPatterns("/**").excludePathPatterns("/login", "/signup", "/css/**", "/js/**", "/images/**", "/fonts/**", "/favicon.ico");
 			
-			registry.addInterceptor(superadmin).addPathPatterns("/manager/**");
+			registry.addInterceptor(manager).addPathPatterns("/manager/**");
+			
+			registry.addInterceptor(onlyMan).addPathPatterns("/manager-only/**");
 			
 			registry.addInterceptor(admin).addPathPatterns("/admin/**");
 		}
