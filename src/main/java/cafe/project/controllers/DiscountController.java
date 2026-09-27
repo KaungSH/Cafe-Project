@@ -70,4 +70,22 @@ public class DiscountController {
 		discountService.deleteDiscount(id);
 		return "redirect:/manager/discounts";
 	}
+	
+	@GetMapping("deleted-list")
+	public String deleteDiscountList(Model model) {
+		model.addAttribute("discounts", this.discountService.DeletedList());
+		return "discount/deleted-list";
+	}
+	
+	@PostMapping("/restore")
+	public String restoreDiscount(@RequestParam String id) {
+		discountService.restore(id);
+		return "redirect:/manager/discounts/deleted-list";
+	}
+	
+	@PostMapping("/real-delete")
+	public String realDeleteDiscount(@RequestParam String id) {
+		discountService.hardDelete(id);
+		return "redirect:/manager/discounts/deleted-list";
+	}
 }

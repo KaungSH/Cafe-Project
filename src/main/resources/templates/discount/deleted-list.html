@@ -3,7 +3,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Discount Management</title>
+<title>Deleted Discount List</title>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -15,15 +15,12 @@
 	<div class="container my-4">
 		<div class="d-flex justify-content-between align-items-center mb-4">
 			<div>
-				<h3 class="fw-bold mb-0">Discount & Promotions</h3>
-				<p class="text-muted small">Manage store discount rates and
-					audience targeting</p>
+				<h3 class="fw-bold mb-0">Deleted list</h3>
+
+				<a th:href="@{/manager/discounts}" class="btn btn-primary">Back
+					to Discount List </a>
+
 			</div>
-			<a th:href="@{/manager/discounts/create}" class="btn btn-primary"> <i
-				class="bi bi-plus-circle me-1"></i> Add New Discount
-			</a>
-			<a th:href="@{/manager/discounts/deleted-list}" class="btn btn-primary"> Deleted List
-			</a>
 		</div>
 
 		<div class="card border-0 shadow-sm">
@@ -70,16 +67,25 @@
 								<td><small
 									th:text="${discount.ename != null ? discount.ename : 'N/A'}">Employee</small>
 								</td>
-								<td class="text-end pe-4"><a
-									th:href="@{/manager/discounts/edit/{id}(id=${discount.discount_id})}"
-									class="btn btn-sm btn-outline-warning me-1"> <i
-										class="bi bi-pencil-square"></i> Edit
-								</a> <a
-									th:href="@{/manager/discounts/delete/{id}(id=${discount.discount_id})}"
-									class="btn btn-sm btn-outline-danger"
-									onclick="return confirm('Are you sure you want to delete this discount?');">
-										<i class="bi bi-trash"></i>
-								</a></td>
+								<td class="text-end pe-4"><form
+										th:action="@{/manager/discounts/restore}" method="post">
+										<input type="hidden" name="id"
+											th:value="${discount.discount_id}">
+
+										<button type="submit">Restore</button>
+									</form>
+									<form th:action="@{/manager/discounts/real-delete}"
+										method="post" style="display: inline;"
+										onsubmit="return confirm('Are you sure you want to delete this discount?');">
+
+										<input type="hidden" name="id"
+											th:value="${discount.discount_id}">
+
+										<button type="submit" class="btn btn-sm btn-outline-danger">
+											<i class="bi bi-trash"></i>
+										</button>
+
+									</form></td>
 							</tr>
 						</tbody>
 					</table>
