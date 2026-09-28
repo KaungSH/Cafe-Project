@@ -14,13 +14,16 @@ public class BranchesStatsDto {
 	private LocalDateTime created_at;
 	private double employee_cost;
 	private String employee_id;
+	private String branch_name;
+	private String employee_name;
 
 	public BranchesStatsDto() {
 
 	}
 
 	public BranchesStatsDto(String branch_stats_id, String branch_id, int salecount, double saleamount, String month,
-			boolean isedited, boolean isdeleted, LocalDateTime created_at, double employee_cost, String employee_id) {
+			boolean isedited, boolean isdeleted, LocalDateTime created_at, double employee_cost, String employee_id,
+			String branch_name, String employee_name) {
 		this.branch_stats_id = branch_stats_id;
 		this.branch_id = branch_id;
 		this.salecount = salecount;
@@ -31,6 +34,8 @@ public class BranchesStatsDto {
 		this.created_at = created_at;
 		this.employee_cost = employee_cost;
 		this.employee_id = employee_id;
+		this.branch_name = branch_name;
+		this.employee_name = employee_name;
 	}
 
 	public String getBranch_stats_id() {
@@ -112,4 +117,21 @@ public class BranchesStatsDto {
 	public void setEmployee_id(String employee_id) {
 		this.employee_id = employee_id;
 	}
+
+	public String getBranch_name() {
+		return branch_name;
+	}
+
+	public void setBranch_name(String branch_name) {
+		this.branch_name = branch_name;
+	}
+
+	public String getEmployee_name() {
+		return employee_name;
+	}
+
+	public void setEmployee_name(String employee_name) {
+		this.employee_name = employee_name;
+	}
+	
 }
