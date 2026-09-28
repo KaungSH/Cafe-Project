@@ -76,7 +76,7 @@ button {
 
 		<p>Are you sure you want to delete this category?</p>
 
-		 <form th:action="@{/categories/delete}"
+		 <form th:action="@{/manager-only/categories/delete}"
           th:object="${category}"
           method="post">
 
@@ -89,7 +89,7 @@ button {
 
 				<button type="submit">Yes, Delete</button>
 
-				<a th:href="@{/categories}" class="cancel"> Cancel </a>
+				<a th:href="@{/manager-only/categories}" class="cancel"> Cancel </a>
 
 			</div>
 

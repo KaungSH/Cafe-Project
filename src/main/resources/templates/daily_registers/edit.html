@@ -75,7 +75,7 @@
       <i class="fa-solid fa-pen-to-square me-2"></i>Edit Daily Register
     </h3>
 
-    <form th:action="@{/manager/daily-registers/update}" th:object="${registerDto}" method="post" novalidate>
+    <form th:action="@{/manager-only/daily-registers/update}" th:object="${registerDto}" method="post" novalidate>
 
      
       <input type="hidden" th:field="*{register_id}" />
@@ -136,7 +136,7 @@
 
       <!-- Action Buttons -->
       <div class="mt-4 d-flex gap-2 justify-content-end">
-        <a th:href="@{/manager/daily-registers}" class="btn btn-cancel">Cancel</a>
+        <a th:href="@{/manager-only/daily-registers/all}" class="btn btn-cancel">Cancel</a>
         <button type="submit" class="btn btn-submit">Update Register</button>
       </div>
 

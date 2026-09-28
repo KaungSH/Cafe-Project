@@ -56,31 +56,11 @@
 
 <div class="container py-4">
   <div class="main-card">
-
-    <div class="d-flex justify-content-between align-items-center mb-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
       <h3 class="fw-bold" style="color: var(--primary-color);">
-        <i class="fa-solid fa-list me-2"></i>Daily Register List
+        <i class="fa-solid fa-list me-2"></i>Daily Register List - Admin
       </h3>
-        <a th:href="@{/closeshift}" class="btn btn-create">
-        <i class="fa-solid fa-plus me-1"></i> Close Shift
-      </a>
-      <a th:href="@{/manager-only/daily-registers/opened}" class="btn btn-create" th:if = "${sort != 'opened'}">
-        <i class="fa-solid fa-plus me-1"></i> Opened Registers
-      </a>
-      <a th:href="@{/manager-only/daily-registers/closed}" class="btn btn-create" th:if = "${sort != 'closed'}">
-        <i class="fa-solid fa-plus me-1"></i> Closed Registers
-      </a>
-      <a th:href="@{/manager-only/daily-registers/all}" class="btn btn-create" th:if = "${sort != 'all'}">
-        <i class="fa-solid fa-plus me-1"></i> All Registers
-      </a>
-      <a th:href="@{/manager-only/daily-registers/timedSoftDelete}" class="btn btn-create" onclick="return confirm('Are you sure? But you can recover registers from the bin.');">
-        <i class="fa-solid fa-trash me-1"></i> Delete Last Months Registers
-      </a>
-       <a th:href="@{/manager-only/daily-registers/deleted}" class="btn btn-create">
-        <i class="fa-solid fa-trash me-1"></i> Register Trash Bin
-      </a>
-    </div>
-    <div class = "error" th:text = "${error}"></div>
+  </div>
 
     <div class="table-responsive">
       <table class="table table-hover align-middle border">
@@ -92,7 +72,6 @@
             <th>Status</th>
             <th>Open time</th>
             <th>Closed time</th>
-            <th class="text-center">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -105,17 +84,7 @@
             </td>
             <td th:text="${reg.opened_at}">08:00:00</td>
             <td th:text="${reg.status_name == 'CLOSED' ? reg.closed_at : 'Not Closed Yet'}">17:00:00</td>
-            <td class="text-center">
-              <a th:href="@{/manager-only/daily-registers/edit/{register_id}(register_id=${reg.register_id})}" 
-                 class="btn btn-sm btn-outline-warning me-1">
-                <i class="fa-solid fa-pen-to-square"></i>
-              </a>
-              <a th:href="@{/manager-only/daily-registers/delete/{register_id}(register_id=${reg.register_id})}" 
-                 class="btn btn-sm btn-outline-danger"
-                 onclick="return confirm('Are you sure you want to delete this record?');">
-                <i class="fa-solid fa-trash"></i>
-              </a>
-            </td>
+            
           </tr>
           <tr th:if="${#lists.isEmpty(registers)}">
             <td colspan="7" class="text-center text-muted py-4">No daily register records found.</td>

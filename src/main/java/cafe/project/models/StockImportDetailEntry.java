@@ -1,7 +1,6 @@
 package cafe.project.models;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class StockImportDetailEntry {
 	private String import_detail_id;

@@ -86,10 +86,7 @@ th {
 	<div class="container">
 
 		<div class="header">
-			<h1>Category Management</h1>
-
-			<a href="/manager-only/categories/add" class="btn"> + Add Category </a>
-			<a href="/manager-only/categories/deleted-list" class="btn"> Category Bin </a>
+			<h1>Category List - Admin</h1>
 		</div>
 
 		<table>
@@ -102,7 +99,6 @@ th {
 					<th>Created By</th>
 					<th>Description</th>
 					<th>Active</th>
-					<th>Action</th>
 				</tr>
 			</thead>
 
@@ -121,19 +117,6 @@ th {
 					<td th:text="${category.description}"></td>
 
 					<td th:text="${category.is_active ? 'Active' : 'Inactive'}"></td>
-
-					<td>
-					    <a class="edit"
-					       th:href="@{/manager-only/categories/edit/{id}(id=${category.category_id})}">
-					        Edit 
-					    </a> 
-					    
-					    <a class="delete"
-					       th:href="@{/manager-only/categories/delete/{id}(id=${category.category_id})}" 
-					       onclick="return confirm('Are you sure you want to delete this category?');">
-					        Delete 
-					    </a>
-					</td>
 
 				</tr>
 

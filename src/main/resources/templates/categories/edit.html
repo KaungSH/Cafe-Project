@@ -85,7 +85,7 @@ button {
 
 		<h2>Edit Category</h2>
 
-		<form th:action="@{/categories/edit}"
+		<form th:action="@{/manager-only/categories/edit}"
 			th:object="${category}" method="post">
 
 			<input type="hidden" th:field="*{category_id}"> <label>Category
@@ -104,7 +104,7 @@ button {
 			<div class="buttons">
 				<button type="submit">Update</button>
 
-				<a th:href="@{/categories}" class="cancel"> Cancel </a>
+				<a th:href="@{/manager-only/categories}" class="cancel"> Cancel </a>
 			</div>
 
 		</form>
