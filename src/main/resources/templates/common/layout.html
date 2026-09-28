@@ -488,29 +488,28 @@
 <div class="cafe-layout">
 
 
-    <!-- =====================================
-         MANAGER SIDEBAR
-    ====================================== -->
+    <!-- ================= MANAGER ================= -->
 
-    <div th:if="${session.loggedInUser != null
-                 and session.loggedInUser.employee_role == 'MANAGER'}"
+<th:block
+    th:if="${session.loggedInUser != null
+            and session.loggedInUser.employee_role == 'MANAGER'}">
 
-         th:replace="~{common/fragments/sidebar_manager :: sidebar_manager}">
-
+    <div th:replace="~{common/fragments/sidebar_manager :: sidebar_manager}">
     </div>
 
+</th:block>
 
 
-    <!-- =====================================
-         ADMIN SIDEBAR
-    ====================================== -->
+<!-- ================= ADMIN ================= -->
 
-    <div th:if="${session.loggedInUser != null
-                 and session.loggedInUser.employee_role == 'ADMIN'}"
+<th:block
+    th:if="${session.loggedInUser != null
+            and session.loggedInUser.employee_role == 'ADMIN'}">
 
-         th:replace="~{common/fragments/sidebar_admin :: sidebar_admin}">
-
+    <div th:replace="~{common/fragments/sidebar_admin :: sidebar_admin}">
     </div>
+
+</th:block>
 
 
 
