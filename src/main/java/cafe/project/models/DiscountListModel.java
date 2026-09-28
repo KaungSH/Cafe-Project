@@ -13,14 +13,15 @@ public class DiscountListModel {
 	private boolean is_active;
 	private String promo_type_name;
 	private String audience_type_name;
-	private String ename; //employee
+	private String ename; // employee
+	private String branch_name;
 
 	public DiscountListModel() {
 	}
 
 	public DiscountListModel(String discount_id, String name, String description, BigDecimal discount_value,
-			LocalDate startdate, LocalDate enddate, boolean is_active, String promo_type_name, String audience_type_name,
-			String ename) {
+			LocalDate startdate, LocalDate enddate, boolean is_active, String promo_type_name,
+			String audience_type_name, String ename, String branch_name) {
 		this.discount_id = discount_id;
 		this.name = name;
 		this.description = description;
@@ -31,6 +32,7 @@ public class DiscountListModel {
 		this.promo_type_name = promo_type_name;
 		this.audience_type_name = audience_type_name;
 		this.ename = ename;
+		this.branch_name = branch_name;
 	}
 
 	public String getDiscount_id() {
@@ -113,6 +115,12 @@ public class DiscountListModel {
 		this.ename = ename;
 	}
 
-	
+	public String getBranch_name() {
+		return branch_name;
+	}
+
+	public void setBranch_name(String branch_name) {
+		this.branch_name = branch_name;
+	}
 
 }

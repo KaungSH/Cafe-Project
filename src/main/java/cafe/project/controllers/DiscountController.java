@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import cafe.project.models.DiscountEntryModel;
 import cafe.project.models.DiscountListModel;
 import cafe.project.repositories.AtypeAndPtypeRepository;
+import cafe.project.services.BranchService;
 import cafe.project.services.DiscountService;
 
 import java.util.List;
@@ -20,10 +21,12 @@ public class DiscountController {
 
 	private final DiscountService discountService;
 	private final AtypeAndPtypeRepository repo;
+	private final BranchService branchService;
 
-	public DiscountController(DiscountService discountService, AtypeAndPtypeRepository repo) {
+	public DiscountController(DiscountService discountService, AtypeAndPtypeRepository repo, BranchService branchService) {
 		this.discountService = discountService;
 		this.repo = repo;
+		this.branchService=branchService;
 	}
 
 	@GetMapping
@@ -40,6 +43,8 @@ public class DiscountController {
 		model.addAttribute("promoTypes", repo.findTypesAll(true));
 
 		model.addAttribute("audienceTypes", repo.findTypesAll(false));
+		
+		model.addAttribute("branches",branchService.findAll());
 
 		return "discount/create";
 	}

@@ -38,6 +38,7 @@ public class DiscountService {
 		dto.setIs_active(discount.getIs_active());
 		dto.setPromo_type_id(discount.getPromo_type_id());
 		dto.setAudience_type_id(discount.getAudience_type_id());
+		dto.setBranches_branch_id(discount.getBranches_branch_id());
 		return dto;
 	}
 
@@ -53,6 +54,7 @@ public class DiscountService {
 		discount.setIs_active(dto.isIs_active());
 		discount.setPromo_type_id(dto.getPromo_type_id());
 		discount.setAudience_type_id(dto.getAudience_type_id());
+		discount.setBranches_branch_id(dto.getBranches_branch_id());
 
 		discountRepository.save(discount);
 	}
@@ -70,6 +72,7 @@ public class DiscountService {
 		discount.setIs_active(dto.isIs_active());
 		discount.setPromo_type_id(dto.getPromo_type_id());
 		discount.setAudience_type_id(dto.getAudience_type_id());
+		discount.setBranches_branch_id(dto.getBranches_branch_id());
 
 		discountRepository.update(discount);
 	}

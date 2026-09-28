@@ -19,11 +19,10 @@
 				<p class="text-muted small">Manage store discount rates and
 					audience targeting</p>
 			</div>
-			<a th:href="@{/manager/discounts/create}" class="btn btn-primary"> <i
-				class="bi bi-plus-circle me-1"></i> Add New Discount
-			</a>
-			<a th:href="@{/manager/discounts/deleted-list}" class="btn btn-primary"> Deleted List
-			</a>
+			<a th:href="@{/manager/discounts/create}" class="btn btn-primary">
+				<i class="bi bi-plus-circle me-1"></i> Add New Discount
+			</a> <a th:href="@{/manager/discounts/deleted-list}"
+				class="btn btn-primary"> Deleted List </a>
 		</div>
 
 		<div class="card border-0 shadow-sm">
@@ -33,6 +32,7 @@
 						<thead class="table-dark">
 							<tr>
 								<th>Discount Name</th>
+								<th>Branch</th>
 								<th>Promo Type</th>
 								<th>Audience</th>
 								<th>Value</th>
@@ -52,6 +52,8 @@
 									<br th:if="${discount.description != null}"> <small
 									class="text-muted" th:text="${discount.description}">Description</small>
 								</td>
+								<td><span class="badge bg-info text-dark"
+									th:text="${discount.branch_name}">Branch</span></td>
 								<td><span class="badge bg-info text-dark"
 									th:text="${discount.promo_type_name}">Promo</span></td>
 								<td><span class="badge bg-secondary"

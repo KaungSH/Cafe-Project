@@ -30,6 +30,7 @@
 						<thead class="table-dark">
 							<tr>
 								<th>Discount Name</th>
+								<th>Branch</th>
 								<th>Promo Type</th>
 								<th>Audience</th>
 								<th>Value</th>
@@ -49,6 +50,9 @@
 									<br th:if="${discount.description != null}"> <small
 									class="text-muted" th:text="${discount.description}">Description</small>
 								</td>
+								<td><span class="badge bg-info text-dark"
+									th:text="${discount.branch_name}">Branch</span></td>
+								
 								<td><span class="badge bg-info text-dark"
 									th:text="${discount.promo_type_name}">Promo</span></td>
 								<td><span class="badge bg-secondary"
