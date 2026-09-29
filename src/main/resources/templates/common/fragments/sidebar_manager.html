@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="sidebar_manager" class="cafe-sidebar manager-sidebar">
+
+    <!-- ================= BRAND ================= -->
+    <div class="cafe-brand">
+        <div class="cafe-brand-icon manager-icon">
+            <i class="bi bi-cup-hot-fill"></i>
+        </div>
+        <div>
+            <div class="cafe-brand-name">
+                Café <span>Shop</span>
+            </div>
+            <div class="cafe-role">
+                <i class="bi bi-person-badge"></i>
+                MANAGER
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MENU ================= -->
+    <div class="cafe-menu">
+        <!-- HOME -->
+        <a th:href="@{/}" class="cafe-menu-item">
+            <i class="bi bi-house"></i>
+            <span>Home</span>
+        </a>
+
+        <!-- DAILY REGISTERS -->
+        <a th:href="@{/manager/daily-registers/all}" class="cafe-menu-item">
+            <i class="bi bi-calendar-check"></i>
+            <span>Daily Registers</span>
+        </a>
+
+        <!-- INGREDIENT BATCH -->
+        <a th:href="@{/manager/ingredientBatch}" class="cafe-menu-item">
+            <i class="bi bi-box-seam"></i>
+            <span>Ingredient Batch</span>
+        </a>
+
+        <!-- PRODUCTS (For Viewing only) -->
+        <a th:href="@{/manager/products}" class="cafe-menu-item">
+            <i class="bi bi-cup-hot"></i>
+            <span>Products List</span>
+        </a>
+
+        <!-- SUPPLIERS -->
+        <a th:href="@{/manager/supplier}" class="cafe-menu-item">
+            <i class="bi bi-truck"></i>
+            <span>Suppliers</span>
+        </a>
+
+        <!-- WASTE LOGS -->
+        <a th:href="@{/manager/WasteLogs}" class="cafe-menu-item">
+            <i class="bi bi-trash"></i>
+            <span>Waste Logs</span>
+        </a>
+
+        <!-- WASTE REASONS -->
+        <a th:href="@{/manager/wastereasons}" class="cafe-menu-item">
+            <i class="bi bi-exclamation-circle"></i>
+            <span>Waste Reasons</span>
+        </a>
+
+        <!-- STOCK IMPORTS -->
+        <a th:href="@{/manager/stock_imports}" class="cafe-menu-item">
+            <i class="bi bi-box-arrow-in-down"></i>
+            <span>Stock Imports</span>
+        </a>
+
+        <!-- ORDERS -->
+        <a th:href="@{/orders}" class="cafe-menu-item">
+            <i class="bi bi-bag"></i>
+            <span>Orders</span>
+        </a>
+
+        <!-- PAYMENTS -->
+        <a th:href="@{/payments}" class="cafe-menu-item">
+            <i class="bi bi-cash-stack"></i>
+            <span>Payments</span>
+        </a>
+
+        <!-- DISCOUNTS -->
+        <a th:href="@{/manager/discounts}" class="cafe-menu-item">
+            <i class="bi bi-percent"></i>
+            <span>Discounts</span>
+        </a>
+
+        <!-- EXPENSES -->
+        <a th:href="@{/manager/expense}" class="cafe-menu-item">
+            <i class="bi bi-wallet2"></i>
+            <span>Expenses</span>
+        </a>
+    </div>
+
+    <!-- ================= DIVIDER ================= -->
+    <div class="cafe-divider"></div>
+
+    <!-- ================= LOGOUT ================= -->
+    <div class="cafe-bottom-menu">
+        <a th:href="@{/logout}" class="cafe-menu-item logout-item">
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Log out</span>
+        </a>
+    </div>
+</div>
+</body>
+</html>
