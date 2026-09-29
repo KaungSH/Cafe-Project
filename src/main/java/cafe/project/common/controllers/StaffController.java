@@ -27,7 +27,7 @@ public class StaffController {
 	@GetMapping("/discounts")
 	public String discountList(Model model, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-		model.addAttribute("discounts", discountService.getAllDiscounts(ldto.getBranch_id()));
+		model.addAttribute("discounts", discountService.getAllDiscountsActive(ldto.getBranch_id()));
 		return "discount/list-admin-staff";
 	}
 

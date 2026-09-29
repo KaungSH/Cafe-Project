@@ -55,13 +55,9 @@ public class DiscountProductRepository {
 	}
 
 	public int save(DiscountProduct dp) {
-		if(exists(dp.getDiscount_id(), dp.getProduct_id())) {
 			String sql = "INSERT INTO discounts_products (discount_id, product_id) VALUES (?, ?);";
 	
 			return jdbcTemplate.update(sql, dp.getDiscount_id(), dp.getProduct_id());
-		}
-		
-		return 0;
 	}
 
 	public int remove(String discount_id, String product_id) {

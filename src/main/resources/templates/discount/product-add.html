@@ -208,12 +208,12 @@ select:focus {
 
 			<h1>New Discount Product</h1>
 
-			<a th:href="@{/manager/discounts}" class="close-button"> × </a>
+			<a th:href="@{/manager-only/discounts}" class="close-button"> × </a>
 
 		</div>
 
 
-		<form th:action="@{/manager/discounts/discountProducts/add}"
+		<form th:action="@{/manager-only/discounts/discountProducts/add}"
 			th:object="${discountProduct}" method="post">
 
 			<div class="form-body">
@@ -258,7 +258,7 @@ select:focus {
 
 			<div class="form-footer">
 
-				<a th:href="@{/manager/discounts}" class="cancel-button"> Cancel
+				<a th:href="@{/manager-only/discounts}" class="cancel-button"> Cancel
 				</a>
 
 				<button type="submit" class="save-button">Create</button>

@@ -59,7 +59,7 @@
 								<th>Value</th>
 								
 								<th>Duration</th>
-								<th>Status</th>
+								<th th:if="${session.loggedInUser != null and session.loggedInUser.employee_role == 'ADMIN'}">Status</th>
 								<th>Created By</th>
 								<th class="text-end pe-4">Actions</th>
 
@@ -90,7 +90,8 @@
 										class="bi bi-calendar-check me-1"></i><span
 										th:text="${discount.enddate}">2026-09-30</span>
 								</small></td>
-								<td><span th:if="${discount.is_active == true}"
+								<td th:if="${session.loggedInUser != null and session.loggedInUser.employee_role == 'ADMIN'}">
+								<span th:if="${discount.is_active == true}"
 									class="badge bg-success">Active</span> <span
 									th:if="${discount.is_active== false}" class="badge bg-danger">Inactive</span>
 								</td>
