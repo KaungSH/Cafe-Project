@@ -58,4 +58,12 @@ public class PayMethodService {
 	public void deletePayMethod(String methodId) {
 		payMethodRepository.softDelete(methodId);
 	}
+
+	public List<PayMethodDto> findDeleted() {
+		return this.payMethodRepository.deletedList();
+	}
+
+	public int restore(String methodId) {
+		return this.payMethodRepository.restore(methodId);
+	}
 }
