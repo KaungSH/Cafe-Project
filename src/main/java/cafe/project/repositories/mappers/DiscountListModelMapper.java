@@ -30,6 +30,7 @@ public class DiscountListModelMapper implements RowMapper<DiscountListModel> {
 		model.setPromo_type_name(rs.getString("promo_type_name"));
 		model.setAudience_type_name(rs.getString("audience_type_name"));
 		model.setEname(rs.getString("employee_name"));
+		model.setBranch_name(rs.getString("branch_name"));
 
 		return model;
 	}

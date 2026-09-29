@@ -1,172 +1,113 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <body>
-
 <div th:fragment="sidebar_admin" class="cafe-sidebar admin-sidebar">
 
     <!-- ================= BRAND ================= -->
-
     <div class="cafe-brand">
-
         <div class="cafe-brand-icon admin-icon">
             <i class="bi bi-cup-hot-fill"></i>
         </div>
-
         <div>
-
             <div class="cafe-brand-name">
                 Café <span>Shop</span>
             </div>
-
             <div class="cafe-role">
                 <i class="bi bi-shield-lock-fill"></i>
                 ADMIN
             </div>
-
         </div>
-
     </div>
 
-
     <!-- ================= MENU ================= -->
-
     <div class="cafe-menu">
-
         <a th:href="@{/}" class="cafe-menu-item">
             <i class="bi bi-house"></i>
             <span>Home</span>
         </a>
-
-
         <a th:href="@{/manager/employee}" class="cafe-menu-item">
             <i class="bi bi-people"></i>
             <span>Employees</span>
         </a>
-
-
         <a th:href="@{/manager/daily-registers/all}" class="cafe-menu-item">
             <i class="bi bi-calendar-check"></i>
             <span>Daily Registers</span>
         </a>
-
-
         <a th:href="@{/manager/ingredientBatch}" class="cafe-menu-item">
             <i class="bi bi-box-seam"></i>
             <span>Ingredient Batch</span>
         </a>
-
-
         <a th:href="@{/categories}" class="cafe-menu-item">
             <i class="bi bi-tags"></i>
             <span>Product Categories</span>
         </a>
-
-
         <a th:href="@{/units}" class="cafe-menu-item">
             <i class="bi bi-rulers"></i>
             <span>Units</span>
         </a>
-
-
         <a th:href="@{/manager/products}" class="cafe-menu-item">
             <i class="bi bi-cup-hot"></i>
             <span>Products List</span>
         </a>
-
-
         <a th:href="@{/manager/supplier}" class="cafe-menu-item">
             <i class="bi bi-truck"></i>
             <span>Suppliers</span>
         </a>
-
-
         <a th:href="@{/staff/ingredientType}" class="cafe-menu-item">
             <i class="bi bi-list-check"></i>
             <span>Ingredient Types</span>
         </a>
-
-
         <a th:href="@{/manager/WasteLogs}" class="cafe-menu-item">
             <i class="bi bi-trash"></i>
             <span>Waste Logs</span>
         </a>
-
-
         <a th:href="@{/manager/wastereasons}" class="cafe-menu-item">
             <i class="bi bi-exclamation-circle"></i>
             <span>Waste Reasons</span>
         </a>
-
-
         <a th:href="@{/manager/paymethod}" class="cafe-menu-item">
             <i class="bi bi-credit-card"></i>
             <span>Pay Methods</span>
         </a>
-
-
         <a th:href="@{/manager/stock_imports}" class="cafe-menu-item">
             <i class="bi bi-box-arrow-in-down"></i>
             <span>Stock Imports</span>
         </a>
-
-
         <a th:href="@{/orders}" class="cafe-menu-item">
             <i class="bi bi-bag"></i>
             <span>Orders</span>
         </a>
-
-
         <a th:href="@{/payments}" class="cafe-menu-item">
             <i class="bi bi-cash-stack"></i>
             <span>Payments</span>
         </a>
-
-
         <a th:href="@{/manager/discounts}" class="cafe-menu-item">
             <i class="bi bi-percent"></i>
             <span>Discounts</span>
         </a>
-
-
         <a th:href="@{/manager/expensecategory}" class="cafe-menu-item">
             <i class="bi bi-folder"></i>
             <span>Expense Categories</span>
         </a>
-
-
         <a th:href="@{/manager/expense}" class="cafe-menu-item">
             <i class="bi bi-wallet2"></i>
             <span>Expenses</span>
         </a>
-
-
         <a th:href="@{/manager/branches}" class="cafe-menu-item">
             <i class="bi bi-building"></i>
             <span>Branches</span>
         </a>
-
     </div>
-
 
     <div class="cafe-divider"></div>
 
-
     <!-- LOGOUT -->
-
     <div class="cafe-bottom-menu">
-
         <a th:href="@{/logout}" class="cafe-menu-item logout-item">
-
             <i class="bi bi-box-arrow-right"></i>
-
             <span>Log out</span>
-
         </a>
-
     </div>
-
 </div>
-
 </body>
 </html>

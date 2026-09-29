@@ -203,8 +203,15 @@ body {
 		<!-- Buttons -->
 		<div class="mt-4 d-flex gap-2 justify-content-end">
 
-			<a th:href="@{/manager/daily-registers}"
-			   class="btn btn-cancel">
+			<a th:href="@{/manager-only/daily-registers/all}"
+			   class="btn btn-cancel" th:if="${session.loggedInUser != null and session.loggedInUser.employee_role == 'MANAGER'}">
+
+				<i class="fa-solid fa-xmark me-1"></i>Cancel
+
+			</a>
+			
+			<a th:href="@{/}"
+			   class="btn btn-cancel" th:if="${session.loggedInUser != null and session.loggedInUser.employee_role == 'STAFF'}">
 
 				<i class="fa-solid fa-xmark me-1"></i>Cancel
 

@@ -75,21 +75,16 @@ button {
 
 	<div class="form-box">
 
-		<h1>Add Category</h1>
+		<h2>Add Product Category For Branch - <span class="display-field" th:text="${branch}"> Branch Name</span> </h2> 
 
-		<form th:action="@{/categories/add}" th:object="${category}"
+		<form th:action="@{/manager-only/categories/add}" th:object="${category}"
 			method="post">
 
 			<label>Category Name</label> <input type="text" th:field="*{name}"
 				placeholder="Enter category name" required> <label>Description</label>
 
 			<textarea th:field="*{description}" placeholder="Enter description"></textarea>
-			<label>Branch</label> <select class="from-control"
-				th:field="*{branch_id}">
-				<option value="">-- Select Branch --</option>
-				<option th:each="branch : ${branches}"
-					th:value="${branch.branch_id}" th:text="${branch.name}"></option>
-			</select> <label> <input type="checkbox" th:field="*{is_active}">
+			<label> <input type="checkbox" th:field="*{is_active}">
 				Active
 			</label>
 
@@ -97,7 +92,7 @@ button {
 
 				<button type="submit">Save Category</button>
 
-				<a href="/categories" class="cancel"> Cancel </a>
+				<a href="/manager-only/categories" class="cancel"> Cancel </a>
 
 			</div>
 

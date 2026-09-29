@@ -29,8 +29,12 @@ public class CategoryService {
                 .toList();
     }
     
-    public List<Category> findAllByRelation(){
-    	return repo.findAllByRelation();
+    public List<Category> findAllByRelation(String branch_id){
+    	return repo.findAllByRelation(branch_id);
+    }
+    
+    public List<Category> findAllByRelationAdmin(){
+    	return repo.findAllByRelationAdmin();
     }
 
     public CategoryDto findById(String id) {
@@ -59,8 +63,8 @@ public class CategoryService {
         return repo.delete(id);
     }
     
-    public List<CategoryDto> deletedList(){
-    	return this.repo.findDeletedAll().stream().map(this::toDto).toList();			
+    public List<CategoryDto> deletedList(String branch_id){
+    	return this.repo.findDeletedAll(branch_id).stream().map(this::toDto).toList();			
     }
     
     public int restore(String id) {

@@ -2,7 +2,6 @@ package cafe.project.services;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-
 import cafe.project.employeemanagement.models.ChangePasswordDto;
 import cafe.project.employeemanagement.models.ChangeProfileDto;
 import cafe.project.employeemanagement.services.PasswordService;
@@ -34,6 +33,22 @@ public class EmployeeService {
 		return employeeRepository.findAllEmployeeListDto();
 	}
 
+	public List<EmployeeListDto> getDeletedEmployeeListDto() {
+		return employeeRepository.findDeletedEmployeeListDto();
+	}
+
+	public List<EmployeeListDto> getEmployeesByStatus(String statusId) {
+		return employeeRepository.findByStatus(statusId);
+	}
+
+	public List<EmployeeListDto> getEmployeesByRole(String roleId) {
+		return employeeRepository.findByRole(roleId);
+	}
+
+	public List<EmployeeListDto> getEmployeesByBranch(String branchId) {
+		return employeeRepository.findByBranch(branchId);
+	}
+
 	public Employee getEmployeeById(String id) {
 		return employeeRepository.findById(id);
 	}
@@ -49,8 +64,16 @@ public class EmployeeService {
 		employeeRepository.updateEmployee(dto);
 	}
 
-	public void deleteEmployee(String id) {
-		employeeRepository.delete(id);
+	public void softDeleteEmployee(String id) {
+		employeeRepository.softDelete(id);
+	}
+
+	public void recoverEmployee(String id) {
+		employeeRepository.recover(id);
+	}
+
+	public void hardDeleteEmployee(String id) {
+		employeeRepository.hardDelete(id);
 	}
 
 	public int changePassword(ChangePasswordDto cpdto) {
@@ -64,9 +87,8 @@ public class EmployeeService {
 	}
 
 	public int changeStatus(String id, String statusId) {
-		if (employeeRepository.findById(id) == null) {
+		if (employeeRepository.findById(id) == null)
 			return 0;
-		}
 		return employeeRepository.changeStatus(id, statusId);
 	}
 
