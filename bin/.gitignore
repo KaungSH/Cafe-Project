@@ -1,5 +1,0 @@
-# Maven build output
-target/
-
-# Java compiled files
-*.class
