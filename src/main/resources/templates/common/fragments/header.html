@@ -1,88 +1,46 @@
 <!DOCTYPE html>
+
 <html xmlns:th="http://www.thymeleaf.org">
 
+<body>
+
 <div th:fragment="header">
-	 <nav class="navbar navbar-expand-lg bg-secondary navbar-info">
 
-        <div class="container">
-			
-            <a class="navbar-brand"
-               th:href="@{/}">
-               <img th:src="@{/favicon.ico}" alt="Favicon" style="width: 32px; height: 32px;" class = "shadow-lg" />
-                Café Луфт
-            </a>
+    <nav class="navbar navbar-light bg-white border-bottom px-4"
+         style="height: 65px;">
 
-            <button class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarContent">
+        <div class="container-fluid">
 
-                <span class="navbar-toggler-icon"></span>
+            <span class="navbar-brand fw-bold">
+                ☕ Cafe Shop
+            </span>
 
-            </button>
+            <div th:if="${session.loggedInUser != null}">
 
-            <div class="collapse navbar-collapse"
-                 id="navbarContent">
+                <span class="me-3">
 
-                <ul class="navbar-nav ms-auto">
-                
-                    <li class="nav-item" th:if = "${session.loggedInUser.employee_role == 'STAFF'}">
-                        <a class="nav-link"
-                           th:href="@{/staff/products}">
-                            Menu
-                        </a>
-                    </li>
-                    
-                    <li class="nav-item" th:if = "${session.loggedInUser.employee_role == 'MANAGER' || session.loggedInUser.employee_role == 'ADMIN'}">
-                        <a class="nav-link"
-                           th:href="@{/manager/products}">
-                            Products
-                        </a>
-                    </li>
+                    <i class="bi bi-person-circle"></i>
 
-                    <li class="nav-item" th:if = "${session.loggedInUser == null}">
-                        <a class="nav-link"
-                           th:href="@{/signup}">
-                            SignUp
-                        </a>
-                    </li>
-                    
-                    <li class="nav-item" th:if = "${session.loggedInUser != null}">
-                   	<a class="nav-link"
-                           th:href="@{/signup}">
-                            AddAcc
-                    </a>
-                    </li>
-                    
-                     <li class="nav-item" th:if = "${session.loggedInUser == null}">
-                        <a class="nav-link"
-                           th:href="@{/login}">
-                            Log In
-                        </a>
-                    </li>
-                    
-                     <li class="nav-item" th:if = "${session.loggedInUser != null}">
-                        <a class="nav-link"
-                           th:href="@{/logout}" onclick="return confirm('Are you sure you want to log out?');">
-                           Log Out
-                        </a>
-                    </li>
+                    <span
+                        th:text="${session.loggedInUser.employee_name}">
+                        User
+                    </span>
 
-					<li class="nav-item" th:if = "${session.loggedInUser != null}">
-                        <a class="nav-link"
-                           th:href="@{/pedit}">
-                           <strong th:text="${session.loggedInUser.employee_name}"></strong>
-                           <strong th:text="${session.loggedInUser.employee_role}"></strong>
-                            
-				    		
-                        </a>
-                        
-                    </li>
+                </span>
 
-                </ul>
+                <span class="badge bg-warning text-dark"
+                      th:text="${session.loggedInUser.employee_role}">
+                    STAFF
+                </span>
 
             </div>
+
         </div>
 
     </nav>
+
 </div>
+
+</body>
+
+</html>

@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Discount Management</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+
+	<div class="container my-4">
+		<div class="d-flex justify-content-between align-items-center mb-4">
+			<div>
+				<h3 class="fw-bold mb-0">Discount & Promotions</h3>
+				<p class="text-muted small">Manage store discount rates and
+					audience targeting</p>
+			</div>
+			<a th:href="@{/manager/discounts/create}" class="btn btn-primary"> <i
+				class="bi bi-plus-circle me-1"></i> Add New Discount
+			</a>
+		</div>
+
+		<div class="card border-0 shadow-sm">
+			<div class="card-body p-0">
+				<div class="table-responsive">
+					<table class="table table-hover align-middle mb-0">
+						<thead class="table-dark">
+							<tr>
+								<th>Discount Name</th>
+								<th>Promo Type</th>
+								<th>Audience</th>
+								<th>Value</th>
+								<th>Duration</th>
+								<th>Status</th>
+								<th>Created By</th>
+								<th class="text-end pe-4">Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:if="${#lists.isEmpty(discounts)}">
+								<td colspan="8" class="text-center py-4 text-muted">No
+									discounts available. Click 'Add New Discount' to create one.</td>
+							</tr>
+							<tr th:each="discount : ${discounts}">
+								<td><strong th:text="${discount.name}">Summer Sale</strong>
+									<br th:if="${discount.description != null}"> <small
+									class="text-muted" th:text="${discount.description}">Description</small>
+								</td>
+								<td><span class="badge bg-info text-dark"
+									th:text="${discount.promo_type_name}">Promo</span></td>
+								<td><span class="badge bg-secondary"
+									th:text="${discount.audience_type_name}">Audience</span></td>
+								<td><span class="fw-bold text-success"
+									th:text="${discount.discount_value}">10.00</span></td>
+								<td><small> <i class="bi bi-calendar3 me-1"></i><span
+										th:text="${discount.startdate}">2026-09-01</span> <br> <i
+										class="bi bi-calendar-check me-1"></i><span
+										th:text="${discount.enddate}">2026-09-30</span>
+								</small></td>
+								<td><span th:if="${discount.is_active == 1}"
+									class="badge bg-success">Active</span> <span
+									th:if="${discount.is_active== 0}" class="badge bg-danger">Inactive</span>
+								</td>
+								<td><small
+									th:text="${discount.ename != null ? discount.ename : 'N/A'}">Employee</small>
+								</td>
+								<td class="text-end pe-4"><a
+									th:href="@{/manager/discounts/edit/{id}(id=${discount.discount_id})}"
+									class="btn btn-sm btn-outline-warning me-1"> <i
+										class="bi bi-pencil-square"></i> Edit
+								</a> <a
+									th:href="@{/manager/discounts/delete/{id}(id=${discount.discount_id})}"
+									class="btn btn-sm btn-outline-danger"
+									onclick="return confirm('Are you sure you want to delete this discount?');">
+										<i class="bi bi-trash"></i>
+								</a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

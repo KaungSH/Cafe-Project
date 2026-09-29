@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Unit</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+        }
+
+        .container {
+            width: 500px;
+            margin: 70px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 11px;
+            margin-bottom: 18px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        button,
+        .cancel {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button {
+            background: #198754;
+            color: white;
+        }
+
+        .cancel {
+            background: #6c757d;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Edit Unit</h2>
+
+    <form th:action="@{/units/edit/{id}(id=${unit.unit_id})}"
+          th:object="${unit}"
+          method="post">
+
+        <input type="hidden" th:field="*{unit_id}">
+
+        <label>Unit Name</label>
+        <input type="text"
+               th:field="*{name}"
+               placeholder="Example: Kilogram"
+               required>
+
+        <label>Abbreviation</label>
+        <input type="text"
+               th:field="*{abbreviation}"
+               placeholder="Example: kg"
+               required>
+
+        <div class="buttons">
+            <button type="submit">Update</button>
+
+            <a th:href="@{/units}" class="cancel">
+                Cancel
+            </a>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

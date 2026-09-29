@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel = "stylesheet" th:href = "@{/css/bootstrap.min.css}">
+<head>
+<meta charset="UTF-8">
+<title>Login</title>
+<style>
+        .error {
+            color: red;
+            font-size: 0.950rem;
+        }
+        
+</style>
+</head>
+<div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-7">
+                <div class="card shadow-sm">
+                
+                    <div class="card-header bg-secondary text-white">
+                        <h2 class="mb-0">Log In</h2>
+                    </div>
+
+                    <div class="card-body p-4">
+
+                        <form method="post" th:action="@{/login}" th:object="${user}" enctype="multipart/form-data">
+                        <div class = "error" th:text = "${error}"></div>
+
+                            <!-- Email -->
+                            <div class="mb-4">
+                                <label for="email" class="form-label fw-semibold">
+                                    Enter Email
+                                </label>
+                                <input type="text" id="email" class="form-control" th:field="*{email}" placeholder="Enter Email" required>
+                            </div>
+                            
+                            <!-- Password -->
+                            <div class="mb-4">
+                                <label for="password" class="form-label fw-semibold">
+                                    Enter Password
+                                </label>
+                                <input type="password" id="password" class="form-control" th:field="*{password}" placeholder="Enter Password" required>
+                            </div>
+                            
+                            <!-- Branch -->
+                            <div class="mb-4">
+
+                                <label for="branch" class="form-label fw-semibold">
+                                    Current Branch
+                                </label>
+
+                                <select id="branch" class="form-select" th:field="*{branch_id}">
+                                    <option value="0" disabled>
+                                        --- Select Your Current Branch ---
+                                    </option>
+                                    <option th:if="${b.branch_id != 'deleted'}" th:each="b : ${branches}" th:value="${b.branch_id}" th:text="${b.name}"></option>
+                                </select>
+                            </div>
+                            
+                            <!-- Buttons -->
+                            <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+
+                                <a th:href="@{/}" class="btn btn-outline-secondary">
+                                    Cancel
+                                </a>
+                                <button type="submit"
+                                        class="btn btn-secondary">
+                                    Login
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+	<!-- Bootstrap JavaScript -->
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+
+    <!-- Image Preview -->
+    <script>
+        document.getElementById("coverImg").addEventListener("change", function(event) {
+
+            const file = event.target.files[0];
+            const preview = document.getElementById("coverPreview");
+
+            if (file) {
+                preview.src = URL.createObjectURL(file);
+                preview.style.display = "block";
+            } else {
+                preview.src = "";
+                preview.style.display = "none";
+            }
+        });
+    </script>
+</div>
+</html>

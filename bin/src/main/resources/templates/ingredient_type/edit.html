@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Edit Ingredient Type</title>
+
+<style>
+body {
+	margin: 0;
+	padding: 30px;
+	font-family: Arial, sans-serif;
+	background-color: #faf7f2;
+	color: #5b4636;
+}
+
+h2 {
+	color: #3f2d20;
+	font-size: 32px;
+	margin-bottom: 30px;
+}
+
+form {
+	width: 500px;
+	background-color: #fcf9f4;
+	padding: 30px;
+	border: 1px solid #eadbc9;
+	border-radius: 14px;
+}
+
+label {
+	font-size: 16px;
+	font-weight: bold;
+	color: #6f5844;
+}
+
+input, textarea, select {
+	width: 100%;
+	box-sizing: border-box;
+	margin-top: 8px;
+	padding: 12px;
+	border: 1px solid #dfcbb5;
+	border-radius: 8px;
+	background-color: white;
+	font-size: 15px;
+	color: #5b4636;
+}
+
+textarea {
+	height: 100px;
+	resize: vertical;
+}
+
+input:focus, textarea:focus, select:focus {
+	outline: none;
+	border-color: #95612e;
+}
+
+button {
+	background-color: #95612e;
+	color: white;
+	border: none;
+	padding: 12px 22px;
+	border-radius: 8px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+button:hover {
+	background-color: #75491f;
+}
+
+a {
+	color: #95612e;
+	margin-left: 12px;
+	font-weight: bold;
+}
+
+span {
+	color: red;
+}
+</style>
+
+</head>
+
+<body>
+
+	<h2>Edit Ingredient Type</h2>
+
+	<form
+		th:action="@{/staff/ingredientType/edit/{id}(id=${ingredientForm.ingredientTypeId})}"
+		th:object="${ingredientForm}" method="post">
+
+		<!-- Keep ID, but don't show it -->
+		<input type="hidden" th:field="*{ingredientTypeId}" />
+
+
+		<div>
+
+			<label for="name">Name:</label><br /> <input type="text" id="name"
+				th:field="*{name}" /> <span th:if="${#fields.hasErrors('name')}"
+				th:errors="*{name}"> </span>
+
+		</div>
+
+		<br />
+
+
+		<div>
+
+			<label for="description">Description:</label><br />
+
+			<textarea id="description" th:field="*{description}">
+            </textarea>
+
+		</div>
+
+		<br />
+
+
+		<div>
+
+			<label for="unitId">Unit:</label><br /> <select id="unitId"
+				th:field="*{unitId}">
+
+				<option value="">-- Select Unit --</option>
+
+				<option th:each="u : ${units}" th:value="${u.unit_id}"
+					th:text="${u.name}"></option>
+
+			</select> <span th:if="${#fields.hasErrors('unitId')}" th:errors="*{unitId}">
+			</span>
+
+		</div>
+
+		<br />
+
+
+		<button type="submit">Update</button>
+
+		<a th:href="@{/staff/ingredientType}"> Cancel </a>
+
+	</form>
+
+</body>
+
+</html>

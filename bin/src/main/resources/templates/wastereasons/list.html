@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate = "~{common/layout}">
+<head>
+<meta charset="UTF-8">
+<title>Waste Reasons List - Manager</title>
+</head>
+<div layout:fragment = "content">
+	<h2>Waste Reasons List</h2>
+	<a th:href = "@{/manager/wastereasons/add}">Add Reason</a>
+	<table class = "table table-bordered table-striped">
+		<thead>
+			<tr>
+				<th>No.</th>
+				
+				<th>Reason Name</th>
+
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="r,state:${reasons}" style = "height : 200px">
+				<td th:text = "${state.count}"></td>
+				
+				<td th:text = "${r.reason_name}"></td>
+				
+				<td>
+					<a th:href = "@{/manager/wastereasons/edit/{id}(id = ${r.waste_reason_id})}">Edit Reason</a>
+					<a th:href = "@{/manager/wastereasons/delete/{id}(id = ${r.waste_reason_id})}" onclick="return confirm('Are you sure you want to delete this?');">Delete Reason</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate = "~{common/layout}">
+<head>
+<meta charset="UTF-8">
+<title>Add Types - Manager</title>
+</head>
+<div layout:fragment = "content">
+	<h2>Add <span th:text = "${dname}"></span> Type Form</h2>
+	<form method = "post" th:action = "@{/manager/types/add}" th:object = "${type}">
+	<input type = "hidden" name="name" th:value = "${name}"/>
+	
+		<div>
+			<label> Name : </label>
+			<input th:if = "${name == 'audience'}" type = "text" th:field = "${type.audience_type_name}" required>
+			<input th:if = "${name == 'promo'}" type = "text" th:field = "${type.promo_type_name}" required>
+		</div>
+		
+		<input type = "submit" value = "Add Type">
+	</form>
+	<form method = "get" th:action = "@{/manager/types/{type}(type = ${name})}">
+			<input type = "submit" value = "Cancel"/>
+	</form>
+</div>
+</html>
