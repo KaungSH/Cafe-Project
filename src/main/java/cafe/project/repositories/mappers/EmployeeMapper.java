@@ -3,6 +3,7 @@ package cafe.project.repositories.mappers;
 import org.springframework.jdbc.core.RowMapper;
 
 import cafe.project.models.EmployeeListDto;
+import cafe.project.models.Gender;
 import cafe.project.repositories.entities.Employee;
 
 public class EmployeeMapper {
@@ -19,11 +20,12 @@ public class EmployeeMapper {
 		emp.setSalary(rs.getBigDecimal("salary"));
 		emp.setAddress(rs.getString("address"));
 		emp.setDob(rs.getDate("dob") != null ? rs.getDate("dob").toLocalDate() : null);
-		emp.setGender_id(rs.getString("gender_id"));
+		emp.setGender(rs.getString("gender") != null ? Gender.valueOf(rs.getString("gender")) : null);
 		emp.setEmployee_role_id(rs.getString("employee_role_id"));
 		emp.setBranch_id(rs.getString("branch_id"));
 		emp.setCreated_at(
 				rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null);
+		emp.setIs_deleted(rs.getBoolean("is_deleted"));
 		return emp;
 	};
 
@@ -38,7 +40,7 @@ public class EmployeeMapper {
 		dto.setDob(rs.getDate("dob") != null ? rs.getDate("dob").toLocalDate() : null);
 		dto.setPhotopath(rs.getString("photopath"));
 		dto.setESname(rs.getString("status_name"));
-		dto.setGender_name(rs.getString("gender_name"));
+		dto.setGender(rs.getString("gender") != null ? Gender.valueOf(rs.getString("gender")) : null);
 		dto.setRole_name(rs.getString("role_name"));
 		dto.setBranch_name(rs.getString("branch_name"));
 		return dto;
