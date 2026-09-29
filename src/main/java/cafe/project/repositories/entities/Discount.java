@@ -18,12 +18,13 @@ public class Discount {
 	    private LocalDateTime created_at;
 	    private String promo_type_id;
 	    private String audience_type_id;
+	    private String branches_branch_id;
 
 	    public Discount() {}
 	    public Discount(String discount_id,String employee_id, String name,String description,
 	    		 BigDecimal discount_value,LocalDate startdate,LocalDate enddate,Boolean isedited,
 	    		 Boolean is_active,Boolean isdeleted,LocalDateTime created_at,String promo_type_id,
-	    		 String audience_type_id) {
+	    		 String audience_type_id,String branches_branch_id) {
 	    	this.discount_id=discount_id;
 	    	this.employee_id=employee_id;
 	    	this.name=name;
@@ -37,6 +38,7 @@ public class Discount {
 	    	this.created_at=created_at;
 	    	this.promo_type_id=promo_type_id;
 	    	this.audience_type_id=audience_type_id;
+	    	this.branches_branch_id=branches_branch_id;
 	    	}
 		public String getDiscount_id() {
 			return discount_id;
@@ -116,7 +118,12 @@ public class Discount {
 		public void setAudience_type_id(String audience_type_id) {
 			this.audience_type_id = audience_type_id;
 		}
-	    
+		public String getBranches_branch_id() {
+			return branches_branch_id;
+		}
+		public void setBranches_branch_id(String branches_branch_id) {
+			this.branches_branch_id = branches_branch_id;
+		}
 	    
 }
 	

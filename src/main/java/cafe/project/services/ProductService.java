@@ -31,6 +31,10 @@ public class ProductService {
 		return prepo.findListAllByTypeId3(type_id).stream().map(this::toListModel2).toList();
 	}
 	
+	public List<ProductListModel> findListAllByDiscountId(String discountId) {
+		return prepo.findListAllByDiscount(discountId).stream().map(this::toListModel2).toList();
+	}
+	
 	public List<ProductListModel> findDeletedAll() {
 		return prepo.findDeletedAll().stream().map(this::toListModel).toList();
 	}

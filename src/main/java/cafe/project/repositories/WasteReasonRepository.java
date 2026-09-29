@@ -44,6 +44,7 @@ public class WasteReasonRepository {
 			return jdbcTemplate.update("DELETE FROM waste_reasons WHERE waste_reason_id = ?", id);
 	}
 	
+	
 	private int setWasteLogs(String id) {
 			return jdbcTemplate.update("UPDATE waste_logs SET waste_reason_id = 'deleted' WHERE waste_reason_id = ?", id);
 	}

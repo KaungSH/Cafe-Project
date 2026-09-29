@@ -22,20 +22,24 @@ public class DailyRegisterService {
 		this.repository = repository;
 	}
 
-	public List<DailyRegisterListDto> getAllRegisters() {
-		return repository.findAllDto();
+	public List<DailyRegisterListDto> getAllRegisters(String branch_id) {
+		return repository.findAllDto(branch_id);
 	}
 	
-	public List<DailyRegisterListDto> getAllOpened() {
-		return repository.findAllOpened();
+	public List<DailyRegisterListDto> getAllRegistersAdmin() {
+		return repository.findAllDtoAdmin();
 	}
 	
-	public List<DailyRegisterListDto> getAllClosed() {
-		return repository.findAllClosed();
+	public List<DailyRegisterListDto> getAllOpened(String branch_id) {
+		return repository.findAllOpened(branch_id);
 	}
 	
-	public List<DailyRegisterListDto> getAllDeleted() {
-		return repository.findAllDeleted();
+	public List<DailyRegisterListDto> getAllClosed(String branch_id) {
+		return repository.findAllClosed(branch_id);
+	}
+	
+	public List<DailyRegisterListDto> getAllDeleted(String branch_id) {
+		return repository.findAllDeleted(branch_id);
 	}
 
 	public DailyRegisterEntryDto getRegisterEntryDtoById(String register_id) {
@@ -55,6 +59,44 @@ public class DailyRegisterService {
 	
 	public DailyRegisterEntryDto getRegisterEntryDtoByDate(LocalDate date, String employee_id) {
 		DailyRegister entity = repository.findByDate(date, employee_id);
+		
+		if(entity == null) {
+			return null;
+		}
+
+		DailyRegisterEntryDto dto = new DailyRegisterEntryDto();
+		dto.setRegister_id(entity.getRegister_id());
+		dto.setBranch_id(entity.getBranch_id());
+		dto.setEmployee_id(entity.getEmployee_id());
+		dto.setRegister_status_id(entity.getRegister_status_id());
+		dto.setDate(entity.getDate());
+		dto.setOpened_at(entity.getOpened_at());
+		dto.setClosed_at(entity.getClosed_at());
+
+		return dto;
+	}
+	
+	public DailyRegisterEntryDto getRegisterEntryDtoByDateOpened(LocalDate date, String employee_id) {
+		DailyRegister entity = repository.findByDateOpened(date, employee_id);
+		
+		if(entity == null) {
+			return null;
+		}
+
+		DailyRegisterEntryDto dto = new DailyRegisterEntryDto();
+		dto.setRegister_id(entity.getRegister_id());
+		dto.setBranch_id(entity.getBranch_id());
+		dto.setEmployee_id(entity.getEmployee_id());
+		dto.setRegister_status_id(entity.getRegister_status_id());
+		dto.setDate(entity.getDate());
+		dto.setOpened_at(entity.getOpened_at());
+		dto.setClosed_at(entity.getClosed_at());
+
+		return dto;
+	}
+	
+	public DailyRegisterEntryDto getRegisterEntryDtoByDateClosed(LocalDate date, String employee_id) {
+		DailyRegister entity = repository.findByDateClosed(date, employee_id);
 		
 		if(entity == null) {
 			return null;

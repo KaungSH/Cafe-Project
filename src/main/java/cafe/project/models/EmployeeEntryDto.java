@@ -46,7 +46,7 @@ public class EmployeeEntryDto {
 	private LocalDate dob;
 
 	@NotNull(message = "Gender is required")
-	private String gender;
+	private Gender gender;
 
 	@NotBlank(message = "Employee status is required")
 	private String employee_status_id;
@@ -61,7 +61,7 @@ public class EmployeeEntryDto {
 	}
 
 	public EmployeeEntryDto(String employee_id, String name, String email, String password, String photopath,
-			String phone, BigDecimal salary, String address, LocalDate dob, String gender, String employee_status_id,
+			String phone, BigDecimal salary, String address, LocalDate dob, Gender gender, String employee_status_id,
 			String employee_role_id, String branch_id) {
 		this.employee_id = employee_id;
 		this.name = name;
@@ -114,7 +114,7 @@ public class EmployeeEntryDto {
 		return dob;
 	}
 
-	public String getGender() {
+	public Gender getGender() {
 		return gender;
 	}
 
@@ -166,7 +166,7 @@ public class EmployeeEntryDto {
 		this.dob = dob;
 	}
 
-	public void setGender(String gender) {
+	public void setGender(Gender gender) {
 		this.gender = gender;
 	}
 
