@@ -208,29 +208,25 @@ select:focus {
 
 			<h1>New Discount Product</h1>
 
-			<a th:href="@{/discountProducts}" class="close-button"> × </a>
+			<a th:href="@{/manager/discounts}" class="close-button"> × </a>
 
 		</div>
 
 
-		<form th:action="@{/discountProducts/add}"
+		<form th:action="@{/manager/discounts/discountProducts/add}"
 			th:object="${discountProduct}" method="post">
-
 
 			<div class="form-body">
 
 				<div class="form-group">
 
-					<label for="discount"> Discount </label> <select id="discount"
-						th:field="*{discount_id}" required>
-
-						<option value="">Select discount</option>
-
-						<option th:each="discount : ${discounts}"
-							th:value="${discount.discount_id}" th:text="${discount.name}">
-						</option>
-
-					</select>
+					<label for="discount"> Discount </label> 
+					<div class="display-field"
+						th:text="${discount.name}">
+						Discount Name
+					</div>
+					<input type = "hidden" id="discount"
+						name="discount_id" th:value="${discount.discount_id}">
 
 				</div>
 
@@ -243,8 +239,8 @@ select:focus {
 						<div class="product-item" th:each="product : ${products}">
 
 							<input type="checkbox" name="product_ids"
-								th:value="${product.product_id}"> <span
-								class="product-name" th:text="${product.type_name}">
+								th:value="${product.product_id}" th:checked="${existingProductIds.contains(product.product_id)}"> <span
+								class="product-name" th:text="${product.type_name + ' (' + product.size_code + ')'}">
 								Product Name </span>
 
 						</div>
@@ -262,7 +258,7 @@ select:focus {
 
 			<div class="form-footer">
 
-				<a th:href="@{/discountProducts}" class="cancel-button"> Cancel
+				<a th:href="@{/manager/discounts}" class="cancel-button"> Cancel
 				</a>
 
 				<button type="submit" class="save-button">Create</button>

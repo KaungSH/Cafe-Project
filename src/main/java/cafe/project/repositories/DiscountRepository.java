@@ -43,16 +43,16 @@ public class DiscountRepository {
 		return jdbcTemplate.update(sql, id);
 	}
 
-	public List<DiscountListModel> DeletedList() {
+	public List<DiscountListModel> DeletedList(String branch_id) {
 		String sql = "SELECT d.discount_id, d.name AS discount_name, d.description, d.discount_value, \r\n"
 				+ "d.startdate, d.enddate, d.is_active, pt.type_name AS promo_type_name, \r\n"
 				+ "at.type_name AS audience_type_name, e.name AS employee_name, b.name AS branch_name FROM discounts d \r\n"
 				+ "JOIN promo_types pt ON d.promo_type_id = pt.promo_type_id \r\n"
 				+ "JOIN audience_types at ON d.audience_type_id = at.audience_type_id \r\n"
 				+ "LEFT JOIN employees e ON d.employee_id = e.employee_id \r\n"
-				+ "LEFT JOIN branches b ON  d.branches_branch_id = b.branch_id WHERE d.isdeleted = 1 \r\n"
+				+ "LEFT JOIN branches b ON  d.branches_branch_id = b.branch_id WHERE d.isdeleted = 1 AND d.branches_branch_id = ? \r\n"
 				+ "ORDER BY d.created_at DESC";
-		return jdbcTemplate.query(sql, new DiscountListModelResultSetExtractor());
+		return jdbcTemplate.query(sql, new DiscountListModelResultSetExtractor(), branch_id);
 	}
 
 	public int restore(String id) {
@@ -71,7 +71,19 @@ public class DiscountRepository {
 		return (results != null && !results.isEmpty()) ? Optional.of(results.get(0)) : Optional.empty();
 	}
 
-	public List<DiscountListModel> findAllForList() {
+	public List<DiscountListModel> findAllForList(String branch_id) {
+		String sql = "SELECT d.discount_id, d.name AS discount_name, d.description, d.discount_value, \r\n"
+				+ "d.startdate, d.enddate, d.is_active, pt.type_name AS promo_type_name, \r\n"
+				+ "at.type_name AS audience_type_name, e.name AS employee_name, b.name AS branch_name FROM discounts d \r\n"
+				+ "JOIN promo_types pt ON d.promo_type_id = pt.promo_type_id \r\n"
+				+ "JOIN audience_types at ON d.audience_type_id = at.audience_type_id \r\n"
+				+ "LEFT JOIN employees e ON d.employee_id = e.employee_id \r\n"
+				+ "LEFT JOIN branches b ON  d.branches_branch_id = b.branch_id WHERE d.isdeleted = 0 AND d.branches_branch_id = ? \r\n"
+				+ "ORDER BY d.created_at DESC";
+		return jdbcTemplate.query(sql, new DiscountListModelResultSetExtractor(), branch_id);
+	}
+	
+	public List<DiscountListModel> findAllForListAdmin() {
 		String sql = "SELECT d.discount_id, d.name AS discount_name, d.description, d.discount_value, \r\n"
 				+ "d.startdate, d.enddate, d.is_active, pt.type_name AS promo_type_name, \r\n"
 				+ "at.type_name AS audience_type_name, e.name AS employee_name, b.name AS branch_name FROM discounts d \r\n"
@@ -81,5 +93,18 @@ public class DiscountRepository {
 				+ "LEFT JOIN branches b ON  d.branches_branch_id = b.branch_id WHERE d.isdeleted = 0 \r\n"
 				+ "ORDER BY d.created_at DESC";
 		return jdbcTemplate.query(sql, new DiscountListModelResultSetExtractor());
+	}
+	
+	public DiscountListModel findAllForListById(String id) {
+		String sql = "SELECT d.discount_id, d.name AS discount_name, d.description, d.discount_value, \r\n"
+				+ "d.startdate, d.enddate, d.is_active, pt.type_name AS promo_type_name, \r\n"
+				+ "at.type_name AS audience_type_name, e.name AS employee_name, b.name AS branch_name FROM discounts d \r\n"
+				+ "JOIN promo_types pt ON d.promo_type_id = pt.promo_type_id \r\n"
+				+ "JOIN audience_types at ON d.audience_type_id = at.audience_type_id \r\n"
+				+ "LEFT JOIN employees e ON d.employee_id = e.employee_id \r\n"
+				+ "LEFT JOIN branches b ON  d.branches_branch_id = b.branch_id WHERE d.isdeleted = 0 AND d.discount_id = ? \r\n"
+				+ "ORDER BY d.created_at DESC";
+		List<DiscountListModel> entities = jdbcTemplate.query(sql, new DiscountListModelResultSetExtractor(), id);
+		return entities.isEmpty()?null:entities.get(0);
 	}
 }

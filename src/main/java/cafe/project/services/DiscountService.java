@@ -14,13 +14,35 @@ import java.util.UUID;
 public class DiscountService {
 
 	private final DiscountRepository discountRepository;
+	private final ProductService productService;
 
-	public DiscountService(DiscountRepository discountRepository) {
+	public DiscountService(DiscountRepository discountRepository, ProductService productService) {
 		this.discountRepository = discountRepository;
+		this.productService = productService;
 	}
 
-	public List<DiscountListModel> getAllDiscounts() {
-		return discountRepository.findAllForList();
+	public List<DiscountListModel> getAllDiscounts(String branch_id) {
+		List<DiscountListModel> modelList = discountRepository.findAllForList(branch_id);
+		
+		for (DiscountListModel m : modelList) {
+			m.setProducts(productService.findListAllByDiscountId(m.getDiscount_id()));
+		}
+		return modelList;
+	}
+	
+	public List<DiscountListModel> getAllDiscountsAdmin() {
+		List<DiscountListModel> modelList = discountRepository.findAllForListAdmin();
+		
+		for (DiscountListModel m : modelList) {
+			m.setProducts(productService.findListAllByDiscountId(m.getDiscount_id()));
+		}
+		return modelList;
+	}
+	
+	public DiscountListModel getAllDiscountsById(String id) {
+		DiscountListModel listModel = discountRepository.findAllForListById(id);
+		listModel.setProducts(productService.findListAllByDiscountId(listModel.getDiscount_id()));
+		return listModel;
 	}
 
 	public DiscountEntryModel getDiscountById(String id) {
@@ -81,8 +103,8 @@ public class DiscountService {
 		discountRepository.softDelete(id);
 	}
 
-	public List<DiscountListModel> DeletedList() {
-		return discountRepository.DeletedList();
+	public List<DiscountListModel> DeletedList(String branch_id) {
+		return discountRepository.DeletedList(branch_id);
 	}
 
 	public int restore(String id) {

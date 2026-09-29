@@ -17,7 +17,7 @@
 			<div>
 				<h3 class="fw-bold mb-0">Deleted list</h3>
 
-				<a th:href="@{/manager/discounts}" class="btn btn-primary">Back
+				<a th:href="@{/manager-only/discounts}" class="btn btn-primary">Back
 					to Discount List </a>
 
 			</div>
@@ -72,13 +72,13 @@
 									th:text="${discount.ename != null ? discount.ename : 'N/A'}">Employee</small>
 								</td>
 								<td class="text-end pe-4"><form
-										th:action="@{/manager/discounts/restore}" method="post">
+										th:action="@{/manager-only/discounts/restore}" method="post">
 										<input type="hidden" name="id"
 											th:value="${discount.discount_id}">
 
 										<button type="submit">Restore</button>
 									</form>
-									<form th:action="@{/manager/discounts/real-delete}"
+									<form th:action="@{/manager-only/discounts/real-delete}"
 										method="post" style="display: inline;"
 										onsubmit="return confirm('Are you sure you want to delete this discount?');">
 

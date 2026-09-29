@@ -40,9 +40,9 @@ public class DiscountProductService {
 		}
 	}
 
-	public int deleteByDiscountId(String discount_id) {
+	public int remove(String discount_id, String product_id) {
 
-		return repo.deleteByDiscountId(discount_id);
+		return repo.remove(discount_id, product_id);
 	}
 
 	private DiscountProductDto toDto(DiscountProduct entity) {
