@@ -14,51 +14,51 @@ import cafe.project.repositories.entities.WasteReason;
 @Controller
 @RequestMapping("/manager/wastereasons")
 public class WasteReasonsController {
-	
+
 	private WasteReasonRepository repo;
-	
+
 	public WasteReasonsController(WasteReasonRepository repo) {
 		this.repo = repo;
 	}
-	
+
 	@GetMapping
-	public String getPromoTypes(Model model) {
+	public String getReason(Model model) {
 		model.addAttribute("reasons", repo.findReasonsAll());
-		return "YatiWinLatt/manager/wastereasons/list";
+		return "/wastereasons/list";
 	}
-	
+
 	@GetMapping("/add")
-	public String addTypes(Model model) {
+	public String addReason(Model model) {
 		model.addAttribute("reason", new WasteReason());
-		return "YatiWinLatt/manager/wastereasons/add";
+		return "/wastereasons/add";
 	}
-	
+
 	@PostMapping("/add")
-	public String addTypes(@ModelAttribute WasteReason reason,  Model model) {
-			repo.addReason(reason.getReason_name());
-			return "redirect:/manager/wastereasons";
+	public String addReason(@ModelAttribute WasteReason reason, Model model) {
+		repo.addReason(reason.getReason_name());
+		return "redirect:/manager/wastereasons";
 	}
-	
+
 	@GetMapping("/edit/{id}")
-	public String editTypes(@PathVariable String id, Model model) {
+	public String editReason(@PathVariable String id, Model model) {
 		System.out.println(repo.findReasonById(id).getReason_name());
 		System.out.println(id);
 		model.addAttribute("reason", repo.findReasonById(id));
-		return "YatiWinLatt/manager/wastereasons/edit";
+		return "/wastereasons/edit";
 	}
-	
+
 	@PostMapping("/edit")
-	public String editTypes(@ModelAttribute WasteReason reason, Model model) {
+	public String editReason(@ModelAttribute WasteReason reason, Model model) {
 		System.out.println(reason.getReason_name());
 		System.out.println(reason.getWaste_reason_id());
 		repo.editReason(reason.getWaste_reason_id(), reason.getReason_name());
 		return "redirect:/manager/wastereasons";
 	}
-	
+
 	@GetMapping("/delete/{id}")
-	public String deleteTypes(@PathVariable String id, Model model) {
+	public String deleteReason(@PathVariable String id) {
 		repo.deleteReason(id);
 		return "redirect:/manager/wastereasons";
 	}
-	
+
 }

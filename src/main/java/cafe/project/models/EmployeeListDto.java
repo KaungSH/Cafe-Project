@@ -12,7 +12,7 @@ public class EmployeeListDto {
 	private String address;
 	private LocalDate dob;
 	private String photopath;
-	private String gender_name;
+	private Gender gender;
 
 	private String ESname;
 	private String role_name;
@@ -22,7 +22,7 @@ public class EmployeeListDto {
 	}
 
 	public EmployeeListDto(String employee_id, String name, String email, String phone, BigDecimal salary,
-			String address, LocalDate dob, String photopath, String gender_name, String ESname, String role_name,
+			String address, LocalDate dob, String photopath, Gender gender, String ESname, String role_name,
 			String branch_name) {
 		this.employee_id = employee_id;
 		this.name = name;
@@ -32,7 +32,7 @@ public class EmployeeListDto {
 		this.address = address;
 		this.dob = dob;
 		this.photopath = photopath;
-		this.gender_name = gender_name;
+		this.gender= gender;
 		this.ESname = ESname;
 		this.role_name = role_name;
 		this.branch_name = branch_name;
@@ -71,12 +71,13 @@ public class EmployeeListDto {
 	}
 	
 
-	public String getGender_name() {
-		return gender_name;
+
+	public Gender getGender() {
+		return gender;
 	}
 
-	public void setGender_name(String gender_name) {
-		this.gender_name = gender_name;
+	public void setGender(Gender gender) {
+		this.gender = gender;
 	}
 
 	public String getESname() {
