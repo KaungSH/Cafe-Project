@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import cafe.project.models.OrderDetailsDto;
 import cafe.project.repositories.OrderDetailsRepository;
 import cafe.project.repositories.entities.OrderDetails;
 
@@ -31,18 +32,35 @@ public class OrderDetailsService {
 		return orderDetailsRepository.findByOrderId(orderId);
 	}
 
+	// Get Order IDs
+	public List<String> findOrderIds() {
+		return orderDetailsRepository.findOrderIds();
+	}
+
 	// Add order detail
-	public int save(OrderDetails orderDetail) {
-		return orderDetailsRepository.save(orderDetail);
+	public void save(OrderDetailsDto dto) {
+
+		for (OrderDetails orderDetail : dto.getOrderDetails()) {
+
+			orderDetailsRepository.save(orderDetail);
+		}
 	}
 
 	// Update order detail
-	public int edit(String id, OrderDetails orderDetail) {
-		return orderDetailsRepository.edit(id, orderDetail);
+	public void edit(OrderDetailsDto dto) {
+
+		for (OrderDetails orderDetail : dto.getOrderDetails()) {
+
+			orderDetailsRepository.edit(orderDetail.getOrder_detail_id(), orderDetail);
+		}
 	}
 
 	// Delete order detail
-	public int delete(String id) {
-		return orderDetailsRepository.delete(id);
+	public void delete(OrderDetailsDto dto) {
+
+		for (OrderDetails orderDetail : dto.getOrderDetails()) {
+
+			orderDetailsRepository.delete(orderDetail.getOrder_detail_id());
+		}
 	}
 }

@@ -8,104 +8,87 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import cafe.project.repositories.entities.OrderDetails;
+import cafe.project.models.OrderDetailsDto;
 import cafe.project.services.OrderDetailsService;
+import cafe.project.services.ProductService;
 
 @Controller
 @RequestMapping("/order-details")
 public class OrderDetailsController {
 
 	private final OrderDetailsService orderDetailsService;
+	private final ProductService productService;
 
-	public OrderDetailsController(OrderDetailsService orderDetailsService) {
+	public OrderDetailsController(OrderDetailsService orderDetailsService, ProductService productService) {
 
 		this.orderDetailsService = orderDetailsService;
+		this.productService = productService;
 	}
 
-	
 	// LIST
-	
 	@GetMapping
-	public String index(Model model) {
+	public String list(Model model) {
 
-		model.addAttribute(
-				"orderDetails",
-				orderDetailsService.findAll());
+		model.addAttribute("orderDetails", orderDetailsService.findAll());
 
-		return "order-details/index";
+		return "orderdetails/list";
 	}
 
-	
 	// ADD FORM
-	
 	@GetMapping("/add")
 	public String add(Model model) {
 
-		model.addAttribute(
-				"orderDetail",
-				new OrderDetails());
+		model.addAttribute("orderDetailsDto", new OrderDetailsDto());
 
-		return "order-details/add";
+		model.addAttribute("orders", orderDetailsService.findOrderIds());
+
+		model.addAttribute("products", productService.findAll());
+
+		return "orderdetails/add";
 	}
 
-	
-	// SAVE
-	
-	@PostMapping("/add")
-	public String save(
-			@ModelAttribute("orderDetail")
-			OrderDetails orderDetail) {
+	// INSERT - LIST
+	@PostMapping("/save")
+	public String save(@ModelAttribute("orderDetailsDto") OrderDetailsDto dto) {
 
-		orderDetailsService.save(orderDetail);
+		orderDetailsService.save(dto);
 
 		return "redirect:/order-details";
 	}
 
-	// =========================
 	// EDIT FORM
-	// =========================
 	@GetMapping("/edit/{id}")
-	public String edit(
-			@PathVariable String id,
-			Model model) {
+	public String edit(@PathVariable("id") String id, Model model) {
 
-		OrderDetails existingOrderDetail =
-				orderDetailsService.findById(id);
+		model.addAttribute("orderDetail", orderDetailsService.findById(id));
 
-		if (existingOrderDetail != null) {
+		return "orderdetails/edit";
+	}
 
-			model.addAttribute(
-					"orderDetail",
-					existingOrderDetail);
+	// UPDATE - LIST
+	@PostMapping("/update")
+	public String update(@ModelAttribute("orderDetailsDto") OrderDetailsDto dto) {
 
-			return "order-details/edit";
-		}
+		orderDetailsService.edit(dto);
 
 		return "redirect:/order-details";
 	}
 
-	
-	// UPDATE
-	
-	@PostMapping("/edit/{id}")
-	public String update(
-			@PathVariable String id,
-			@ModelAttribute("orderDetail")
-			OrderDetails orderDetail) {
+	// DELETE - LIST
+	@PostMapping("/delete")
+	public String delete(@ModelAttribute("orderDetailsDto") OrderDetailsDto dto) {
 
-		orderDetailsService.edit(id, orderDetail);
+		orderDetailsService.delete(dto);
 
 		return "redirect:/order-details";
 	}
 
-	
-	// DELETE
-	
-	@GetMapping("/delete/{id}")
-	public String delete(@PathVariable String id) {
+	// LIST BY ORDER ID
+	@GetMapping("/order/{orderId}")
+	public String findByOrderId(@PathVariable("orderId") String orderId, Model model) {
 
-		orderDetailsService.delete(id);
+		model.addAttribute("orderDetails", orderDetailsService.findByOrderId(orderId));
 
-		return "redirect:/order-details";
+		return "orderdetails/list";
 	}
 }
