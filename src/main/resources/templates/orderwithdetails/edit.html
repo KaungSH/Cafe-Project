@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
@@ -13,6 +12,7 @@
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
 	rel="stylesheet">
+
 
 <style>
 body {
@@ -36,7 +36,11 @@ body {
 	font-weight: 500;
 }
 
-.table th, .table td {
+.table th {
+	vertical-align: middle;
+}
+
+.table td {
 	vertical-align: middle;
 }
 </style>
@@ -65,74 +69,7 @@ body {
 
 			<div class="card shadow-sm mb-4">
 
-
-				<div class="card-header bg-primary text-white">Order
-					Information</div>
-
-
-				<div class="card-body">
-
-					<div class="row">
-
-
-						<div class="col-md-6 mb-3">
-
-							<label class="form-label"> Order ID </label> <input type="text"
-								class="form-control" th:value="${order.order_id}" readonly>
-
-						</div>
-
-						<div class="col-md-6 mb-3">
-
-							<label class="form-label"> Employee </label> <input type="text"
-								class="form-control" th:value="${order.employee_name}" readonly>
-
-						</div>
-
-						<div class="col-md-6 mb-3">
-
-							<label class="form-label"> Branch </label> <input type="text"
-								class="form-control" th:value="${order.branch_name}" readonly>
-
-						</div>
-
-						<div class="col-md-6 mb-3">
-
-							<label class="form-label"> Received Time </label> <input
-								type="datetime-local" name="received_time" class="form-control"
-								th:value="${order.received_time != null ? #temporals.format(order.received_time, 'yyyy-MM-dd''T''HH:mm') : ''}">
-
-						</div>
-
-						<div class="col-md-6 mb-3">
-
-							<label class="form-label"> Total Amount </label> <input
-								type="number" name="total_amount" class="form-control"
-								step="0.01" min="0" th:value="${order.total_amount}">
-
-						</div>
-
-						<div class="col-md-6 mb-3">
-
-							<label class="form-label"> Token Number </label> <input
-								type="number" name="token_number" class="form-control"
-								th:value="${order.token_number}">
-
-						</div>
-
-
-					</div>
-
-				</div>
-
-			</div>
-
-
-			<div class="card shadow-sm mb-4">
-
-
 				<div class="card-header bg-success text-white">Order Details</div>
-
 
 				<div class="card-body">
 
@@ -148,13 +85,13 @@ body {
 
 									<th style="width: 5%;">No.</th>
 
-									<th style="width: 30%;">Product</th>
+									<th style="width: 35%;">Product</th>
 
 									<th style="width: 20%;">Quantity</th>
 
 									<th style="width: 30%;">Remark</th>
 
-									<th style="width: 15%;">Action</th>
+									<th style="width: 10%;">Action</th>
 
 								</tr>
 
@@ -175,26 +112,30 @@ body {
 										th:name="'orderDetails[' + ${stat.index} + '].product_id'"
 										class="form-select product-select" required>
 
+
 											<option value="">-- Select Product --</option>
 
 
 											<option th:each="product : ${products}"
 												th:value="${product.product_id}"
-												th:text="${product.type_name}"
+												th:text="${product.type_name + ' - ' + product.price}"
+												th:attr="data-price=${product.price}"
 												th:selected="${product.product_id == detail.product_id}">
 
 											</option>
+
 
 									</select></td>
 
 									<td><input type="number"
 										th:name="'orderDetails[' + ${stat.index} + '].quantity'"
-										class="form-control" min="1" th:value="${detail.quantity}"
-										required></td>
+										class="form-control quantity-input" min="1"
+										th:value="${detail.quantity}" required></td>
 
 									<td><input type="text"
 										th:name="'orderDetails[' + ${stat.index} + '].remark'"
-										class="form-control" th:value="${detail.remark}"></td>
+										class="form-control" placeholder="Remark"
+										th:value="${detail.remark}"></td>
 
 									<td class="text-center">
 
@@ -205,22 +146,16 @@ body {
 
 
 								</tr>
-								
-								<tr th:if="${#lists.isEmpty(orderDetailsDto.orderDetails)}">
-
-									<td colspan="5" class="text-center text-muted">No order
-										details found.</td>
-
-								</tr>
 
 
 							</tbody>
+
 
 						</table>
 
 
 					</div>
-					
+
 					<button type="button" class="btn btn-success"
 						onclick="addProduct()">+ Add Product</button>
 
@@ -229,13 +164,45 @@ body {
 
 			</div>
 
-			<div class="d-flex justify-content-end gap-2 mb-5">
+			<div class="card shadow-sm mb-4">
 
+				<div class="card-body">
+
+
+					<div class="row">
+
+
+						<div class="col-md-8"></div>
+
+
+						<div class="col-md-4">
+
+
+							<label class="form-label fw-bold"> Total Amount </label>
+
+							<input type="text" id="totalAmountDisplay"
+								class="form-control form-control-lg fw-bold"
+								th:value="${order.total_amount}" readonly>
+
+							<input type="hidden" name="total_amount" id="totalAmount"
+								th:value="${order.total_amount}">
+
+
+						</div>
+
+
+					</div>
+
+
+				</div>
+
+			</div>
+
+			<div class="d-flex justify-content-end gap-2">
 
 				<a th:href="@{/order-with-details}" class="btn btn-secondary">
 
 					Cancel </a>
-
 
 				<button type="submit" class="btn btn-primary">Update Order
 
@@ -247,9 +214,65 @@ body {
 
 		</form>
 
+
 	</div>
 
 	<script>
+
+		function calculateTotal() {
+
+			let total = 0;
+
+			const rows = document.querySelectorAll("#orderDetailsTable tr");
+
+			rows
+					.forEach(function(row) {
+
+						const product = row.querySelector(".product-select");
+
+						const quantity = row.querySelector(".quantity-input");
+
+						if (product && quantity) {
+
+							const selectedOption = product.options[product.selectedIndex];
+
+							const price = parseFloat(selectedOption
+									.getAttribute("data-price")) || 0;
+
+							const qty = parseInt(quantity.value) || 0;
+
+							total = total + (price * qty);
+
+						}
+
+					});
+
+			document.getElementById("totalAmountDisplay").value = total
+					.toFixed(2);
+
+			document.getElementById("totalAmount").value = total.toFixed(2);
+
+		}
+
+		document.addEventListener("change", function(event) {
+
+			if (event.target.classList.contains("product-select")) {
+
+				calculateTotal();
+
+			}
+
+		});
+
+		document.addEventListener("input", function(event) {
+
+			if (event.target.classList.contains("quantity-input")) {
+
+				calculateTotal();
+
+			}
+
+		});
 
 		function addProduct() {
 
@@ -258,10 +281,17 @@ body {
 			const firstSelect = document.querySelector(".product-select");
 
 			const row = document.createElement("tr");
-
 			const numberCell = document.createElement("td");
 
 			numberCell.className = "text-center";
+
+			numberCell.innerText = table.rows.length + 1;
+
+			const hiddenId = document.createElement("input");
+
+			hiddenId.type = "hidden";
+
+			hiddenId.value = "";
 
 			const productCell = document.createElement("td");
 
@@ -277,14 +307,15 @@ body {
 
 			quantityInput.type = "number";
 
-			quantityInput.className = "form-control";
+			quantityInput.className = "form-control quantity-input";
 
 			quantityInput.min = "1";
+
+			quantityInput.value = "1";
 
 			quantityInput.required = true;
 
 			quantityCell.appendChild(quantityInput);
-
 
 			const remarkCell = document.createElement("td");
 
@@ -320,6 +351,8 @@ body {
 
 			row.appendChild(numberCell);
 
+			row.appendChild(hiddenId);
+
 			row.appendChild(productCell);
 
 			row.appendChild(quantityCell);
@@ -332,8 +365,9 @@ body {
 
 			updateIndexes();
 
-		}
+			calculateTotal();
 
+		}
 
 		function removeProduct(button) {
 
@@ -343,8 +377,9 @@ body {
 
 			updateIndexes();
 
-		}
+			calculateTotal();
 
+		}
 
 		function updateIndexes() {
 
@@ -352,35 +387,8 @@ body {
 
 			rows.forEach(function(row, index) {
 
+
 				row.cells[0].innerText = index + 1;
-
-				
-				const product = row.querySelector("select");
-
-				if (product) {
-
-					product.name = "orderDetails[" + index + "].product_id";
-
-				}
-
-
-				const quantity = row.querySelector("input[type='number']");
-
-				if (quantity) {
-
-					quantity.name = "orderDetails[" + index + "].quantity";
-
-				}
-
-
-				const remark = row.querySelector("input[type='text']");
-
-				if (remark) {
-
-					remark.name = "orderDetails[" + index + "].remark";
-
-				}
-
 
 				const detailId = row.querySelector("input[type='hidden']");
 
@@ -391,15 +399,41 @@ body {
 
 				}
 
+				const product = row.querySelector(".product-select");
+
+				if (product) {
+
+					product.name = "orderDetails[" + index + "].product_id";
+
+				}
+
+
+				const quantity = row.querySelector(".quantity-input");
+
+				if (quantity) {
+
+					quantity.name = "orderDetails[" + index + "].quantity";
+
+				}
+
+				const remark = row.querySelector("input[type='text']");
+
+				if (remark) {
+
+					remark.name = "orderDetails[" + index + "].remark";
+
+				}
+
 			});
 
 		}
-	</script>
 
 
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
-		
+		document.addEventListener("DOMContentLoaded", function() {
+
+			calculateTotal();
+
+		});
 	</script>
 
 

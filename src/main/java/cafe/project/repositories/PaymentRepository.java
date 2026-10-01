@@ -103,4 +103,14 @@ public class PaymentRepository {
 
         return jdbcTemplate.update(sql, id);
     }
+    
+    public int restore() {
+    	String sql = "";
+    	return 0;
+    }
+    
+    public int hardDelete() {
+    	String sql = "";
+    	return 0;
+    }
 }

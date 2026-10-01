@@ -1,5 +1,6 @@
 package cafe.project.repositories;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,13 +28,6 @@ public class OrderDetailsRepository {
 
 		return jdbcTemplate.query(sql, new OrderDetailsMapper());
 	}
-//
-//	public List<OrderDetails> findAllByRelation() {
-//
-//		String sql = "SELECT * FROM order_details";
-//
-//		return jdbcTemplate.query(sql, new OrderDetailsMapper());
-//	}
 
 	// GET BY ID
 	public OrderDetails findById(String id) {
@@ -70,6 +64,14 @@ public class OrderDetailsRepository {
 
 		return jdbcTemplate.update(sql, UUID.randomUUID().toString(), entity.getProduct_id(), entity.getOrder_id(),
 				entity.getQuantity(), entity.getRemark());
+	}
+
+	public BigDecimal calculateTotalAmount(String orderId) {
+
+		String sql = "SELECT COALESCE(SUM(p.price * od.quantity), 0) " + "FROM order_details od " + "JOIN products p "
+				+ "ON od.product_id = p.product_id " + "WHERE od.order_id = ?";
+
+		return jdbcTemplate.queryForObject(sql, BigDecimal.class, orderId);
 	}
 
 	// UPDATE

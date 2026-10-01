@@ -1,5 +1,6 @@
 package cafe.project.controllers;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -44,11 +45,21 @@ public class OrderDetailsController {
 	@GetMapping
 	public String list(Model model, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-		model.addAttribute("orders", ordersService.findAll());
+		model.addAttribute("orders", ordersService.findNotReceivedAll());
 
 		model.addAttribute("orderDetails", orderDetailsService.findAll());
 
 		return "orderwithdetails/list";
+	}
+
+	@GetMapping("/received-list")
+	public String receivedList(Model model) {
+
+		model.addAttribute("orders", ordersService.findReceivedAll());
+
+		model.addAttribute("orderDetails", orderDetailsService.findAll());
+
+		return "orderwithdetails/receivedlist";
 	}
 
 	@GetMapping("/add")
@@ -79,13 +90,11 @@ public class OrderDetailsController {
 		order.setEmployee_id(ldto.getEmployee_id());
 		order.setBranch_id(ldto.getBranch_id());
 
+		order.setReceived_time(null);
+
 		ordersService.save(order);
 
 		for (OrderDetails detail : dto.getOrderDetails()) {
-
-			System.out.println("Product ID = " + detail.getProduct_id());
-			System.out.println("Quantity = " + detail.getQuantity());
-			System.out.println("Remark = " + detail.getRemark());
 
 			if (detail.getProduct_id() == null || detail.getProduct_id().trim().isEmpty()) {
 
@@ -98,6 +107,18 @@ public class OrderDetailsController {
 		}
 
 		orderDetailsService.save(dto);
+
+		BigDecimal total = orderDetailsService.calculateTotalAmount(order.getOrder_id());
+
+		ordersService.updateTotalAmount(order.getOrder_id(), total);
+
+		return "redirect:/order-with-details";
+	}
+
+	@PostMapping("/received/{id}")
+	public String received(@PathVariable("id") String id) {
+
+		ordersService.setReceivedTime(id);
 
 		return "redirect:/order-with-details";
 	}

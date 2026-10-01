@@ -1,5 +1,6 @@
 package cafe.project.repositories;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,18 +19,22 @@ public class OrdersRepository {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	public List<Orders> findAll() {
+	public List<Orders> findNotReceivedAll() {
 
-		String sql = "SELECT o.*,\r\n" + "e.name AS employee_name, \r\n" + "b.name AS branch_name \r\n"
-				+ "FROM orders o \r\n" + "LEFT JOIN employees e ON o.employee_id = e.employee_id \r\n"
-				+ "LEFT JOIN branches b ON o.branch_id = b.branch_id \r\n" + "WHERE o.isdeleted = false";
+		String sql = "SELECT o.*, " + "e.name AS employee_name, " + "b.name AS branch_name " + "FROM orders o "
+				+ "LEFT JOIN employees e " + "ON o.employee_id = e.employee_id " + "LEFT JOIN branches b "
+				+ "ON o.branch_id = b.branch_id " + "WHERE o.isdeleted = false " + "AND o.received_time IS NULL "
+				+ "ORDER BY o.created_time DESC";
 
 		return jdbcTemplate.query(sql, new OrdersMapper());
 	}
 
-	public List<Orders> findAllByRelation() {
+	public List<Orders> findReceivedAll() {
 
-		String sql = "SELECT * FROM orders WHERE isdeleted = false";
+		String sql = "SELECT o.*, " + "e.name AS employee_name, " + "b.name AS branch_name " + "FROM orders o "
+				+ "LEFT JOIN employees e " + "ON o.employee_id = e.employee_id " + "LEFT JOIN branches b "
+				+ "ON o.branch_id = b.branch_id " + "WHERE o.isdeleted = false " + "AND o.received_time IS NOT NULL "
+				+ "ORDER BY o.received_time DESC";
 
 		return jdbcTemplate.query(sql, new OrdersMapper());
 	}
@@ -60,6 +65,15 @@ public class OrdersRepository {
 
 		entity.setCreated_time(java.time.LocalDateTime.now());
 
+		entity.setReceived_time(null);
+
+		String tokenSql = "SELECT COALESCE(MAX(token_number), 0) + 1 " + "FROM orders " + "WHERE branch_id = ? "
+				+ "AND DATE(created_time) = CURDATE() " + "AND isdeleted = 0";
+
+		Integer nextToken = jdbcTemplate.queryForObject(tokenSql, Integer.class, entity.getBranch_id());
+
+		entity.setToken_number(nextToken);
+
 		String sql = "INSERT INTO orders " + "(order_id, employee_id,branch_id, "
 				+ "created_time, received_time, isedited, isdeleted, total_amount, token_number) "
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -67,6 +81,19 @@ public class OrdersRepository {
 		return jdbcTemplate.update(sql, entity.getOrder_id(), entity.getEmployee_id(), entity.getBranch_id(),
 				entity.getCreated_time(), entity.getReceived_time(), entity.isIsedited(), entity.isIsdeleted(),
 				entity.getTotal_amount(), entity.getToken_number());
+	}
+
+	public int updateTotalAmoun(String Id, BigDecimal totalAmount) {
+		String sql = "UPDATE orders\r\n" + "SET total_amount = ? \r\n" + "WHERE order_id = ?";
+		return jdbcTemplate.update(sql, totalAmount, Id);
+	}
+
+	public int setReceivedTime(String orderId) {
+
+		String sql = "UPDATE orders " + "SET received_time = NOW() " + "WHERE order_id = ? "
+				+ "AND received_time IS NULL";
+
+		return jdbcTemplate.update(sql, orderId);
 	}
 
 	public int edit(String id, Orders entity) {
