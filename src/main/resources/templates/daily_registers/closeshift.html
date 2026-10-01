@@ -1,233 +1,197 @@
-
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Open Register - Luft Cafe</title>
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<title>Close Register - Luft Cafe</title>
+
+<!-- Bootstrap 5 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- FontAwesome (Icons) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
 :root {
-	--primary-color: #5C3D2E;
-	--accent-warm: #E0A96D;
-	--accent-hover: #C88E52;
-	--bg-main: #FAF7F2;
-	--card-bg: #FFFFFF;
-	--text-color: #2D2422;
+  --coffee-dark: #1b0b05;
+  --coffee-deep: #2b1209;
+  --coffee: #5a2d19;
+  --coffee-mid: #7b4425;
+  --caramel: #e59a55;
+  --cream: #fff1e3;
+  --muted: #dbc4b3;
 }
+* { box-sizing: border-box; }
+
+html, body { min-height: 100%; }
 
 body {
-	background-color: var(--bg-main);
-	color: var(--text-color);
-	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 34px 60px;
+  overflow-x: hidden;
+  color: var(--cream);
+  background: 
+    linear-gradient(180deg, rgba(10,5,3,.42), rgba(10,5,3,.74)),
+    url('/images/Close.png') no-repeat center center fixed;
+  background-size: cover;
 }
 
-.main-card {
-	background-color: var(--card-bg);
-	border: 1px solid #EAE3DC;
-	border-radius: 12px;
-	padding: 32px 40px;
-	box-shadow: 0 4px 15px rgba(92, 61, 46, 0.05);
-	margin-top: 30px;
-	margin-bottom: 30px;
+.register-glass-card {
+  width: 100%;
+  max-width: 500px;
+  background: rgba(27, 11, 5, 0.25); 
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(229, 154, 85, 0.3);
+  border-radius: 24px;
+  padding: 35px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+  color: var(--cream);
+  margin-right: 40px; 
 }
 
-.page-title {
-	color: var(--primary-color);
-	font-weight: 700;
-	font-size: 1.6rem;
+.register-logo-icon {
+  width: 65px;
+  height: 65px;
+  background: radial-gradient(circle, var(--coffee) 0%, var(--coffee-deep) 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px auto;
+  font-size: 26px;
+  color: var(--cream);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  border: 2px solid rgba(229, 154, 85, 0.3);
 }
 
-.form-label {
-	color: #4A3E3D;
-	font-size: 0.95rem;
+.register-title {
+  text-align: center;
+  font-weight: 700;
+  font-size: 26px;
+  margin-bottom: 5px;
+  color: var(--cream);
 }
 
-.form-control, .form-select {
-	padding: 10px 12px;
-	border-radius: 8px;
-	border: 1px solid #D6CECE;
+.register-subtitle {
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 25px;
 }
 
-.form-control:focus, .form-select:focus {
-	border-color: var(--primary-color);
-	box-shadow: 0 0 0 0.25rem rgba(92, 61, 46, 0.15);
+.register-info-group {
+  background: rgba(255, 241, 227, 0.04);
+  border: 1px solid rgba(229, 154, 85, 0.15);
+  border-radius: 12px;
+  padding: 12px 18px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.btn-submit {
-	background-color: var(--accent-warm);
-	color: #3E2723;
-	font-weight: 600;
-	border-radius: 8px;
-	padding: 9px 24px;
-	border: none;
-	transition: background-color 0.2s;
+.register-info-label {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 500;
 }
 
-.btn-submit:hover {
-	background-color: var(--accent-hover);
-	color: #2C1A14;
+.register-info-value {
+  font-size: 14px;
+  color: var(--cream);
+  font-weight: 600;
 }
 
-.btn-cancel {
-	background-color: #EFEBE9;
-	color: #5D4037;
-	border: 1px solid #D7CCC8;
-	border-radius: 8px;
-	padding: 9px 24px;
-	text-decoration: none;
-	font-weight: 600;
-	display: inline-block;
-	transition: all 0.2s;
+.btn-caramel-custom {
+  width: 100%;
+  background: var(--caramel);
+  border: none;
+  padding: 12px;
+  border-radius: 12px;
+  color: var(--coffee-dark);
+  font-weight: 700;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  margin-top: 15px;
+  box-shadow: 0 4px 15px rgba(229, 154, 85, 0.3);
 }
 
-.btn-cancel:hover {
-	background-color: #D7CCC8;
-	color: #3E2723;
+.btn-caramel-custom:hover {
+  background: #f0a762;
+  color: var(--coffee-deep);
 }
 </style>
 </head>
 
 <body>
 
-<div class="container py-4" style="max-width: 650px;">
+<div class="register-glass-card">
+    <!-- Logo Icon -->
+    <div class="register-logo-icon">
+        <i class="fa-solid fa-cash-register"></i>
+    </div>
 
-<div class="main-card">
+    <h3 class="register-title">Close Daily Register</h3>
+    <p class="register-subtitle">Manage your daily shift and operations securely</p>
 
-	<h3 class="page-title mb-4">
-		<i class="fa-solid fa-cash-register me-2"></i>Open Daily Register
-	</h3>
+    <form th:action="@{/closeshift}" th:object="${registerDto}" method="post" novalidate>
+        <input type="hidden" th:field="*{register_id}" />
 
-	<form th:action="@{/closeshift}"
-		  th:object="${registerDto}"
-		  method="post"
-		  novalidate>
-	<input type="hidden" th:field="*{register_id}" />
+        <!-- Branch -->
+        <div class="register-info-group">
+            <span class="register-info-label"><i class="fa-solid fa-store me-2"></i>Branch</span>
+            <span class="register-info-value" th:text="${branch}">Branch Name</span>
+            <input type="hidden" th:field="*{branch_id}">
+        </div>
 
-		<!-- Branch: Display only -->
-		<div class="mb-3">
-			<label class="form-label fw-bold">
-				Branch
-			</label>
-			<div class="display-field"
-				 th:text="${branch}">
-				Branch Name
-			</div>
-			<input type="hidden"
-				   th:field="*{branch_id}">
-		</div>
+        <!-- Employee -->
+        <div class="register-info-group">
+            <span class="register-info-label"><i class="fa-solid fa-user-tie me-2"></i>Employee</span>
+            <span class="register-info-value" th:text="${employee}">Employee Name</span>
+            <input type="hidden" th:field="*{employee_id}">
+        </div>
 
+        <!-- Status -->
+        <div class="register-info-group">
+            <span class="register-info-label"><i class="fa-solid fa-circle-info me-2"></i>Status</span>
+            <span class="register-info-value text-danger" th:text="${status}">Status Name</span>
+            <input type="hidden" th:field="*{register_status_id}">
+        </div>
 
-		<!-- Employee: Display only -->
-		<div class="mb-3">
-			<label class="form-label fw-bold">
-				Employee
-			</label>
-			<div class="display-field"
-				 th:text="${employee}">
-				Employee Name
-			</div>
-			<input type="hidden"
-				   th:field="*{employee_id}">
-		</div>
+        <!-- Date -->
+        <div class="register-info-group">
+            <span class="register-info-label"><i class="fa-solid fa-calendar-days me-2"></i>Date</span>
+            <span class="register-info-value" th:text="${registerDto.date}">Date</span>
+            <input type="hidden" th:field="*{date}">
+        </div>
 
+        <!-- Open Time -->
+        <div class="register-info-group">
+            <span class="register-info-label"><i class="fa-solid fa-clock me-2"></i>Open time</span>
+            <span class="register-info-value" th:text="${registerDto.opened_at}">Time</span>
+            <input type="hidden" th:field="*{opened_at}">
+        </div>
 
-		<!-- Status: Display only -->
-		<div class="mb-3">
-			<label class="form-label fw-bold">
-				Status
-			</label>
-			<div class="display-field"
-				 th:text="${status}">
-				Status Name
-			</div>
-			<input type="hidden"
-				   th:field="*{register_status_id}">
-		</div>
+        <!-- Close Time -->
+        <div class="register-info-group">
+            <span class="register-info-label"><i class="fa-solid fa-business-time me-2"></i>Close time</span>
+            <span class="register-info-value" th:text="${registerDto.closed_at}">Time</span>
+            <input type="hidden" th:field="*{closed_at}">
+        </div>
 
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-caramel-custom">
+            <i class="fa-solid fa-floppy-disk me-2"></i>Save Register
+        </button>
 
-		<!-- Date: Display only -->
-		<div class="mb-3">
-
-			<label class="form-label fw-bold">
-				Date
-			</label>
-
-			<div class="display-field"
-				 th:text="${registerDto.date}">
-			</div>
-
-			<input type="hidden"
-				   th:field="*{date}">
-
-		</div>
-
-
-		<!-- Open time: Display only -->
-		<div class="mb-3">
-
-			<label class="form-label fw-bold">
-				Open time
-			</label>
-
-			<div class="display-field"
-				 th:text="${registerDto.opened_at}">
-			</div>
-
-			<input type="hidden"
-				   th:field="*{opened_at}">
-
-		</div>
-		
-		<!-- Close time: Display only -->
-		<div class="mb-3">
-
-			<label class="form-label fw-bold">
-				Close time
-			</label>
-
-			<div class="display-field"
-				 th:text="${registerDto.closed_at}">
-			</div>
-
-			<input type="hidden"
-				   th:field="*{closed_at}">
-
-		</div>
-
-
-		<!-- Buttons -->
-		<div class="mt-4 d-flex gap-2 justify-content-end">
-
-			<a th:href="@{/manager-only/daily-registers/all}"
-			   class="btn btn-cancel" th:if="${session.loggedInUser != null and session.loggedInUser.employee_role == 'MANAGER'}">
-
-				<i class="fa-solid fa-xmark me-1"></i>Cancel
-
-			</a>
-			
-			<a th:href="@{/}"
-			   class="btn btn-cancel" th:if="${session.loggedInUser != null and session.loggedInUser.employee_role == 'STAFF'}">
-
-				<i class="fa-solid fa-xmark me-1"></i>Cancel
-
-			</a>
-
-			<button type="submit" class="btn btn-submit">
-
-				<i class="fa-solid fa-floppy-disk me-1"></i>Save Register
-
-			</button>
-
-		</div>
-
-	</form>
-
-</div>
+    </form>
 </div>
 
 </body>

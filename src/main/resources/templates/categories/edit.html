@@ -1,10 +1,17 @@
-
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
+
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Edit Category</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Edit Category - Café Shop</title>
+
+<!-- Fonts & FontAwesome -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
 
 <style>
 * {
@@ -12,105 +19,240 @@
 }
 
 body {
-	margin: 0;
-	font-family: Arial, sans-serif;
-	background: #f4f6f9;
+	font-family: 'Plus Jakarta Sans', sans-serif;
+	background-color: #f8fafc;
+	color: #0f172a;
 }
 
-.container {
-	width: 500px;
-	margin: 70px auto;
-	background: white;
-	padding: 30px;
-	border-radius: 12px;
-	box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+.page-container {
+	padding: 24px 32px 48px;
+	max-width: 1100px;
+	margin: 0 auto;
 }
 
-h2 {
-	text-align: center;
-	margin-bottom: 25px;
-}
-
-label {
-	display: block;
-	margin-bottom: 8px;
-	font-weight: bold;
-}
-
-input, textarea {
-	width: 100%;
-	padding: 11px;
-	margin-bottom: 18px;
-	border: 1px solid #ccc;
-	border-radius: 6px;
-	font-size: 15px;
-}
-
-textarea {
-	height: 120px;
-	resize: vertical;
-}
-
-.buttons {
+.header-breadcrumb {
 	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 24px;
+	padding-bottom: 16px;
+	border-bottom: 1px solid #edf2f7;
+}
+
+.breadcrumb-tag {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 0.85rem;
+	color: #64748b;
+	text-decoration: none;
+	font-weight: 500;
+}
+.breadcrumb-tag:hover {
+	color: #c2410c;
+}
+
+.dashboard-card {
+	background: #ffffff;
+	border-radius: 20px;
+	border: 1px solid #edf2f7;
+	box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+	overflow: hidden;
+}
+
+.sub-panel {
+	background: #ffffff;
+	border: 1px solid #e2e8f0;
+	border-radius: 16px;
+	padding: 24px;
+	height: 100%;
+}
+
+.sub-panel-title {
+	font-size: 0.95rem;
+	font-weight: 700;
+	color: #0f172a;
+	margin-bottom: 18px;
+	display: flex;
+	align-items: center;
 	gap: 10px;
 }
+.sub-panel-title i {
+	color: #ea580c;
+}
 
-button, .cancel {
-	flex: 1;
-	padding: 12px;
-	border: none;
-	border-radius: 6px;
-	text-align: center;
+.form-label-caps {
+	display: block;
+	font-size: 0.72rem;
+	font-weight: 700;
+	color: #64748b;
+	letter-spacing: 0.5px;
+	text-transform: uppercase;
+	margin-bottom: 6px;
+}
+
+.input-rounded, .select-rounded {
+	width: 100%;
+	height: 44px;
+	border-radius: 12px;
+	border: 1px solid #e2e8f0;
+	padding: 8px 16px;
+	font-size: 0.88rem;
+	color: #1e293b;
+	background-color: #f8fafc;
+	outline: none;
+	transition: all 0.2s;
+}
+
+.input-rounded:focus, .select-rounded:focus {
+	border-color: #c2410c;
+	background-color: #ffffff;
+	box-shadow: 0 0 0 3px rgba(194, 65, 12, 0.1);
+}
+
+.textarea-rounded {
+	width: 100%;
+	border-radius: 12px;
+	border: 1px solid #e2e8f0;
+	padding: 12px 16px;
+	font-size: 0.88rem;
+	color: #1e293b;
+	background-color: #f8fafc;
+	outline: none;
+	resize: none;
+	transition: all 0.2s;
+}
+
+.textarea-rounded:focus {
+	border-color: #c2410c;
+	background-color: #ffffff;
+	box-shadow: 0 0 0 3px rgba(194, 65, 12, 0.1);
+}
+
+.footer-action-bar {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 12px;
+	padding: 20px 28px;
+	background: #fafafa;
+	border-top: 1px solid #edf2f7;
+}
+
+.btn-cancel-custom {
+	background: #ffffff;
+	border: 1px solid #e2e8f0;
+	color: #475569;
+	font-weight: 600;
+	font-size: 0.88rem;
+	border-radius: 10px;
+	padding: 9px 24px;
 	text-decoration: none;
+	transition: all 0.2s;
+}
+
+.btn-cancel-custom:hover {
+	background-color: #f1f5f9;
+	color: #0f172a;
+}
+
+.btn-save-custom {
+	background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+	color: #ffffff;
+	font-weight: 600;
+	font-size: 0.88rem;
+	border-radius: 10px;
+	padding: 10px 28px;
+	border: none;
 	cursor: pointer;
-	font-size: 15px;
+	box-shadow: 0 4px 12px rgba(194, 65, 12, 0.25);
+	transition: all 0.2s;
 }
 
-button {
-	background: #198754;
-	color: white;
-}
-
-.cancel {
-	background: #6c757d;
-	color: white;
+.btn-save-custom:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 6px 16px rgba(194, 65, 12, 0.35);
 }
 </style>
 </head>
 
 <body>
+	<div layout:fragment="content">
+		<div class="page-container">
 
-	<div class="container">
-
-		<h2>Edit Category</h2>
-
-		<form th:action="@{/manager-only/categories/edit}"
-			th:object="${category}" method="post">
-
-			<input type="hidden" th:field="*{category_id}"> <label>Category
-				Name</label> <input type="text" th:field="*{name}"
-				placeholder="Enter category name" required> <label>Description</label>
-			<textarea th:field="*{description}" placeholder="Enter description"></textarea>
-
-			<label>Branch</label> <select class="from-control"
-				th:field="*{branch_id}">
-				<option value="">-- Select Branch --</option>
-				<option th:each="branch : ${branches}"
-					th:value="${branch.branch_id}" th:text="${branch.name}">
-				</option>
-			</select>
-
-			<div class="buttons">
-				<button type="submit">Update</button>
-
-				<a th:href="@{/manager-only/categories}" class="cancel"> Cancel </a>
+			<!-- Header -->
+			<div class="header-breadcrumb">
+				<div>
+					<a th:href="@{/manager-only/categories}" class="breadcrumb-tag mb-1">
+						<i class="fa-solid fa-arrow-left"></i> Back to Categories
+					</a>
+					<h3 class="fw-bold text-dark mb-0">Edit Category</h3>
+				</div>
+				<a th:href="@{/manager-only/categories}" class="btn-cancel-custom py-1 px-3 small">
+					<i class="fa-solid fa-xmark me-1"></i> Close
+				</a>
 			</div>
 
-		</form>
+			<!-- Form Card -->
+			<div class="dashboard-card">
+				<form th:action="@{/manager-only/categories/edit}" th:object="${category}" method="post">
+					<input type="hidden" th:field="*{category_id}">
 
+					<div class="p-4 p-lg-5">
+						<div class="row g-4">
+							
+							<!-- Main Input Area -->
+							<div class="col-lg-7">
+								<div class="sub-panel">
+									<div class="sub-panel-title">
+										<i class="fa-solid fa-pen-to-square"></i> Update Information
+									</div>
+
+									<div class="mb-3">
+										<label class="form-label-caps" for="name">Category Name</label>
+										<input type="text" id="name" class="input-rounded" th:field="*{name}" placeholder="Enter category name" required>
+									</div>
+
+									<div class="mb-3">
+										<label class="form-label-caps" for="branch">Assigned Branch</label>
+										<select id="branch" class="select-rounded" th:field="*{branch_id}">
+											<option value="">-- Select Branch --</option>
+											<option th:each="branch : ${branches}" th:value="${branch.branch_id}" th:text="${branch.name}"></option>
+										</select>
+									</div>
+
+									<div class="mb-0">
+										<label class="form-label-caps" for="description">Description</label>
+										<textarea id="description" class="textarea-rounded" rows="4" th:field="*{description}" placeholder="Enter description..."></textarea>
+									</div>
+								</div>
+							</div>
+
+							<!-- Tips Panel -->
+							<div class="col-lg-5">
+								<div class="sub-panel bg-light">
+									<div class="sub-panel-title">
+										<i class="fa-solid fa-lightbulb"></i> Note
+									</div>
+									<p class="text-muted small">
+										Modifying the category name will automatically reflect on all linked coffee and tea products.
+									</p>
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+					<div class="footer-action-bar">
+						<a th:href="@{/manager-only/categories}" class="btn-cancel-custom">Cancel</a>
+						<button type="submit" class="btn-save-custom">
+							<i class="fa-solid fa-check me-1"></i> Update Category
+						</button>
+					</div>
+				</form>
+			</div>
+
+		</div>
 	</div>
-
 </body>
 </html>
-

@@ -1,400 +1,703 @@
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{common/layout}">
 
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Products Management - Café Shop</title>
 
-<title>Products List - Manager</title>
+<!-- Fonts & FontAwesome -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
 
 <style>
-.product-cover {
-	height: 180px;
-	width: 180px;
-	object-fit: cover;
-	border-radius: 8px;
+* {
+	box-sizing: border-box;
 }
 
-.detail-table th, .detail-table td {
+body {
+	font-family: 'Plus Jakarta Sans', sans-serif;
+	background-color: #f8fafc;
+	margin: 0;
+	color: #0f172a;
+}
+
+/* ================= Top Bar ================= */
+.top-navbar-wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 20px;
+	padding-bottom: 22px;
+	margin-bottom: 24px;
+	border-bottom: 1px solid #edf2f7;
+}
+
+.search-box-wrapper {
+	position: relative;
+	width: 100%;
+	max-width: 460px;
+}
+
+.search-box-wrapper input {
+	width: 100%;
+	height: 46px;
+	border-radius: 24px;
+	padding-left: 46px;
+	padding-right: 20px;
+	border: 1px solid #e2e8f0;
+	background-color: #ffffff;
+	font-size: 0.9rem;
+	transition: all 0.25s ease;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.search-box-wrapper input:focus {
+	border-color: #c2410c;
+	box-shadow: 0 0 0 3px rgba(194, 65, 12, 0.1);
+	background-color: #ffffff;
+	outline: none;
+}
+
+.search-box-wrapper .search-icon {
+	position: absolute;
+	left: 18px;
+	top: 50%;
+	transform: translateY(-50%);
+	color: #94a3b8;
+	font-size: 0.95rem;
+}
+
+.user-profile-wrapper {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+}
+
+.notif-bell {
+	position: relative;
+	width: 44px;
+	height: 44px;
+	border-radius: 12px;
+	background: #ffffff;
+	border: 1px solid #e2e8f0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #475569;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.notif-bell:hover {
+	background-color: #f8fafc;
+	color: #0f172a;
+}
+
+.notif-bell::after {
+	content: '';
+	position: absolute;
+	top: 11px;
+	right: 12px;
+	width: 8px;
+	height: 8px;
+	background-color: #ea580c;
+	border-radius: 50%;
+	border: 2px solid #ffffff;
+}
+
+/* ================= Profile Label with Click-to-Upload ================= */
+.profile-card-label {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	background: #ffffff;
+	padding: 6px 16px 6px 8px;
+	border-radius: 30px;
+	border: 1px solid #e2e8f0;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+	cursor: pointer;
+	user-select: none;
+	margin-bottom: 0;
+	transition: all 0.2s ease;
+}
+
+.profile-card-label:hover {
+	background-color: #f8fafc;
+	border-color: #cbd5e1;
+	transform: translateY(-1px);
+}
+
+.profile-avatar-wrapper {
+	position: relative;
+	width: 38px;
+	height: 38px;
+	flex-shrink: 0;
+	border-radius: 50%;
+	overflow: hidden;
+}
+
+.profile-img {
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	object-fit: cover;
+	border: 1.5px solid #e2e8f0;
+	transition: all 0.2s ease;
+}
+
+.avatar-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #ffffff;
+	font-size: 0.8rem;
+	background: rgba(0, 0, 0, 0.45);
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.2s ease;
+}
+
+.profile-card-label:hover .avatar-overlay {
+	opacity: 1;
+}
+
+/* ================= Stat Mini Cards ================= */
+.stat-card-row {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+	gap: 16px;
+	margin-bottom: 28px;
+}
+
+.stat-card {
+	background: #ffffff;
+	border: 1px solid #edf2f7;
+	border-radius: 16px;
+	padding: 18px 20px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	box-shadow: 0 4px 12px rgba(15, 23, 42, 0.02);
+	transition: transform 0.2s;
+}
+
+.stat-card:hover {
+	transform: translateY(-2px);
+}
+
+.stat-icon {
+	width: 44px;
+	height: 44px;
+	border-radius: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.15rem;
+}
+
+.stat-icon-coffee { background: #fff7ed; color: #c2410c; }
+.stat-icon-category { background: #fefce8; color: #ca8a04; }
+.stat-icon-stock { background: #f0fdf4; color: #16a34a; }
+
+/* ================= Action Bar ================= */
+.page-header-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 16px;
+	margin-bottom: 20px;
+}
+
+.btn-pill-white {
+	background-color: #ffffff;
+	border: 1px solid #e2e8f0;
+	color: #334155;
+	border-radius: 10px;
+	padding: 9px 18px;
+	font-weight: 600;
+	font-size: 0.88rem;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.btn-pill-white:hover {
+	background-color: #f1f5f9;
+	color: #0f172a;
+}
+
+.btn-add-type {
+	background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+	color: #ffffff !important;
+	border-radius: 10px;
+	padding: 10px 22px;
+	font-weight: 600;
+	font-size: 0.88rem;
+	border: none;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	text-decoration: none;
+	box-shadow: 0 6px 14px rgba(194, 65, 12, 0.25);
+	transition: all 0.2s;
+}
+
+.btn-add-type:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 8px 18px rgba(194, 65, 12, 0.3);
+}
+
+.btn-bin-trash {
+	background-color: #f1f5f9;
+	color: #475569 !important;
+	border-radius: 10px;
+	padding: 10px 18px;
+	font-weight: 600;
+	font-size: 0.88rem;
+	border: none;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	text-decoration: none;
+	transition: all 0.2s;
+}
+
+.btn-bin-trash:hover {
+	background-color: #e2e8f0;
+	color: #0f172a !important;
+}
+
+/* ================= Main Table Design ================= */
+.custom-card-container {
+	background: #ffffff;
+	border-radius: 18px;
+	border: 1px solid #edf2f7;
+	box-shadow: 0 10px 30px rgba(15, 23, 42, 0.03);
+	overflow: hidden;
+}
+
+.custom-table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.custom-table th {
+	font-weight: 700;
+	color: #64748b;
+	background-color: #f8fafc;
+	border-bottom: 1px solid #e2e8f0;
+	padding: 16px 20px;
+	font-size: 0.76rem;
+	text-transform: uppercase;
+	letter-spacing: 0.6px;
+}
+
+.custom-table td {
+	padding: 16px 20px;
 	vertical-align: middle;
+	color: #1e293b;
+	border-bottom: 1px solid #f1f5f9;
+	font-size: 0.88rem;
+}
+
+.custom-table tr:hover td {
+	background-color: #fffaf5;
+}
+
+.product-cover-img {
+	width: 58px;
+	height: 58px;
+	object-fit: cover;
+	border-radius: 14px;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+	border: 1px solid #f1f5f9;
+}
+
+.badge-tag-category {
+	background-color: #fffbeb;
+	color: #b45309;
+	border: 1px solid #fde68a;
+	padding: 6px 14px;
+	border-radius: 30px;
+	font-weight: 700;
+	font-size: 0.74rem;
+	display: inline-block;
+}
+
+.price-text {
+	font-weight: 800;
+	color: #0f172a;
+	font-size: 0.95rem;
+}
+
+.currency-sub {
+	font-size: 0.75rem;
+	font-weight: 600;
+	color: #94a3b8;
+	margin-left: 4px;
+}
+
+.btn-action-icon {
+	width: 34px;
+	height: 34px;
+	border-radius: 8px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background: #ffffff;
+	border: 1px solid #e2e8f0;
+	color: #64748b;
+	transition: all 0.2s;
+	text-decoration: none;
+}
+
+.btn-action-icon:hover {
+	background: #f8fafc;
+	border-color: #cbd5e1;
+}
+
+.btn-details-expand {
+	background: #0f172a;
+	color: #ffffff;
+	font-size: 0.78rem;
+	font-weight: 600;
+	padding: 7px 14px;
+	border-radius: 8px;
+	border: none;
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	transition: background-color 0.2s;
+}
+
+.btn-details-expand:hover {
+	background: #334155;
 }
 </style>
-
 </head>
 
-
+<body>
 <div layout:fragment="content">
+	<div class="container-fluid py-4 px-4">
 
-	<div class="container py-4">
-
-		<!-- Page Header -->
-		<div class="d-flex justify-content-between align-items-center mb-3">
-
-			<h2 class="mb-0">Products List - Manager</h2>
-			<form method="post" th:action="@{/manager/products/search}" th:object="${keywordmodel}" id="search" class="d-flex gap-2 align-items-center">
-			    <input type="text" 
-			           th:field="*{keyword}" 
-			           class="form-control" 
-			           placeholder="Search products..." 
-			           aria-label="Search">
-			    <button type="submit" class="btn btn-submit">
-			        <i class="fa-solid fa-magnifying-glass me-1"></i> Search
-			    </button>
+		<!-- 1. Top Navbar: Search & Manager Profile -->
+		<div class="top-navbar-wrapper">
+			<form method="post" th:action="@{/manager/products/search}" th:object="${keywordmodel}" id="search" class="search-box-wrapper mb-0">
+				<i class="fa-solid fa-magnifying-glass search-icon"></i>
+				<input type="text" th:field="*{keyword}" placeholder="Search coffee, recipes, categories..." aria-label="Search">
 			</form>
 
-			<div class="d-flex gap-2">
+			<div class="user-profile-wrapper">
+				<div class="notif-bell" title="Notifications">
+					<i class="fa-regular fa-bell"></i>
+				</div>
 
-				<a th:href="@{/manager/products/add}" class="btn btn-primary">
+				<!-- Click-to-Upload Profile Card Label -->
+				<label for="profileFileInput" class="profile-card-label" title="Click to change profile picture">
+					<div class="profile-avatar-wrapper">
+						<img id="managerProfileImg" 
+						     th:src="@{/images/Manager_Thura.jpg}" 
+						     src="/images/Manager_Thura.jpg" 
+						     alt="Manager Thura" 
+						     class="profile-img">
+						<div class="avatar-overlay">
+							<i class="fa-solid fa-camera"></i>
+						</div>
+					</div>
+					<div class="d-flex flex-column text-start">
+						<span class="fw-bold text-dark" style="font-size: 0.88rem; line-height: 1.2;">Manager Thura</span>
+						<span class="text-muted" style="font-size: 0.72rem;">manager@cafeluft.com</span>
+					</div>
+				</label>
 
-					Add Product Type </a> <a
-					th:href="@{/manager/products/deleted}"
-					class="btn btn-outline-secondary"> Deleted Products Bin </a>
-
+				<!-- Hidden File Input -->
+				<input type="file" id="profileFileInput" accept="image/*" style="display: none;">
 			</div>
-
 		</div>
 
+		<!-- 2. Mini Metric KPI Summary Cards -->
+		<div class="stat-card-row">
+			<div class="stat-card">
+				<div>
+					<div class="text-muted small fw-semibold">Total Menu Items</div>
+					<div class="fw-bold fs-4 text-dark" th:text="${product_types != null ? product_types.size() : '0'}">2</div>
+				</div>
+				<div class="stat-icon stat-icon-coffee">
+					<i class="fa-solid fa-mug-hot"></i>
+				</div>
+			</div>
 
-		<!-- Product Types Table -->
-		<div class="table-responsive">
+			<div class="stat-card">
+				<div>
+					<div class="text-muted small fw-semibold">Category Types</div>
+					<div class="fw-bold fs-4 text-dark">Hot Drinks</div>
+				</div>
+				<div class="stat-icon stat-icon-category">
+					<i class="fa-solid fa-layer-group"></i>
+				</div>
+			</div>
 
-			<table class="table table-bordered table-striped align-middle">
+			<div class="stat-card">
+				<div>
+					<div class="text-muted small fw-semibold">Store Status</div>
+					<div class="fw-bold fs-5 text-success">
+						<i class="fa-solid fa-circle-check me-1 small"></i> Serving Active
+					</div>
+				</div>
+				<div class="stat-icon stat-icon-stock">
+					<i class="fa-solid fa-store"></i>
+				</div>
+			</div>
+		</div>
 
-				<thead class="table-secondary">
+		<!-- 3. Title & Action Buttons -->
+		<div class="page-header-row">
+			<div>
+				<h3 class="fw-bold mb-1" style="color: #0f172a; font-size: 1.55rem;">Products List - Manager</h3>
+				<p class="text-muted mb-0" style="font-size: 0.88rem;">Manage coffee types, sizes, variant pricing, recipes, and active states.</p>
+			</div>
 
-					<tr>
+			<div class="d-flex align-items-center gap-2 flex-wrap">
+				<div class="dropdown">
+					<button class="btn btn-pill-white dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+						Showing <span class="fw-bold">10</span>
+					</button>
+					<ul class="dropdown-menu">
+						<li><a class="dropdown-item" href="#">10</a></li>
+						<li><a class="dropdown-item" href="#">25</a></li>
+						<li><a class="dropdown-item" href="#">50</a></li>
+					</ul>
+				</div>
 
-						<th>No.</th>
+				<button class="btn btn-pill-white" type="button">
+					<i class="fa-solid fa-filter text-muted"></i> Filter
+				</button>
 
-						<th>Cover Image</th>
+				<button class="btn btn-pill-white" type="button">
+					<i class="fa-solid fa-arrow-up-from-bracket text-muted"></i> Export
+				</button>
 
-						<th>Name</th>
+				<a th:href="@{/manager/products/add}" class="btn-add-type">
+					<i class="fa-solid fa-plus"></i> Add Product Type
+				</a>
 
-						<th>Description</th>
+				<a th:href="@{/manager/products/deleted}" class="btn-bin-trash">
+					<i class="fa-solid fa-trash-can"></i> Deleted Bin
+				</a>
+			</div>
+		</div>
 
-						<th>Category</th>
-
-						<th>Default Price</th>
-
-						<th>Edited</th>
-
-						<th>Created At</th>
-
-						<th>Created By</th>
-
-						<th>Actions</th>
-
-					</tr>
-
-				</thead>
-
-
-				<tbody>
-
-					<!-- Loop through each Product Type -->
-					<th:block th:each="p, state : ${product_types}">
-
-
-						<!-- Main Product Type Row -->
+		<!-- 4. Modern Clean Table -->
+		<div class="custom-card-container">
+			<div class="table-responsive">
+				<table class="table custom-table mb-0 align-middle">
+					<thead>
 						<tr>
-
-							<!-- No. -->
-							<td th:text="${state.count}">1</td>
-
-
-							<!-- Cover Image -->
-							<td class="text-center">
-
-								<div th:if="${p.coverimgpath != null}">
-
-									<img th:src="@{'/images/' + ${p.coverimgpath}}"
-										th:alt="${p.name}" class="product-cover">
-
-								</div>
-
-								<div th:unless="${p.coverimgpath != null}" class="text-muted">
-
-									No Image</div>
-
-							</td>
-
-
-							<!-- Name -->
-							<td><span class="fw-semibold" th:text="${p.name}">
-
-									Product Name </span></td>
-
-
-							<!-- Description -->
-							<td th:text="${p.description}">Description</td>
-
-
-							<!-- Category -->
-							<td th:text="${p.category_name}">Category</td>
-
-
-							<!-- Default Price -->
-							<td><span th:text="${#numbers.formatDecimal(p.price, 1, 2)}">
-
-									0.00 </span></td>
-
-
-							<!-- Edited -->
-							<td class="text-center"><span th:if="${p.isedited}"
-								class="badge bg-warning text-dark"> Yes </span> <span
-								th:unless="${p.isedited}" class="badge bg-secondary"> No
-
-							</span></td>
-
-
-							<!-- Created At -->
-							<td
-								th:text="${#temporals.format(p.created_at, 'yyyy-MM-dd HH:mm')}">
-
-								2026-01-01 12:00</td>
-
-
-							<!-- Created By -->
-							<td th:text="${p.employee_name}">Employee</td>
-
-
-							<!-- Actions -->
-							<td>
-
-								<div class="d-flex flex-column gap-2">
-
-									<a class="btn btn-sm btn-warning"
-										th:href="@{/manager/products/edit/{id}(id=${p.type_id})}">
-
-										Edit </a> <a class="btn btn-sm btn-danger" th:href="@{/manager/products/delete/type/{id}(id=${p.type_id})}" onclick="return confirm('Are you sure you want to delete this?');">
-
-										Delete </a>
-
-
-									<!-- View Details -->
-									<button class="btn btn-sm btn-info text-white" type="button"
-										data-bs-toggle="collapse"
-										th:data-bs-target="'#detailRow-' + ${state.index}"
-										aria-expanded="false">View Details ▼</button>
-
-								</div>
-
-							</td>
-
+							<th style="width: 5%;">No.</th>
+							<th style="width: 9%;">Cover</th>
+							<th style="width: 18%;">Product Name</th>
+							<th style="width: 22%;">Description</th>
+							<th style="width: 12%;">Category</th>
+							<th style="width: 12%;">Default Price</th>
+							<th style="width: 7%; text-align: center;">Edited</th>
+							<th style="width: 9%;">Created At</th>
+							<th style="width: 6%; text-align: end;">Actions</th>
 						</tr>
-
-
-						<!-- Expandable Detail Row -->
-						<tr class="collapse" th:id="'detailRow-' + ${state.index}">
-
-							<td colspan="10" class="bg-light p-4">
-
-
-								<div class="card shadow-sm">
-
-									<div class="card-body">
-
-
-										<!-- Detail Title -->
-										<h5 class="text-primary mb-3">
-
-											Details for <span th:text="${p.name}"> Product </span>
-
-										</h5>
-
-
-										<!-- Products / Sizes -->
-										<div th:if="${p.products != null and !p.products.empty}">
-
-											<div class="table-responsive">
-
-												<table
-													class="table table-sm table-bordered mb-0 bg-white detail-table">
-
-													<thead class="table-secondary">
-
-														<tr>
-
-															<th>No.</th>
-
-															<th>Size Code</th>
-
-															<th>Price</th>
-
-															<th>Edited</th>
-
-															<th>Active</th>
-
-															<th>Created/Edited At</th>
-
-															<th>Created By</th>
-
-															<th>Discounts</th>
-
-															<th>Required Ingredients</th>
-															
-															<th><th>
-
-														</tr>
-
-													</thead>
-
-
-													<tbody>
-
-														<!-- Loop through ProductListModel -->
-														<tr th:each="prod, prodState : ${p.products}">
-
-
-															<!-- No. -->
-															<td th:text="${prodState.count}">1</td>
-
-
-															<!-- Size -->
-															<td><span class="fw-semibold"
-																th:text="${prod.size_code}"> Size </span></td>
-
-
-															<!-- Price -->
-															<td><span
-																th:text="${#numbers.formatDecimal(prod.price, 1, 2)}">
-
-																	0.00 </span></td>
-
-
-															<!-- Edited -->
-															<td class="text-center"><span
-																th:if="${prod.isedited}"
-																class="badge bg-warning text-dark"> Yes </span> <span
-																th:unless="${prod.isedited}" class="badge bg-secondary">
-
-																	No </span></td>
-
-
-															<!-- Active -->
-															<td class="text-center"><span
-																th:if="${prod.is_active}" class="badge bg-success">
-
-																	Active </span> <span th:unless="${prod.is_active}"
-																class="badge bg-secondary"> Inactive </span></td>
-
-
-															<!-- Created At -->
-															<td
-																th:text="${#temporals.format(prod.created_at, 'yyyy-MM-dd HH:mm')}">
-
-																2026-01-01 12:00</td>
-
-
-															<!-- Created By -->
-															<td th:text="${prod.employee_name}">Employee</td>
-
-
-															<!-- Discounts -->
-															<td>
-
-																<div
-																	th:if="${prod.discount_names != null and !prod.discount_names.empty}">
-
-																	<div
-																		th:each="discountName, discountState : ${prod.discount_names}"
-																		class="mb-1">
-
-																		<span th:text="${discountName}"> Discount </span> <span
-																			class="badge bg-success"
-																			th:if="${prod.discount_values != null and discountState.index < prod.discount_values.size()}"
-																			th:text="${prod.discount_values[discountState.index]}">
-
-																			Value </span>
-
-																	</div>
-
-																</div> <span
-																th:unless="${prod.discount_names != null and !prod.discount_names.empty}"
-																class="text-muted"> No Discounts </span>
-
-															</td>
-
-
-															<!-- Required Ingredients -->
-															<td>
-
-																<div
-																	th:if="${prod.ingredient_names != null and !prod.ingredient_names.empty}">
-
-																	<div
-																		th:each="ingredientName, ingredientState : ${prod.ingredient_names}"
-																		class="mb-1">
-
-																		<strong th:text="${ingredientName}">
-
-																			Ingredient </strong> <span class="text-muted"> : </span>
-
-
-																		<!-- Quantity -->
-																		<span
-																			th:if="${prod.quantity_required != null and ingredientState.index < prod.quantity_required.size()}"
-																			th:text="${prod.quantity_required[ingredientState.index]}">
-
-																			0 </span>
-
-
-																		<!-- Unit -->
-																		<span
-																			th:if="${prod.unit_code != null and ingredientState.index < prod.unit_code.size()}"
-																			th:text="${prod.unit_code[ingredientState.index]}">
-
-																			unit </span>
-
-																	</div>
-
-																</div> <span
-																th:unless="${prod.ingredient_names != null and !prod.ingredient_names.empty}"
-																class="text-muted"> No Ingredients </span>
-
-															</td>
-															
-															<td><a class="btn btn-sm btn-danger" th:href="@{/manager/products/delete/{id}(id=${prod.product_id})}" onclick="return confirm('Are you sure you want to delete this?');"> Delete </a></td>
-
-														</tr>
-
-													</tbody>
-
-												</table>
-
-											</div>
-
-										</div>
-
-
-										<!-- No Products -->
-										<div th:unless="${p.products != null and !p.products.empty}"
-											class="text-muted">No products / sizes have been
-											configured.</div>
-
-
+					</thead>
+					<tbody>
+						<th:block th:each="p, state : ${product_types}">
+							<tr>
+								<td class="fw-bold text-muted" th:text="${state.count}">1</td>
+
+								<td>
+									<div th:if="${p.coverimgpath != null and !#strings.isEmpty(p.coverimgpath)}">
+										<img th:src="@{'/images/' + ${p.coverimgpath}}" 
+										     th:alt="${p.name}" 
+										     class="product-cover-img"
+										     onerror="this.onerror=null; this.src='/images/Cappuccino.jpg';">
 									</div>
 
-								</div>
+									<div th:unless="${p.coverimgpath != null and !#strings.isEmpty(p.coverimgpath)}">
+										<img th:if="${#strings.containsIgnoreCase(p.name, 'cappuc')}" 
+										     th:src="@{/images/Cappuccino.jpg}" 
+										     class="product-cover-img" alt="Cappuccino">
 
-							</td>
+										<img th:if="${#strings.containsIgnoreCase(p.name, 'americano') or #strings.containsIgnoreCase(p.name, 'espresso')}" 
+										     th:src="@{/images/Americano.jpg}" 
+										     class="product-cover-img" alt="Americano">
 
-						</tr>
+										<img th:if="${#strings.containsIgnoreCase(p.name, 'latte')}" 
+										     th:src="@{/images/Latte.jpg}" 
+										     class="product-cover-img" alt="Latte">
 
+										<img th:if="${#strings.containsIgnoreCase(p.name, 'mocha')}" 
+										     th:src="@{/images/Mocha.jpg}" 
+										     class="product-cover-img" alt="Mocha">
 
-					</th:block>
+										<img th:if="${#strings.containsIgnoreCase(p.name, 'tea')}" 
+										     th:src="@{'/images/classic milk tea.jpg'}" 
+										     class="product-cover-img" alt="Milk Tea">
 
-				</tbody>
+										<img th:if="${!#strings.containsIgnoreCase(p.name, 'cappuc') 
+										            and !#strings.containsIgnoreCase(p.name, 'americano') 
+										            and !#strings.containsIgnoreCase(p.name, 'espresso') 
+										            and !#strings.containsIgnoreCase(p.name, 'latte') 
+										            and !#strings.containsIgnoreCase(p.name, 'mocha') 
+										            and !#strings.containsIgnoreCase(p.name, 'tea')}" 
+										     th:src="@{/images/cafe.jpg}" 
+										     class="product-cover-img" alt="Coffee">
+									</div>
+								</td>
 
-			</table>
+								<td>
+									<div class="fw-bold text-dark" style="font-size: 0.93rem;" th:text="${p.name}">Coffee - Cappucino</div>
+								</td>
 
+								<td>
+									<span class="text-muted text-truncate d-inline-block" style="max-width: 230px;" th:text="${p.description}">A Hot Cup of Cappucino</span>
+								</td>
+
+								<td>
+									<span class="badge-tag-category" th:text="${p.category_name}">Hot Drinks</span>
+								</td>
+
+								<td>
+									<span class="price-text" th:text="${#numbers.formatDecimal(p.price, 1, 2)}">10,000.00</span>
+									<span class="currency-sub">MMK</span>
+								</td>
+
+								<td class="text-center">
+									<span th:if="${p.isedited}" class="badge bg-light text-warning border px-2 py-1 small">Yes</span>
+									<span th:unless="${p.isedited}" class="badge bg-light text-muted border px-2 py-1 small">No</span>
+								</td>
+
+								<td class="text-muted small" th:text="${#temporals.format(p.created_at, 'yyyy-MM-dd HH:mm')}">2026-09-27 23:52</td>
+
+								<td class="text-end">
+									<div class="d-flex justify-content-end gap-2 align-items-center">
+										<a class="btn-action-icon text-primary" th:href="@{/manager/products/edit/{id}(id=${p.type_id})}" title="Edit Product">
+											<i class="fa-solid fa-pen-to-square"></i>
+										</a>
+										<a class="btn-action-icon text-danger" th:href="@{/manager/products/delete/type/{id}(id=${p.type_id})}" onclick="return confirm('Are you sure you want to delete this product?');" title="Delete">
+											<i class="fa-solid fa-trash-can"></i>
+										</a>
+										<button class="btn-details-expand" type="button" data-bs-toggle="collapse" th:data-bs-target="'#detailRow-' + ${state.index}">
+											Details <i class="fa-solid fa-chevron-down ms-1" style="font-size: 0.65rem;"></i>
+										</button>
+									</div>
+								</td>
+							</tr>
+
+							<!-- Expandable Detail Row -->
+							<tr class="collapse bg-light" th:id="'detailRow-' + ${state.index}">
+								<td colspan="9" class="p-3">
+									<div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+										<div class="d-flex justify-content-between align-items-center mb-3">
+											<h6 class="fw-bold text-dark mb-0">
+												<i class="fa-solid fa-mug-saucer text-warning me-2"></i> Recipes & Sizes: <span class="text-primary" th:text="${p.name}">Product</span>
+											</h6>
+										</div>
+
+										<div th:if="${p.products != null and !p.products.empty}">
+											<div class="table-responsive">
+												<table class="table table-sm table-bordered align-middle mb-0 bg-white">
+													<thead class="table-light">
+														<tr class="small text-muted">
+															<th>No.</th>
+															<th>Size</th>
+															<th>Price</th>
+															<th>Status</th>
+															<th>Discounts</th>
+															<th>Ingredients</th>
+															<th class="text-center">Action</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:each="prod, prodState : ${p.products}">
+															<td th:text="${prodState.count}">1</td>
+															<td><span class="fw-bold" th:text="${prod.size_code}">Size</span></td>
+															<td class="text-success fw-bold" th:text="${#numbers.formatDecimal(prod.price, 1, 2) + ' MMK'}">0.00 MMK</td>
+															<td>
+																<span th:if="${prod.is_active}" class="badge bg-success-subtle text-success px-2 py-1">Active</span>
+																<span th:unless="${prod.is_active}" class="badge bg-secondary-subtle text-secondary px-2 py-1">Inactive</span>
+															</td>
+															<td>
+																<span th:if="${prod.discount_names != null and !prod.discount_names.empty}" class="small" th:text="${prod.discount_names}">Discounts</span>
+																<span th:unless="${prod.discount_names != null and !prod.discount_names.empty}" class="text-muted small">None</span>
+															</td>
+															<td>
+																<span th:if="${prod.ingredient_names != null and !prod.ingredient_names.empty}" class="small" th:text="${prod.ingredient_names}">Ingredients</span>
+																<span th:unless="${prod.ingredient_names != null and !prod.ingredient_names.empty}" class="text-muted small">None</span>
+															</td>
+															<td class="text-center">
+																<a class="btn btn-sm btn-outline-danger border-0" th:href="@{/manager/products/delete/{id}(id=${prod.product_id})}" onclick="return confirm('Delete this size?');">
+																	<i class="fa-solid fa-trash-can"></i>
+																</a>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+										<div th:unless="${p.products != null and !p.products.empty}" class="text-muted text-center py-2 small fst-italic">
+											No variant sizes configured.
+										</div>
+									</div>
+								</td>
+							</tr>
+						</th:block>
+					</tbody>
+				</table>
+			</div>
 		</div>
 
 	</div>
 
-</div>
+	<!-- Bootstrap Bundle JS (fragment အတွင်းတွင် ထည့်သွင်းထားပါသည်) -->
+	<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 
+	<!-- Profile Instant Update & LocalStorage Persistence Script -->
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			const profileInput = document.getElementById("profileFileInput");
+			const profileImg = document.getElementById("managerProfileImg");
+
+			// ၁။ ယခင်က သိမ်းဆည်းခဲ့ဖူးသော ပုံရှိပါက ချက်ချင်းပြန်ပြပေးမည်
+			const savedProfileImage = localStorage.getItem("manager_profile_avatar");
+			if (savedProfileImage && profileImg) {
+				profileImg.src = savedProfileImage;
+			}
+
+			// ၂။ ပုံအသစ် ရွေးလိုက်တာနဲ့ ချက်ချင်း Preview ပြောင်းပြီး LocalStorage တွင် သိမ်းဆည်းမည်
+			if (profileInput && profileImg) {
+				profileInput.addEventListener("change", function (event) {
+					const file = event.target.files[0];
+					if (file) {
+						const reader = new FileReader();
+						reader.onload = function (e) {
+							const newImageDataUrl = e.target.result;
+							profileImg.src = newImageDataUrl;
+							localStorage.setItem("manager_profile_avatar", newImageDataUrl);
+						};
+						reader.readAsDataURL(file);
+					}
+				});
+			}
+		});
+	</script>
+</div>
+</body>
 </html>

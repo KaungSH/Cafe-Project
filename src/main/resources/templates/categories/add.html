@@ -1,105 +1,279 @@
-
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Add Category</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Add Product Category - Café Shop</title>
+
+<!-- Fonts & FontAwesome -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
 
 <style>
+* {
+	box-sizing: border-box;
+}
+
 body {
-	margin: 0;
-	font-family: Arial, sans-serif;
-	background: #f5f6fa;
+	font-family: 'Plus Jakarta Sans', sans-serif;
+	background-color: #f8fafc;
+	color: #0f172a;
 }
 
-.form-box {
-	width: 500px;
-	margin: 70px auto;
-	background: white;
-	padding: 30px;
-	border-radius: 10px;
-	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+.page-container {
+	padding: 24px 32px 48px;
+	max-width: 1100px;
+	margin: 0 auto;
 }
 
-h1 {
-	text-align: center;
-	margin-bottom: 25px;
-}
-
-label {
-	display: block;
-	margin-bottom: 7px;
-	font-weight: bold;
-}
-
-input, textarea {
-	width: 100%;
-	padding: 11px;
-	margin-bottom: 18px;
-	border: 1px solid #ccc;
-	border-radius: 6px;
-}
-
-textarea {
-	height: 100px;
-	resize: vertical;
-}
-
-.buttons {
+.header-breadcrumb {
 	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 24px;
+	padding-bottom: 16px;
+	border-bottom: 1px solid #edf2f7;
+}
+
+.breadcrumb-tag {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 0.85rem;
+	color: #64748b;
+	text-decoration: none;
+	font-weight: 500;
+}
+.breadcrumb-tag:hover {
+	color: #c2410c;
+}
+
+.dashboard-card {
+	background: #ffffff;
+	border-radius: 20px;
+	border: 1px solid #edf2f7;
+	box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+	overflow: hidden;
+}
+
+.sub-panel {
+	background: #ffffff;
+	border: 1px solid #e2e8f0;
+	border-radius: 16px;
+	padding: 24px;
+	height: 100%;
+}
+
+.sub-panel-title {
+	font-size: 0.95rem;
+	font-weight: 700;
+	color: #0f172a;
+	margin-bottom: 18px;
+	display: flex;
+	align-items: center;
 	gap: 10px;
 }
+.sub-panel-title i {
+	color: #ea580c;
+}
 
-button, .cancel {
-	padding: 11px 20px;
-	border: none;
-	border-radius: 6px;
-	text-decoration: none;
+.form-label-caps {
+	display: block;
+	font-size: 0.72rem;
+	font-weight: 700;
+	color: #64748b;
+	letter-spacing: 0.5px;
+	text-transform: uppercase;
+	margin-bottom: 6px;
+}
+
+.input-rounded {
+	width: 100%;
+	height: 44px;
+	border-radius: 12px;
+	border: 1px solid #e2e8f0;
+	padding: 8px 16px;
+	font-size: 0.88rem;
+	color: #1e293b;
+	background-color: #f8fafc;
+	outline: none;
+	transition: all 0.2s;
+}
+
+.input-rounded:focus {
+	border-color: #c2410c;
+	background-color: #ffffff;
+	box-shadow: 0 0 0 3px rgba(194, 65, 12, 0.1);
+}
+
+.textarea-rounded {
+	width: 100%;
+	border-radius: 12px;
+	border: 1px solid #e2e8f0;
+	padding: 12px 16px;
+	font-size: 0.88rem;
+	color: #1e293b;
+	background-color: #f8fafc;
+	outline: none;
+	resize: none;
+	transition: all 0.2s;
+}
+
+.textarea-rounded:focus {
+	border-color: #c2410c;
+	background-color: #ffffff;
+	box-shadow: 0 0 0 3px rgba(194, 65, 12, 0.1);
+}
+
+.branch-badge {
+	background-color: #fff7ed;
+	color: #c2410c;
+	border: 1px solid #fed7aa;
+	padding: 5px 12px;
+	border-radius: 8px;
+	font-size: 0.8rem;
+	font-weight: 700;
+}
+
+.custom-checkbox {
+	width: 18px;
+	height: 18px;
+	border-radius: 5px;
+	accent-color: #c2410c;
 	cursor: pointer;
 }
 
-button {
-	background: #3498db;
-	color: white;
+.footer-action-bar {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 12px;
+	padding: 20px 28px;
+	background: #fafafa;
+	border-top: 1px solid #edf2f7;
 }
 
-.cancel {
-	background: #777;
-	color: white;
+.btn-cancel-custom {
+	background: #ffffff;
+	border: 1px solid #e2e8f0;
+	color: #475569;
+	font-weight: 600;
+	font-size: 0.88rem;
+	border-radius: 10px;
+	padding: 9px 24px;
+	text-decoration: none;
+	transition: all 0.2s;
+}
+
+.btn-cancel-custom:hover {
+	background-color: #f1f5f9;
+	color: #0f172a;
+}
+
+.btn-save-custom {
+	background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+	color: #ffffff;
+	font-weight: 600;
+	font-size: 0.88rem;
+	border-radius: 10px;
+	padding: 10px 28px;
+	border: none;
+	cursor: pointer;
+	box-shadow: 0 4px 12px rgba(194, 65, 12, 0.25);
+	transition: all 0.2s;
+}
+
+.btn-save-custom:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 6px 16px rgba(194, 65, 12, 0.35);
 }
 </style>
 </head>
+
 <body>
+	<div layout:fragment="content">
+		<div class="page-container">
 
-	<div class="form-box">
-
-		<h2>Add Product Category For Branch - <span class="display-field" th:text="${branch}"> Branch Name</span> </h2> 
-
-		<form th:action="@{/manager-only/categories/add}" th:object="${category}"
-			method="post">
-
-			<label>Category Name</label> <input type="text" th:field="*{name}"
-				placeholder="Enter category name" required> <label>Description</label>
-
-			<textarea th:field="*{description}" placeholder="Enter description"></textarea>
-			<label> <input type="checkbox" th:field="*{is_active}">
-				Active
-			</label>
-
-			<div class="buttons">
-
-				<button type="submit">Save Category</button>
-
-				<a href="/manager-only/categories" class="cancel"> Cancel </a>
-
+			<!-- Top Navigation -->
+			<div class="header-breadcrumb">
+				<div>
+					<a th:href="@{/manager-only/categories}" class="breadcrumb-tag mb-1">
+						<i class="fa-solid fa-arrow-left"></i> Back to Categories
+					</a>
+					<h3 class="fw-bold text-dark mb-0">Add Product Category</h3>
+				</div>
+				<a th:href="@{/manager-only/categories}" class="btn-cancel-custom py-1 px-3 small">
+					<i class="fa-solid fa-xmark me-1"></i> Close
+				</a>
 			</div>
 
-		</form>
+			<!-- Form Card -->
+			<div class="dashboard-card">
+				<form th:action="@{/manager-only/categories/add}" th:object="${category}" method="post">
+					<div class="p-4 p-lg-5">
+						<div class="row g-4">
+							
+							<!-- Form Input Fields -->
+							<div class="col-lg-7">
+								<div class="sub-panel">
+									<div class="sub-panel-title">
+										<i class="fa-solid fa-pen-nib"></i> Category Details
+									</div>
 
+									<div class="mb-3">
+										<label class="form-label-caps" for="name">Category Name</label>
+										<input type="text" id="name" class="input-rounded" th:field="*{name}" placeholder="e.g. Special Brews, Bakery" required>
+									</div>
+
+									<div class="mb-4">
+										<label class="form-label-caps" for="description">Description</label>
+										<textarea id="description" class="textarea-rounded" rows="4" th:field="*{description}" placeholder="Write a brief category description..."></textarea>
+									</div>
+
+									<div class="d-flex align-items-center gap-2 p-3 bg-light rounded-3 border">
+										<input type="checkbox" id="isActive" class="custom-checkbox" th:field="*{is_active}" checked>
+										<label for="isActive" class="fw-semibold text-dark mb-0 small" style="cursor: pointer;">
+											Set this category active for ordering and menu display
+										</label>
+									</div>
+								</div>
+							</div>
+
+							<!-- Context Info / Preview -->
+							<div class="col-lg-5">
+								<div class="sub-panel bg-light">
+									<div class="sub-panel-title">
+										<i class="fa-solid fa-circle-info"></i> Assignment Information
+									</div>
+
+									<div class="mb-3 pb-3 border-bottom">
+										<span class="text-muted small d-block mb-1">Target Branch:</span>
+										<span class="branch-badge" th:text="${branch}">Main Branch</span>
+									</div>
+
+									<p class="text-muted small mb-0">
+										Categories help organize coffee types, pastries, and supplies into clean sections on the POS Menu.
+									</p>
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+					<div class="footer-action-bar">
+						<a th:href="@{/manager-only/categories}" class="btn-cancel-custom">Cancel</a>
+						<button type="submit" class="btn-save-custom">
+							<i class="fa-solid fa-plus me-1"></i> Save Category
+						</button>
+					</div>
+				</form>
+			</div>
+
+		</div>
 	</div>
-
 </body>
 </html>
-

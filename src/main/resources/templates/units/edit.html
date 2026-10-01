@@ -1,115 +1,192 @@
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Unit</title>
+    <title>Edit Unit - Café Luft</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        * {
-            box-sizing: border-box;
+        :root {
+            --cafe-espresso: #1a0b05;
+            --caramel: #e28e44;
+            --caramel-soft: #fcf4ec;
+            --caramel-hover: #d2792e;
+            --cream-bg: #f9f5f1;
+            --card-border: #ede0d4;
+            --text-dark: #20130b;
+            --text-muted: #856e62;
         }
 
         body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--cream-bg);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 15px;
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f6f9;
         }
 
-        .container {
-            width: 500px;
-            margin: 70px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        .form-card {
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 15px 35px rgba(26, 11, 5, 0.06);
+            border: 1px solid var(--card-border);
+            padding: 40px;
+            width: 100%;
+            max-width: 480px;
         }
 
-        h2 {
+        .form-icon-box {
+            width: 65px;
+            height: 65px;
+            background: var(--caramel-soft);
+            color: var(--caramel);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 18px;
+            font-size: 26px;
+            margin: 0 auto 16px auto;
+            border: 1px solid rgba(226, 142, 68, 0.2);
+        }
+
+        .form-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--cafe-espresso);
             text-align: center;
+            margin-bottom: 6px;
+        }
+
+        .form-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .form-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--cafe-espresso);
+            margin-bottom: 8px;
+        }
+
+        .custom-input {
+            border: 1.5px solid var(--card-border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 14px;
+            background-color: #fdfbf9;
+            transition: all 0.2s ease;
+        }
+
+        .custom-input:focus {
+            background-color: #ffffff;
+            border-color: var(--caramel);
+            box-shadow: 0 0 0 4px rgba(226, 142, 68, 0.15);
+        }
+
+        .switch-container {
+            background: #fbf6f1;
+            border: 1px solid #eedecf;
+            border-radius: 14px;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             margin-bottom: 25px;
         }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
+        .form-check-input:checked {
+            background-color: var(--caramel);
+            border-color: var(--caramel);
         }
 
-        input {
-            width: 100%;
-            padding: 11px;
-            margin-bottom: 18px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 15px;
-        }
-
-        .buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        button,
-        .cancel {
-            flex: 1;
-            padding: 12px;
+        .btn-caramel-submit {
+            background: var(--caramel);
+            color: #ffffff;
             border: none;
-            border-radius: 6px;
+            padding: 13px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            width: 100%;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 14px rgba(226, 142, 68, 0.3);
+        }
+
+        .btn-caramel-submit:hover {
+            background: var(--caramel-hover);
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .btn-cancel {
+            background: #f4ece4;
+            color: var(--text-muted);
+            border: none;
+            padding: 13px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            width: 100%;
             text-align: center;
             text-decoration: none;
-            cursor: pointer;
-            font-size: 15px;
+            display: block;
+            margin-top: 10px;
+            transition: all 0.2s ease;
         }
 
-        button {
-            background: #198754;
-            color: white;
-        }
-
-        .cancel {
-            background: #6c757d;
-            color: white;
+        .btn-cancel:hover {
+            background: #ebdccf;
+            color: var(--cafe-espresso);
         }
     </style>
 </head>
 
 <body>
 
-<div class="container">
-
-    <h2>Edit Unit</h2>
-
-    <form th:action="@{/units/edit/{id}(id=${unit.unit_id})}"
-          th:object="${unit}"
-          method="post">
-
-        <input type="hidden" th:field="*{unit_id}">
-
-        <label>Unit Name</label>
-        <input type="text"
-               th:field="*{name}"
-               placeholder="Example: Kilogram"
-               required>
-
-        <label>Abbreviation</label>
-        <input type="text"
-               th:field="*{abbreviation}"
-               placeholder="Example: kg"
-               required>
-
-        <div class="buttons">
-            <button type="submit">Update</button>
-
-            <a th:href="@{/units}" class="cancel">
-                Cancel
-            </a>
+    <div class="form-card">
+        <div class="form-icon-box">
+            <i class="fa-solid fa-pen-to-square"></i>
         </div>
+        <h2 class="form-title">Edit Measurement Unit</h2>
+        <p class="form-subtitle">Update unit information and active status</p>
 
-    </form>
+        <form th:action="@{/units/edit/{id}(id=${unit.unit_id})}" th:object="${unit}" method="post">
+            <input type="hidden" th:field="*{unit_id}">
 
-</div>
+            <div class="mb-3">
+                <label class="form-label">Unit Name</label>
+                <input type="text" class="form-control custom-input" th:field="*{name}" placeholder="Example: Kilogram" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Abbreviation</label>
+                <input type="text" class="form-control custom-input" th:field="*{abbreviation}" placeholder="Example: kg" required>
+            </div>
+
+            <div class="switch-container">
+                <label class="form-label mb-0" for="activeSwitch">Active Status</label>
+                <div class="form-check form-switch m-0">
+                    <input class="form-check-input fs-5" type="checkbox" role="switch" th:field="*{is_active}" id="activeSwitch">
+                </div>
+            </div>
+
+            <button type="submit" class="btn-caramel-submit">
+                <i class="fa-solid fa-pen-to-square me-2"></i>Update Unit
+            </button>
+            <a th:href="@{/units}" class="btn-cancel">Cancel</a>
+        </form>
+    </div>
 
 </body>
 </html>
