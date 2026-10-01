@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cafe.project.employeemanagement.models.LoginDto;
 import cafe.project.models.BranchEntryDto;
 import cafe.project.repositories.StatusRepository;
 import cafe.project.services.BranchService;
@@ -15,6 +16,7 @@ import cafe.project.services.CategoryService;
 import cafe.project.services.DailyRegisterService;
 import cafe.project.services.DiscountService;
 import cafe.project.services.EmployeeService;
+import cafe.project.services.ExpenseService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
@@ -28,8 +30,10 @@ public class AdminController {
 	private final BranchService branchService;
 	private final EmployeeService employeeService;
 	private final StatusRepository statusRepository;
+	private final ExpenseService expenseService;
 
-	public AdminController(DailyRegisterService dailyRegisterservice, BranchService branchService, EmployeeService employeeService, StatusRepository statusRepository, CategoryService categoryService, DiscountService discountService) {
+	public AdminController(DailyRegisterService dailyRegisterservice, BranchService branchService, EmployeeService employeeService, StatusRepository statusRepository, CategoryService categoryService, DiscountService discountService, ExpenseService expenseService) {
+		this.expenseService = expenseService;
 		this.dailyRegisterservice = dailyRegisterservice;
 		this.categoryService = categoryService;
 		this.branchService = branchService;
@@ -90,5 +94,13 @@ public class AdminController {
 			}
 		}
 	}
+	
+	@GetMapping("/expenses")
+	public String ExpenseList(Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		model.addAttribute("expense", this.expenseService.findAll(ldto.getBranch_id()));
+		return "expense/list-admin";
+	}
+	
 
 }

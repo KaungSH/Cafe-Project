@@ -7,7 +7,6 @@ import cafe.project.repositories.entities.Size;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class SizeService {
@@ -50,8 +49,5 @@ public class SizeService {
 	    sizeRepository.hardDeleteById(size_id);
 	  }
 
-	  public List<Map<String, Object>> getAllEmployees() {
-	    return sizeRepository.findAllEmployees();
-	  }
 	
 }

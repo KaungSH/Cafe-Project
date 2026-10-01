@@ -75,7 +75,7 @@ body {
 		<div class="title">Add Expense Category</div>
 
 
-		<form th:action="@{/manager/expensecategory/add}"
+		<form th:action="@{/admin/expensecategory/add}"
 			th:object="${expensecategory}" method="post">
 
 			<div class="mb-4">
@@ -91,7 +91,7 @@ body {
 
 			<div class="d-flex justify-content-end gap-2">
 
-				<a th:href="@{/manager/expensecategory}" class="cancel-btn"> Cancel </a>
+				<a th:href="@{/admin/expensecategory}" class="cancel-btn"> Cancel </a>
 
 				<button type="submit" class="save-btn">Save</button>
 

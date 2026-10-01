@@ -179,7 +179,7 @@ tbody tr:hover {
 			<div class="expense-title">
 
 				<h2>
-					 Expense List For <span th:text = "${branch}"></span>
+					 Expense List
 				</h2>
 
 				<p>Manage Expenses</p>
@@ -188,10 +188,6 @@ tbody tr:hover {
 
 
 			<div>
-
-				<a th:href="@{/manager-only/expense/add}" class="add-button"> Add </a> <a
-					th:href="@{/manager-only/expense/deleted}" class="deleted-button">
-					Deleted Expenses List </a>
 
 			</div>
 			<div th:text = "${error}"></div>
@@ -214,7 +210,6 @@ tbody tr:hover {
 
 					<th>Amount</th>
 
-					<th>Action</th>
 
 				</tr>
 
@@ -242,18 +237,6 @@ tbody tr:hover {
 
 					<td th:text="${e.amount}">Amount</td>
 
-					<td class="actions"><a
-						th:href="@{/manager-only/expense/edit/{expense_id}(expense_id=${e.expense_id})}"
-						class="edit-button"> Edit </a>
-						<form th:action="@{/manager-only/expense/delete}" method="post"
-							style="display: inline;"
-							onsubmit="return confirm('Are you sure you want to delete this expense?');">
-
-							<input type="hidden" name="expense_id" th:value="${e.expense_id}">
-
-							<button type="submit" class="delete-button">Delete</button>
-
-						</form></td>
 				</tr>
 			</tbody>
 

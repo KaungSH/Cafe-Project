@@ -18,7 +18,16 @@ public class ExpenseRepository {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	public List<Expense> findAll() {
+	public List<Expense> findAll(String branch_id) {
+		String sql = "SELECT e.*," + "b.name As branch_name,\r\n" + "ec.category_name\r\n" + "FROM expenses e\r\n"
+				+ "LEFT JOIN branches b ON e.branch_id = b.branch_id \r\n"
+				+ "LEFT JOIN expense_categories ec ON e.expense_category_id = ec.expense_category_id"
+				+ " WHERE e.isdeleted = 0 AND e.branch_id = ?";
+		List<Expense> entities = this.jdbcTemplate.query(sql, new ExpenseMapper(), branch_id);
+		return entities;
+	}
+	
+	public List<Expense> findAllAdmin() {
 		String sql = "SELECT e.*," + "b.name As branch_name,\r\n" + "ec.category_name\r\n" + "FROM expenses e\r\n"
 				+ "LEFT JOIN branches b ON e.branch_id = b.branch_id \r\n"
 				+ "LEFT JOIN expense_categories ec ON e.expense_category_id = ec.expense_category_id"
@@ -27,23 +36,13 @@ public class ExpenseRepository {
 		return entities;
 	}
 
-	public Expense findById(String expense_id) {
+	public Expense findById(String expense_id, String branch_id) {
 		String sql = "SELECT e.*,\r\n"
 				+ "b.Name As branch_name,\r\n" + "ec.category_name\r\n" + "FROM expenses e\r\n"
 				+ "LEFT JOIN branches b ON e.branch_id = b.branch_id \r\n"
 				+ "LEFT JOIN expense_categories ec ON e.expense_category_id = ec.expense_category_id\r\n"
-				+ "WHERE e.expense_id = ? AND e.isdeleted = 0";
-		List<Expense> entities = this.jdbcTemplate.query(sql, new ExpenseMapper(), expense_id);
-		return entities.isEmpty() ? null : entities.get(0);
-	}
-	
-	public Expense existByCategoryId(String category_id) {
-		String sql = "SELECT e.*,\r\n"
-				+ "b.Name As branch_name,\r\n" + "ec.category_name\r\n" + "FROM expenses e\r\n"
-				+ "LEFT JOIN branches b ON e.branch_id = b.branch_id \r\n"
-				+ "LEFT JOIN expense_categories ec ON e.expense_category_id = ec.expense_category_id\r\n"
-				+ "WHERE e.expense_category_id = ? AND e.isdeleted = 0";
-		List<Expense> entities = this.jdbcTemplate.query(sql, new ExpenseMapper(), category_id);
+				+ "WHERE e.expense_id = ? AND e.branch_id = ? AND e.isdeleted = 0";
+		List<Expense> entities = this.jdbcTemplate.query(sql, new ExpenseMapper(), expense_id, branch_id);
 		return entities.isEmpty() ? null : entities.get(0);
 	}
 
@@ -71,12 +70,12 @@ public class ExpenseRepository {
 		return this.jdbcTemplate.update(sql, expense_id);
 	}
 
-	public List<Expense> DeletedList() {
+	public List<Expense> DeletedList(String branch_id) {
 		String sql = "SELECT e.*,\r\n" + "b.Name As branch_name,\r\n" + "ec.category_name\r\n" + "FROM expenses e\r\n"
 				+ "LEFT JOIN branches b ON e.branch_id = b.branch_id \r\n"
 				+ "LEFT JOIN expense_categories ec ON e.expense_category_id = ec.expense_category_id\r\n"
-				+ "WHERE e.isdeleted = 1";
-		return this.jdbcTemplate.query(sql, new ExpenseMapper());
+				+ "WHERE e.isdeleted = 1 AND e.branch_id = ?";
+		return this.jdbcTemplate.query(sql, new ExpenseMapper(), branch_id);
 	}
 
 	public int restore(String expense_id) {

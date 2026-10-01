@@ -24,13 +24,11 @@ import jakarta.validation.constraints.Size;
 	    @NotNull(message = "Enter financial loss ")
 	    @DecimalMin(value = "0.00", message = "Financial loss must 0 or above 0")
 	    private BigDecimal financial_loss;
-	    	
+
 	    private String employee_id; 
 
 	    @Size(max = 255, message = "Notes must not above 255")
 	    private String notes;
-	    
-	    
 
 	    public WasteLogsEntryDto() {}
 
@@ -90,5 +88,5 @@ import jakarta.validation.constraints.Size;
 			this.notes = notes;
 		}
 
-		
-	}
+	    
+}

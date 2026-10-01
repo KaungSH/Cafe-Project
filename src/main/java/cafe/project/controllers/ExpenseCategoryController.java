@@ -1,9 +1,7 @@
 package cafe.project.controllers;
 
 import cafe.project.models.ExpenseCategoryDto;
-import cafe.project.models.ExpenseDto;
 import cafe.project.services.ExpenseCategoryService;
-import cafe.project.services.ExpenseService;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,15 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.validation.Valid;
 
 @Controller
-@RequestMapping("/manager/expensecategory")
+@RequestMapping("/admin/expensecategory")
 public class ExpenseCategoryController {
 
 	private final ExpenseCategoryService expenseCategoryService;
-	private final ExpenseService expenseService;
 
-	public ExpenseCategoryController(ExpenseCategoryService expenseCategoryService, ExpenseService expenseService) {
+	public ExpenseCategoryController(ExpenseCategoryService expenseCategoryService) {
 		this.expenseCategoryService = expenseCategoryService;
-		this.expenseService = expenseService;
 	}
 
 	@GetMapping
@@ -40,8 +36,7 @@ public class ExpenseCategoryController {
 	}
 
 	@PostMapping("/add")
-	public String addSupplier(@Valid @ModelAttribute("expensecategory") ExpenseCategoryDto expensecategory,
-			BindingResult bindingResult) {
+	public String addSupplier(@Valid @ModelAttribute("expensecategory") ExpenseCategoryDto expensecategory, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			return "expensecategory/add";
 		}
@@ -71,10 +66,6 @@ public class ExpenseCategoryController {
 
 	@PostMapping("/delete/{expense_category_id}")
 	public String Delete(@PathVariable String expense_category_id, Model model) {
-		ExpenseDto existingEp = expenseService.existByCategoryId(expense_category_id);
-		if (existingEp != null) {
-			model.addAttribute("error", "There are Expense Logs with that Category. Delete them first");
-		}
 		expenseCategoryService.delete(expense_category_id);
 		return "redirect:/manager/expensecategory";
 	}
