@@ -56,6 +56,13 @@ public class ExpenseService {
 		return this.repo.hardDelete(expense_id);
 	}
 	
+	public ExpenseDto existByCategoryId(String category_id) {
+		Expense entity =this.repo.existByCategoryId(category_id);
+		if(entity == null)
+			return null;
+		return toDto(entity);
+	}
+	
 	private ExpenseDto toDto(Expense entity) {
 		ExpenseDto dto = new ExpenseDto();
 		

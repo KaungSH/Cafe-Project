@@ -108,7 +108,7 @@ public class DiscountRepository {
 				+ "JOIN promo_types pt ON d.promo_type_id = pt.promo_type_id \r\n"
 				+ "JOIN audience_types at ON d.audience_type_id = at.audience_type_id \r\n"
 				+ "LEFT JOIN employees e ON d.employee_id = e.employee_id \r\n"
-				+ "LEFT JOIN branches b ON  d.branches_branch_id = b.branch_id WHERE d.isdeleted = 0 \r\n"
+				+ "LEFT JOIN branches b ON  d.branches_branch_id = b.branch_id WHERE d.isdeleted = 0 AND d.discount_id != 'deleted'\r\n"
 				+ "ORDER BY d.created_at DESC";
 		return jdbcTemplate.query(sql, new DiscountListModelResultSetExtractor());
 	}
@@ -120,7 +120,7 @@ public class DiscountRepository {
 				+ "JOIN promo_types pt ON d.promo_type_id = pt.promo_type_id \r\n"
 				+ "JOIN audience_types at ON d.audience_type_id = at.audience_type_id \r\n"
 				+ "LEFT JOIN employees e ON d.employee_id = e.employee_id \r\n"
-				+ "LEFT JOIN branches b ON  d.branches_branch_id = b.branch_id WHERE d.isdeleted = 0 AND d.discount_id = ? \r\n"
+				+ "LEFT JOIN branches b ON  d.branches_branch_id = b.branch_id WHERE d.isdeleted = 0 AND d.discount_id != 'deleted' AND d.discount_id = ? \r\n"
 				+ "ORDER BY d.created_at DESC";
 		List<DiscountListModel> entities = jdbcTemplate.query(sql, new DiscountListModelResultSetExtractor(), id);
 		return entities.isEmpty()?null:entities.get(0);
@@ -131,10 +131,13 @@ public class DiscountRepository {
 	}
 	
 	public int softDelete(String discount_id) {
-		recordDelete(discount_id);
-		setDiscounts_products(discount_id);
-		String sql = "UPDATE discounts SET isdeleted = 1 WHERE discount_id = ?";
-		return jdbcTemplate.update(sql, discount_id);
+		if (!"deleted".equals(discount_id)) {
+			recordDelete(discount_id);
+			setDiscounts_products(discount_id);
+			String sql = "UPDATE discounts SET isdeleted = 1 WHERE discount_id = ?";
+			return jdbcTemplate.update(sql, discount_id);
+		}
+		return 0;
 	}
 
 	public int restore(String discount_id) {
@@ -147,9 +150,12 @@ public class DiscountRepository {
 	}
 
 	public int hardDelete(String discount_id) {
-		deleteRecordRepo.deleteByParentId(discount_id);
-		String sql = "DELETE FROM discounts WHERE discount_id=?";
-		return jdbcTemplate.update(sql, discount_id);
+		if (!"deleted".equals(discount_id)) {
+			deleteRecordRepo.deleteByParentId(discount_id);
+			String sql = "DELETE FROM discounts WHERE discount_id=?";
+			return jdbcTemplate.update(sql, discount_id);
+		}
+		return 0;
 	}
 	
 	private int setDiscounts_products(String discount_id) {

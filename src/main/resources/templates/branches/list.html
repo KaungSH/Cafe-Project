@@ -179,6 +179,9 @@ body {
 						<td style="text-align: right;"><a
 							th:href="@{/manager/branches/edit/{branch_id}(branch_id=${branch.branch_id})}"
 							class="btn-action-edit me-1">Edit</a>
+							<a
+							th:href="@{/manager/branches/status/{branch_id}(branch_id=${branch.branch_id})}"
+							class="btn-action-edit me-1">Change Status</a>
 
 
 							<form

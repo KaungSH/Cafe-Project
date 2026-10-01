@@ -19,18 +19,19 @@ public class SupplierRepository {
 	}
 
 	public List<Supplier> findAll() {
-		String sql = "SELECT * FROM suppliers WHERE isdeleted=0";
+		String sql = "SELECT * FROM suppliers WHERE isdeleted = false";
 		List<Supplier> entities = this.jdbcTemplate.query(sql, new SupplierMapper());
 		return entities;
 	}
 
 	public Supplier findById(String supplier_id) {
-		String sql = "SELECT * FROM suppliers WHERE supplier_id=? AND isdeleted=0";
+		String sql = "SELECT * FROM suppliers WHERE supplier_id=? AND isdeleted = false";
 		List<Supplier> entities = this.jdbcTemplate.query(sql, new SupplierMapper(), supplier_id);
 		return entities.isEmpty() ? null : entities.get(0);
 	}
 
 	public int save(Supplier entity) {
+		System.out.println(entity.getName());
 		String sql = "INSERT INTO suppliers (supplier_id,name,contact_info,isdeleted,created_at) VALUES (?,?,?,?,?)";
 		return this.jdbcTemplate.update(sql, UUID.randomUUID().toString(), entity.getName(), entity.getContact_info(),
 				entity.isIsdeleted(), entity.getCreated_at());
@@ -58,10 +59,5 @@ public class SupplierRepository {
 	public int restore(String supplier_id) {
 		String sql = "UPDATE suppliers SET isdeleted = 0 WHERE supplier_id = ?";
 		return jdbcTemplate.update(sql, supplier_id);
-	}
-	//hard delete
-	public int realDelete(String supplier_id) {
-		String sql = "DELETE FROM suppliers WHERE supplier_id=?";
-		return this.jdbcTemplate.update(sql, supplier_id);
 	}
 }

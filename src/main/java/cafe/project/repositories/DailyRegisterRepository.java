@@ -56,7 +56,7 @@ public class DailyRegisterRepository {
         		+ "JOIN branches b ON dr.branch_id = b.branch_id\r\n"
         		+ "JOIN employees e ON dr.employee_id = e.employee_id\r\n"
         		+ "JOIN register_statuses s ON dr.register_status_id = s.register_status_id\r\n"
-        		+ "WHERE dr.isdeleted = 0\r\n"
+        		+ "WHERE dr.isdeleted = 0 AND dr.register_id != 'deleted'\r\n"
         		+ "ORDER BY dr.date DESC, dr.opened_at DESC;\r\n"
         		+ "";
         return jdbcTemplate.query(sql, new DailyRegisterListDtoMapper());
@@ -91,25 +91,25 @@ public class DailyRegisterRepository {
     }
 
 	public Optional<DailyRegister> findById(String register_id) {
-		String sql = "SELECT * FROM daily_registers where register_id = ? AND isdeleted = 0";
+		String sql = "SELECT * FROM daily_registers where register_id = ? AND isdeleted = 0 AND register_id != 'deleted'";
 		List<DailyRegister> list = jdbcTemplate.query(sql, new DailyRegisterMapper(), register_id);
 		return list.stream().findFirst();
 	}
 	
 	public DailyRegister findByDate(LocalDate date, String employee_id) {
-		String sql = "SELECT * from daily_registers where date = ? AND isdeleted = 0 AND employee_id = ?";
+		String sql = "SELECT * from daily_registers where date = ? AND isdeleted = 0 AND employee_id = ? AND register_id != 'deleted'";
 		List<DailyRegister> entities = jdbcTemplate.query(sql, new DailyRegisterMapper(), date, employee_id);
 		return entities.isEmpty()?null:entities.get(0);
 	}
 	
 	public DailyRegister findByDateOpened(LocalDate date, String employee_id) {
-		String sql = "SELECT d.*, s.name AS status_name from daily_registers d JOIN register_statuses s ON d.register_status_id = s.register_status_id where date = ? AND isdeleted = 0 AND employee_id = ? AND s.name = 'OPENED'";
+		String sql = "SELECT d.*, s.name AS status_name from daily_registers d JOIN register_statuses s ON d.register_status_id = s.register_status_id where date = ? AND isdeleted = 0 AND employee_id = ? AND s.name = 'OPENED' AND d.register_id != 'deleted'";
 		List<DailyRegister> entities = jdbcTemplate.query(sql, new DailyRegisterMapper(), date, employee_id);
 		return entities.isEmpty()?null:entities.get(0);
 	}
 	
 	public DailyRegister findByDateClosed(LocalDate date, String employee_id) {
-		String sql = "SELECT d.*, s.name AS status_name from daily_registers d JOIN register_statuses s ON d.register_status_id = s.register_status_id where date = ? AND isdeleted = 0 AND employee_id = ? AND s.name = 'CLOSED'";
+		String sql = "SELECT d.*, s.name AS status_name from daily_registers d JOIN register_statuses s ON d.register_status_id = s.register_status_id where date = ? AND isdeleted = 0 AND employee_id = ? AND s.name = 'CLOSED' AND d.register_id != 'deleted'";
 		List<DailyRegister> entities = jdbcTemplate.query(sql, new DailyRegisterMapper(), date, employee_id);
 		return entities.isEmpty()?null:entities.get(0);
 	}
@@ -136,10 +136,14 @@ public class DailyRegisterRepository {
 	}
 
 	public int delete(String register_id) {
-		recordDelete(register_id);
-		setDailyReports(register_id);
-		String sql = "UPDATE daily_registers set isdeleted = 1 where register_id = ?";
-		return jdbcTemplate.update(sql, register_id);
+		if(!"deleted".equals(register_id)) {
+			recordDelete(register_id);
+			setDailyReports(register_id);
+			String sql = "UPDATE daily_registers set isdeleted = 1 where register_id = ?";
+			return jdbcTemplate.update(sql, register_id);
+		}
+		
+		return 0;
 	}
 	
 	public int recover(String register_id) {
@@ -152,9 +156,12 @@ public class DailyRegisterRepository {
 	}
 	
 	public int hardDelete(String register_id) {
-		deleteRecordRepo.deleteByParentId(register_id);
-		String sql="DELETE FROM daily_registers WHERE register_id = ?";
-		return jdbcTemplate.update(sql, register_id);
+		if(!"deleted".equals(register_id)) {
+			deleteRecordRepo.deleteByParentId(register_id);
+			String sql="DELETE FROM daily_registers WHERE register_id = ?";
+			return jdbcTemplate.update(sql, register_id);
+		}
+		return 0;
 	}
 	
 	private int setDailyReports(String register_id) {

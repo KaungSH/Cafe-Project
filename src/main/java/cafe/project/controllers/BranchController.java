@@ -17,27 +17,7 @@ public class BranchController {
 	public BranchController(BranchService branchService) {
 		this.branchService = branchService;
 	}
-	@GetMapping
-	public String list(Model model) {
-		model.addAttribute("branches", branchService.findAll());
-		return "branches/list";
-	}
-	@GetMapping("/create")
-	public String showCreateForm(Model model) {
-		model.addAttribute("branchDto", new BranchEntryDto());
-		model.addAttribute("statuses", branchService.findAllStatuses());
-		return "branches/create";
-	}
-	@PostMapping("/create")
-	public String save(@Valid @ModelAttribute("branchDto") BranchEntryDto dto, BindingResult result, Model model) {
-		validateTimeRange(dto, result);
-		if (result.hasErrors()) {
-			model.addAttribute("statuses", branchService.findAllStatuses());
-			return "branches/create";
-		}
-		branchService.add(dto);
-		return "redirect:/manager/branches";
-	}
+
 	@GetMapping("/edit/{branch_id}")
 	public String showEditForm(@PathVariable("branch_id") String branch_id, Model model) {
 		BranchEntryDto dto = branchService.findById(branch_id);
@@ -59,11 +39,25 @@ public class BranchController {
 		branchService.edit(branch_id, dto);
 		return "redirect:/manager/branches";
 	}
-	@PostMapping("/delete/{branch_id}")
-	public String delete(@PathVariable("branch_id") String branch_id) {
-		branchService.delete(branch_id);
+	
+	@GetMapping("/status/{branch_id}")
+	public String changeStatus(@PathVariable("branch_id") String branch_id, Model model) {
+		BranchEntryDto dto = branchService.findById(branch_id);
+		if (dto == null) {
+			return "redirect:/manager/branches";
+		}
+		model.addAttribute("branchDto", dto);
+		model.addAttribute("statuses", branchService.findAllStatuses());
+		return "branches/changeStatus";
+	}
+	@PostMapping("/status")
+	public String changeStatus(@ModelAttribute("branchDto") BranchEntryDto dto, Model model) {
+		branchService.changeStatus(dto.getBranch_id(), dto.getBranch_status_id());
 		return "redirect:/manager/branches";
 	}
+	
+	
+
 	private void validateTimeRange(BranchEntryDto dto, BindingResult result) {
 		if (dto.getOpening_time() != null && dto.getClosing_time() != null) {
 			if (dto.getClosing_time().isBefore(dto.getOpening_time())) {

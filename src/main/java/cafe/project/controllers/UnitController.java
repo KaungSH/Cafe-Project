@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import cafe.project.employeemanagement.models.LoginDto;
 import cafe.project.models.UnitDto;
 import cafe.project.services.UnitService;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class UnitController {
@@ -37,10 +39,10 @@ public class UnitController {
 	}
 
 	@PostMapping("/units/add")
-	public String addUnit(@ModelAttribute("unit") UnitDto unit, Model model) {
-
+	public String addUnit(@ModelAttribute("unit") UnitDto unit, Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		unit.setEmployee_id(ldto.getEmployee_id());
 		this.unitService.add(unit);
-
 		return "redirect:/units";
 	}
 
@@ -59,11 +61,11 @@ public class UnitController {
 		return "redirect:/notfound";
 	}
 
-	@PostMapping("/units/edit")
-	public String editUnit(@ModelAttribute("unit") UnitDto unit, Model model) {
-
+	@PostMapping("/units/edit/{id}")
+	public String editUnit(@ModelAttribute("unit") UnitDto unit, Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		unit.setEmployee_id(ldto.getEmployee_id());
 		this.unitService.edit(unit.getUnit_id(), unit);
-
 		return "redirect:/units";
 	}
 
