@@ -1,5 +1,6 @@
 package cafe.project.services;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -16,10 +17,6 @@ public class OrdersService {
 		this.ordersRepository = ordersRepository;
 	}
 
-	public List<Orders> findAll() {
-		return ordersRepository.findAll();
-	}
-
 	public List<Orders> findDeletedAll() {
 		return ordersRepository.findDeletedAll();
 	}
@@ -30,6 +27,27 @@ public class OrdersService {
 
 	public int save(Orders order) {
 		return ordersRepository.save(order);
+	}
+
+	public int updateTotalAmount(String id, BigDecimal totalAmount) {
+		return ordersRepository.updateTotalAmoun(id, totalAmount);
+	}
+
+	public int setReceivedTime(String orderId) {
+
+		return ordersRepository.setReceivedTime(orderId);
+	}
+
+	public List<Orders> findNotReceivedAll() {
+
+		return ordersRepository.findNotReceivedAll();
+
+	}
+
+	public List<Orders> findReceivedAll() {
+
+		return ordersRepository.findReceivedAll();
+
 	}
 
 	public int edit(String id, Orders order) {

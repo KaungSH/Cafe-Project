@@ -148,7 +148,7 @@ tr:hover {
 
 			<h2>Deleted Expenses</h2>
 
-			<a th:href="@{/manager/expense}" class="back-btn"> Back to
+			<a th:href="@{/manager-only/expense}" class="back-btn"> Back to
 				Expenses </a>
 
 		</div>
@@ -197,7 +197,7 @@ tr:hover {
 
 						<td class="action-cell">
 
-							<form th:action="@{/manager/expense/restore}" method="post"
+							<form th:action="@{/manager-only/expense/restore}" method="post"
 								style="display: inline;">
 
 								<input type="hidden" name="expense_id"
@@ -206,7 +206,7 @@ tr:hover {
 								<button type="submit" class="restore-btn">Restore</button>
 
 							</form>
-							<form th:action="@{/manager/expense/real-delete}" method="post"
+							<form th:action="@{/manager-only/expense/real-delete}" method="post"
 								style="display: inline;"
 								onsubmit="return confirm('Are you sure you want to permanently delete this expense?');">
 

@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
@@ -67,51 +66,7 @@ body {
 
 			<div class="card shadow-sm mb-4">
 
-
-				<div class="card-header bg-primary text-white">Order
-					Information</div>
-
-
-				<div class="card-body">
-
-					<div class="row">
-
-
-						<div class="col-md-6 mb-3">
-
-							<label class="form-label"> Received Time </label> <input
-								type="datetime-local" name="received_time" class="form-control">
-
-						</div>
-
-						<div class="col-md-6 mb-3">
-
-							<label class="form-label"> Total Amount </label> <input
-								type="number" name="total_amount" class="form-control"
-								step="0.01" min="0" placeholder="Enter total amount">
-
-						</div>
-
-						<div class="col-md-6 mb-3">
-
-							<label class="form-label"> Token Number </label> <input
-								type="number" name="token_number" class="form-control" min="1"
-								placeholder="Enter token number">
-
-						</div>
-
-
-					</div>
-
-				</div>
-
-			</div>
-
-			<div class="card shadow-sm mb-4">
-
-
 				<div class="card-header bg-success text-white">Order Details</div>
-
 
 				<div class="card-body">
 
@@ -138,6 +93,7 @@ body {
 								</tr>
 
 							</thead>
+
 							<tbody id="orderDetailsTable">
 
 								<tr>
@@ -147,16 +103,22 @@ body {
 									<td><select name="orderDetails[0].product_id"
 										class="form-select product-select" required>
 
+
 											<option value="">-- Select Product --</option>
+
 
 											<option th:each="product : ${products}"
 												th:value="${product.product_id}"
-												th:text="${product.type_name}"></option>
+												th:text="${product.type_name + ' - ' + product.price}"
+												th:attr="data-price=${product.price}"></option>
+
 
 									</select></td>
 
 									<td><input type="number" name="orderDetails[0].quantity"
-										class="form-control" min="1" required></td>
+										class="form-control quantity-input" min="1" value="1" required>
+
+									</td>
 
 									<td><input type="text" name="orderDetails[0].remark"
 										class="form-control" placeholder="Remark"></td>
@@ -168,12 +130,15 @@ body {
 
 									</td>
 
+
 								</tr>
+
 
 							</tbody>
 
 
 						</table>
+
 
 					</div>
 
@@ -185,13 +150,43 @@ body {
 
 			</div>
 
-			<div class="d-flex justify-content-end gap-2">
+			<div class="card shadow-sm mb-4">
 
+				<div class="card-body">
+
+
+					<div class="row">
+
+
+						<div class="col-md-8"></div>
+
+
+						<div class="col-md-4">
+
+
+							<label class="form-label fw-bold"> Total Amount </label> <input
+								type="text" id="totalAmountDisplay"
+								class="form-control form-control-lg fw-bold" value="0.00"
+								readonly> <input type="hidden" name="total_amount"
+								id="totalAmount" value="0.00">
+
+
+						</div>
+
+
+					</div>
+
+
+				</div>
+
+			</div>
+
+
+			<div class="d-flex justify-content-end gap-2">
 
 				<a th:href="@{/order-with-details}" class="btn btn-secondary">
 
 					Cancel </a>
-
 
 				<button type="submit" class="btn btn-primary">Save Order</button>
 
@@ -205,6 +200,61 @@ body {
 	</div>
 
 	<script>
+		function calculateTotal() {
+
+			let total = 0;
+
+			const rows = document.querySelectorAll("#orderDetailsTable tr");
+
+			rows
+					.forEach(function(row) {
+
+						const product = row.querySelector(".product-select");
+
+						const quantity = row.querySelector(".quantity-input");
+
+						if (product && quantity) {
+
+							const selectedOption = product.options[product.selectedIndex];
+
+							const price = parseFloat(selectedOption
+									.getAttribute("data-price")) || 0;
+
+							const qty = parseInt(quantity.value) || 0;
+
+							total = total + (price * qty);
+
+						}
+
+					});
+
+			document.getElementById("totalAmountDisplay").value = total
+					.toFixed(2);
+
+			document.getElementById("totalAmount").value = total.toFixed(2);
+
+		}
+
+		document.addEventListener("change", function(event) {
+
+			if (event.target.classList.contains("product-select")) {
+
+				calculateTotal();
+
+			}
+
+		});
+
+		document.addEventListener("input", function(event) {
+
+			if (event.target.classList.contains("quantity-input")) {
+
+				calculateTotal();
+
+			}
+
+		});
+
 		function addProduct() {
 
 			const table = document.getElementById("orderDetailsTable");
@@ -213,11 +263,17 @@ body {
 
 			const row = document.createElement("tr");
 
+			const numberCell = document.createElement("td");
+
+			numberCell.className = "text-center";
+
+			numberCell.innerText = table.rows.length + 1;
+
+			const productCell = document.createElement("td");
+
 			const productSelect = firstSelect.cloneNode(true);
 
 			productSelect.value = "";
-
-			const productCell = document.createElement("td");
 
 			productCell.appendChild(productSelect);
 
@@ -226,8 +282,13 @@ body {
 			const quantityInput = document.createElement("input");
 
 			quantityInput.type = "number";
-			quantityInput.className = "form-control";
+
+			quantityInput.className = "form-control quantity-input";
+
 			quantityInput.min = "1";
+
+			quantityInput.value = "1";
+
 			quantityInput.required = true;
 
 			quantityCell.appendChild(quantityInput);
@@ -237,7 +298,9 @@ body {
 			const remarkInput = document.createElement("input");
 
 			remarkInput.type = "text";
+
 			remarkInput.className = "form-control";
+
 			remarkInput.placeholder = "Remark";
 
 			remarkCell.appendChild(remarkInput);
@@ -249,7 +312,9 @@ body {
 			const removeButton = document.createElement("button");
 
 			removeButton.type = "button";
+
 			removeButton.className = "btn btn-danger btn-sm";
+
 			removeButton.innerText = "Remove";
 
 			removeButton.onclick = function() {
@@ -260,19 +325,19 @@ body {
 
 			actionCell.appendChild(removeButton);
 
-			const numberCell = document.createElement("td");
-
-			numberCell.className = "text-center";
-
 			row.appendChild(numberCell);
+
 			row.appendChild(productCell);
+
 			row.appendChild(quantityCell);
+
 			row.appendChild(remarkCell);
+
 			row.appendChild(actionCell);
 
-			table.appendChild(row);
-
 			updateIndexes();
+
+			calculateTotal();
 
 		}
 
@@ -284,6 +349,8 @@ body {
 
 			updateIndexes();
 
+			calculateTotal();
+
 		}
 
 		function updateIndexes() {
@@ -294,22 +361,41 @@ body {
 
 				row.cells[0].innerText = index + 1;
 
-				const product = row.querySelector("select");
+				const product = row.querySelector(".product-select");
 
-				product.name = "orderDetails[" + index + "].product_id";
+				if (product) {
 
-				const quantity = row.querySelector("input[type='number']");
+					product.name = "orderDetails[" + index + "].product_id";
 
-				quantity.name = "orderDetails[" + index + "].quantity";
+				}
+
+				const quantity = row.querySelector(".quantity-input");
+
+				if (quantity) {
+
+					quantity.name = "orderDetails[" + index + "].quantity";
+
+				}
 
 				const remark = row.querySelector("input[type='text']");
 
-				remark.name = "orderDetails[" + index + "].remark";
+				if (remark) {
+
+					remark.name = "orderDetails[" + index + "].remark";
+
+				}
 
 			});
 
 		}
+
+		document.addEventListener("DOMContentLoaded", function() {
+
+			calculateTotal();
+
+		});
 	</script>
+
 
 </body>
 

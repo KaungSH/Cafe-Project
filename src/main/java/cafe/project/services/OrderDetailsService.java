@@ -1,5 +1,6 @@
 package cafe.project.services;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -44,6 +45,10 @@ public class OrderDetailsService {
 
 			orderDetailsRepository.save(orderDetail);
 		}
+	}
+
+	public BigDecimal calculateTotalAmount(String orderId) {
+		return orderDetailsRepository.calculateTotalAmount(orderId);
 	}
 
 	// Update order detail

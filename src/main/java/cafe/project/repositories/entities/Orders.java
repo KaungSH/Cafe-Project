@@ -8,12 +8,16 @@ public class Orders {
 	private String order_id;
 	private String employee_id;
 	private String branch_id;
+	
 	private LocalDateTime created_time;
 	private LocalDateTime received_time;
+	
 	private boolean isedited;
 	private boolean isdeleted;
+	
 	private BigDecimal total_amount;
 	private int token_number;
+	
 	private String employee_name;
 	private String branch_name;
 

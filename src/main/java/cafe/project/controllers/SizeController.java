@@ -1,8 +1,10 @@
 package cafe.project.controllers;
 
+import cafe.project.employeemanagement.models.LoginDto;
 import cafe.project.models.SizeEntryDto;
 import cafe.project.repositories.entities.Size;
 import cafe.project.services.SizeService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,12 +12,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("manager/sizes")
+@RequestMapping("/admin/sizes")
 public class SizeController {
 
 	private final SizeService sizeService;
 
-	SizeController(SizeService sizeService) {
+	public SizeController(SizeService sizeService) {
 		this.sizeService = sizeService;
 	}
 
@@ -28,18 +30,18 @@ public class SizeController {
 	@GetMapping("/create")
 	public String showCreateForm(Model model) {
 		model.addAttribute("sizeDto", new SizeEntryDto());
-		model.addAttribute("employees", sizeService.getAllEmployees());
 		return "sizes/create";
 	}
 
 	@PostMapping("/create")
-	public String create(@Valid @ModelAttribute("sizeDto") SizeEntryDto sizeDto, BindingResult result, Model model) {
+	public String create(@Valid @ModelAttribute("sizeDto") SizeEntryDto sizeDto, BindingResult result, Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		if (result.hasErrors()) {
-			model.addAttribute("employees", sizeService.getAllEmployees());
 			return "sizes/create";
 		}
+		sizeDto.setEmployee_id(ldto.getEmployee_id());
 		sizeService.createSize(sizeDto);
-		return "redirect:/manager/sizes";
+		return "redirect:/admin/sizes";
 	}
 
 	@GetMapping("/edit/{size_id}")
@@ -50,20 +52,21 @@ public class SizeController {
 	}
 
 	@PostMapping("/edit/{size_id}")
-	public String update(@PathVariable("size_id") String size_id,
-			@Valid @ModelAttribute("sizeDto") SizeEntryDto sizeDto, BindingResult result) {
+	public String update(@PathVariable("size_id") String size_id, @Valid @ModelAttribute("sizeDto") SizeEntryDto sizeDto, BindingResult result, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		if (result.hasFieldErrors("name") || result.hasFieldErrors("size_code")) {
 			return "sizes/edit";
 		}
+		sizeDto.setEmployee_id(ldto.getEmployee_id());
 		sizeDto.setSize_id(size_id);
 		sizeService.updateSize(sizeDto);
-		return "redirect:/manager/sizes";
+		return "redirect:/admin/sizes";
 	}
 
 	@GetMapping("/delete/{size_id}")
 	public String delete(@PathVariable("size_id") String size_id) {
 		sizeService.deleteSize(size_id);
-		return "redirect:/manager/sizes";
+		return "redirect:/admin/sizes";
 
 	}
 
@@ -76,7 +79,7 @@ public class SizeController {
 	@GetMapping("/recover/{size_id}")
 	public String recover(@PathVariable("size_id") String size_id) {
 		sizeService.restoreSize(size_id);
-		return "redirect:/manager/sizes/deleted";
+		return "redirect:/admin/sizes/deleted";
 	}
 
 	@GetMapping("/hard-delete/{size_id}")
@@ -89,6 +92,6 @@ public class SizeController {
 	@PostMapping("/hard-delete/{size_id}")
 	public String hardDelete(@PathVariable("size_id") String size_id) {
 		sizeService.hardDeleteSize(size_id);
-		return "redirect:/manager/sizes/deleted";
+		return "redirect:/admin/sizes/deleted";
 	}
 }

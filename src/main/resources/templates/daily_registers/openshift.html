@@ -12,7 +12,7 @@
 <!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<style>
+<style th:inline="css">
 :root {
   --coffee-dark: #1b0b05;
   --coffee-deep: #2b1209;
@@ -48,13 +48,10 @@ overflow-x: hidden;
 
 color: var(--cream);
 
-background:
-
-linear-gradient(180deg, rgba(10,5,3,.42), rgba(10,5,3,.74)),
-
-url('/images/Open.png') no-repeat center center fixed;
-
-background-size: cover;
+  background: 
+    linear-gradient(180deg, rgba(10,5,3,.42), rgba(10,5,3,.74)),
+    url('[[@{/images/Open.png}]]') no-repeat center center fixed;
+  background-size: cover;
 
 }
 

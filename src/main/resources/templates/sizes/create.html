@@ -40,16 +40,8 @@ body {
 		<div class="card-box">
 			<h4 class="fw-bold text-secondary mb-4">Add New Size</h4>
 
-			<form th:action="@{/manager/sizes/create}" th:object="${sizeDto}"
+			<form th:action="@{/admin/sizes/create}" th:object="${sizeDto}"
 				method="post">
-				<div class="mb-3">
-					<label class="form-label text-secondary fw-medium">Employee</label>
-					<select th:field="*{employee_id}" class="form-select" required>
-						<option value="">Select Employee</option>
-						<option th:each="emp : ${employees}" th:value="${emp.employee_id}"
-							th:text="${emp.name}"></option>
-					</select>
-				</div>
 
 				<div class="mb-3">
 					<label class="form-label text-secondary fw-medium">Size
@@ -75,7 +67,7 @@ body {
 				</div>
 
 				<div class="d-flex justify-content-between align-items-center">
-					<a th:href="@{/manager/sizes}" class="btn btn-light border">Cancel</a>
+					<a th:href="@{/admin/sizes}" class="btn btn-light border">Cancel</a>
 					<button type="submit" class="btn btn-custom-primary">Save
 						Size</button>
 				</div>
