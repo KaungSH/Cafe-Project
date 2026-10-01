@@ -1,13 +1,215 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layout}">
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+      layout:decorate="~{common/layout}">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+    <meta charset="UTF-8">
+    <title>404 - Page Not Found | Café Luft</title>
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --cafe-deep: #1e0f07;       /* အလွန်ရင့်သော espresso အရောင် */
+            --cafe-card: #2d160c;       /* ပြတ်သားသော card နောက်ခံအရောင် */
+            --caramel: #e28e44;         /* ကာရာမဲလ် အဓိကအရောင် */
+            --caramel-bright: #ffad66;  /* ခလုတ်အရောင် */
+            --text-main: #ffffff;       /* ခေါင်းစဉ်ဖြူဖြူစင်စင် */
+            --text-sub: #ecd9cb;        /* ဖတ်ရလွယ်သော စာသားအရောင် */
+            --pill-bg: #472414;         /* Status pill နောက်ခံ */
+        }
+
+        .error-viewport {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            padding: 30px 15px;
+        }
+
+        /* ပိုမိုပြတ်သားခိုင်မာပြီး အရိပ်ထင်းထင်း ထွက်စေမည့် Card */
+        .error-card-pro {
+            width: 100%;
+            max-width: 500px;
+            background: var(--cafe-card);
+            border: 2px solid var(--caramel);
+            border-radius: 28px;
+            padding: 45px 35px;
+            text-align: center;
+            box-shadow: 0 25px 60px rgba(30, 15, 7, 0.45);
+        }
+
+        /* Coffee Cup Icon Box */
+        .coffee-cup-art {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 20px auto;
+            background: #190b04;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(226, 142, 68, 0.4);
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.6);
+        }
+
+        .cup-icon {
+            font-size: 40px;
+            color: var(--caramel-bright);
+            position: relative;
+            top: 4px;
+        }
+
+        /* Floating Steam Animation */
+        .steam-line {
+            position: absolute;
+            background: #ffffff;
+            border-radius: 10px;
+            width: 3.5px;
+            animation: rise 2s infinite ease-in-out;
+        }
+        .steam-1 { height: 16px; top: 12px; left: 38px; animation-delay: 0s; }
+        .steam-2 { height: 22px; top: 8px; left: 46px; animation-delay: 0.4s; }
+        .steam-3 { height: 14px; top: 14px; left: 54px; animation-delay: 0.8s; }
+
+        @keyframes rise {
+            0% { transform: translateY(5px); opacity: 0; }
+            50% { opacity: 0.9; }
+            100% { transform: translateY(-10px); opacity: 0; }
+        }
+
+        /* 404 Status Pill - စာလုံးထင်းထင်းမြင်ရစေရန် */
+        .code-pill {
+            display: inline-block;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 6px 18px;
+            background: var(--pill-bg);
+            border: 1px solid var(--caramel);
+            border-radius: 50px;
+            color: var(--caramel-bright);
+            margin-bottom: 16px;
+        }
+
+        /* Main Heading */
+        .error-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 30px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            letter-spacing: -0.3px;
+        }
+
+        /* Error Description / Sub-message */
+        .error-description {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-sub);
+            line-height: 1.6;
+            margin-bottom: 35px;
+            padding: 0 10px;
+        }
+
+        /* Buttons Group */
+        .action-flex {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 480px) {
+            .action-flex { grid-template-columns: 1fr; }
+        }
+
+        /* ထင်းလင်းသော Caramel Primary Button */
+        .btn-luxe-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 13px 20px;
+            background: var(--caramel-bright);
+            border: none;
+            border-radius: 12px;
+            color: #1a0a03;
+            font-weight: 800;
+            font-size: 14px;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(226, 142, 68, 0.4);
+            transition: all 0.25s ease;
+        }
+
+        .btn-luxe-primary:hover {
+            background: #ffbe85;
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        /* နားလည်လွယ်သော Secondary Button */
+        .btn-luxe-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 13px 20px;
+            background: #472414;
+            border: 1.5px solid var(--caramel);
+            border-radius: 12px;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.25s ease;
+        }
+
+        .btn-luxe-secondary:hover {
+            background: #5a2e19;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+    </style>
 </head>
-<div layout:fragment = "content">
-	<h2><strong th:text="${message}"></strong> not found. <br> 404 Not Found.</h2>
-	<a th:href="@{/}" class="btn btn-dark">Go Back to Home.</a>
+
+<div layout:fragment="content">
+    <div class="error-viewport">
+        <div class="error-card-pro">
+            
+            <!-- Animated Steam & Coffee Cup -->
+            <div class="coffee-cup-art">
+                <span class="steam-line steam-1"></span>
+                <span class="steam-line steam-2"></span>
+                <span class="steam-line steam-3"></span>
+                <i class="fa-solid fa-mug-hot cup-icon"></i>
+            </div>
+
+            <!-- 404 Tag -->
+            <div class="code-pill">ERROR 404 NOT FOUND</div>
+
+            <!-- Title -->
+            <h1 class="error-heading">Out of Order / Not Found</h1>
+            
+            <!-- Error Message -->
+            <p class="error-description">
+                <span th:if="${message}" th:text="${message}">No static resource found.</span>
+                <span th:unless="${message}">This page seems to have run out of coffee beans! The link you are looking for has been moved or doesn't exist.</span>
+            </p>
+
+            <!-- Action Buttons -->
+            <div class="action-flex">
+                <a th:href="@{/}" class="btn-luxe-primary">
+                    <i class="fa-solid fa-house-chimney me-2"></i>Go to Home
+                </a>
+                <a href="javascript:history.back()" class="btn-luxe-secondary">
+                    <i class="fa-solid fa-arrow-left me-2"></i>Go Back
+                </a>
+            </div>
+
+        </div>
+    </div>
 </div>
 </html>
