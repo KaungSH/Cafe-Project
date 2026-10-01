@@ -160,6 +160,11 @@ tbody tr:hover {
 	min-width: 150px;
 	white-space: nowrap;
 }
+
+.error {
+        	color : red;
+            font-size: 0.950rem;
+        }
 </style>
 
 </head>
@@ -189,12 +194,12 @@ tbody tr:hover {
 					Deleted Expenses List </a>
 
 			</div>
-
+			<div th:text = "${error}"></div>
 		</div>
 
 
 		<table>
-
+			
 			<thead>
 
 				<tr>

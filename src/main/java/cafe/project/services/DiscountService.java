@@ -7,6 +7,7 @@ import cafe.project.models.DiscountListModel;
 import cafe.project.repositories.DiscountRepository;
 import cafe.project.repositories.entities.Discount;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,6 +26,27 @@ public class DiscountService {
 		List<DiscountListModel> modelList = discountRepository.findAllForList(branch_id);
 		
 		for (DiscountListModel m : modelList) {
+			setStatus(m.getDiscount_id(), m.getStartdate(), m.getEnddate());
+			m.setProducts(productService.findListAllByDiscountId(m.getDiscount_id()));
+		}
+		return modelList;
+	}
+	
+	public List<DiscountListModel> getAllDiscountsInactive(String branch_id) {
+		List<DiscountListModel> modelList = discountRepository.findAllForListInactive(branch_id);
+		
+		for (DiscountListModel m : modelList) {
+			setStatus(m.getDiscount_id(), m.getStartdate(), m.getEnddate());
+			m.setProducts(productService.findListAllByDiscountId(m.getDiscount_id()));
+		}
+		return modelList;
+	}
+	
+	public List<DiscountListModel> getAllDiscountsActive(String branch_id) {
+		List<DiscountListModel> modelList = discountRepository.findAllForListActive(branch_id);
+		
+		for (DiscountListModel m : modelList) {
+			setStatus(m.getDiscount_id(), m.getStartdate(), m.getEnddate());
 			m.setProducts(productService.findListAllByDiscountId(m.getDiscount_id()));
 		}
 		return modelList;
@@ -34,6 +56,7 @@ public class DiscountService {
 		List<DiscountListModel> modelList = discountRepository.findAllForListAdmin();
 		
 		for (DiscountListModel m : modelList) {
+			setStatus(m.getDiscount_id(), m.getStartdate(), m.getEnddate());
 			m.setProducts(productService.findListAllByDiscountId(m.getDiscount_id()));
 		}
 		return modelList;
@@ -113,5 +136,15 @@ public class DiscountService {
 
 	public int hardDelete(String id) {
 		return discountRepository.hardDelete(id);
+	}
+	
+	private int setStatus(String discount_id, LocalDate startDate, LocalDate endDate) {
+		boolean isActive = !LocalDate.now().isBefore(startDate) && !LocalDate.now().isAfter(endDate);
+
+		if (isActive) {
+	       return discountRepository.setStatus(discount_id, true);
+	    } else {
+	       return discountRepository.setStatus(discount_id, false);
+	    }
 	}
 }

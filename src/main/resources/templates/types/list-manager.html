@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate = "~{common/layout}">
+<head>
+<meta charset="UTF-8">
+<title>Types List - Manager</title>
+</head>
+<div layout:fragment = "content">
+	<h2><span th:text = "${dname}"></span> Types List</h2>
+	<table class = "table table-bordered table-striped">
+		<thead>
+			<tr>
+				<th>No.</th>
+				
+				<th>Type Name</th>
+
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="t,state:${types}" style = "height : 200px">
+				<td th:text = "${state.count}"></td>
+				
+				<td th:if = "${t.audience_type_name != null}" th:text = "${t.audience_type_name}"></td>
+				<td th:if = "${t.promo_type_name != null}" th:text = "${t.promo_type_name}"></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+</html>

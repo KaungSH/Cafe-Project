@@ -12,21 +12,13 @@ public class BranchesStatsMapper implements RowMapper<BranchesStats> {
 
 	@Override
 	public BranchesStats mapRow(ResultSet rs, int rowNum) throws SQLException {
-			
+
 		LocalDateTime created_at = rs.getObject("created_at", LocalDateTime.class);
-		
-		return new BranchesStats(
-					rs.getString("branch_stats_id"),
-					rs.getString("branch_id"),
-					rs.getInt("salecount"),
-					rs.getDouble("saleamount"),
-					rs.getString("month"),
-					rs.getBoolean("isedited"),
-					rs.getBoolean("isdeleted"),
-					created_at,
-					rs.getDouble("employee_id"),
-					rs.getString("employee_id")
-					);
+
+		return new BranchesStats(rs.getString("branch_stat_id"), rs.getString("branch_id"), rs.getInt("salecount"),
+				rs.getDouble("saleamount"), rs.getString("month"), rs.getBoolean("isedited"),
+				rs.getBoolean("isdeleted"), created_at, rs.getDouble("employee_costs"), rs.getString("employee_id"),
+				rs.getString("branch_name"), rs.getString("employee_name"));
 	}
 
 }

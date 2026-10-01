@@ -18,19 +18,19 @@ public class BranchRepository {
 	}
 
 	public List<Branch> findAll() {
-		String sql = "SELECT * FROM branches WHERE isdeleted = false";
+		String sql = "SELECT * FROM branches WHERE isdeleted = false AND branch_id != 'deleted'";
 		return this.jdbcTemplate.query(sql, new BranchMapper());
 	}
 
 	public List<Branch> findAllWithRelation() {
 		String sql = "SELECT b.*, s.name AS status_name FROM branches b "
 				+ "INNER JOIN branch_statuses s ON b.branch_status_id = s.branch_status_id "
-				+ "WHERE b.isdeleted = false";
+				+ "WHERE b.isdeleted = false AND branch_id != 'deleted'";
 		return this.jdbcTemplate.query(sql, new BranchMapper2());
 	}
 
 	public Branch findById(String branch_id) {
-		String sql = "SELECT * FROM branches WHERE branch_id = ? AND isdeleted = false";
+		String sql = "SELECT * FROM branches WHERE branch_id = ? AND isdeleted = false AND branch_id != 'deleted'";
 		List<Branch> list = this.jdbcTemplate.query(sql, new BranchMapper(), branch_id);
 		return list.isEmpty() ? null : list.get(0);
 	}
@@ -38,9 +38,13 @@ public class BranchRepository {
 	public Branch findByIdWithRelation(String branch_id) {
 		String sql = "SELECT b.*, s.name AS status_name FROM branches b "
 				+ "INNER JOIN branch_statuses s ON b.branch_status_id = s.branch_status_id "
-				+ "WHERE b.isdeleted = false AND b.branch_id = ?";
+				+ "WHERE b.isdeleted = false AND b.branch_id = ? AND branch_id != 'deleted'";
 		List<Branch> list = this.jdbcTemplate.query(sql, new BranchMapper2(), branch_id);
 		return list.isEmpty() ? null : list.get(0);
+	}
+	
+	public int changeStatus(String branch_id, String status_id) {
+		return jdbcTemplate.update("UPDATE branches SET branch_status_id = ? WHERE branch_id = ?", status_id, branch_id);
 	}
 
 	public int save(Branch entity) {
@@ -58,8 +62,4 @@ public class BranchRepository {
 				entity.getBranch_status_id(), entity.getOpening_time(), entity.getClosing_time(), branch_id);
 	}
 
-	public int delete(String branch_id) {
-		String sql = "UPDATE branches SET isdeleted = true WHERE branch_id = ?";
-		return this.jdbcTemplate.update(sql, branch_id);
-	}
 }

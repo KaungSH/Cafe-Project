@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Orders List</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<style>
+body {
+	background-color: #f5f5f5;
+	font-family: Arial, sans-serif;
+}
+
+.container {
+	margin-top: 30px;
+	margin-bottom: 50px;
+}
+
+.page-title {
+	font-weight: bold;
+	margin-bottom: 20px;
+}
+
+.order-card {
+	background-color: white;
+	border-radius: 10px;
+	margin-bottom: 25px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+	overflow: hidden;
+}
+
+.order-header {
+	background-color: #212529;
+	color: white;
+	padding: 15px 25px;
+}
+
+.order-header .label {
+	font-weight: bold;
+}
+
+.order-header .value {
+	margin-left: 5px;
+}
+
+.order-body {
+	padding: 25px;
+}
+
+.info-label {
+	font-weight: bold;
+	font-size: 18px;
+	margin-bottom: 5px;
+}
+
+.info-value {
+	font-size: 17px;
+}
+
+.details-title {
+	font-size: 25px;
+	font-weight: bold;
+	margin-top: 25px;
+	margin-bottom: 15px;
+}
+
+.table th {
+	font-weight: bold;
+	background-color: #f8f9fa;
+}
+
+.table td, .table th {
+	vertical-align: middle;
+}
+
+.order-actions {
+	text-align: right;
+	margin-top: 20px;
+}
+
+.btn-edit {
+	background-color: #ffc107;
+	color: black;
+	border: none;
+}
+
+.btn-edit:hover {
+	background-color: #e0a800;
+	color: black;
+}
+
+.btn-delete {
+	background-color: #dc3545;
+	color: white;
+	border: none;
+}
+
+.btn-delete:hover {
+	background-color: #bb2d3b;
+	color: white;
+}
+</style>
+
+</head>
+
+
+<body>
+
+	<div class="container">
+
+		<div class="d-flex justify-content-between align-items-center mb-4">
+
+			<h2 class="page-title">Orders List</h2>
+
+			<div>
+
+				<a th:href="@{/order-with-details/add}" class="btn btn-success">
+					+ Add Order </a> <a th:href="@{/order-with-details/deleted}"
+					class="btn btn-warning"> Deleted Orders </a>
+
+			</div>
+
+		</div>
+
+		<div th:each="order : ${orders}" class="order-card">
+
+
+			<div class="order-header">
+
+				<div class="row">
+
+					<div class="col-md-3">
+
+						<span class="label"> Order ID: </span> <span class="value"
+							th:text="${order.order_id}"> order-id </span>
+
+					</div>
+
+					<div class="col-md-3">
+
+						<span class="label"> Employee: </span> <span class="value"
+							th:text="${order.employee_name}"> Employee Name </span>
+
+					</div>
+
+					<div class="col-md-3">
+
+						<span class="label"> Branch: </span> <span class="value"
+							th:text="${order.branch_name}"> Branch Name </span>
+
+					</div>
+
+					<div class="col-md-3">
+
+						<span class="label"> Token: </span> <span class="value"
+							th:text="${order.token_number}"> 99 </span>
+
+					</div>
+
+				</div>
+
+			</div>
+
+			<div class="order-body">
+
+
+				<div class="row">
+
+					<div class="col-md-3">
+
+						<div class="info-label">Created Time</div>
+
+						<div class="info-value" th:text="${order.created_time}">
+							2026-09-30T21:42:28</div>
+
+					</div>
+
+					<div class="col-md-3">
+
+						<div class="info-label">Received Time</div>
+
+						<div class="info-value" th:text="${order.received_time}">
+							2026-09-30T21:42</div>
+
+					</div>
+
+					<div class="col-md-3">
+
+						<div class="info-label">Total Amount</div>
+
+						<div class="info-value" th:text="${order.total_amount}">
+							1000.00</div>
+
+					</div>
+
+				</div>
+
+				<div class="details-title">Order Details</div>
+
+				<table class="table table-bordered">
+
+					<thead>
+
+						<tr>
+
+							<th style="width: 75px;">No.</th>
+
+							<th>Product</th>
+
+							<th style="width: 250px;">Quantity</th>
+
+							<th>Remark</th>
+
+						</tr>
+
+					</thead>
+
+
+					<tbody class="order-details-body">
+
+
+						<tr th:each="detail : ${orderDetails}"
+							th:if="${detail.order_id == order.order_id}">
+
+							<td class="detail-number">1</td>
+
+							<td><span th:text="${detail.product_name}"> Coffee -
+									Espresso </span></td>
+
+							<td><span th:text="${detail.quantity}"> 1 </span></td>
+
+							<td><span th:text="${detail.remark}"> Warmed up </span></td>
+
+						</tr>
+
+
+					</tbody>
+
+				</table>
+
+				<div class="order-actions">
+
+					<a th:href="@{/order-with-details/edit/{id}(id=${order.order_id})}"
+						class="btn btn-edit"> Edit </a>
+
+					<form
+						th:action="@{/order-with-details/delete/{id}(id=${order.order_id})}"
+						method="post" style="display: inline;">
+
+						<button type="submit" class="btn btn-delete"
+							onclick="return confirm('Are you sure you want to delete this order?');">
+
+							Delete</button>
+
+					</form>
+
+
+				</div>
+
+
+			</div>
+
+		</div>
+
+		<div th:if="${#lists.isEmpty(orders)}"
+			class="alert alert-info text-center">No orders found.</div>
+
+
+	</div>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+
+			const detailTables = document
+					.querySelectorAll(".order-details-body");
+
+			detailTables.forEach(function(tbody) {
+
+				const rows = tbody.querySelectorAll("tr");
+
+				rows.forEach(function(row, index) {
+
+					const numberCell = row.querySelector(".detail-number");
+
+					if (numberCell) {
+
+						numberCell.innerText = index + 1;
+
+					}
+
+				});
+
+			});
+
+		});
+	</script>
+
+
+</body>
+
+</html>

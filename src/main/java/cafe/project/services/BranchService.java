@@ -67,13 +67,14 @@ public class BranchService {
 		Branch entity = toEntity(dto);
 		return this.branchRepository.edit(branch_id, entity) > 0;
 	}
-
-	public boolean delete(String branch_id) {
+	
+	public boolean changeStatus(String branch_id, String status_id) {
 		Branch existingBranch = this.branchRepository.findById(branch_id);
 		if (existingBranch == null) {
 			return false;
 		}
-		return this.branchRepository.delete(branch_id) > 0;
+
+		return this.branchRepository.changeStatus(branch_id, status_id) > 0;
 	}
 
 	private BranchListDto toListDto(Branch entity) {

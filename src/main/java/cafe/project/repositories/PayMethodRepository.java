@@ -92,4 +92,21 @@ public class PayMethodRepository {
 		String sql = "UPDATE pay_methods SET isdeleted = 1, isedited = 1 WHERE method_id = ?";
 		return jdbcTemplate.update(sql, methodId);
 	}
+
+	public List<PayMethodDto> deletedList() {
+		String sql = "SELECT pm.method_id AS method_id, pm.name AS method_name, \r\n"
+				+ "pm.description AS description, pm.logopath AS logopath, \r\n"
+				+ "pm.is_active AS is_active,pm.isedited AS isedited, \r\n"
+				+ "pm.isdeleted AS isdeleted,pm.created_at AS created_at, \r\n"
+				+ "pm.employee_id AS employee_id, e.name AS employee_name \r\n"
+				+ "FROM pay_methods pm LEFT JOIN employees e ON pm.employee_id = e.employee_id \r\n"
+				+ "WHERE pm.isdeleted = 1 ORDER BY pm.created_at DESC";
+		return jdbcTemplate.query(sql, new PayMethodResultSetExtractor());
+	}
+
+	public int restore(String methodId) {
+		String sql = "UPDATE pay_methods SET isdeleted=0 WHERE method_id=?";
+		return jdbcTemplate.update(sql, methodId);
+	}
+
 }

@@ -21,18 +21,18 @@ public class AtypeAndPtypeRepository {
 	
 	public List<AtypeAndPtype> findTypesAll(boolean isPromo) {
 		if(!isPromo) {
-			return jdbcTemplate.query("SELECT * FROM audience_types", new AudienceTypeMapper());
+			return jdbcTemplate.query("SELECT * FROM audience_types WHERE audience_type_id != 'deleted'", new AudienceTypeMapper());
 		} else {
-			return jdbcTemplate.query("SELECT * FROM promo_types", new PromoTypeMapper());
+			return jdbcTemplate.query("SELECT * FROM promo_types AND audience_type_id != 'deleted'", new PromoTypeMapper());
 		}
 		
 	}
 	
 	public AtypeAndPtype findTypeById(String id, boolean isPromo) {
 		if(isPromo) {
-			return jdbcTemplate.queryForObject("SELECT * FROM promo_types WHERE promo_type_id = ?", new PromoTypeMapper(), id);
+			return jdbcTemplate.queryForObject("SELECT * FROM promo_types WHERE promo_type_id = ? AND promo_type_id != 'deleted'", new PromoTypeMapper(), id);
 		} else {
-			return jdbcTemplate.queryForObject("SELECT * FROM audience_types WHERE audience_type_id = ?", new AudienceTypeMapper(), id);
+			return jdbcTemplate.queryForObject("SELECT * FROM audience_types WHERE audience_type_id = ? AND audience_type_id != 'deleted'", new AudienceTypeMapper(), id);
 		}
 	}
 	

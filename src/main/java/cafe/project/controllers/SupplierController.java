@@ -27,20 +27,20 @@ public class SupplierController {
 
 	@GetMapping("/suppliers")
 	public String supplierList(Model model) {
-		model.addAttribute("supplier", this.supplierService.findAll());
-		return "NayZarLinn/supplier/list";
+		model.addAttribute("suppliers", this.supplierService.findAll());
+		return "supplier/list";
 	}
 
 	@GetMapping("/suppliers/add")
 	public String addSupplier(Model model) {
 		model.addAttribute("supplier", new SupplierDto());
-		return "NayZarLinn/supplier/add";
+		return "supplier/add";
 	}
 
 	@PostMapping("/suppliers/add")
 	public String addSupplier(@Valid @ModelAttribute("supplier") SupplierDto supplier, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
-			return "NayZarLinn/supplier/add";
+			return "supplier/add";
 		}
 		supplier.setCreated_at(LocalDateTime.now());
 		this.supplierService.add(supplier);
@@ -52,16 +52,16 @@ public class SupplierController {
 		SupplierDto existingSup = this.supplierService.findById(supplier_id);
 		if (existingSup != null) {
 			model.addAttribute("supplier", existingSup);
-			return "NayZarLinn/supplier/edit";
+			return "supplier/edit";
 		}
-		return "";
+		return "redirect:/manager/suppliers";
 	}
 
 	@PostMapping("/suppliers/edit")
 	public String editSupplier(@Valid @ModelAttribute("supplier") SupplierDto supplier, BindingResult bindingResult,
 			Model model) {
 		if (bindingResult.hasErrors()) {
-			return "NayZarLinn/supplier/edit";
+			return "supplier/edit";
 		}
 		supplier.setCreated_at(LocalDateTime.now());
 		this.supplierService.edit(supplier.getSupplier_id(), supplier);
@@ -73,9 +73,9 @@ public class SupplierController {
 		SupplierDto existingSup = this.supplierService.findById(supplier_id);
 		if (existingSup != null) {
 			model.addAttribute("supplier", existingSup);
-			return "NayZarLinn/supplier/delete";
+			return "supplier/delete";
 		}
-		return "";
+		return "redirect:/manager/suppliers";
 	}
 
 	@PostMapping("/suppliers/delete")
@@ -87,18 +87,12 @@ public class SupplierController {
 	@GetMapping("/suppliers/deleted")
 	public String deletedSupplierList(Model model) {
 		model.addAttribute("supplier", supplierService.findDeleted());
-		return "NayZarLinn/supplier/deletedList";
+		return "supplier/deletedList";
 	}
 
 	@PostMapping("/suppliers/restore")
 	public String restoreSupplier(@RequestParam String supplier_id) {
 		supplierService.restore(supplier_id);
-		return "redirect:/manager/suppliers/deleted";
-	}
-
-	@PostMapping("/suppliers/real-delete")
-	public String realDeleteSupplier(@ModelAttribute("supplier") SupplierDto supplier) {
-		supplierService.realDelete(supplier.getSupplier_id());
 		return "redirect:/manager/suppliers/deleted";
 	}
 

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Deleted Payment Methods | Coffee Shop</title>
+
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<link
+	href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap"
+	rel="stylesheet">
+
+<style>
+body {
+	background-color: #f9f4ef;
+	font-family: 'Nunito', sans-serif;
+	color: #4a3018;
+}
+
+.custom-container {
+	background-color: #ffffff;
+	border-radius: 20px;
+	padding: 30px;
+	box-shadow: 0 10px 30px rgba(92, 58, 33, 0.08);
+	margin-top: 50px;
+	margin-bottom: 50px;
+}
+
+h2 {
+	color: #5c3a21;
+	font-weight: 700;
+}
+
+.btn-coffee-primary {
+	background-color: #a87b51;
+	color: white;
+	border: none;
+	border-radius: 12px;
+	padding: 10px 20px;
+	font-weight: 600;
+	transition: all 0.3s ease;
+}
+
+.btn-coffee-primary:hover {
+	background-color: #8c633e;
+	color: white;
+	transform: translateY(-2px);
+}
+
+.btn-back {
+	background-color: #8fa382;
+	color: white;
+	border: none;
+	border-radius: 12px;
+	padding: 10px 20px;
+	font-weight: 600;
+}
+
+.btn-back:hover {
+	background-color: #728566;
+	color: white;
+}
+
+.table {
+	border-collapse: separate;
+	border-spacing: 0;
+	margin-top: 15px;
+}
+
+.table thead th {
+	background-color: #5c3a21;
+	color: #f9f4ef;
+	border: none;
+	padding: 15px;
+	font-weight: 600;
+}
+
+.table thead th:first-child {
+	border-top-left-radius: 15px;
+}
+
+.table thead th:last-child {
+	border-top-right-radius: 15px;
+}
+
+.table tbody tr td {
+	vertical-align: middle;
+	border-bottom: 1px solid #eee5da;
+	color: #5c3a21;
+	padding: 12px 15px;
+}
+
+.table tbody tr:hover {
+	background-color: #fcf9f5;
+}
+
+.btn-restore {
+	background-color: #8fa382;
+	color: white;
+	border: none;
+	border-radius: 8px;
+	font-size: 0.875rem;
+}
+
+.btn-restore:hover {
+	background-color: #728566;
+	color: white;
+}
+
+.deleted-row {
+	opacity: 0.85;
+}
+
+.deleted-badge {
+	background-color: #b07d62;
+}
+</style>
+
+</head>
+
+<body>
+
+
+	<div class="container custom-container">
+
+		<!-- Header -->
+
+		<div class="d-flex justify-content-between align-items-center mb-4">
+
+			<h2>🗑️ Deleted Payment Methods</h2>
+
+			<a th:href="@{/manager/paymethod}" class="btn btn-back"> ← Back
+				to Payment Methods </a>
+
+		</div>
+
+		<!-- Table -->
+
+		<div class="table-responsive">
+
+			<table class="table table-hover align-middle">
+
+				<thead>
+
+					<tr>
+
+						<th>No.</th>
+
+						<th>Logo</th>
+
+						<th>Name</th>
+
+						<th>Description</th>
+
+						<th>Status</th>
+
+						<th>Deleted By</th>
+
+						<th class="text-center">Actions</th>
+
+					</tr>
+
+				</thead>
+
+				<tbody>
+
+					<tr th:each="pm,state : ${payMethods}" class="deleted-row">
+
+						<!-- No -->
+
+						<td th:text="${state.count}" class="fw-bold"></td>
+
+						<!-- Logo -->
+
+						<td><img th:if="${pm.logoPath != null and pm.logoPath != ''}"
+							th:src="${pm.logoPath}" alt="logo"
+							style="width: 40px; height: 40px; object-fit: contain; border-radius: 8px;" />
+
+							<span th:if="${pm.logoPath == null or pm.logoPath == ''}"
+							class="text-muted"> — </span></td>
+
+						<!-- Name -->
+
+						<td th:text="${pm.name}" class="fw-bold"></td>
+
+						<!-- Description -->
+
+						<td th:text="${pm.description}"></td>
+
+						<!-- Status -->
+
+						<td><span class="badge deleted-badge"> Deleted </span></td>
+
+						<!-- Employee -->
+
+						<td th:text="${employeeName}">
+						</td>
+
+						<!-- Actions -->
+
+						<td class="text-center">
+							<!-- Restore -->
+
+							<form th:action="@{/manager/paymethod/restore}" method="post"
+								style="display: inline;">
+
+								<input type="hidden" name="methodId" th:value="${pm.methodId}">
+
+								<button type="submit" class="btn btn-sm btn-restore px-3"
+									onclick="return confirm('Are you sure you want to restore this payment method?');">
+
+									Restore</button>
+
+							</form>
+
+						</td>
+
+					</tr>
+
+					<!-- Empty -->
+
+					<tr th:if="${#lists.isEmpty(payMethods)}">
+
+						<td colspan="7" class="text-center text-muted py-4">No
+							deleted payment methods found.</td>
+
+					</tr>
+
+				</tbody>
+
+			</table>
+
+		</div>
+
+	</div>
+
+	<!-- Bootstrap JS -->
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+		
+	</script>
+
+
+</body>
+
+</html>

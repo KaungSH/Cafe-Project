@@ -52,10 +52,6 @@ public class SupplierService {
 		return this.repo.restore(supplier_id);
 	}
 
-	public int realDelete(String supplier_id) {
-		return this.repo.realDelete(supplier_id);
-	}
-
 	private SupplierDto toDto(Supplier entity) {
 		SupplierDto dto = new SupplierDto();
 		dto.setSupplier_id(entity.getSupplier_id());
