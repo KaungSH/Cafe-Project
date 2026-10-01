@@ -1,240 +1,338 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Supplier List</title>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <meta charset="UTF-8">
+    <title>Café Luft | Supplier Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-<style>
-body {
-	margin: 0;
-	background-color: #faf7f1;
-	color: #241c16;
-	font-family: Arial, sans-serif;
-	font-size: 14px;
-}
+    <style>
+        :root {
+            --luft-primary: #855325;
+            --luft-primary-hover: #6a3e17;
+            --luft-gold: #c5a059;
+            --luft-espresso: #1c1612;
+            --luft-cream: #fbf8f5;
+            --luft-surface: #ffffff;
+            --luft-border: #ede4d8;
+            --luft-muted: #82746b;
+        }
 
-.supplier-container {
-	width: 95%;
-	max-width: 1450px;
-	margin: 25px auto;
-}
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--luft-cream);
+            color: var(--luft-espresso);
+            margin: 0;
+            padding-bottom: 50px;
+        }
 
-.supplier-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: flex-start;
-	margin-bottom: 28px;
-}
+        .serif-font {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            letter-spacing: -0.02em;
+        }
 
-.supplier-title h2 {
-	margin: 0 0 6px 0;
-	color: #241c16;
-	font-size: 27px;
-	font-weight: 700;
-	line-height: 1.2;
-}
+        .supplier-container {
+            width: 94%;
+            max-width: 1400px;
+            margin: 30px auto;
+        }
 
-.supplier-title h2 i {
-	color: #875522;
-	font-size: 22px;
-	margin-right: 7px;
-}
+        /* Hero Header with Coffee Beans Logistics Image */
+        .supplier-hero-card {
+            background: linear-gradient(135deg, rgba(28, 22, 18, 0.88) 0%, rgba(55, 38, 27, 0.78) 100%), 
+                        url('https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1500&q=80') center/cover no-repeat;
+            border-radius: 20px;
+            padding: 35px 40px;
+            color: #ffffff;
+            box-shadow: 0 12px 35px rgba(28, 22, 18, 0.12);
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            margin-bottom: 30px;
+        }
 
-.supplier-title p {
-	margin: 0;
-	color: #806b56;
-	font-size: 14px;
-	line-height: 1.5;
-}
+        .hero-tag {
+            background: rgba(197, 160, 89, 0.22);
+            border: 1px solid var(--luft-gold);
+            color: #f7e7c4;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
 
-.btn-add {
-	display: inline-flex;
-	align-items: center;
-	gap: 6px;
-	background-color: #925d2b;
-	color: #ffffff;
-	border: none;
-	border-radius: 9px;
-	padding: 10px 18px;
-	font-size: 14px;
-	font-weight: 600;
-	text-decoration: none;
-	transition: 0.2s;
-}
+        /* KPI Cards */
+        .metric-card {
+            background: #ffffff;
+            border: 1px solid var(--luft-border);
+            border-radius: 16px;
+            padding: 20px 24px;
+            box-shadow: 0 4px 20px rgba(28, 22, 18, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: transform 0.2s;
+        }
+        .metric-card:hover {
+            transform: translateY(-2px);
+        }
+        .metric-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--luft-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        .metric-val {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--luft-espresso);
+            margin-top: 4px;
+        }
+        .metric-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(197, 160, 89, 0.15);
+            color: var(--luft-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
 
-.btn-add:hover {
-	background-color: #75451f;
-	color: #ffffff;
-}
+        /* Luxury Table Card */
+        .luxury-card {
+            background: #ffffff;
+            border: 1px solid var(--luft-border);
+            border-radius: 18px;
+            box-shadow: 0 8px 30px rgba(28, 22, 18, 0.04);
+            overflow: hidden;
+        }
 
-.btn-deleted {
-	display: inline-flex;
-	align-items: center;
-	gap: 6px;
-	background-color: #eadbc7;
-	color: #624522;
-	border: none;
-	border-radius: 9px;
-	padding: 10px 18px;
-	font-size: 14px;
-	font-weight: 600;
-	text-decoration: none;
-	margin-left: 7px;
-	transition: 0.2s;
-}
+        .luxury-table {
+            margin-bottom: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        .luxury-table thead th {
+            background-color: #f7f3ed;
+            color: #6a584c;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--luft-border);
+            border-top: none;
+        }
+        .luxury-table tbody td {
+            padding: 18px 24px;
+            vertical-align: middle;
+            border-top: 1px solid #f6eee5;
+            color: var(--luft-espresso);
+            font-size: 0.92rem;
+        }
+        .luxury-table tbody tr:hover td {
+            background-color: #fdfaf6;
+        }
 
-.btn-deleted:hover {
-	background-color: #ddc9ae;
-	color: #4f351c;
-}
+        /* Supplier Thumbnail & ID Badge */
+        .supplier-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 1.5px solid var(--luft-border);
+        }
+        .supplier-id-code {
+            font-family: monospace;
+            background: #f4ede4;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: #694a32;
+            border: 1px solid #e5d7c8;
+        }
 
-.supplier-container .table {
-	width: 100%;
-	margin: 0;
-	background-color: #fffaf4;
-	border: 1px solid #eadcca;
-	border-radius: 14px;
-	overflow: hidden;
-	border-collapse: separate;
-	border-spacing: 0;
-	box-shadow: 0 2px 8px rgba(80, 50, 20, 0.04);
-}
+        /* Action Buttons */
+        .btn-luxury-primary {
+            background: linear-gradient(135deg, var(--luft-primary) 0%, #683d16 100%);
+            color: #ffffff !important;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            padding: 10px 22px;
+            text-decoration: none;
+            box-shadow: 0 4px 14px rgba(104, 61, 22, 0.22);
+            transition: all 0.2s;
+            border: none;
+        }
+        .btn-luxury-primary:hover {
+            transform: translateY(-1px);
+        }
+        .btn-luxury-ghost {
+            background: #ffffff;
+            color: var(--luft-espresso);
+            border: 1px solid var(--luft-border);
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            padding: 10px 20px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn-luxury-ghost:hover {
+            background: #f7eee3;
+            color: var(--luft-espresso);
+        }
 
-.supplier-container .table thead th {
-	background-color: #f5ecdf;
-	color: #9a8067;
-	padding: 13px 20px;
-	font-size: 12px;
-	font-weight: 600;
-	text-transform: uppercase;
-	letter-spacing: 0.4px;
-	border: none;
-	border-bottom: 1px solid #eadcca;
-	white-space: nowrap;
-}
-
-.supplier-container .table tbody td {
-	padding: 14px 20px;
-	color: #705a45;
-	font-size: 14px;
-	vertical-align: middle;
-	border: none;
-	border-bottom: 1px solid #eadcca;
-}
-
-.supplier-container .table tbody tr:last-child td {
-	border-bottom: none;
-}
-
-.supplier-container .table tbody tr:hover {
-	background-color: #fcf5eb;
-}
-
-.supplier-container .table tbody td:nth-child(2) {
-	color: #211a15;
-	font-weight: 500;
-}
-
-.supplier-container .table tbody td:nth-child(3) {
-	color: #745d47;
-}
-
-.supplier-container .table tbody td:nth-child(4) {
-	color: #806b56;
-	white-space: nowrap;
-}
-
-.btn-edit {
-	display: inline-block;
-	color: #5f401f;
-	background-color: #ffffff;
-	border: 1px solid #ddcbb4;
-	border-radius: 8px;
-	padding: 6px 13px;
-	font-size: 13px;
-	font-weight: 600;
-	text-decoration: none;
-	transition: 0.2s;
-}
-
-.btn-edit:hover {
-	background-color: #f1e4d1;
-	color: #5f401f;
-	border-color: #cdb391;
-}
-
-.btn-delete {
-	display: inline-block;
-	color: #8f3e2e;
-	background-color: #ffffff;
-	border: 1px solid #e2c9bf;
-	border-radius: 8px;
-	padding: 6px 13px;
-	font-size: 13px;
-	font-weight: 600;
-	text-decoration: none;
-	margin-left: 5px;
-	transition: 0.2s;
-}
-
-.btn-delete:hover {
-	background-color: #f2d8d0;
-	color: #8f3e2e;
-	border-color: #d6afa3;
-}
-</style>
+        .btn-act {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--luft-border);
+            background: #ffffff;
+            color: #55443a;
+            font-size: 0.88rem;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+        .btn-act:hover {
+            background: #f7eee3;
+            color: var(--luft-primary);
+        }
+        .btn-act-del:hover {
+            background: #fdf2f2;
+            color: #bd2b2b;
+            border-color: #f1bfbf;
+        }
+    </style>
 </head>
 <body>
 
-	<div class="supplier-container">
-		<div class="supplier-header">
-			<div class="supplier-title">
-				<h2>
-					<i class="bi bi-truck"></i> Supplier Management
-				</h2>
-				<p>Manage your suppliers and contact information</p>
-			</div>
-			<div>
-				<a th:href="@{/manager/suppliers/add}" class="btn-add"><i
-					class="bi bi-plus-lg"></i> Add Supplier</a> <a
-					th:href="@{/manager/suppliers/deleted}" class="btn-deleted"><i
-					class="bi bi-trash"></i> Deleted List</a>
-			</div>
-		</div>
+    <div class="supplier-container">
+        
+        <!-- Header Banner -->
+        <div class="supplier-hero-card d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+                <span class="hero-tag"><i class="bi bi-box-seam me-1"></i> Supply Chain & Logistics</span>
+                <h1 class="serif-font mb-1" style="font-size: 2.2rem; font-weight: 700;">Café Luft Supplier Registry</h1>
+                <p class="text-white-50 mb-0">Manage roastery partnerships, farm bean origins, and wholesale vendors</p>
+            </div>
+            <div class="d-flex gap-2 mt-3 mt-md-0">
+                <a th:href="@{/manager/suppliers/deleted}" class="btn-luxury-ghost">
+                    <i class="bi bi-archive me-1"></i> Deleted List
+                </a>
+                <a th:href="@{/manager/suppliers/add}" class="btn-luxury-primary">
+                    <i class="bi bi-plus-lg me-1"></i> Add Supplier
+                </a>
+            </div>
+        </div>
 
-		<table class="table">
-			<thead>
-				<tr>
-					<th>ID</th>
-					<th>Name</th>
-					<th>Contact Info</th>
-					<th>Created At</th>
-					<th class="text-end">Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="supplier : ${suppliers}">
-					<td th:text="${supplier.supplier_id}">SUP-001</td>
-					<td th:text="${supplier.name}">Supplier Name</td>
-					<td th:text="${supplier.contact_info}">Yangon / 09765473828</td>
-					<td
-						th:text="${supplier.created_at != null ? #temporals.format(supplier.created_at, 'yyyy-MM-dd HH:mm') : '-'}">2026-09-24
-						15:30</td>
-					<td class="text-end"><a
-						th:href="@{/manager/suppliers/edit/{id}(id=${supplier.supplier_id})}"
-						class="btn-edit">Edit</a> <a
-						th:href="@{/manager/suppliers/delete/{id}(id=${supplier.supplier_id})}"
-						class="btn-delete" onclick="return confirm('Are you sure?')">Delete</a>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+        <!-- Metric KPI Summary -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="metric-card">
+                    <div>
+                        <div class="metric-label">Direct Coffee Origin</div>
+                        <div class="metric-val">Single Estate</div>
+                    </div>
+                    <div class="metric-icon"><i class="bi bi-geo-alt-fill"></i></div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="metric-card">
+                    <div>
+                        <div class="metric-label">Supply Category</div>
+                        <div class="metric-val">Roasts & Dairy</div>
+                    </div>
+                    <div class="metric-icon"><i class="bi bi-cup-hot-fill"></i></div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="metric-card">
+                    <div>
+                        <div class="metric-label">Partner Integrity</div>
+                        <div class="metric-val">Verified Tier-1</div>
+                    </div>
+                    <div class="metric-icon"><i class="bi bi-shield-check"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table Card -->
+        <div class="luxury-card">
+            <div class="table-responsive">
+                <table class="table luxury-table align-middle">
+                    <thead>
+                        <tr>
+                            <th style="width: 25%;">Supplier / Vendor</th>
+                            <th style="width: 25%;">Internal Reference ID</th>
+                            <th style="width: 25%;">Contact & Logistics</th>
+                            <th style="width: 15%;">Registered Date</th>
+                            <th class="text-end pe-3" style="width: 10%;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${#lists.isEmpty(suppliers)}">
+                            <td colspan="5" class="text-center py-5 text-muted">
+                                <i class="bi bi-truck fs-2 d-block mb-2 opacity-50"></i>
+                                No active suppliers found in system.
+                            </td>
+                        </tr>
+                        <tr th:each="supplier : ${suppliers}">
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <img src="https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=120&q=80" 
+                                         class="supplier-avatar" alt="Vendor">
+                                    <div>
+                                        <div class="fw-bold text-dark" th:text="${supplier.name}">Yami Artisanal Roasters</div>
+                                        <small class="text-muted"><i class="bi bi-patch-check-fill text-warning me-1"></i>Exclusive Partner</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="supplier-id-code" th:text="${supplier.supplier_id}">83a01982-34ca-4367-8f2f</span>
+                            </td>
+                            <td>
+                                <div class="fw-medium text-dark"><i class="bi bi-telephone me-1 text-muted"></i><span th:text="${supplier.contact_info}">Coffee / 09455678894</span></div>
+                            </td>
+                            <td>
+                                <span class="small text-muted" 
+                                      th:text="${supplier.created_at != null ? #temporals.format(supplier.created_at, 'yyyy-MM-dd HH:mm') : '-'}">
+                                    2026-10-01 15:22
+                                </span>
+                            </td>
+                            <td class="text-end pe-3">
+                                <div class="d-inline-flex gap-1">
+                                    <a th:href="@{/manager/suppliers/edit/{id}(id=${supplier.supplier_id})}" 
+                                       class="btn-act" title="Edit Supplier">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a th:href="@{/manager/suppliers/delete/{id}(id=${supplier.supplier_id})}" 
+                                       class="btn-act btn-act-del" title="Delete Supplier">
+                                        <i class="bi bi-trash3"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
 
 </body>
 </html>
