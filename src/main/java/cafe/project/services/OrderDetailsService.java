@@ -47,11 +47,47 @@ public class OrderDetailsService {
 	}
 
 	// Update order detail
-	public void edit(OrderDetailsDto dto) {
+	public void edit(OrderDetailsDto dto, String orderId) {
 
-		for (OrderDetails orderDetail : dto.getOrderDetails()) {
+		// Get existing details from database
+		List<OrderDetails> oldDetails = orderDetailsRepository.findByOrderId(orderId);
 
-			orderDetailsRepository.edit(orderDetail.getOrder_detail_id(), orderDetail);
+		// Update or Insert
+		for (OrderDetails detail : dto.getOrderDetails()) {
+
+			detail.setOrder_id(orderId);
+
+			if (detail.getOrder_detail_id() == null || detail.getOrder_detail_id().isEmpty()) {
+
+				// NEW DETAIL
+				orderDetailsRepository.save(detail);
+
+			} else {
+
+				// EXISTING DETAIL
+				orderDetailsRepository.edit(detail.getOrder_detail_id(), detail);
+			}
+		}
+
+		// Delete removed details
+		for (OrderDetails oldDetail : oldDetails) {
+
+			boolean found = false;
+
+			for (OrderDetails detail : dto.getOrderDetails()) {
+
+				if (oldDetail.getOrder_detail_id().equals(detail.getOrder_detail_id())) {
+
+					found = true;
+					break;
+				}
+			}
+
+			if (!found) {
+
+				orderDetailsRepository.delete(oldDetail.getOrder_detail_id());
+
+			}
 		}
 	}
 

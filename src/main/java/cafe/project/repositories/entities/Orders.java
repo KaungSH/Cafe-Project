@@ -7,31 +7,33 @@ public class Orders {
 
 	private String order_id;
 	private String employee_id;
-	private String customer_id;
 	private String branch_id;
 	private LocalDateTime created_time;
 	private LocalDateTime received_time;
 	private boolean isedited;
 	private boolean isdeleted;
-	private String order_type_id;
 	private BigDecimal total_amount;
-	
-	public Orders() {}
-	
-	public Orders(String order_id,String employee_id,String customer_id,
-			String branch_id,LocalDateTime created_time,LocalDateTime received_time,
-			boolean isedited,boolean isdeleted,String order_type_id,BigDecimal total_amount) {
-		this.order_id=order_id;
-		this.employee_id=employee_id;
-		this.customer_id=customer_id;
-		this.branch_id=branch_id;
-		this.created_time=created_time;
-		this.received_time=received_time;
-		this.isedited=isedited;
-		this.isdeleted=isdeleted;
-		this.order_type_id=order_type_id;
-		this.total_amount=total_amount;
-		
+	private int token_number;
+	private String employee_name;
+	private String branch_name;
+
+	public Orders() {
+	}
+
+	public Orders(String order_id, String employee_id, String branch_id, LocalDateTime created_time,
+			LocalDateTime received_time, boolean isedited, boolean isdeleted, BigDecimal total_amount, int token_number,
+			String employee_name, String branch_name) {
+		this.order_id = order_id;
+		this.employee_id = employee_id;
+		this.branch_id = branch_id;
+		this.created_time = created_time;
+		this.received_time = received_time;
+		this.isedited = isedited;
+		this.isdeleted = isdeleted;
+		this.total_amount = total_amount;
+		this.token_number = token_number;
+		this.employee_name = employee_name;
+		this.branch_name = branch_name;
 	}
 
 	public String getOrder_id() {
@@ -48,14 +50,6 @@ public class Orders {
 
 	public void setEmployee_id(String employee_id) {
 		this.employee_id = employee_id;
-	}
-
-	public String getCustomer_id() {
-		return customer_id;
-	}
-
-	public void setCustomer_id(String customer_id) {
-		this.customer_id = customer_id;
 	}
 
 	public String getBranch_id() {
@@ -98,14 +92,6 @@ public class Orders {
 		this.isdeleted = isdeleted;
 	}
 
-	public String getOrder_type_id() {
-		return order_type_id;
-	}
-
-	public void setOrder_type_id(String order_type_id) {
-		this.order_type_id = order_type_id;
-	}
-
 	public BigDecimal getTotal_amount() {
 		return total_amount;
 	}
@@ -113,6 +99,29 @@ public class Orders {
 	public void setTotal_amount(BigDecimal total_amount) {
 		this.total_amount = total_amount;
 	}
-	
+
+	public int getToken_number() {
+		return token_number;
+	}
+
+	public void setToken_number(int token_number) {
+		this.token_number = token_number;
+	}
+
+	public String getEmployee_name() {
+		return employee_name;
+	}
+
+	public void setEmployee_name(String employee_name) {
+		this.employee_name = employee_name;
+	}
+
+	public String getBranch_name() {
+		return branch_name;
+	}
+
+	public void setBranch_name(String branch_name) {
+		this.branch_name = branch_name;
+	}
 
 }
