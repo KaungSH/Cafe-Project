@@ -1,211 +1,278 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Status List - Luft Cafe</title>
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-:root {
-	--primary-color: #5C3D2E;
-	--primary-hover: #432B20;
-	--bg-main: #FAF7F2;
-	--text-color: #2D2422;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Café Luft | Status Ledger</title>
+    
+    <!-- Premium Fonts: Cormorant Garamond & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-body {
-	background-color: var(--bg-main);
-	color: var(--text-color);
-	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+    <style>
+        :root {
+            --luft-primary: #855325;
+            --luft-primary-hover: #693e18;
+            --luft-gold: #c5a059;
+            --luft-gold-light: rgba(197, 160, 89, 0.16);
+            --luft-espresso: #1a1410;
+            --luft-cream: #faf7f2;
+            --luft-surface: #ffffff;
+            --luft-border: #ede4d8;
+            --luft-muted: #82746b;
+            --luft-shadow: 0 16px 40px rgba(26, 20, 16, 0.06);
+        }
 
-.page-title {
-	color: var(--primary-color);
-	font-weight: 700;
-	font-size: 1.75rem;
-}
+        body {
+            background-color: var(--luft-cream);
+            color: var(--luft-espresso);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: -0.01em;
+            margin: 0;
+            padding-bottom: 70px;
+            background-image: radial-gradient(circle at 10% 20%, rgba(237, 228, 216, 0.45) 0%, transparent 40%),
+                              radial-gradient(circle at 90% 80%, rgba(197, 160, 89, 0.08) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
 
-.btn-add {
-	background-color: var(--primary-color);
-	color: #ffffff;
-	font-weight: 600;
-	border-radius: 8px;
-	padding: 10px 20px;
-	border: none;
-	box-shadow: 0 2px 6px rgba(92, 61, 46, 0.15);
-	transition: background-color 0.2s;
-	text-decoration: none;
-}
+        .serif-font {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            letter-spacing: -0.02em;
+        }
 
-.btn-add:hover {
-	background-color: var(--primary-hover);
-	color: #ffffff;
-}
+        /* Centered Elegant Width */
+        .status-wrapper {
+            width: 92%;
+            max-width: 760px;
+            margin: 45px auto;
+        }
 
-/* Cafe Tabs Styling */
-.nav-tabs {
-	border-bottom: 2px solid #EAE3DC;
-}
+        /* Boutique Atmospheric Header */
+        .status-hero-banner {
+            position: relative;
+            background: linear-gradient(135deg, rgba(26, 20, 16, 0.92) 0%, rgba(55, 38, 27, 0.84) 100%), 
+                        url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1400&q=80') center/cover no-repeat;
+            border-radius: 22px;
+            padding: 34px 40px;
+            color: #ffffff;
+            box-shadow: 0 14px 35px rgba(26, 20, 16, 0.14);
+            border: 1px solid rgba(197, 160, 89, 0.38);
+            margin-bottom: 26px;
+            overflow: hidden;
+        }
 
-.nav-tabs .nav-link {
-	color: #8C7B75;
-	border: none;
-	padding: 10px 20px;
-	font-weight: 600;
-	border-bottom: 3px solid transparent;
-	transition: all 0.2s;
-}
+        .status-hero-banner::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--luft-gold), transparent);
+        }
 
-.nav-tabs .nav-link:hover {
-	color: var(--primary-color);
-	border-color: transparent;
-}
+        .hero-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(197, 160, 89, 0.22);
+            border: 1px solid var(--luft-gold);
+            color: #fcefd6;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            padding: 4px 12px;
+            border-radius: 30px;
+            margin-bottom: 10px;
+        }
 
-.nav-tabs .nav-link.active {
-	color: var(--primary-color);
-	background-color: transparent;
-	border-bottom: 3px solid var(--primary-color);
-}
+        /* Floating Capsule Tabs */
+        .capsule-tabs {
+            display: inline-flex;
+            background: #ede3d5;
+            padding: 5px;
+            border-radius: 14px;
+            border: 1px solid #dfd1c0;
+            margin-bottom: 22px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04);
+        }
 
-/* Card Table Styling */
-.table-card {
-	background-color: #ffffff;
-	border-radius: 12px;
-	box-shadow: 0 4px 15px rgba(92, 61, 46, 0.05);
-	border: 1px solid #EAE3DC;
-	overflow: hidden;
-}
+        .capsule-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 20px;
+            font-size: 0.86rem;
+            font-weight: 600;
+            color: #6d5b4e;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-.custom-table {
-	width: 100%;
-	margin-bottom: 0;
-}
+        .capsule-link:hover {
+            color: var(--luft-espresso);
+            background: rgba(255, 255, 255, 0.55);
+        }
 
-.custom-table thead th {
-	font-weight: 700;
-	color: var(--primary-color);
-	padding: 16px 24px;
-	border-bottom: 2px solid #EAE3DC;
-	background-color: #FCFAF8;
-}
+        .capsule-link.active {
+            background: #ffffff;
+            color: var(--luft-primary);
+            box-shadow: 0 4px 12px rgba(26, 20, 16, 0.08);
+            font-weight: 700;
+        }
 
-.custom-table tbody td {
-	padding: 16px 24px;
-	color: var(--text-color);
-	border-bottom: 1px solid #F0EAE5;
-}
+        /* Dedicated 2-Column Ledger Card */
+        .ledger-card {
+            background: var(--luft-surface);
+            border: 1px solid var(--luft-border);
+            border-radius: 20px;
+            box-shadow: var(--luft-shadow);
+            overflow: hidden;
+        }
 
-.custom-table tbody tr:hover {
-	background-color: #FAF5F0;
-}
+        .ledger-table {
+            width: 100%;
+            margin-bottom: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
 
-.id-text {
-	color: #8C7B75;
-	font-weight: 500;
-}
+        .ledger-table thead th {
+            background-color: #f7f3ed;
+            color: #705e52;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 18px 30px;
+            border-bottom: 1.5px solid var(--luft-border);
+            border-top: none;
+        }
 
-/* Action Buttons */
-.btn-action-edit {
-	color: #8C592B;
-	border: 1px solid #E0A96D;
-	background-color: #FFFDF9;
-	border-radius: 6px;
-	padding: 5px 14px;
-	font-size: 0.85rem;
-	font-weight: 600;
-	text-decoration: none;
-	display: inline-block;
-	transition: all 0.2s;
-}
+        .ledger-table tbody td {
+            padding: 22px 30px;
+            vertical-align: middle;
+            border-top: 1px solid #f6eee5;
+            font-size: 0.94rem;
+            transition: background 0.18s ease;
+        }
 
-.btn-action-edit:hover {
-	background-color: #E0A96D;
-	color: #FFF;
-}
+        .ledger-table tbody tr:first-child td {
+            border-top: none;
+        }
 
-.btn-action-delete {
-	color: #B23B2A;
-	border: 1px solid #E6B6B0;
-	background-color: #FFFDF9;
-	border-radius: 6px;
-	padding: 5px 14px;
-	font-size: 0.85rem;
-	font-weight: 600;
-	text-decoration: none;
-	display: inline-block;
-	transition: all 0.2s;
-}
+        .ledger-table tbody tr:hover td {
+            background-color: #fbf7f0;
+        }
 
-.btn-action-delete:hover {
-	background-color: #B23B2A;
-	color: white;
-}
-</style>
+        /* Monospace Reference ID Badge */
+        .id-capsule {
+            display: inline-flex;
+            align-items: center;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            background: #faf4eb;
+            color: var(--luft-primary);
+            border: 1px solid #eadac7;
+            padding: 5px 13px;
+            border-radius: 8px;
+            font-size: 0.84rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+        }
+
+        /* Status Name & Subtle Subtitle */
+        .status-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--luft-espresso);
+            letter-spacing: 0.03em;
+            margin-bottom: 2px;
+        }
+
+        .status-sub {
+            font-size: 0.78rem;
+            color: var(--luft-muted);
+            letter-spacing: 0.01em;
+        }
+    </style>
 </head>
+
 <body>
 
-	<div class="container py-5">
-		<!-- Header -->
-		<div class="d-flex justify-content-between align-items-center mb-4">
-			<h3 class="page-title mb-0">Status Management</h3>
-			<a
-				th:href="@{/admin/statuses/create(type=${selectedType != null ? selectedType : 'branch'})}"
-				class="btn btn-add"> <i class="fa-solid fa-plus me-1"></i>Add
-				New Status
-			</a>
-		</div>
+    <div class="status-wrapper">
 
+        <!-- Executive Boutique Hero -->
+        <div class="status-hero-banner">
+            <span class="hero-pill"><i class="bi bi-shield-check"></i> System Governance</span>
+            <h1 class="serif-font mb-1" style="font-size: 2.15rem; font-weight: 700;">Status Registry & Reference</h1>
+            <p class="text-white-50 mb-0 small">Configured operational state conditions across Café Luft modules</p>
+        </div>
 
-		<ul class="nav nav-tabs fw-semibold mb-4">
-			<li class="nav-item"><a class="nav-link"
-				th:classappend="${selectedType == 'branch'} ? 'active'"
-				th:href="@{/admin/statuses(type='branch')}">Branch</a></li>
-			<li class="nav-item"><a class="nav-link"
-				th:classappend="${selectedType == 'employee'} ? 'active'"
-				th:href="@{/admin/statuses(type='employee')}">Employee</a></li>
-			<li class="nav-item"><a class="nav-link"
-				th:classappend="${selectedType == 'customer'} ? 'active'"
-				th:href="@{/admin/statuses(type='customer')}">Customer</a></li>
-			<li class="nav-item"><a class="nav-link"
-				th:classappend="${selectedType == 'register'} ? 'active'"
-				th:href="@{/admin/statuses(type='register')}">Register</a></li>
-		</ul>
+        <!-- Scope Navigation Tabs -->
+        <div class="d-flex justify-content-start">
+            <div class="capsule-tabs">
+                <a class="capsule-link" 
+                   th:classappend="${selectedType == 'branch' or selectedType == null} ? 'active'"
+                   th:href="@{/admin/statuses(type='branch')}">
+                    <i class="bi bi-shop"></i> Branch
+                </a>
+                <a class="capsule-link" 
+                   th:classappend="${selectedType == 'employee'} ? 'active'"
+                   th:href="@{/admin/statuses(type='employee')}">
+                    <i class="bi bi-person-badge"></i> Employee
+                </a>
+                <a class="capsule-link" 
+                   th:classappend="${selectedType == 'customer'} ? 'active'"
+                   th:href="@{/admin/statuses(type='customer')}">
+                    <i class="bi bi-people"></i> Customer
+                </a>
+                <a class="capsule-link" 
+                   th:classappend="${selectedType == 'register'} ? 'active'"
+                   th:href="@{/admin/statuses(type='register')}">
+                    <i class="bi bi-clipboard2-check"></i> Register
+                </a>
+            </div>
+        </div>
 
+        <!-- 2-Column Minimal Status Ledger (Reference ID & Name သီးသန့်) -->
+        <div class="ledger-card">
+            <div class="table-responsive">
+                <table class="table ledger-table align-middle">
+                    <thead>
+                        <tr>
+                            <th style="width: 32%;">Reference ID</th>
+                            <th style="width: 68%;">Status State / Identifier</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="st : ${statusList}">
+                            <td>
+                                <span class="id-capsule" th:text="${'ST-' + st.id}">ST-1</span>
+                            </td>
+                            <td>
+                                <div class="status-title" th:text="${st.name}">OPENED</div>
+                                <div class="status-sub">Standard Lifecycle Condition</div>
+                            </td>
+                        </tr>
 
-		<div class="table-card">
-			<div class="table-responsive">
-				<table class="table custom-table align-middle">
-					<thead>
-						<tr>
-							<th style="width: 45%;" class="ps-4">ID</th>
-							<th style="width: 35%;">Name</th>
-							<th style="width: 20%;" class="text-center">Action</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="st : ${statusList}">
-							<td class="ps-4 small id-text" th:text="${st.id}"></td>
-							<td class="fw-semibold" th:text="${st.name}"></td>
-							<td class="text-center"><a
-								th:href="@{/admin/statuses/edit(type=${selectedType}, id=${st.id})}"
-								class="btn-action-edit me-1">Edit</a> <a
-								th:href="@{/admin/statuses/delete(type=${selectedType}, id=${st.id})}"
-								class="btn-action-delete"
-								onclick="return confirm('Are you sure you want to delete this record?')">Delete</a></td>
-						</tr>
-						<tr th:if="${#lists.isEmpty(statusList)}">
-							<td colspan="3" class="text-center text-muted py-4">No
-								status found.</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-	</div>
+                        <!-- No Data Found State -->
+                        <tr th:if="${#lists.isEmpty(statusList)}">
+                            <td colspan="2" class="text-center py-5 text-muted">
+                                <i class="bi bi-inbox fs-2 d-block mb-2 opacity-50"></i>
+                                No status configurations recorded for this category.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
 
 </body>
 </html>

@@ -1,102 +1,169 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Deleted Discount List</title>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <meta charset="UTF-8">
+    <title>Café Luft | Archived Discounts</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <style>
+        :root {
+            --luft-primary: #8b5a2b;
+            --luft-espresso: #261e1a;
+            --luft-cream: #faf7f2;
+            --luft-border: #ede4d8;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--luft-cream);
+            color: var(--luft-espresso);
+        }
+
+        .serif-font {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+        }
+
+        .luxury-card {
+            background: #ffffff;
+            border: 1px solid var(--luft-border);
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(50, 30, 20, 0.04);
+            overflow: hidden;
+        }
+
+        .luxury-table thead th {
+            background-color: #2b211a;
+            color: #d8c8ba;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 16px 20px;
+            border: none;
+        }
+
+        .luxury-table tbody td {
+            padding: 18px 20px;
+            vertical-align: middle;
+            border-top: 1px solid #f5ede4;
+            font-size: 0.9rem;
+        }
+
+        .btn-restore {
+            background-color: #f7f1e8;
+            border: 1px solid #dfcbb8;
+            color: #7b4f24;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 6px 14px;
+            transition: all 0.2s;
+        }
+        .btn-restore:hover {
+            background-color: #7b4f24;
+            color: #fff;
+        }
+
+        .btn-permanent-delete {
+            width: 33px;
+            height: 33px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #f3c7c7;
+            background: #fff;
+            color: #c0392b;
+            transition: all 0.2s;
+        }
+        .btn-permanent-delete:hover {
+            background: #c0392b;
+            color: #fff;
+        }
+    </style>
 </head>
-<body class="bg-light">
 
-	<div class="container my-4">
-		<div class="d-flex justify-content-between align-items-center mb-4">
-			<div>
-				<h3 class="fw-bold mb-0">Deleted list</h3>
+<body>
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-light-subtle">
+            <div>
+                <h2 class="serif-font mb-1 fw-bold" style="font-size: 1.85rem;">Promotion Archive</h2>
+                <p class="text-muted small mb-0">Deactivated and deleted records ready for safe restoration or permanent purging</p>
+            </div>
+            <a th:href="@{/manager-only/discounts}" class="btn btn-outline-secondary rounded-pill px-4">
+                <i class="bi bi-arrow-left me-1"></i> Return to Promotions
+            </a>
+        </div>
 
-				<a th:href="@{/manager-only/discounts}" class="btn btn-primary">Back
-					to Discount List </a>
-
-			</div>
-		</div>
-
-		<div class="card border-0 shadow-sm">
-			<div class="card-body p-0">
-				<div class="table-responsive">
-					<table class="table table-hover align-middle mb-0">
-						<thead class="table-dark">
-							<tr>
-								<th>Discount Name</th>
-								<th>Branch</th>
-								<th>Promo Type</th>
-								<th>Audience</th>
-								<th>Value</th>
-								<th>Duration</th>
-								<th>Status</th>
-								<th>Created By</th>
-								<th class="text-end pe-4">Actions</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:if="${#lists.isEmpty(discounts)}">
-								<td colspan="8" class="text-center py-4 text-muted">No
-									discounts available. Click 'Add New Discount' to create one.</td>
-							</tr>
-							<tr th:each="discount : ${discounts}">
-								<td><strong th:text="${discount.name}">Summer Sale</strong>
-									<br th:if="${discount.description != null}"> <small
-									class="text-muted" th:text="${discount.description}">Description</small>
-								</td>
-								<td><span class="badge bg-info text-dark"
-									th:text="${discount.branch_name}">Branch</span></td>
-								
-								<td><span class="badge bg-info text-dark"
-									th:text="${discount.promo_type_name}">Promo</span></td>
-								<td><span class="badge bg-secondary"
-									th:text="${discount.audience_type_name}">Audience</span></td>
-								<td><span class="fw-bold text-success"
-									th:text="${discount.discount_value}">10.00</span></td>
-								<td><small> <i class="bi bi-calendar3 me-1"></i><span
-										th:text="${discount.startdate}">2026-09-01</span> <br> <i
-										class="bi bi-calendar-check me-1"></i><span
-										th:text="${discount.enddate}">2026-09-30</span>
-								</small></td>
-								<td><span th:if="${discount.is_active == 1}"
-									class="badge bg-success">Active</span> <span
-									th:if="${discount.is_active== 0}" class="badge bg-danger">Inactive</span>
-								</td>
-								<td><small
-									th:text="${discount.ename != null ? discount.ename : 'N/A'}">Employee</small>
-								</td>
-								<td class="text-end pe-4"><form
-										th:action="@{/manager-only/discounts/restore}" method="post">
-										<input type="hidden" name="id"
-											th:value="${discount.discount_id}">
-
-										<button type="submit">Restore</button>
-									</form>
-									<form th:action="@{/manager-only/discounts/real-delete}"
-										method="post" style="display: inline;"
-										onsubmit="return confirm('Are you sure you want to delete this discount?');">
-
-										<input type="hidden" name="id"
-											th:value="${discount.discount_id}">
-
-										<button type="submit" class="btn btn-sm btn-outline-danger">
-											<i class="bi bi-trash"></i>
-										</button>
-
-									</form></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-	</div>
-
+        <div class="luxury-card">
+            <div class="table-responsive">
+                <table class="table luxury-table mb-0 align-middle">
+                    <thead>
+                        <tr>
+                            <th>Promotion Title</th>
+                            <th>Branch</th>
+                            <th>Type</th>
+                            <th>Audience</th>
+                            <th>Value</th>
+                            <th>Validity</th>
+                            <th>Status</th>
+                            <th>Author</th>
+                            <th class="text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${#lists.isEmpty(discounts)}">
+                            <td colspan="9" class="text-center py-5 text-muted">
+                                <i class="bi bi-archive-fill fs-2 d-block mb-2 opacity-25"></i>
+                                No archived promotions found.
+                            </td>
+                        </tr>
+                        <tr th:each="discount : ${discounts}">
+                            <td>
+                                <strong class="text-dark" th:text="${discount.name}">Autumn Harvest Special</strong>
+                                <br th:if="${discount.description != null}">
+                                <small class="text-muted" th:text="${discount.description}">Expired promo</small>
+                            </td>
+                            <td><span class="badge bg-light text-dark border" th:text="${discount.branch_name}">Branch</span></td>
+                            <td><span class="badge bg-light text-dark border" th:text="${discount.promo_type_name}">Promo</span></td>
+                            <td><span class="badge bg-light text-secondary border" th:text="${discount.audience_type_name}">Audience</span></td>
+                            <td><span class="fw-bold" style="color: var(--luft-primary);" th:text="${discount.discount_value}">10.00</span></td>
+                            <td>
+                                <small class="text-muted">
+                                    <span th:text="${discount.startdate}">2026-09-01</span> ~ <span th:text="${discount.enddate}">2026-09-30</span>
+                                </small>
+                            </td>
+                            <td>
+                                <span th:if="${discount.is_active == 1 or discount.is_active == true}" class="badge bg-success-subtle text-success border border-success-subtle">Active</span>
+                                <span th:if="${discount.is_active == 0 or discount.is_active == false}" class="badge bg-danger-subtle text-danger border border-danger-subtle">Archived</span>
+                            </td>
+                            <td><small class="text-secondary" th:text="${discount.ename != null ? discount.ename : 'Manager'}">Admin</small></td>
+                            <td class="text-end pe-4">
+                                <div class="d-inline-flex gap-2">
+                                    <form th:action="@{/manager-only/discounts/restore}" method="post">
+                                        <input type="hidden" name="id" th:value="${discount.discount_id}">
+                                        <button type="submit" class="btn btn-restore">
+                                            <i class="bi bi-arrow-counterclockwise me-1"></i> Restore
+                                        </button>
+                                    </form>
+                                    <form th:action="@{/manager-only/discounts/real-delete}" method="post"
+                                          onsubmit="return confirm('Permanently remove this discount record? This cannot be undone.');">
+                                        <input type="hidden" name="id" th:value="${discount.discount_id}">
+                                        <button type="submit" class="btn-permanent-delete" title="Purge Permanently">
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

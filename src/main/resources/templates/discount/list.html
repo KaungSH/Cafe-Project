@@ -1,243 +1,362 @@
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layout}">
-
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout}">
 <head>
+    <meta charset="UTF-8">
+    <title>Café Luft | Boutique Promotions & Offers</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
-<meta charset="UTF-8">
+    <style>
+        :root {
+            --luft-primary: #855325;
+            --luft-primary-hover: #6a3e17;
+            --luft-gold: #c5a059;
+            --luft-gold-soft: rgba(197, 160, 89, 0.15);
+            --luft-espresso: #1c1612;
+            --luft-cream: #fbf8f5;
+            --luft-surface: #ffffff;
+            --luft-border: #ede4d8;
+            --luft-muted: #82746b;
+            --luft-shadow-sm: 0 4px 20px rgba(28, 22, 18, 0.04);
+            --luft-shadow-lg: 0 14px 40px rgba(28, 22, 18, 0.08);
+        }
 
-<title>Products List - Manager</title>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--luft-cream);
+            color: var(--luft-espresso);
+        }
 
-<style>
-.product-cover {
-	height: 180px;
-	width: 180px;
-	object-fit: cover;
-	border-radius: 8px;
-}
+        .serif-title {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            letter-spacing: -0.02em;
+        }
 
-.detail-table th, .detail-table td {
-	vertical-align: middle;
-}
-</style>
+        /* Hero Banner with Coffee Atmosphere Image */
+        .cafe-hero-banner {
+            position: relative;
+            background: linear-gradient(135deg, rgba(28, 22, 18, 0.85) 0%, rgba(55, 38, 27, 0.75) 100%), 
+                        url('https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+            border-radius: 20px;
+            padding: 38px 40px;
+            color: #ffffff;
+            margin-bottom: 28px;
+            box-shadow: 0 12px 30px rgba(28, 22, 18, 0.15);
+            border: 1px solid rgba(197, 160, 89, 0.3);
+        }
 
+        .hero-tag {
+            display: inline-block;
+            background: rgba(197, 160, 89, 0.25);
+            border: 1px solid var(--luft-gold);
+            color: #f7e7c4;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+        }
+
+        /* Table Card Container */
+        .table-container-card {
+            background: var(--luft-surface);
+            border: 1px solid var(--luft-border);
+            border-radius: 18px;
+            box-shadow: var(--luft-shadow-sm);
+            overflow: hidden;
+        }
+
+        .luxury-table {
+            margin-bottom: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .luxury-table thead th {
+            background-color: #f7f3ed;
+            color: #6a584c;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--luft-border);
+        }
+
+        .luxury-table tbody td {
+            padding: 16px 20px;
+            vertical-align: middle;
+            border-top: 1px solid #f6eee5;
+            font-size: 0.92rem;
+        }
+
+        .luxury-table tbody tr:hover td {
+            background-color: #fdfaf6;
+        }
+
+        /* Thumbnails & Images */
+        .promo-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1.5px solid var(--luft-border);
+            background-color: #f5ece2;
+        }
+
+        .product-thumbnail {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid var(--luft-border);
+        }
+
+        /* Badges */
+        .badge-craft {
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .badge-branch {
+            background-color: #f4eee7;
+            color: #694b34;
+            border: 1px solid #e1d3c5;
+        }
+
+        .badge-active {
+            background-color: #ebf7ee;
+            color: #1a7431;
+            border: 1px solid #b7e4c2;
+        }
+
+        .badge-inactive {
+            background-color: #fcf1f1;
+            color: #b32d2d;
+            border: 1px solid #f5c8c8;
+        }
+
+        .btn-luxury-primary {
+            background: linear-gradient(135deg, var(--luft-primary) 0%, #683d16 100%);
+            color: #ffffff !important;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            padding: 10px 22px;
+            box-shadow: 0 4px 14px rgba(104, 61, 22, 0.25);
+            border: none;
+            transition: all 0.2s ease;
+        }
+        .btn-luxury-primary:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-luxury-ghost {
+            background-color: #ffffff;
+            color: var(--luft-espresso);
+            border: 1px solid var(--luft-border);
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            padding: 10px 20px;
+            text-decoration: none;
+        }
+
+        .btn-act {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--luft-border);
+            background: #ffffff;
+            color: #55443a;
+            text-decoration: none;
+        }
+        .btn-act:hover {
+            background: #f7eee3;
+            color: var(--luft-primary);
+        }
+
+        .expanded-offer-drawer {
+            background: #faf6f0;
+            border-radius: 14px;
+            padding: 22px;
+            border: 1px solid #ebdccb;
+            margin: 12px 20px;
+        }
+    </style>
 </head>
 
-
+<body>
 <div layout:fragment="content">
+    <div class="container py-4">
 
-	<div class="container py-4">
+        <!-- Atmosphere Hero Banner -->
+        <div class="cafe-hero-banner d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+                <span class="hero-tag"><i class="bi bi-cup-hot-fill me-1"></i> Special Reserve Campaign</span>
+                <h1 class="serif-title mb-1" style="font-size: 2.3rem;">Café Luft Discounts & Privileges</h1>
+                <p class="text-white-50 mb-0">Crafting bespoke seasonal experiences and artisanal coffee benefits</p>
+            </div>
+            <div class="d-flex gap-2 mt-3 mt-md-0">
+                <a th:href="@{/manager-only/discounts/deleted-list}" class="btn btn-luxury-ghost">
+                    <i class="bi bi-archive me-1"></i> Archived List
+                </a>
+                <a th:href="@{/manager-only/discounts/create}" class="btn btn-luxury-primary">
+                    <i class="bi bi-plus-lg me-1"></i> Add New Discount
+                </a>
+            </div>
+        </div>
 
-		<!-- Page Header -->
-		<div class="d-flex justify-content-between align-items-center mb-3">
+        <!-- Master Table Card -->
+        <div class="table-container-card">
+            <div class="table-responsive">
+                <table class="table luxury-table align-middle">
+                    <thead>
+                        <tr>
+                            <th style="min-width: 240px;">Promotion</th>
+                            <th>Branch</th>
+                            <th>Promo Type</th>
+                            <th>Audience</th>
+                            <th>Value</th>
+                            <th>Validity</th>
+                            <th>Status</th>
+                            <th>Manager</th>
+                            <th class="text-end pe-3" style="min-width: 220px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <th:block th:each="discount, state : ${discounts}">
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <!-- Coffee Latte Art Thumbnail Icon -->
+                                        <img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=120&q=80" 
+                                             class="promo-avatar" alt="Coffee Icon">
+                                        <div>
+                                            <div class="fw-bold text-dark" th:text="${discount.name}">Autumn Espresso Blend</div>
+                                            <small class="text-muted d-block" th:if="${discount.description != null}" th:text="${discount.description}">Available for selected beans</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge badge-craft badge-branch">
+                                        <i class="bi bi-geo-alt"></i> <span th:text="${discount.branch_name}">Café Luft</span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-craft" style="background-color: rgba(197, 160, 89, 0.15); color: #855325;" th:text="${discount.promo_type_name}">Seasonal</span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-craft" style="background-color: #f1f2f4; color: #515a63;" th:text="${discount.audience_type_name}">All Guests</span>
+                                </td>
+                                <td>
+                                    <span class="fw-bold" style="color: var(--luft-primary); font-size: 1.1rem;" th:text="${discount.discount_value}">15.00</span>
+                                </td>
+                                <td>
+                                    <div class="small text-muted">
+                                        <div><i class="bi bi-calendar3 me-1"></i><span th:text="${discount.startdate}">2026-09-01</span></div>
+                                        <div><i class="bi bi-calendar-check me-1"></i><span th:text="${discount.enddate}">2026-09-30</span></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span th:if="${discount.is_active == true}" class="badge badge-craft badge-active">Active</span>
+                                    <span th:if="${discount.is_active == false}" class="badge badge-craft badge-inactive">Inactive</span>
+                                </td>
+                                <td>
+                                    <small class="text-secondary fw-medium" th:text="${discount.ename != null ? discount.ename : 'Admin'}">Staff</small>
+                                </td>
+                                <td class="text-end pe-3">
+                                    <div class="d-inline-flex align-items-center gap-1">
+                                        <a th:href="@{/manager-only/discounts/discountProducts/add/{id}(id=${discount.discount_id})}" 
+                                           class="btn-act" title="Add Menu Items">
+                                            <i class="bi bi-plus-circle"></i>
+                                        </a>
+                                        <a th:href="@{/manager-only/discounts/edit/{id}(id=${discount.discount_id})}" 
+                                           class="btn-act" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a th:href="@{/manager-only/discounts/delete/{id}(id=${discount.discount_id})}" 
+                                           class="btn-act" style="color: #b72b2b;"
+                                           onclick="return confirm('Archive this discount?');" title="Delete">
+                                            <i class="bi bi-trash3"></i>
+                                        </a>
+                                        <button class="btn btn-sm btn-outline-secondary ms-2" type="button"
+                                                data-bs-toggle="collapse"
+                                                th:data-bs-target="'#detailRow-' + ${state.index}"
+                                                aria-expanded="false">
+                                            Items <i class="bi bi-chevron-down ms-1"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
 
-			<h3 class="fw-bold mb-0">Discount And Promotions</h3>
+                            <!-- Nested Product Drawer with Photos -->
+                            <tr class="collapse" th:id="'detailRow-' + ${state.index}">
+                                <td colspan="9" class="p-0 border-0">
+                                    <div class="expanded-offer-drawer shadow-sm">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h6 class="serif-title mb-0 text-dark fw-bold" style="font-size: 1.25rem;">
+                                                Enrolled Menu Offerings for: <span class="text-secondary" th:text="${discount.name}"></span>
+                                            </h6>
+                                            <a th:href="@{/manager-only/discounts/discountProducts/add/{id}(id=${discount.discount_id})}" 
+                                               class="btn btn-sm btn-luxury-ghost py-1 px-3">
+                                                <i class="bi bi-plus me-1"></i> Assign Products
+                                            </a>
+                                        </div>
 
-			<div class="d-flex gap-2">
-			<div>
-				<p class="text-muted small">Manage store discount rates and
-					audience targeting</p>
-			</div>
-			<a th:href="@{/manager-only/discounts/create}" class="btn btn-primary">
-				<i class="bi bi-plus-circle me-1"></i> Add New Discount
-			</a> <a th:href="@{/manager-only/discounts/deleted-list}"
-				class="btn btn-primary"> Deleted List </a>
+                                        <div th:if="${discount.products != null and !discount.products.empty}">
+                                            <div class="row g-3">
+                                                <div class="col-md-6 col-lg-4" th:each="dp : ${discount.products}">
+                                                    <div class="p-2 bg-white rounded-3 border d-flex align-items-center justify-content-between shadow-sm">
+                                                        <div class="d-flex align-items-center gap-3">
+                                                            <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=120&q=80" 
+                                                                 class="product-thumbnail" alt="Coffee Cup">
+                                                            <div>
+                                                                <div class="fw-semibold text-dark mb-0" th:text="${dp.type_name}">Product Name</div>
+                                                                <small class="text-muted">Artisanal Beverage</small>
+                                                            </div>
+                                                        </div>
+                                                        <a th:href="@{/manager-only/discounts/discountProducts/delete/{discount_id}/{product_id}(discount_id=${discount.discount_id}, product_id=${dp.product_id})}"
+                                                           class="btn-act me-2" style="color: #b72b2b;"
+                                                           onclick="return confirm('Remove product from discount?');"
+                                                           title="Remove Item">
+                                                            <i class="bi bi-x-lg"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div th:unless="${discount.products != null and !discount.products.empty}" class="text-muted text-center py-4">
+                                            <i class="bi bi-cup-straw fs-2 d-block mb-1 opacity-50"></i>
+                                            <small>No coffee or pastry items enrolled yet. Click "Assign Products" to link items.</small>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </th:block>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-
-			</div>
-
-		</div>
-
-
-		<!-- Product Types Table -->
-		<div class="table-responsive">
-
-			<table class="table table-bordered table-striped align-middle">
-
-				<thead class="table-secondary">
-
-					<tr>
-
-						<th>Discount Name</th>
-								<th>Branch</th>
-								<th>Promo Type</th>
-								<th>Audience</th>
-								<th>Value</th>
-								
-								<th>Duration</th>
-								<th>Status</th>
-								<th>Created By</th>
-								<th class="text-end pe-4">Actions</th>
-
-					</tr>
-
-				</thead>
-
-
-				<tbody>
-
-					<!-- Loop through each Product Type -->
-					<th:block th:each="discount, state : ${discounts}">
-						<tr>
-								<td><strong th:text="${discount.name}">Summer Sale</strong>
-									<br th:if="${discount.description != null}"> <small
-									class="text-muted" th:text="${discount.description}">Description</small>
-								</td>
-								<td><span class="badge bg-info text-dark"
-									th:text="${discount.branch_name}">Branch</span></td>
-								<td><span class="badge bg-info text-dark"
-									th:text="${discount.promo_type_name}">Promo</span></td>
-								<td><span class="badge bg-secondary"
-									th:text="${discount.audience_type_name}">Audience</span></td>
-								<td><span class="fw-bold text-success"
-									th:text="${discount.discount_value}">10.00</span></td>
-								<td><small> <i class="bi bi-calendar3 me-1"></i><span
-										th:text="${discount.startdate}">2026-09-01</span> <br> <i
-										class="bi bi-calendar-check me-1"></i><span
-										th:text="${discount.enddate}">2026-09-30</span>
-								</small></td>
-								<td><span th:if="${discount.is_active == true}"
-									class="badge bg-success">Active</span> <span
-									th:if="${discount.is_active== false}" class="badge bg-danger">Inactive</span>
-								</td>
-								<td><small
-									th:text="${discount.ename != null ? discount.ename : 'N/A'}">Employee</small>
-								</td>
-								<td class="text-end pe-4"><a
-									th:href="@{/manager-only/discounts/discountProducts/add/{id}(id=${discount.discount_id})}"
-									class="btn btn-sm btn-outline-info">
-									Add Products	<i class="bi bi-trash"></i>
-								</a><a
-									th:href="@{/manager-only/discounts/edit/{id}(id=${discount.discount_id})}"
-									class="btn btn-sm btn-outline-warning me-1"> <i
-										class="bi bi-pencil-square"></i> Edit
-								</a> <a
-									th:href="@{/manager-only/discounts/delete/{id}(id=${discount.discount_id})}"
-									class="btn btn-sm btn-outline-danger"
-									onclick="return confirm('Are you sure you want to delete this discount?');">
-									Delete	<i class="bi bi-trash"></i>
-								</a>
-								
-								<!-- View Details -->
-								<div>
-									<button class="btn btn-sm btn-info text-white" type="button"
-										data-bs-toggle="collapse"
-										th:data-bs-target="'#detailRow-' + ${state.index}"
-										aria-expanded="false">View Details ▼</button>
-
-								</div>
-								</td>
-								
-							</tr>
-
-
-
-						<!-- Expandable Detail Row -->
-						<tr class="collapse" th:id="'detailRow-' + ${state.index}">
-
-							<td colspan="10" class="bg-light p-4">
-
-
-								<div class="card shadow-sm">
-
-									<div class="card-body">
-
-
-										<!-- Detail Title -->
-										<h5 class="text-primary mb-3">
-
-											Details for <span th:text="${discount.name}"> Product </span>
-
-										</h5>
-
-
-										<!-- Products / Sizes -->
-										<div th:if="${discount.products != null and !discount.products.empty}">
-
-											<div class="table-responsive">
-
-												<table id="productsTable">
-									
-													<thead>
-									
-														<tr>
-									
-															<th style="width: 35%;">DISCOUNT</th>
-									
-															<th style="width: 50%;">PRODUCTS</th>
-									
-															<th style="width: 15%;">ACTION</th>
-									
-														</tr>
-									
-													</thead>
-									
-									
-													<tbody>
-									
-														<tr th:each="dp : ${discount.products}">
-									
-															<td th:text="${discount.name}">Discount Name</td>
-									
-									
-															<td class="product-list" th:text="${dp.type_name}">
-																Product Name</td>
-									
-									
-															<td>
-									
-																<a th:href="@{/manager-only/discounts/discountProducts/delete/{discount_id}/{product_id}
-																              (discount_id=${discount.discount_id},
-																               product_id=${dp.product_id})}" onclick="return confirm('Are you sure you want to delete this discount product?');">
-																    Delete
-																</a>
-									
-															</td>
-									
-														</tr>
-									
-														<tr th:if="${#lists.isEmpty(discount.products)}">
-									
-															<td colspan="3" class="empty-message">No discount products
-																found.</td>
-									
-														</tr>
-									
-													</tbody>
-									
-												</table>
-
-											</div>
-
-										</div>
-
-
-										<!-- No Products -->
-										<div th:unless="${discount.products != null and !discount.products.empty}"
-											class="text-muted">This discount currently has no products. Add products to get started.</div>
-
-
-									</div>
-
-								</div>
-
-							</td>
-
-						</tr>
-
-
-					</th:block>
-
-				</tbody>
-
-			</table>
-
-		</div>
-
-	</div>
-
+    </div>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>
