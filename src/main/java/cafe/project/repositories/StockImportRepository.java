@@ -1,66 +1,146 @@
 package cafe.project.repositories;
 
-import java.util.List;
 
-import org.springframework.jdbc.core.JdbcTemplate;
+
+
+import org.springframework.jdbc.core.JdbcTemplate; 
+import org.springframework.jdbc.core.RowMapper; 
 import org.springframework.stereotype.Repository;
 
+import cafe.project.models.IngredientBatchItemDto;
+import cafe.project.models.StockImportListDto;
 import cafe.project.repositories.entities.StockImport;
-import cafe.project.repositories.mappers.StockImportMapper;
 
-@Repository
-public class StockImportRepository {
-	private final JdbcTemplate jdbcTemplate;
+import java.math.BigDecimal; 
+import java.util.List; 
+import java.util.Optional;
+@Repository public class StockImportRepository {
+private final JdbcTemplate jdbcTemplate;
 
-	public StockImportRepository(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
-	}
+public StockImportRepository(JdbcTemplate jdbcTemplate) {
+    this.jdbcTemplate = jdbcTemplate;
+}
 
-	public List<StockImport> findAll() {
-		String sql = "SELECT * FROM stock_imports WHERE isdeleted = false";
-		return this.jdbcTemplate.query(sql, new StockImportMapper());
-	}
+public String generateNextImportId() {
+    String sql = "SELECT import_id FROM stock_imports ORDER BY created_at DESC LIMIT 1";
+    List<String> results = jdbcTemplate.query(sql, (rs, rowNum) -> rs.getString("import_id"));
+    if (results.isEmpty()) {
+        return "SI-001";
+    }
+    String lastId = results.get(0);
+    int num = Integer.parseInt(lastId.replace("SI-", "")) + 1;
+    return String.format("SI-%03d", num);
+}
 
-	public List<StockImport> findDeletedAll() {
-		String sql = "SELECT * FROM stock_imports WHERE isdeleted = true";
-		return this.jdbcTemplate.query(sql, new StockImportMapper());
-	}
+public void saveStockImport(StockImport entity) {
+    String sql = "INSERT INTO stock_imports (import_id, imported_at, employee_id, branch_id, supplier_id, total_cost, isedited, isdeleted, created_at) " +
+                 "VALUES (?, ?, ?, ?, ?, ?, 0, 0, NOW())";
+    jdbcTemplate.update(sql, entity.getImport_id(), entity.getImported_at(), entity.getEmployee_id(), 
+                        entity.getBranch_id(), entity.getSupplier_id(), entity.getTotal_cost());
+}
 
-	public StockImport findById(String import_id) {
-		String sql = "SELECT * FROM stock_imports WHERE import_id = ? AND isdeleted = false";
-		List<StockImport> entities = this.jdbcTemplate.query(sql, new StockImportMapper(), import_id);
-		return entities.isEmpty() ? null : entities.get(0);
-	}
+public void saveIngredientBatch(String batchId, IngredientBatchItemDto item, String branchId, String importId) {
+    String sql = "INSERT INTO ingredient_batches (batch_id, remaining_quantity, manufactured_date, expire_date, branch_id, ingredient_type_id, unit_cost, quantity_ordered, total_import_cost, import_id, isdeleted, created_at) " +
+                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, NOW())";
+    jdbcTemplate.update(sql, batchId, item.getQuantity_ordered(), item.getManufactured_date(), item.getExpire_date(),
+                        branchId, item.getIngredientTypeId(), item.getUnit_cost(), item.getQuantity_ordered(),
+                        item.getTotal_import_cost(), importId);
+}
 
-	public StockImport findDeletedById(String import_id) {
-		String sql = "SELECT * FROM stock_imports WHERE import_id = ? AND isdeleted = true";
-		List<StockImport> entities = this.jdbcTemplate.query(sql, new StockImportMapper(), import_id);
-		return entities.isEmpty() ? null : entities.get(0);
-	}
+public List<StockImportListDto> findAllActive() {
+    String sql = "SELECT si.import_id, si.imported_at, s.name AS supplier_name, e.name AS employee_name, b.name AS branch_name, si.total_cost, si.isedited, si.isdeleted " +
+                 "FROM stock_imports si " +
+                 "JOIN suppliers s ON si.supplier_id = s.supplier_id " +
+                 "JOIN employees e ON si.employee_id = e.employee_id " +
+                 "JOIN branches b ON si.branch_id = b.branch_id " +
+                 "WHERE si.isdeleted = 0 ORDER BY si.created_at DESC";
+    return jdbcTemplate.query(sql, listDtoMapper);
+}
 
-	public int add(StockImport entity) {
-		String sql = "INSERT INTO stock_imports (import_id, imported_at, employee_id, branch_id, isdeleted, supplier_id, total_cost) VALUES (?,?,?,?,?,?,?)";
-		return this.jdbcTemplate.update(sql, entity.getImport_id(), entity.getImported_at(), entity.getEmployee_id(),
-				entity.getBranch_id(), false, entity.getSupplier_id(), entity.getTotal_cost());
-	}
+public List<StockImportListDto> findAllDeleted() {
+    String sql = "SELECT si.import_id, si.imported_at, s.name AS supplier_name, e.name AS employee_name, b.name AS branch_name, si.total_cost, si.isedited, si.isdeleted " +
+                 "FROM stock_imports si " +
+                 "JOIN suppliers s ON si.supplier_id = s.supplier_id " +
+                 "JOIN employees e ON si.employee_id = e.employee_id " +
+                 "JOIN branches b ON si.branch_id = b.branch_id " +
+                 "WHERE si.isdeleted = 1 ORDER BY si.created_at DESC";
+    return jdbcTemplate.query(sql, listDtoMapper);
+}
 
-	public int edit(StockImport entity) {
-		// Removed the extra 'false' parameter that caused the mismatch
-		String sql = "UPDATE stock_imports SET imported_at = ?, employee_id = ?, branch_id = ?, supplier_id = ?, total_cost = ? WHERE import_id = ?";
-		return this.jdbcTemplate.update(sql, entity.getImported_at(), entity.getEmployee_id(), entity.getBranch_id(),
-				entity.getSupplier_id(), entity.getTotal_cost(), entity.getImport_id());
-	}
+public Optional<StockImport> findById(String import_id) {
+    String sql = "SELECT * FROM stock_imports WHERE import_id = ?";
+    List<StockImport> list = jdbcTemplate.query(sql, (rs, rowNum) -> {
+        StockImport entity = new StockImport();
+        entity.setImport_id(rs.getString("import_id"));
+        entity.setImported_at(rs.getTimestamp("imported_at").toLocalDateTime());
+        entity.setEmployee_id(rs.getString("employee_id"));
+        entity.setBranch_id(rs.getString("branch_id"));
+        entity.setSupplier_id(rs.getString("supplier_id"));
+        entity.setTotal_cost(rs.getBigDecimal("total_cost"));
+        entity.setIsedited(rs.getBoolean("isedited"));
+        entity.setIsdeleted(rs.getBoolean("isdeleted"));
+        return entity;
+    }, import_id);
+    return list.stream().findFirst();
+}
 
-	public int deleted(String import_id) {
-		// Fixed syntax error around '?' and set isdeleted to true
-		String sql = "UPDATE stock_imports SET isdeleted = true WHERE import_id = ?";
-		return this.jdbcTemplate.update(sql, import_id);
-	}
+public List<IngredientBatchItemDto> findBatchesByImportId(String importId) {
+    String sql = "SELECT ib.ingredient_type_id, it.name AS ingredient_name, u.name AS unit_name, ib.quantity_ordered, ib.unit_cost, ib.total_import_cost, ib.manufactured_date, ib.expire_date " +
+                 "FROM ingredient_batches ib " +
+                 "JOIN ingredient_types it ON ib.ingredient_type_id = it.ingredient_type_id " +
+                 "JOIN units u ON it.unit_id = u.unit_id " +
+                 "WHERE ib.import_id = ?";
+    return jdbcTemplate.query(sql, (rs, rowNum) -> {
+        IngredientBatchItemDto item = new IngredientBatchItemDto();
+        item.setIngredientTypeId(rs.getString("ingredient_type_id"));
+        item.setIngredientTypeName(rs.getString("ingredient_name"));
+        item.setUnitName(rs.getString("unit_name"));
+        item.setQuantityOrdered(rs.getDouble("quantity_ordered"));
+        item.setUnitCost(rs.getBigDecimal("unit_cost"));
+        item.setTotalImportCost(rs.getDouble("total_import_cost"));
+        item.setManufacturedDate(rs.getDate("manufactured_date").toLocalDate());
+        item.setExpireDate(rs.getDate("expire_date").toLocalDate());
+        return item;
+    }, importId);
+}
 
-	public int recover(String import_id) {
-		// Fixed syntax error around '?' and set isdeleted to false
-		String sql = "UPDATE stock_imports SET isdeleted = false WHERE import_id = ?";
-		return this.jdbcTemplate.update(sql, import_id);
-	}
+public void updateStockImport(StockImportEntity entity) {
+    String sql = "UPDATE stock_imports SET supplier_id = ?, imported_at = ?, total_cost = ?, isedited = 1 WHERE import_id = ?";
+    jdbcTemplate.update(sql, entity.getSupplierId(), entity.getImportedAt(), entity.getTotalCost(), entity.getImportId());
+}
 
+public void deleteBatchesByImportId(String importId) {
+    String sql = "DELETE FROM ingredient_batches WHERE import_id = ?";
+    jdbcTemplate.update(sql, importId);
+}
+
+public void softDelete(String importId) {
+    String sql = "UPDATE stock_imports SET isdeleted = 1 WHERE import_id = ?";
+    jdbcTemplate.update(sql, importId);
+}
+
+public void recover(String importId) {
+    String sql = "UPDATE stock_imports SET isdeleted = 0 WHERE import_id = ?";
+    jdbcTemplate.update(sql, importId);
+}
+
+public void hardDelete(String importId) {
+    String deleteBatches = "DELETE FROM ingredient_batches WHERE import_id = ?";
+    jdbcTemplate.update(deleteBatches, importId);
+    String deleteImport = "DELETE FROM stock_imports WHERE import_id = ?";
+    jdbcTemplate.update(deleteImport, importId);
+}
+
+private final RowMapper<StockImportListDto> listDtoMapper = (rs, rowNum) -> {
+    StockImportListDto dto = new StockImportListDto();
+    dto.setImport_id(rs.getString("import_id"));
+    dto.setImported_at(rs.getTimestamp("imported_at").toLocalDateTime());
+    dto.setSupplierName(rs.getString("supplier_name"));
+    dto.setEmployeeName(rs.getString("employee_name"));
+    dto.setBranchName(rs.getString("branch_name"));
+    dto.setTotal_cost(rs.getBigDecimal("total_cost"));
+    dto.setIsedited(rs.getBoolean("isedited"));
+    dto.setIsdeleted(rs.getBoolean("isdeleted"));
+    return dto;
+};
 }

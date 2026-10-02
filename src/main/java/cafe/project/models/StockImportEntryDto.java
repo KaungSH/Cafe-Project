@@ -1,42 +1,30 @@
 package cafe.project.models;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
-public class StockImportEntryModel {
+public class StockImportEntryDto {
 	private String import_id;
-
-	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") // Fixed DateTimeFormat Pattern
 	private LocalDateTime imported_at;
-
-	private double total_cost;
 	private String supplier_id;
 	private String employee_id;
 	private String branch_id;
+	private BigDecimal total_cost;
+	private List<IngredientBatchItemDto> items = new ArrayList<>();
 
-	private List<StockImportDetailEntry> details;
-	
-	public StockImportEntryModel() {
+	public StockImportEntryDto() {
 	}
 
-	public StockImportEntryModel(String import_id, LocalDateTime imported_at, double total_cost, String supplier_id,
-			String employee_id, String branch_id) {
+	public StockImportEntryDto(String import_id, LocalDateTime imported_at, String supplier_id, String employee_id,
+			String branch_id, BigDecimal total_cost) {
 		this.import_id = import_id;
 		this.imported_at = imported_at;
-		this.total_cost = total_cost;
 		this.supplier_id = supplier_id;
 		this.employee_id = employee_id;
 		this.branch_id = branch_id;
-	}
-
-	public List<StockImportDetailEntry> getDetails() {
-		return details;
-	}
-
-	public void setDetails(List<StockImportDetailEntry> details) {
-		this.details = details;
+		this.total_cost = total_cost;
 	}
 
 	public String getImport_id() {
@@ -53,14 +41,6 @@ public class StockImportEntryModel {
 
 	public void setImported_at(LocalDateTime imported_at) {
 		this.imported_at = imported_at;
-	}
-
-	public double getTotal_cost() {
-		return total_cost;
-	}
-
-	public void setTotal_cost(double total_cost) {
-		this.total_cost = total_cost;
 	}
 
 	public String getSupplier_id() {
@@ -85,6 +65,22 @@ public class StockImportEntryModel {
 
 	public void setBranch_id(String branch_id) {
 		this.branch_id = branch_id;
+	}
+
+	public BigDecimal getTotal_cost() {
+		return total_cost;
+	}
+
+	public void setTotal_cost(BigDecimal total_cost) {
+		this.total_cost = total_cost;
+	}
+
+	public List<IngredientBatchItemDto> getItems() {
+		return items;
+	}
+
+	public void setItems(List<IngredientBatchItemDto> items) {
+		this.items = items;
 	}
 
 }

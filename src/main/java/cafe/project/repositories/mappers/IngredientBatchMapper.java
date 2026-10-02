@@ -2,28 +2,46 @@ package cafe.project.repositories.mappers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 import org.springframework.jdbc.core.RowMapper;
-
 import cafe.project.repositories.entities.IngredientBatch;
 
 public class IngredientBatchMapper implements RowMapper<IngredientBatch> {
-
 	@Override
 	public IngredientBatch mapRow(ResultSet rs, int rowNum) throws SQLException {
+		IngredientBatch entity = new IngredientBatch();
+		entity.setBatch_id(rs.getString("batch_id"));
+		entity.setRemaining_quantity(rs.getBigDecimal("remaining_quantity"));
 
-		LocalDateTime createdAt = rs.getObject("created_at", LocalDateTime.class);
+		if (rs.getDate("manufactured_date") != null) {
+			entity.setManufactured_date(rs.getDate("manufactured_date").toLocalDate());
+		}
+		if (rs.getDate("expire_date") != null) {
+			entity.setExpire_date(rs.getDate("expire_date").toLocalDate());
+		}
 
-		LocalDate manufacturedDate = rs.getObject("manufactured_date", LocalDate.class);
+		entity.setBranch_id(rs.getString("branch_id"));
+		entity.setIsdeleted(rs.getBoolean("isdeleted"));
 
-		LocalDate expireDate = rs.getObject("expire_date", LocalDate.class);
+		if (rs.getTimestamp("created_at") != null) {
+			entity.setCreated_at(rs.getTimestamp("created_at").toLocalDateTime());
+		}
 
-		return new IngredientBatch(rs.getString("batch_id"), rs.getBigDecimal("remaining_quantity"), manufacturedDate,
-				expireDate, rs.getString("branch_id"), rs.getString("import_detail_id"), rs.getBoolean("isExpired"),
-				rs.getBoolean("isDeleted"), createdAt, rs.getString("ingredient_type_id"),
-				rs.getBigDecimal("unit_cost"), rs.getString("branch_name"), rs.getString("ingredient_type_name"));
+		entity.setIngredient_type_id(rs.getString("ingredient_type_id"));
+		entity.setUnit_cost(rs.getBigDecimal("unit_cost"));
+		entity.setQuantity_ordered(rs.getDouble("quantity_ordered"));
+		entity.setTotal_import_cost(rs.getDouble("total_import_cost"));
+		entity.setImport_id(rs.getString("import_id"));
+
+		try {
+			entity.setBranch_name(rs.getString("branch_name"));
+		} catch (SQLException ignored) {
+		}
+
+		try {
+			entity.setIngredientType_name(rs.getString("ingredient_type_name"));
+		} catch (SQLException ignored) {
+		}
+
+		return entity;
 	}
-
 }

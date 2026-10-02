@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Ingredient Batch List</title>
+
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+</head>
+
+<body class="container mt-4">
+
+	<div class="d-flex justify-content-between align-items-center mb-3">
+		<h2 class="text-danger">Deleted Ingredient Batches (Trash)</h2>
+		<a th:href="@{/ingredient-batches}" class="btn btn-secondary">Back
+			to Active List</a>
+	</div>
+
+	<table class="table table-bordered table-hover align-middle">
+		<thead class="table-secondary">
+			<tr>
+				<th>Batch ID</th>
+				<th>Ingredient Type</th>
+				<th>Branch</th>
+				<th>Remaining Qty</th>
+				<th>Expire Date</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:if="${#lists.isEmpty(deletedBatches)}">
+				<td colspan="6" class="text-center text-muted">Trash is empty.</td>
+			</tr>
+			<tr th:each="batch : ${deletedBatches}">
+				<td th:text="${batch.batch_id}"></td>
+				<td th:text="${batch.ingredientType_name}"></td>
+				<td th:text="${batch.branch_name}"></td>
+				<td th:text="${batch.remaining_quantity}"></td>
+				<td th:text="${batch.expire_date}"></td>
+				<td><a
+					th:href="@{/ingredient-batches/recover/{id}(id=${batch.batch_id})}"
+					class="btn btn-sm btn-success me-1">Recover</a> <a
+					th:href="@{/ingredient-batches/hard-delete/{id}(id=${batch.batch_id})}"
+					class="btn btn-sm btn-danger">Hard Delete</a></td>
+			</tr>
+		</tbody>
+	</table>
+
+</body>
+
+</html>
