@@ -1,5 +1,9 @@
 package cafe.project.controllers;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,90 +11,126 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import cafe.project.employeemanagement.models.LoginDto;
+import cafe.project.repositories.entities.OrderDetails;
+import cafe.project.repositories.entities.Orders;
 import cafe.project.repositories.entities.Payment;
+import cafe.project.services.OrderDetailsService;
+import cafe.project.services.OrdersService;
+import cafe.project.services.PayMethodService;
 import cafe.project.services.PaymentService;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/payments")
 public class PaymentController {
 
-    private final PaymentService paymentService;
+	private final PaymentService paymentService;
+	private final OrdersService ordersService;
+	private final OrderDetailsService orderDetailsService;
+	private final PayMethodService payMethodService;
 
-    public PaymentController(PaymentService paymentService) {
-        this.paymentService = paymentService;
-    }
+	public PaymentController(PaymentService paymentService, OrdersService orderService,
+			OrderDetailsService orderDetailsService, PayMethodService payMethodService) {
+		this.paymentService = paymentService;
+		this.ordersService = orderService;
+		this.orderDetailsService = orderDetailsService;
+		this.payMethodService = payMethodService;
+	}
 
-    // LIST
-    @GetMapping
-    public String index(Model model) {
+	// LIST
+	@GetMapping
+	public String index(Model model) {
 
-        model.addAttribute(
-                "payments",
-                paymentService.findAll()
-        );
+		model.addAttribute("payments", paymentService.findAll());
 
-        return "payments/index";
-    }
+		return "payments/index";
+	}
 
-    // ADD FORM
-    @GetMapping("/add")
-    public String add(Model model) {
+	// ADD FORM
+	@GetMapping("/add")
+	public String add(@RequestParam("order_id") String order_id, Model model) {
 
-        model.addAttribute("payment", new Payment());
+		Orders order = ordersService.findById(order_id);
 
-        return "payments/add";
-    }
+		List<OrderDetails> orderDetails = orderDetailsService.findByOrderId(order_id);
 
-    // SAVE
-    @PostMapping("/add")
-    public String save(
-            @ModelAttribute("payment") Payment payment) {
+		model.addAttribute("order", order);
+		model.addAttribute("orderDetails", orderDetails);
+		model.addAttribute("payment", new Payment());
+		model.addAttribute("payMethods", payMethodService.getAllActivePayMethods());
 
-        paymentService.save(payment);
+		return "payments/add";
+	}
 
-        return "redirect:/payments";
-    }
+	// SAVE
+	@PostMapping("/add")
+	public String save(@ModelAttribute("payment") Payment payment, HttpSession session) {
 
-    // EDIT FORM
-    @GetMapping("/edit/{id}")
-    public String edit(
-            @PathVariable String id,
-            Model model) {
+		LoginDto user = (LoginDto) session.getAttribute("loggedInUser");
+		payment.setPaid_time(LocalDateTime.now());
+		payment.setDate(LocalDate.now());
+		payment.setFilepath("");
 
-        Payment existingPayment =
-                paymentService.findById(id);
+		if (user != null) {
+			payment.setEmployee_id(user.getEmployee_id());
+		}
+		paymentService.save(payment);
 
-        if (existingPayment != null) {
+		return "redirect:/order-with-details";
+	}
 
-            model.addAttribute(
-                    "payment",
-                    existingPayment
-            );
+	// EDIT FORM
+	@GetMapping("/edit/{id}")
+	public String edit(@PathVariable String id, Model model) {
 
-            return "payments/edit";
-        }
+		Payment existingPayment = paymentService.findById(id);
 
-        return "redirect:/payments";
-    }
+		if (existingPayment != null) {
 
-    // UPDATE
-    @PostMapping("/edit/{id}")
-    public String update(
-            @PathVariable String id,
-            @ModelAttribute("payment") Payment payment) {
+			model.addAttribute("payment", existingPayment);
 
-        paymentService.edit(id, payment);
+			return "payments/edit";
+		}
 
-        return "redirect:/payments";
-    }
+		return "redirect:/payments";
+	}
 
-    // DELETE
-    @GetMapping("/delete/{id}")
-    public String delete(@PathVariable String id) {
+	// UPDATE
+	@PostMapping("/edit/{id}")
+	public String update(@PathVariable String id, @ModelAttribute("payment") Payment payment) {
 
-        paymentService.delete(id);
+		paymentService.edit(id, payment);
 
-        return "redirect:/payments";
-    }
+		return "redirect:/payments";
+	}
+
+	// DELETE
+	@GetMapping("/delete/{id}")
+	public String delete(@PathVariable String id) {
+
+		paymentService.delete(id);
+
+		return "redirect:/payments";
+	}
+
+	@GetMapping("/deleted")
+	public String deletedList(Model model) {
+		model.addAttribute("payments", paymentService.findDeletedAll());
+		return "/payments/deletedList";
+	}
+
+	@GetMapping("/restore/{id}")
+	public String restore(@PathVariable("id") String id) {
+		paymentService.restore(id);
+		return "redirect:/payments/deleted";
+	}
+
+	@GetMapping("/real-deleted/{id}")
+	public String hardDelete(@PathVariable("id") String id) {
+		paymentService.hardDelete(id);
+		return "redirect:/payments/deleted";
+	}
 }

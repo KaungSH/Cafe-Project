@@ -45,8 +45,16 @@ public class OrderDetailsController {
 	@GetMapping
 	public String list(Model model, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-		model.addAttribute("orders", ordersService.findNotReceivedAll());
+		List<Orders> orders = ordersService.findNotReceivedAll();
 
+		for (Orders order : orders) {
+
+			boolean paymentDone = ordersService.isPaymentDone(order.getOrder_id());
+
+			order.setPaymentDone(paymentDone);
+		}
+
+		model.addAttribute("orders", orders);
 		model.addAttribute("orderDetails", orderDetailsService.findAll());
 
 		return "orderwithdetails/list";
@@ -55,9 +63,17 @@ public class OrderDetailsController {
 	@GetMapping("/received-list")
 	public String receivedList(Model model) {
 
-		model.addAttribute("orders", ordersService.findReceivedAll());
+		List<Orders> orders = ordersService.findReceivedAll();
 
+		model.addAttribute("orders", orders);
 		model.addAttribute("orderDetails", orderDetailsService.findAll());
+
+		for (Orders order : orders) {
+
+			boolean paid = ordersService.isPaymentDone(order.getOrder_id());
+
+			order.setPaymentDone(paid);
+		}
 
 		return "orderwithdetails/receivedlist";
 	}
