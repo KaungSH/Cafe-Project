@@ -13,6 +13,8 @@ import cafe.project.services.CategoryService;
 import cafe.project.services.DailyRegisterService;
 import cafe.project.services.DiscountService;
 import cafe.project.services.EmployeeService;
+import cafe.project.services.ExpenseCategoryService;
+import cafe.project.services.SizeService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -20,9 +22,13 @@ import jakarta.servlet.http.HttpSession;
 public class ManagerController {
 	
 	private AtypeAndPtypeRepository typeRepo;
+	private final ExpenseCategoryService expenseCategoryService;
+	private final SizeService sizeService;
 	
-	public ManagerController(AtypeAndPtypeRepository typeRepo) {
+	public ManagerController(AtypeAndPtypeRepository typeRepo, ExpenseCategoryService expenseCategoryService, SizeService sizeService) {
 		this.typeRepo = typeRepo;
+		this.expenseCategoryService = expenseCategoryService;
+		this.sizeService = sizeService;
 	}
 	
 	@GetMapping("/types/audience")
@@ -39,6 +45,18 @@ public class ManagerController {
 		model.addAttribute("name", "promo");
 		model.addAttribute("dname", "Promo");
 		return "types/list-manager";
+	}
+	
+	@GetMapping("/expensesCategories")
+	public String ExpenseCategoryList(Model model) {
+		model.addAttribute("expense", this.expenseCategoryService.findAll());
+		return "expensecategory/list-manager";
+	}
+	
+	@GetMapping("/sizes")
+	public String list(Model model) {
+		model.addAttribute("sizes", sizeService.getAllSizes());
+		return "sizes/list-manager";
 	}
 
 }

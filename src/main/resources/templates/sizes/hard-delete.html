@@ -46,10 +46,10 @@ body {
 			</div>
 
 			<form
-				th:action="@{/manager/sizes/hard-delete/{size_id}(size_id=${size.size_id})}"
+				th:action="@{/admin/sizes/hard-delete/{size_id}(size_id=${size.size_id})}"
 				method="post">
 				<div class="d-flex justify-content-between align-items-center">
-					<a th:href="@{/manager/sizes/deleted}" class="btn btn-light border">Cancel</a>
+					<a th:href="@{/admin/sizes/deleted}" class="btn btn-light border">Cancel</a>
 					<button type="submit" class="btn btn-danger">Yes,
 						Permanently Delete</button>
 				</div>

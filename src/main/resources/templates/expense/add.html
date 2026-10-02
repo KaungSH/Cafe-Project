@@ -93,32 +93,13 @@ textarea.form-control {
 
 	<div class="expense-card">
 
-		<div class="title">New Expense</div>
+		<div class="title">Add New Expense For <span th:text = "${branch}"></span></div>
 
 
-		<form th:action="@{/manager/expense/add}" th:object="${expense}"
+		<form th:action="@{/manager-only/expense/add}" th:object="${expense}"
 			method="post">
 
 			<div class="row">
-
-
-				<div class="col-md-6 mb-3">
-
-					<label class="form-label"> Branch </label> <select
-						class="form-select" th:field="*{branch_id}">
-
-						<option value="">Select Branch</option>
-
-						<option th:each="branch : ${branches}"
-							th:value="${branch.branch_id}" th:text="${branch.name}">
-						</option>
-
-					</select>
-
-					<div class="error" th:if="${#fields.hasErrors('branch_id')}"
-						th:errors="*{branch_id}"></div>
-
-				</div>
 
 				<div class="col-md-6 mb-3">
 
@@ -185,7 +166,7 @@ textarea.form-control {
 
 			<div class="button-area">
 
-				<a th:href="@{/manager/expense}" class="cancel-btn"> Cancel </a>
+				<a th:href="@{/manager-only/expense}" class="cancel-btn"> Cancel </a>
 
 
 				<button type="submit" class="create-btn">Create</button>

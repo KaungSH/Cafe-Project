@@ -84,7 +84,7 @@ body {
 		<div class="title">Edit Expense Category</div>
 
 
-		<form th:action="@{/manager/expensecategory/edit}"
+		<form th:action="@{/admin/expensecategory/edit}"
 			th:object="${expensecategory}" method="post">
 
 			<div class="mb-3">
@@ -107,7 +107,7 @@ body {
 
 			<div class="button-area">
 
-				<a th:href="@{/manager/expensecategory}" class="cancel-btn"> Cancel </a>
+				<a th:href="@{/admin/expensecategory}" class="cancel-btn"> Cancel </a>
 
 				<button type="submit" class="update-btn">Update</button>
 

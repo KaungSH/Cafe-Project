@@ -83,6 +83,15 @@ public class OrdersRepository {
 				entity.getTotal_amount(), entity.getToken_number());
 	}
 
+	public boolean isPaymentDone(String orderId) {
+
+		String sql = "SELECT COUNT(*) " + "FROM payments " + "WHERE order_id = ? " + "AND isdeleted = 0";
+
+		Integer count = jdbcTemplate.queryForObject(sql, Integer.class, orderId);
+
+		return count != null && count > 0;
+	}
+
 	public int updateTotalAmoun(String Id, BigDecimal totalAmount) {
 		String sql = "UPDATE orders\r\n" + "SET total_amount = ? \r\n" + "WHERE order_id = ?";
 		return jdbcTemplate.update(sql, totalAmount, Id);

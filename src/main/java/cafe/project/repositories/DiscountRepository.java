@@ -162,11 +162,11 @@ public class DiscountRepository {
 		return jdbcTemplate.update("UPDATE discounts_products SET discount_id = 'deleted' WHERE discount_id = ?", discount_id);
 	}
 	
-	private int recordDelete(String register_id) {
+	private int recordDelete(String discount_id) {
 		int i = 0;
-		for (String childId : getChildIds(register_id)) {
+		for (String childId : getChildIds(discount_id)) {
 			DeleteRecord dr = new DeleteRecord();
-			dr.setParent_id(register_id); dr.setParent_table_name("discounts"); dr.setChild_id(childId); dr.setChild_table_name("discounts_products");
+			dr.setParent_id(discount_id); dr.setParent_table_name("discounts"); dr.setChild_id(childId); dr.setChild_table_name("discounts_products");
 			deleteRecordRepo.recordDelete(dr);
 			i++;
 		}

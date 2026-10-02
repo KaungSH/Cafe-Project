@@ -17,14 +17,14 @@ public class ExpenseService {
 		this.repo = repo;
 	}
 	
-	public List<ExpenseDto> findAll(){
-		List<Expense> entities = this.repo.findAll();
+	public List<ExpenseDto> findAll(String branch_id){
+		List<Expense> entities = this.repo.findAll(branch_id);
 		List<ExpenseDto> expenses = entities.stream().map(this::toDto).toList();
 		return expenses;
 	}
 	
-	public ExpenseDto findById(String expense_id) {
-		Expense entity =this.repo.findById(expense_id);
+	public ExpenseDto findById(String expense_id, String branch_id) {
+		Expense entity =this.repo.findById(expense_id, branch_id);
 		if(entity == null)
 			return null;
 		return toDto(entity);
@@ -44,8 +44,8 @@ public class ExpenseService {
 		return this.repo.softDelete(expense_id);
 	}
 	
-	public List<ExpenseDto> deletedList(){
-		return this.repo.DeletedList().stream().map(this::toDto).toList();
+	public List<ExpenseDto> deletedList(String branch_id){
+		return this.repo.DeletedList(branch_id).stream().map(this::toDto).toList();
 	}
 	
 	public int restore(String expense_id) {
@@ -54,13 +54,6 @@ public class ExpenseService {
 	
 	public int hardDelete(String expense_id) {
 		return this.repo.hardDelete(expense_id);
-	}
-	
-	public ExpenseDto existByCategoryId(String category_id) {
-		Expense entity =this.repo.existByCategoryId(category_id);
-		if(entity == null)
-			return null;
-		return toDto(entity);
 	}
 	
 	private ExpenseDto toDto(Expense entity) {

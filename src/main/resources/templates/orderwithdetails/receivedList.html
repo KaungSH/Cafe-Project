@@ -192,8 +192,12 @@ body {
 					<span class="badge bg-success fs-6"> Received </span>
 
 				</div>
+				<div class="text-end mt-2">
 
+					<span th:if="${order.paymentDone}" class="badge bg-success fs-6">
+						✓ Payment Successful </span>
 
+				</div>
 			</div>
 
 		</div>

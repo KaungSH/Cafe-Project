@@ -76,9 +76,6 @@ th {
 
 			<div class="title">Expense Categories</div>
 
-			<a th:href="@{/admin/expensecategory/add}" class="add-btn"> +
-				Add Category </a>
-
 		</div>
 
 
@@ -90,7 +87,6 @@ th {
 					<th>No</th>
 					<th>Category ID</th>
 					<th>Category Name</th>
-					<th width="180">Action</th>
 				</tr>
 
 			</thead>
@@ -105,19 +101,6 @@ th {
 					<td th:text="${category.expense_category_id}"></td>
 
 					<td th:text="${category.category_name}"></td>
-
-					<td><a
-						th:href="@{/admin/expensecategory/edit/{id}
-                        (id=${category.expense_category_id})}"
-						class="edit-btn"> Edit </a>
-
-						<form th:action="@{/admin/expensecategory/delete/{id} (id=${category.expense_category_id})}"
-							method="post" style="display: inline;"
-							>
-
-							<button type="submit" class="delete-btn">Delete</button>
-
-						</form>
 				</tr>
 
 				<tr th:if="${#lists.isEmpty(expense)}">

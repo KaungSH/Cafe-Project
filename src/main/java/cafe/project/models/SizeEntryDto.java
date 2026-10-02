@@ -12,8 +12,6 @@ public class SizeEntryDto {
 	private String name;
 
 	private Boolean is_active = true;
-
-	@NotBlank(message = "Employee selection is required")
 	private String employee_id;
 
 	public SizeEntryDto() {

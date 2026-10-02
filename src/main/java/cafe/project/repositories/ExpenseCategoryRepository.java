@@ -19,13 +19,13 @@ public class ExpenseCategoryRepository {
 	}
 
 	public List<ExpenseCategory> findAll() {
-		String sql = "SELECT * FROM expense_categories";
+		String sql = "SELECT * FROM expense_categories WHERE expense_category_id != 'deleted'";
 		List<ExpenseCategory> entities = this.jdbcTemplate.query(sql, new ExpenseCategoryMapper());
 		return entities;
 	}
 
 	public ExpenseCategory findById(String expense_category_id) {
-		String sql = "SELECT * From expense_categories WHERE expense_category_id =?";
+		String sql = "SELECT * From expense_categories WHERE expense_category_id =? AND expense_category_id != 'deleted'";
 		List<ExpenseCategory> entities = this.jdbcTemplate.query(sql, new ExpenseCategoryMapper(), expense_category_id);
 		return entities.isEmpty() ? null : entities.get(0);
 	}
@@ -41,7 +41,12 @@ public class ExpenseCategoryRepository {
 	}
 
 	public int delete(String expense_category_id) {
-		String sql = "DELETE FROM expense_categories WHERE expense_category_id = ?";
+		setExpenses(expense_category_id);
+		String sql = "DELETE FROM expense_categories WHERE expense_category_id = ? expense_category_id != 'deleted'";
 		return this.jdbcTemplate.update(sql, expense_category_id);
+	}
+	
+	private int setExpenses(String expense_category_id) {
+		return jdbcTemplate.update("UPDATE expenses SET expense_category_id = 'deleted' WHERE expense_category_id = ?", expense_category_id);
 	}
 }

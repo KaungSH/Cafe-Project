@@ -42,6 +42,11 @@ body {
 .table td {
 	vertical-align: middle;
 }
+
+.total-box {
+	font-size: 18px;
+	font-weight: bold;
+}
 </style>
 
 </head>
@@ -51,6 +56,11 @@ body {
 
 
 	<div class="container mt-5 mb-5">
+
+
+		<!-- ========================= -->
+		<!-- PAGE TITLE -->
+		<!-- ========================= -->
 
 		<div class="d-flex justify-content-between align-items-center mb-4">
 
@@ -62,11 +72,23 @@ body {
 
 		</div>
 
+
+		<!-- ========================= -->
+		<!-- ORDER FORM -->
+		<!-- ========================= -->
+
 		<form th:action="@{/order-with-details/save}" method="post">
+
+
+			<!-- ========================= -->
+			<!-- ORDER DETAILS CARD -->
+			<!-- ========================= -->
 
 			<div class="card shadow-sm mb-4">
 
+
 				<div class="card-header bg-success text-white">Order Details</div>
+
 
 				<div class="card-body">
 
@@ -75,6 +97,9 @@ body {
 
 
 						<table class="table table-bordered">
+
+
+							<!-- TABLE HEADER -->
 
 							<thead class="table-light">
 
@@ -94,15 +119,26 @@ body {
 
 							</thead>
 
+
+							<!-- TABLE BODY -->
+
 							<tbody id="orderDetailsTable">
+
+
+								<!-- FIRST PRODUCT ROW -->
 
 								<tr>
 
+
+									<!-- NO. -->
+
 									<td class="text-center">1</td>
+
+
+									<!-- PRODUCT -->
 
 									<td><select name="orderDetails[0].product_id"
 										class="form-select product-select" required>
-
 
 											<option value="">-- Select Product --</option>
 
@@ -112,16 +148,24 @@ body {
 												th:text="${product.type_name + ' - ' + product.price}"
 												th:attr="data-price=${product.price}"></option>
 
-
 									</select></td>
+
+
+									<!-- QUANTITY -->
 
 									<td><input type="number" name="orderDetails[0].quantity"
 										class="form-control quantity-input" min="1" value="1" required>
 
 									</td>
 
+
+									<!-- REMARK -->
+
 									<td><input type="text" name="orderDetails[0].remark"
 										class="form-control" placeholder="Remark"></td>
+
+
+									<!-- REMOVE -->
 
 									<td class="text-center">
 
@@ -136,11 +180,13 @@ body {
 
 							</tbody>
 
-
 						</table>
 
 
 					</div>
+
+
+					<!-- ADD PRODUCT BUTTON -->
 
 					<button type="button" class="btn btn-success"
 						onclick="addProduct()">+ Add Product</button>
@@ -150,7 +196,13 @@ body {
 
 			</div>
 
+
+			<!-- ========================= -->
+			<!-- TOTAL AMOUNT -->
+			<!-- ========================= -->
+
 			<div class="card shadow-sm mb-4">
+
 
 				<div class="card-body">
 
@@ -164,11 +216,20 @@ body {
 						<div class="col-md-4">
 
 
-							<label class="form-label fw-bold"> Total Amount </label> <input
-								type="text" id="totalAmountDisplay"
+							<label class="form-label fw-bold"> Total Amount </label>
+
+
+							<!-- DISPLAY TOTAL -->
+
+							<input type="text" id="totalAmountDisplay"
 								class="form-control form-control-lg fw-bold" value="0.00"
-								readonly> <input type="hidden" name="total_amount"
-								id="totalAmount" value="0.00">
+								readonly>
+
+
+							<!-- ACTUAL VALUE SENT TO SPRING BOOT -->
+
+							<input type="hidden" name="total_amount" id="totalAmount"
+								value="0.00">
 
 
 						</div>
@@ -182,11 +243,17 @@ body {
 			</div>
 
 
+			<!-- ========================= -->
+			<!-- FORM BUTTONS -->
+			<!-- ========================= -->
+
 			<div class="d-flex justify-content-end gap-2">
+
 
 				<a th:href="@{/order-with-details}" class="btn btn-secondary">
 
 					Cancel </a>
+
 
 				<button type="submit" class="btn btn-primary">Save Order</button>
 
@@ -199,7 +266,13 @@ body {
 
 	</div>
 
+
+
 	<script>
+		/* =========================================
+		 CALCULATE TOTAL
+		 ========================================= */
+
 		function calculateTotal() {
 
 			let total = 0;
@@ -228,12 +301,20 @@ body {
 
 					});
 
+			/* Display total */
+
 			document.getElementById("totalAmountDisplay").value = total
 					.toFixed(2);
+
+			/* Hidden total */
 
 			document.getElementById("totalAmount").value = total.toFixed(2);
 
 		}
+
+		/* =========================================
+		 PRODUCT CHANGE
+		 ========================================= */
 
 		document.addEventListener("change", function(event) {
 
@@ -245,6 +326,10 @@ body {
 
 		});
 
+		/* =========================================
+		 QUANTITY CHANGE
+		 ========================================= */
+
 		document.addEventListener("input", function(event) {
 
 			if (event.target.classList.contains("quantity-input")) {
@@ -255,19 +340,33 @@ body {
 
 		});
 
+		/* =========================================
+		 ADD PRODUCT
+		 ========================================= */
+
 		function addProduct() {
 
 			const table = document.getElementById("orderDetailsTable");
 
 			const firstSelect = document.querySelector(".product-select");
 
+			/* Create new row */
+
 			const row = document.createElement("tr");
+
+			/* =========================================
+			   NUMBER CELL
+			   ========================================= */
 
 			const numberCell = document.createElement("td");
 
 			numberCell.className = "text-center";
 
 			numberCell.innerText = table.rows.length + 1;
+
+			/* =========================================
+			   PRODUCT CELL
+			   ========================================= */
 
 			const productCell = document.createElement("td");
 
@@ -276,6 +375,10 @@ body {
 			productSelect.value = "";
 
 			productCell.appendChild(productSelect);
+
+			/* =========================================
+			   QUANTITY CELL
+			   ========================================= */
 
 			const quantityCell = document.createElement("td");
 
@@ -293,6 +396,10 @@ body {
 
 			quantityCell.appendChild(quantityInput);
 
+			/* =========================================
+			   REMARK CELL
+			   ========================================= */
+
 			const remarkCell = document.createElement("td");
 
 			const remarkInput = document.createElement("input");
@@ -304,6 +411,10 @@ body {
 			remarkInput.placeholder = "Remark";
 
 			remarkCell.appendChild(remarkInput);
+
+			/* =========================================
+			   ACTION CELL
+			   ========================================= */
 
 			const actionCell = document.createElement("td");
 
@@ -325,6 +436,10 @@ body {
 
 			actionCell.appendChild(removeButton);
 
+			/* =========================================
+			   ADD CELLS TO ROW
+			   ========================================= */
+
 			row.appendChild(numberCell);
 
 			row.appendChild(productCell);
@@ -335,11 +450,26 @@ body {
 
 			row.appendChild(actionCell);
 
+			/* =========================================
+			   IMPORTANT
+			   ADD ROW TO TABLE
+			   ========================================= */
+
+			table.appendChild(row);
+
+			/* Update names */
+
 			updateIndexes();
+
+			/* Recalculate total */
 
 			calculateTotal();
 
 		}
+
+		/* =========================================
+		 REMOVE PRODUCT
+		 ========================================= */
 
 		function removeProduct(button) {
 
@@ -353,13 +483,21 @@ body {
 
 		}
 
+		/* =========================================
+		 UPDATE INDEXES
+		 ========================================= */
+
 		function updateIndexes() {
 
 			const rows = document.querySelectorAll("#orderDetailsTable tr");
 
 			rows.forEach(function(row, index) {
 
+				/* Number */
+
 				row.cells[0].innerText = index + 1;
+
+				/* Product */
 
 				const product = row.querySelector(".product-select");
 
@@ -369,6 +507,8 @@ body {
 
 				}
 
+				/* Quantity */
+
 				const quantity = row.querySelector(".quantity-input");
 
 				if (quantity) {
@@ -376,6 +516,8 @@ body {
 					quantity.name = "orderDetails[" + index + "].quantity";
 
 				}
+
+				/* Remark */
 
 				const remark = row.querySelector("input[type='text']");
 
@@ -389,7 +531,17 @@ body {
 
 		}
 
+		/* =========================================
+		 PAGE LOAD
+		 ========================================= */
+
 		document.addEventListener("DOMContentLoaded", function() {
+
+			/* Set correct names */
+
+			updateIndexes();
+
+			/* Calculate initial total */
 
 			calculateTotal();
 
