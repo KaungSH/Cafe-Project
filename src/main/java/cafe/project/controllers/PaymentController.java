@@ -1,5 +1,6 @@
 package cafe.project.controllers;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -40,7 +41,6 @@ public class PaymentController {
 		this.payMethodService = payMethodService;
 	}
 
-	// LIST
 	@GetMapping
 	public String index(Model model) {
 
@@ -49,7 +49,6 @@ public class PaymentController {
 		return "payments/index";
 	}
 
-	// ADD FORM
 	@GetMapping("/add")
 	public String add(@RequestParam("order_id") String order_id, Model model) {
 
@@ -57,19 +56,40 @@ public class PaymentController {
 
 		List<OrderDetails> orderDetails = orderDetailsService.findByOrderId(order_id);
 
+		BigDecimal subtotal = orderDetailsService.calculateTotalAmount(order_id);
+
+		BigDecimal discountAmount = orderDetailsService.calculateDiscountAmount(order_id);
+
+		BigDecimal finalAmount = subtotal.subtract(discountAmount);
+
+		boolean hasDiscount = discountAmount.compareTo(BigDecimal.ZERO) > 0;
+
 		model.addAttribute("order", order);
+
 		model.addAttribute("orderDetails", orderDetails);
+
 		model.addAttribute("payment", new Payment());
+
 		model.addAttribute("payMethods", payMethodService.getAllActivePayMethods());
+
+		model.addAttribute("subtotal", subtotal);
+
+		model.addAttribute("discountAmount", discountAmount);
+
+		model.addAttribute("finalAmount", finalAmount);
+
+		model.addAttribute("hasDiscount", hasDiscount);
 
 		return "payments/add";
 	}
 
-	// SAVE
 	@PostMapping("/add")
-	public String save(@ModelAttribute("payment") Payment payment, HttpSession session) {
+	public String save(@ModelAttribute("payment") Payment payment, @RequestParam("order_id") String orderId,
+			HttpSession session) {
 
 		LoginDto user = (LoginDto) session.getAttribute("loggedInUser");
+
+		payment.setOrder_id(orderId);
 		payment.setPaid_time(LocalDateTime.now());
 		payment.setDate(LocalDate.now());
 		payment.setFilepath("");
@@ -77,12 +97,12 @@ public class PaymentController {
 		if (user != null) {
 			payment.setEmployee_id(user.getEmployee_id());
 		}
+
 		paymentService.save(payment);
 
 		return "redirect:/order-with-details";
 	}
 
-	// EDIT FORM
 	@GetMapping("/edit/{id}")
 	public String edit(@PathVariable String id, Model model) {
 
@@ -98,7 +118,7 @@ public class PaymentController {
 		return "redirect:/payments";
 	}
 
-	// UPDATE
+
 	@PostMapping("/edit/{id}")
 	public String update(@PathVariable String id, @ModelAttribute("payment") Payment payment) {
 
@@ -107,7 +127,6 @@ public class PaymentController {
 		return "redirect:/payments";
 	}
 
-	// DELETE
 	@GetMapping("/delete/{id}")
 	public String delete(@PathVariable String id) {
 

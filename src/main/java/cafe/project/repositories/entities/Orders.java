@@ -23,6 +23,11 @@ public class Orders {
 
 	private boolean paymentDone;
 
+	private BigDecimal subtotal;
+	private BigDecimal discountAmount;
+	private BigDecimal finalAmount;
+	private boolean hasDiscount;
+
 	public Orders() {
 	}
 
@@ -138,4 +143,35 @@ public class Orders {
 		this.paymentDone = paymentDone;
 	}
 
+	public BigDecimal getSubtotal() {
+		return subtotal;
+	}
+
+	public void setSubtotal(BigDecimal subtotal) {
+		this.subtotal = subtotal;
+	}
+
+	public BigDecimal getDiscountAmount() {
+		return discountAmount;
+	}
+
+	public void setDiscountAmount(BigDecimal discountAmount) {
+		this.discountAmount = discountAmount;
+	}
+
+	public BigDecimal getFinalAmount() {
+		return finalAmount;
+	}
+
+	public void setFinalAmount(BigDecimal finalAmount) {
+		this.finalAmount = finalAmount;
+	}
+
+	public boolean isHasDiscount() {
+		return hasDiscount;
+	}
+
+	public void setHasDiscount(boolean hasDiscount) {
+		this.hasDiscount = hasDiscount;
+	}
 }

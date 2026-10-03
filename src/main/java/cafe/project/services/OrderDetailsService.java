@@ -51,6 +51,11 @@ public class OrderDetailsService {
 		return orderDetailsRepository.calculateTotalAmount(orderId);
 	}
 
+	public BigDecimal calculateDiscountAmount(String orderId) {
+
+		return orderDetailsRepository.calculateDiscountAmount(orderId);
+	}
+
 	// Update order detail
 	public void edit(OrderDetailsDto dto, String orderId) {
 
