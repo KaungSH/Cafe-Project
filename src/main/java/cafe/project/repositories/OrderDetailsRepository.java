@@ -42,11 +42,22 @@ public class OrderDetailsRepository {
 	// GET BY ORDER ID
 	public List<OrderDetails> findByOrderId(String orderId) {
 
-		String sql = "SELECT od.*, \r\n" + "pt.name AS product_name \r\n" + "FROM order_details od \r\n"
-				+ "LEFT JOIN products p \r\n" + "ON od.product_id = p.product_id\r\n" + "LEFT JOIN product_types pt\r\n"
-				+ "ON p.item_id = pt.type_id \r\n" + "WHERE od.order_id = ?";
+		String sql =
+		        "SELECT od.*, "
+		      + "pt.name AS product_name, "
+		      + "p.price AS price "
+		      + "FROM order_details od "
+		      + "LEFT JOIN products p "
+		      + "ON od.product_id = p.product_id "
+		      + "LEFT JOIN product_types pt "
+		      + "ON p.item_id = pt.type_id "
+		      + "WHERE od.order_id = ?";
 
-		return jdbcTemplate.query(sql, new OrderDetailsMapper(), orderId);
+	    return jdbcTemplate.query(
+	            sql,
+	            new OrderDetailsMapper(),
+	            orderId
+	    );
 	}
 
 	public List<String> findOrderIds() {
