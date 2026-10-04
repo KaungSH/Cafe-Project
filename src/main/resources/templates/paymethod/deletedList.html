@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 
 <head>
 
@@ -127,7 +129,7 @@ h2 {
 <body>
 
 
-	<div class="container custom-container">
+<div layout:fragment="content">
 
 		<!-- Header -->
 

@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 
 <head>
 
@@ -57,7 +59,7 @@ body {
 
 <body>
 
-	<div class="container">
+	<div layout:fragment="content">
 
 
 		<div class="d-flex justify-content-between align-items-center mb-4">

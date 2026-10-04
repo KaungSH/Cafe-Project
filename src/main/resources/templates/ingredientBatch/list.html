@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 <head>
 
 <meta charset="UTF-8">
@@ -119,7 +120,7 @@ body {
 
 <body>
 
-	<div class="container main-container">
+	<div layout:fragment="content">
 
 		<div class="page-card">
 

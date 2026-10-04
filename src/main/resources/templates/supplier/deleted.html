@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 <head>
 <meta charset="UTF-8">
 <title>Deleted suppliers List</title>
@@ -130,7 +132,7 @@ body {
 
 </head>
 <body>
-	<div class="supplier-container">
+	<div layout:fragment="content">
 		<div class="supplier-header">
 			<div class="supplier-title">
 				<h2>

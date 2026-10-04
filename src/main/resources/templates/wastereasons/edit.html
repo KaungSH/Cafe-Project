@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,7 +54,7 @@
     </style>
 </head>
 <body class="py-5">
-    <div class="container">
+    <div layout:fragment="content">
         <div class="card lux-card p-4 p-md-5 mx-auto" style="max-width: 520px;">
             <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
                 <div class="p-2 rounded-3 text-white" style="background-color: var(--coffee-accent);">

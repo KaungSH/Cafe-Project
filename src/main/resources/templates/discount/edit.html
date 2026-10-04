@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 <head>
     <meta charset="UTF-8">
     <title>Café Luft | Edit Discount</title>
@@ -117,7 +119,7 @@
 </head>
 
 <body>
-    <div class="container py-5">
+<div layout:fragment="content">
         <div class="row justify-content-center">
             <div class="col-lg-8 col-md-10">
 

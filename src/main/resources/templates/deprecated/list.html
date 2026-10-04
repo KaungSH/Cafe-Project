@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 
 <head>
 
@@ -164,7 +166,7 @@ tbody tr:hover {
 
 <body>
 
-	<div class="container">
+	<div layout:fragment="content">
 
 		<div class="header">
 

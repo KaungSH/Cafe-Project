@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -141,7 +143,7 @@ body {
 <body>
 
 <div class="edit-box">
-  <div class="card-header-bar">
+  <div layout:fragment="content">
     <div class="logo-badge">
       <img th:src="@{/images/luft-logo.png}" alt="Logo">
     </div>

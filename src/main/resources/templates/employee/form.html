@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 <head>
 <meta charset="UTF-8">
 <title
@@ -89,7 +91,7 @@ h2 {
 </style>
 </head>
 <body>
-	<div class="container">
+	<div layout:fragment="content">
 		<div class="form-container">
 			<h2>
 				☕ <span

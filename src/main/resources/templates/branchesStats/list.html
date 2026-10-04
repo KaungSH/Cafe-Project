@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 <head>
 <meta charset="UTF-8">
 <title>Branches Stats List</title>
@@ -190,7 +192,7 @@ body {
 </style>
 </head>
 <body>
-	<div class="branchesStats-container">
+	<div layout:fragment="content">
 		<div class="branchesStats-header">
 			<div class="branchesStats-title">
 				<h2>

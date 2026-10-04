@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 <head>
 <meta charset="UTF-8">
 <title>Edit Import Item | Coffee Shop</title>
@@ -66,7 +68,7 @@ h3 {
 </style>
 </head>
 <body>
-	<div class="container">
+	<div layout:fragment="content">
 		<div class="row justify-content-center">
 			<div class="col-md-6">
 				<div class="card card-coffee p-4">

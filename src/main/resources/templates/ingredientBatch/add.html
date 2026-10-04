@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 
 <head>
 
@@ -84,7 +86,7 @@ body {
 
 <body>
 
-	<div class="container form-container">
+<div layout:fragment="content">
 
 		<div class="form-card">
 

@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 <head>
     <meta charset="UTF-8">
     <title>Café Luft | Select Offer Coffees</title>
@@ -105,7 +107,7 @@
 </head>
 
 <body>
-    <div class="dialog-card">
+<div layout:fragment="content">
         <div class="dialog-header">
             <div>
                 <h3 class="serif-font mb-0">Assign Coffees & Offerings</h3>
