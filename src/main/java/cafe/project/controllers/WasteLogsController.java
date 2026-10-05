@@ -51,17 +51,17 @@ public class WasteLogsController {
 	public String showCreateForm(Model model) {
 		model.addAttribute("wasteLog", new WasteLogsEntryDto());
 		model.addAttribute("reasons", wasteReasonRepository.findReasonsAll());
-		model.addAttribute("batches", ingredientBatchService.findAll());
+		model.addAttribute("batches", ingredientBatchService.getAllBatches());
 		model.addAttribute("employees", employeeService.getAllEmployeeListDto());
 		return "WasteLogs/create1";
 	}
 	
 	@PostMapping("/finCal")
 	public String showFinCal(@ModelAttribute("wasteLog") WasteLogsEntryDto entryDto, Model model) {
-		entryDto.setFinancial_loss(autoCalFinanceLoss(entryDto.getQuantity_lost(), ingredientBatchService.findByBatchId(entryDto.getBatch_id()).getUnitCost()));
+		entryDto.setFinancial_loss(autoCalFinanceLoss(entryDto.getQuantity_lost(), ingredientBatchService.getBatchById(entryDto.getBatch_id()).getUnit_cost()));
 		model.addAttribute("wasteLog", entryDto);
 		model.addAttribute("reasons", wasteReasonRepository.findReasonsAll());
-		model.addAttribute("batches", ingredientBatchService.findAll());
+		model.addAttribute("batches", ingredientBatchService.getAllBatches());
 		model.addAttribute("employees", employeeService.getAllEmployeeListDto());
 		return "WasteLogs/create";
 	}
@@ -72,7 +72,7 @@ public class WasteLogsController {
 
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("reasons", wasteReasonRepository.findReasonsAll());
-			model.addAttribute("batches", ingredientBatchService.findAll());
+			model.addAttribute("batches", ingredientBatchService.getAllBatches());
 			model.addAttribute("employees", employeeService.getAllEmployeeListDto());
 			return "WasteLogs/create";
 		}
@@ -85,7 +85,7 @@ public class WasteLogsController {
 	public String showEditForm(@PathVariable("waste_id") String waste_id, Model model) {
 		model.addAttribute("wasteLog", wasteLogsService.getWasteLogsEntryById(waste_id));
 		model.addAttribute("reasons", wasteReasonRepository.findReasonsAll());
-		model.addAttribute("batches", ingredientBatchService.findAll());
+		model.addAttribute("batches", ingredientBatchService.getAllBatches());
 		model.addAttribute("employees", employeeService.getAllEmployeeListDto());
 		return "WasteLogs/edit";
 	}
@@ -96,7 +96,7 @@ public class WasteLogsController {
 
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("reasons", wasteReasonRepository.findReasonsAll());
-			model.addAttribute("batches", ingredientBatchService.findAll());
+			model.addAttribute("batches", ingredientBatchService.getAllBatches());
 			model.addAttribute("employees", employeeService.getAllEmployeeListDto());
 			return "WasteLogs/edit";
 		}
@@ -116,12 +116,12 @@ public class WasteLogsController {
 		List<WasteLogsEntryDto> list = new ArrayList<>();
 		for(IngredientBatchDto batchDto : wasteLogsService.getTodayExpired()) {
 			WasteLogsEntryDto dto = new WasteLogsEntryDto();
-			dto.setBatch_id(batchDto.getBatchId());
+			dto.setBatch_id(batchDto.getBatch_id());
 			dto.setWaste_reason_id(wasteReasonRepository.findReasonByName("Expired").getWaste_reason_id());
-			dto.setQuantity_lost(batchDto.getRemainingQuantity());
+			dto.setQuantity_lost(batchDto.getRemaining_quantity());
 			//to be replaced with HTTPSession
 			dto.setEmployee_id("1");
-			dto.setFinancial_loss(autoCalFinanceLoss(batchDto.getRemainingQuantity(), batchDto.getUnitCost()));
+			dto.setFinancial_loss(autoCalFinanceLoss(batchDto.getRemaining_quantity(), batchDto.getUnit_cost()));
 			list.add(dto);
 		}
 	    WasteLogsEntryListDto dtoList = new WasteLogsEntryListDto(list);
