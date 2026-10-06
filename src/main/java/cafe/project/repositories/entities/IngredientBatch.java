@@ -15,8 +15,8 @@ public class IngredientBatch {
 	private LocalDateTime created_at;
 	private String ingredient_type_id;
 	private BigDecimal unit_cost;
-	private double quantity_ordered;
-	private double total_import_cost;
+	private BigDecimal quantity_ordered;
+	private BigDecimal total_import_cost;
 	private String import_id;
 	
 	private String branch_name; //branch name
@@ -29,8 +29,8 @@ public class IngredientBatch {
 
 	public IngredientBatch(String batch_id, BigDecimal remaining_quantity, LocalDate manufactured_date,
 			LocalDate expire_date, String branch_id, Boolean isdeleted,
-			LocalDateTime created_at, String ingredient_type_id, BigDecimal unit_cost,double quantity_ordered,
-			double total_import_cost,String import_id, String branch_name,String ingredientType_name,String unit_name) {
+			LocalDateTime created_at, String ingredient_type_id, BigDecimal unit_cost,BigDecimal quantity_ordered,
+			BigDecimal total_import_cost,String import_id, String branch_name,String ingredientType_name,String unit_name) {
 		this.batch_id = batch_id;
 		this.remaining_quantity = remaining_quantity;
 		this.manufactured_date = manufactured_date;
@@ -121,19 +121,19 @@ public class IngredientBatch {
 		this.unit_cost = unit_cost;
 	}
 
-	public double getQuantity_ordered() {
+	public BigDecimal getQuantity_ordered() {
 		return quantity_ordered;
 	}
 
-	public void setQuantity_ordered(double quantity_ordered) {
+	public void setQuantity_ordered(BigDecimal quantity_ordered) {
 		this.quantity_ordered = quantity_ordered;
 	}
 
-	public double getTotal_import_cost() {
+	public BigDecimal getTotal_import_cost() {
 		return total_import_cost;
 	}
 
-	public void setTotal_import_cost(double total_import_cost) {
+	public void setTotal_import_cost(BigDecimal total_import_cost) {
 		this.total_import_cost = total_import_cost;
 	}
 

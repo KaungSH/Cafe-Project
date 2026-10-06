@@ -172,10 +172,6 @@
             <td th:text="${reg.status_name == 'CLOSED' ? reg.closed_at : 'Not Closed Yet'}" 
                 th:class="${reg.status_name == 'CLOSED' ? '' : 'text-muted fst-italic'}">17:00:00</td>
             <td class="text-center">
-              <a th:href="@{/manager-only/daily-registers/edit/{register_id}(register_id=${reg.register_id})}" 
-                 class="btn btn-sm btn-light border text-warning me-1" title="Edit">
-                <i class="fa-solid fa-pen-to-square"></i>
-              </a>
               <a th:href="@{/manager-only/daily-registers/delete/{register_id}(register_id=${reg.register_id})}" 
                  class="btn btn-sm btn-light border text-danger"
                  onclick="return confirm('Are you sure you want to delete this record?');" title="Delete">

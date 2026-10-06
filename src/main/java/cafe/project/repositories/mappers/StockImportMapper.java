@@ -19,7 +19,7 @@ public class StockImportMapper implements RowMapper<StockImport> {
 		if (datefromDb != null) {
 			entity.setImported_at(datefromDb);
 		}
-		entity.setTotal_cost(rs.getDouble("total_cost"));
+		entity.setTotal_cost(rs.getBigDecimal("total_cost"));
 		entity.setSupplier_id(rs.getString("supplier_id"));
 		entity.setEmployee_id(rs.getString("employee_id"));
 		entity.setBranch_id(rs.getString("branch_id"));

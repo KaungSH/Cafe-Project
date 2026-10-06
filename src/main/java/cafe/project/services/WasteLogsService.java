@@ -18,9 +18,11 @@ public class WasteLogsService {
 
   
     private final  WasteLogsRepository wasteLogsRepository;
+    private final BranchService branchService;
     
-    public WasteLogsService( WasteLogsRepository wasteLogsRepository) {
+    public WasteLogsService( WasteLogsRepository wasteLogsRepository, BranchService branchService) {
     	this.wasteLogsRepository=wasteLogsRepository;
+    	this.branchService = branchService;
     	
     }
 
@@ -80,17 +82,16 @@ public class WasteLogsService {
 
 		IngredientBatchDto dto = new IngredientBatchDto();
 
-		dto.setBatchId(entity.getBatchId());
-		dto.setRemainingQuantity(entity.getRemainingQuantity());
-		dto.setManufacturedDate(entity.getManufacturedDate());
-		dto.setExpireDate(entity.getExpireDate());
-		dto.setBranchId(entity.getBranchId());
-		dto.setImportDetailId(entity.getImportDetailId());
-		dto.setIngredientTypeId(entity.getIngredientTypeId());
-		dto.setUnitCost(entity.getUnitCost());
-		dto.setIsExpired(entity.getIsExpired());
-		dto.setIsDeleted(entity.getIsDeleted());
-		dto.setCreatedAt(entity.getCreatedAt());
+		dto.setBatch_id(entity.getBatch_id());
+		dto.setRemaining_quantity(entity.getRemaining_quantity());
+		dto.setManufactured_date(entity.getManufactured_date());
+		dto.setExpire_date(entity.getExpire_date());
+		dto.setBranch_name((branchService.findById(entity.getBranch_id())).getName());
+		dto.setIngredientType_name(entity.getIngredient_type_id());
+		dto.setUnit_cost(entity.getUnit_cost());
+		dto.setIsdeleted(entity.getIsdeleted());
+		dto.setCreated_at(entity.getCreated_at());
+		dto.setQuantity_ordered(entity.getQuantity_ordered());
 
 		return dto;
 	}

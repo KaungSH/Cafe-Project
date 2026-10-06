@@ -97,7 +97,7 @@ h2 {
 			</h2>
 
 			<form
-				th:action="${employee.employeeId == null} ? @{/manager/employee/add} : @{/manager/employee/edit/{id}(id=${employee.employeeId})}"
+				th:action="${employee.employeeId == null} ? @{/manager-only/employee/add} : @{/manager-only/employee/edit/{id}(id=${employee.employeeId})}"
 				th:object="${employee}" method="post">
 
 				<div class="row mb-3">
@@ -189,7 +189,7 @@ h2 {
 				</div>
 
 				<div class="d-flex justify-content-end gap-2">
-					<a th:href="@{/manager/employee}"
+					<a th:href="@{/manager-only/employee}"
 						class="btn btn-coffee-secondary px-4">Cancel</a>
 					<button type="submit" class="btn btn-coffee-primary px-4">
 						<span

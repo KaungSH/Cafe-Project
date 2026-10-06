@@ -28,8 +28,8 @@ public class IngredientBatchMapper implements RowMapper<IngredientBatch> {
 
 		entity.setIngredient_type_id(rs.getString("ingredient_type_id"));
 		entity.setUnit_cost(rs.getBigDecimal("unit_cost"));
-		entity.setQuantity_ordered(rs.getDouble("quantity_ordered"));
-		entity.setTotal_import_cost(rs.getDouble("total_import_cost"));
+		entity.setQuantity_ordered(rs.getBigDecimal("quantity_ordered"));
+		entity.setTotal_import_cost(rs.getBigDecimal("total_import_cost"));
 		entity.setImport_id(rs.getString("import_id"));
 
 		try {

@@ -7,30 +7,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import cafe.project.services.EmployeeService;
 import jakarta.servlet.http.HttpSession;
 import cafe.project.services.DailyRegisterService;
 import cafe.project.employeemanagement.models.LoginDto;
 import cafe.project.models.DailyRegisterEntryDto;
 import cafe.project.models.DailyRegisterListDto;
-import cafe.project.repositories.StatusRepository;
-import cafe.project.services.BranchService;
 
 @Controller
 @RequestMapping("/manager-only/daily-registers")
 public class DailyRegisterController {
 
 	private final DailyRegisterService service;
-	private final BranchService branchService;
-	private final EmployeeService employeeService;
-	private final StatusRepository statusRepository;
 
-	public DailyRegisterController(DailyRegisterService service, BranchService branchService, EmployeeService employeeService, StatusRepository statusRepository) {
-
+	public DailyRegisterController(DailyRegisterService service) {
 		this.service = service;
-		this.branchService = branchService;
-		this.employeeService = employeeService;
-		this.statusRepository = statusRepository;
 	}
 	
 	@GetMapping("/{sort}")
@@ -56,29 +46,6 @@ public class DailyRegisterController {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		model.addAttribute("registers", service.getAllDeleted(ldto.getBranch_id()));
 		return "daily_registers/list-deleted";
-	}
-	
-
-	@GetMapping("/edit/{register_id}")
-	public String showEditPage(@PathVariable("register_id") String register_id, Model model) {
-		System.out.println("Register id = " + register_id);
-		System.out.println("Register date = " + service.getRegisterEntryDtoById(register_id).getDate());
-		DailyRegisterEntryDto dto = service.getRegisterEntryDtoById(register_id);
-
-		model.addAttribute("registerDto", dto);
-
-		model.addAttribute("branches", branchService.findAll());
-		model.addAttribute("employees", employeeService.getAllEmployeeListDto());
-		model.addAttribute("statuses", statusRepository.findAll("register"));
-
-		return "daily_registers/edit";
-	}
-
-	@PostMapping("/update")
-	public String updateRegister(@ModelAttribute("registerDto") DailyRegisterEntryDto dto) {
-		System.out.println("Register date DTO = " + dto.getDate());
-		service.updateRegister(dto);
-		return "redirect:/manager/daily-registers";
 	}
 
 	@GetMapping("/delete/{register_id}")
