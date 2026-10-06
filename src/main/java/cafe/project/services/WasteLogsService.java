@@ -82,6 +82,7 @@ public class WasteLogsService {
 
 		IngredientBatchDto dto = new IngredientBatchDto();
 
+<<<<<<< HEAD
 		dto.setBatch_id(entity.getBatch_id());
 		dto.setRemaining_quantity(entity.getRemaining_quantity());
 		dto.setManufactured_date(entity.getManufactured_date());
@@ -92,6 +93,19 @@ public class WasteLogsService {
 		dto.setIsdeleted(entity.getIsdeleted());
 		dto.setCreated_at(entity.getCreated_at());
 		dto.setQuantity_ordered(entity.getQuantity_ordered());
+=======
+//		dto.setBatchId(entity.getBatch_id());
+//		dto.setRemainingQuantity(entity.getRemaining_quantity());
+//		dto.setManufacturedDate(entity.getManufactured_date());
+//		dto.setExpireDate(entity.getExpire_date());
+//		dto.setBranchId(entity.getBranch_id());
+//		dto.setImportDetailId(entity.getImport_id());
+//		dto.setIngredientTypeId(entity.getIngredient_type_id());
+//		dto.setUnitCost(entity.getUnit_cost());
+//		dto.setIsExpired(entity.isIsExpired());
+//		dto.setIsDeleted(entity.getIsDeleted());
+//		dto.setCreatedAt(entity.getCreatedAt());
+>>>>>>> f0997fc (Update discount)
 
 		return dto;
 	}

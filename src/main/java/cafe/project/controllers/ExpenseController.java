@@ -28,10 +28,11 @@ public class ExpenseController {
 	private final BranchService branchService;
 	private final ExpenseCategoryRepository expenseCategoryRepository;
 
-	public ExpenseController(ExpenseService expenseService, ExpenseCategoryRepository expenseCategoryRepository, BranchService branchService) {
+	public ExpenseController(ExpenseService expenseService, ExpenseCategoryRepository expenseCategoryRepository,
+			BranchService branchService) {
 		this.expenseService = expenseService;
 		this.expenseCategoryRepository = expenseCategoryRepository;
-		this.branchService=branchService;
+		this.branchService = branchService;
 	}
 
 	@GetMapping
@@ -51,9 +52,10 @@ public class ExpenseController {
 	}
 
 	@PostMapping("/add")
-	public String addExpense(@Valid @ModelAttribute("expense") ExpenseDto expense, BindingResult bindingResult, Model model, HttpSession session) {
+	public String addExpense(@Valid @ModelAttribute("expense") ExpenseDto expense, BindingResult bindingResult,
+			Model model, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-		
+
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("branch", branchService.findById(ldto.getBranch_id()).getName());
 			model.addAttribute("expenseCategories", expenseCategoryRepository.findAll());
@@ -63,7 +65,7 @@ public class ExpenseController {
 		expense.setEmployee_id(ldto.getEmployee_id());
 		expense.setCreated_at(LocalDateTime.now());
 		expenseService.add(expense);
-		return "redirect:/manager/expense";
+		return "redirect:/manager-only/expense";
 	}
 
 	@GetMapping("/edit/{expense_id}")
@@ -76,11 +78,12 @@ public class ExpenseController {
 			model.addAttribute("expenseCategories", expenseCategoryRepository.findAll());
 			return "expense/edit";
 		}
-		return "redirect:/manager/expense";
+		return "redirect:/manager-only/expense";
 	}
 
 	@PostMapping("/edit")
-	public String editExpense(@Valid @ModelAttribute("expense") ExpenseDto expense, BindingResult bindingResult, Model model, HttpSession session) {
+	public String editExpense(@Valid @ModelAttribute("expense") ExpenseDto expense, BindingResult bindingResult,
+			Model model, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("branch", branchService.findById(ldto.getBranch_id()).getName());
@@ -91,13 +94,13 @@ public class ExpenseController {
 		expense.setEmployee_id(ldto.getEmployee_id());
 		expense.setCreated_at(LocalDateTime.now());
 		expenseService.edit(expense.getExpense_id(), expense);
-		return "redirect:/manager/expense";
+		return "redirect:/manager-only/expense";
 	}
 
 	@PostMapping("/delete")
 	public String deletedExpense(@RequestParam String expense_id) {
 		expenseService.delete(expense_id);
-		return "redirect:/manager/expense";
+		return "redirect:/manager-only/expense";
 	}
 
 	@GetMapping("/deleted")
@@ -110,13 +113,13 @@ public class ExpenseController {
 	@PostMapping("/restore")
 	public String restoreSupplier(@RequestParam String expense_id) {
 		expenseService.restore(expense_id);
-		return "redirect:/manager/expense/deleted";
+		return "redirect:/manager-only/expense/deleted";
 	}
 
 	@PostMapping("/real-delete")
 	public String realDeleteExpense(@ModelAttribute("expense") ExpenseDto expense) {
 		expenseService.hardDelete(expense.getExpense_id());
-		return "redirect:/manager/expense/deleted";
+		return "redirect:/manager-only/expense/deleted";
 	}
 
 }
