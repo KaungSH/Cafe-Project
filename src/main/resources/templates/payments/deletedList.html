@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
@@ -165,21 +164,10 @@ body {
 	border-bottom: none;
 }
 
-.payment-id {
+.token-number {
 	font-weight: 700;
 	color: #111827;
 	white-space: nowrap;
-}
-
-.order-id {
-	font-weight: 600;
-	color: #334155;
-	white-space: nowrap;
-}
-
-.paid-time {
-	white-space: nowrap;
-	color: #64748b;
 }
 
 .method-badge {
@@ -195,10 +183,20 @@ body {
 	white-space: nowrap;
 }
 
-.payment-note {
-	max-width: 220px;
-	overflow: hidden;
-	text-overflow: ellipsis;
+.employee-name {
+	font-weight: 600;
+	color: #111827;
+	white-space: nowrap;
+}
+
+.branch-name {
+	color: #475569;
+	white-space: nowrap;
+}
+
+.total-amount {
+	font-weight: 700;
+	color: #111827;
 	white-space: nowrap;
 }
 
@@ -208,16 +206,24 @@ body {
 }
 
 .file-path {
-	max-width: 180px;
+	display: inline-block;
+	max-width: 220px;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	color: #64748b;
 }
 
-.employee-id {
-	font-weight: 600;
-	color: #111827;
+.deleted-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	background-color: #fee2e2;
+	color: #b91c1c;
+	padding: 6px 11px;
+	border-radius: 20px;
+	font-size: 12px;
+	font-weight: 700;
 	white-space: nowrap;
 }
 
@@ -227,18 +233,19 @@ body {
 	white-space: nowrap;
 }
 
-.edit-btn {
-	border: 1px solid #f59e0b;
-	color: #b45309;
+.restore-btn {
+	border: 1px solid #198754;
+	color: #198754;
 	background-color: #ffffff;
 	border-radius: 7px;
 	padding: 7px 13px;
 	font-size: 12px;
 	font-weight: 600;
+	text-decoration: none;
 }
 
-.edit-btn:hover {
-	background-color: #f59e0b;
+.restore-btn:hover {
+	background-color: #198754;
 	color: #ffffff;
 }
 
@@ -250,6 +257,7 @@ body {
 	padding: 7px 13px;
 	font-size: 12px;
 	font-weight: 600;
+	text-decoration: none;
 }
 
 .delete-btn:hover {
@@ -302,43 +310,32 @@ body {
 
 		<div class="page-header">
 
-
 			<h1 class="page-title">Payments</h1>
+
 
 			<div class="header-buttons">
 
-				<a th:href="@{/order-with-details}"
-					class="btn btn-primary header-btn"> <i class="bi bi-arrow-left"></i>
+				<a th:href="@{/payments}" class="btn btn-secondary header-btn">
 
-					Back to Orders List
-
-				</a> <a th:href="@{/payments/deleted}"
-					class="btn btn-secondary header-btn"> <i class="bi bi-trash3"></i>
-
-					Deleted List
+					<i class="bi bi-arrow-left"></i> Back to Payments
 
 				</a>
 
-
 			</div>
-
 
 		</div>
 
 		<div class="filter-box">
 
-
 			<div class="row g-2 align-items-center">
 
 				<div class="col-lg-6 col-md-6">
 
-
 					<div class="search-wrapper">
-
 
 						<i class="bi bi-search"></i> <input type="text" id="searchPayment"
 							class="form-control search-input"
-							placeholder="Search payment, order, method, employee, note...">
+							placeholder="Search payment, employee, branch, method...">
 
 					</div>
 
@@ -346,38 +343,29 @@ body {
 
 				<div class="col-lg-4 col-md-4">
 
-
 					<input type="date" id="searchDate" class="form-control date-input">
-
 
 				</div>
 
 				<div class="col-lg-2 col-md-2">
 
-
 					<button type="button" class="btn clear-btn w-100"
 						onclick="clearSearch()">
 
-
 						<i class="bi bi-x-lg"></i> Clear
 
-
 					</button>
-
 
 				</div>
 
 
 			</div>
 
-
 		</div>
 
 		<div class="table-card">
 
-
 			<div class="table-responsive">
-
 
 				<table class="payment-table">
 
@@ -403,6 +391,8 @@ body {
 
 							<th>File Path</th>
 
+							<th>Status</th>
+
 							<th>Actions</th>
 
 						</tr>
@@ -411,10 +401,11 @@ body {
 
 					<tbody>
 
+
 						<tr th:each="payment : ${payments}"
 							th:attr="data-date=${payment.date != null ? payment.date : ''}">
 
-							<td><span class="payment-id"
+							<td><span class="token-number"
 								th:text="${payment.token_number}"></span></td>
 
 							<td><span class="method-badge"> <i
@@ -423,22 +414,20 @@ body {
 
 							</span></td>
 
-							<td><span class="employee-id"
+							<td><span class="employee-name"
 								th:text="${payment.employee_name}"></span></td>
 
-							<td><span th:text="${payment.branch_name}"> 
-									</span></td>
+							<td><span class="branch-name"
+								th:text="${payment.branch_name}"></span></td>
 
-							<td th:text="${payment.product_name}"></td>
+							<td><span class="prodct-name"
+								th:text="${payment.product_name}"></span></td>
+							<td><span class="payment-note" th:text="${payment.note}">-</span></td>
 
-							<td th:text="${payment.note}">-</td>
-
-
-							<td><strong
+							<td><span class="total-amount"
 								th:text="${#numbers.formatDecimal(payment.total_amount, 1, 2) + ' Ks'}">
 
-									</strong></td>
-
+									</span></td>
 
 							<td><span class="payment-date" th:text="${payment.date}">
 
@@ -449,47 +438,59 @@ body {
 
 									— </span></td>
 
+							<td><span class="deleted-badge"> <i
+									class="bi bi-trash3"></i> Deleted
+
+							</span></td>
 
 							<td>
 
 								<div class="action-buttons">
 
-									<a th:href="@{/payments/delete/{id}(id=${payment.payment_id})}"
+									<a
+										th:href="@{/payments/restore/{id}(id=${payment.payment_id})}"
+										class="btn restore-btn"
+										onclick="return confirm('Are you sure you want to restore this payment?');">
+
+										<i class="bi bi-arrow-counterclockwise"></i> Restore
+
+									</a> <a
+										th:href="@{/payments/real-deleted/{id}(id=${payment.payment_id})}"
 										class="btn delete-btn"
-										onclick="return confirm('Are you sure you want to delete this payment?');">
+										onclick="return confirm('Are you sure you want to permanently delete this payment?');">
 
 										<i class="bi bi-trash"></i> Delete
 
 									</a>
 
+
 								</div>
 
 							</td>
 
-						</tr>
 
+						</tr>
 
 						<tr th:if="${#lists.isEmpty(payments)}">
 
-							<td colspan="8" class="empty-row">
+							<td colspan="9" class="empty-row">
 
 								<div class="empty-icon">
 
-									<i class="bi bi-credit-card"></i>
+									<i class="bi bi-trash3"></i>
 
-								</div> No payments found.
+								</div> No deleted payments found.
 
 							</td>
 
 						</tr>
+
 
 					</tbody>
 
 				</table>
 
-
 			</div>
-
 
 		</div>
 

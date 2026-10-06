@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layout}">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
 
@@ -164,14 +162,14 @@ h2 {
 <body>
 
 	```
-	<div layout:fragment="content">
+	<div class="container custom-container">
 
 		<div class="d-flex justify-content-between align-items-center mb-4">
 
 			<h2>💳 Payment Methods</h2>
 
-			<a th:href="@{/manager/paymethod/add}" class="btn btn-coffee-primary">
-				+ Add New Method </a> <a th:href="@{/manager/paymethod/deleted}"
+			<a th:href="@{/admin/paymethod/add}" class="btn btn-coffee-primary">
+				+ Add New Method </a> <a th:href="@{/admin/paymethod/deleted}"
 				class="btn btn-coffee-primary"> <i class="bi bi-trash"></i>Deleted
 				List
 			</a>
@@ -196,6 +194,8 @@ h2 {
 
 						<th>Status</th>
 
+						<th>Created At</th>
+						
 						<th>Created By</th>
 
 						<th class="text-center">Actions</th>
@@ -211,7 +211,7 @@ h2 {
 						<td th:text="${state.count}" class="fw-bold"></td>
 
 						<td><img th:if="${pm.logoPath != null and pm.logoPath != ''}"
-							th:src="${pm.logoPath}" alt="logo"
+							th:src="@{'/images/' + ${pm.logoPath}}" alt="logo"
 							style="width: 40px; height: 40px; object-fit: contain; border-radius: 8px;" />
 
 							<span th:if="${pm.logoPath == null or pm.logoPath == ''}"
@@ -225,15 +225,18 @@ h2 {
 							style="background-color: #8fa382;"> Active </span> <span
 							th:unless="${pm.active}" class="badge bg-secondary">
 								Inactive </span></td>
+								
+						
 
-						<!-- Employee Name from HttpSession -->
+						<td th:text="${pm.createdAt}"></td>
 
-						<td th:text="${employeeName}"></td>
+
+						<td th:text="${pm.employeeName}"></td>
 
 						<td class="text-center"><a
-							th:href="@{/manager/paymethod/view/{id}(id=${pm.methodId})}"
-							class="btn btn-sm btn-view px-3"> View </a> <a
-							th:href="@{/manager/paymethod/edit/{id}(id=${pm.methodId})}"
+							th:href="@{/admin/paymethod/isActive/{id}(id=${pm.methodId})}"
+							class="btn btn-sm btn-view px-3" onclick="return confirm('Are you sure you want to change the status of this payment method?');"> Change Status </a> <a
+							th:href="@{/admin/paymethod/edit/{id}(id=${pm.methodId})}"
 							class="btn btn-sm btn-edit px-3"> Edit </a>
 
 							<button type="button" class="btn btn-sm btn-delete px-3"
@@ -268,7 +271,7 @@ h2 {
 
 				<div class="modal-header">
 
-					<h5 class="modal-title">⚠️ သတိပေးချက် (Warning)</h5>
+					<h5 class="modal-title">⚠️ Warning </h5>
 
 					<button type="button" class="btn-close btn-close-white"
 						data-bs-dismiss="modal" aria-label="Close"></button>
@@ -336,7 +339,7 @@ h2 {
 
 			document.getElementById('deleteMethodId').textContent = id;
 
-			document.getElementById('confirmDeleteBtn').href = '/manager/paymethod/delete/'
+			document.getElementById('confirmDeleteBtn').href = '/admin/paymethod/delete/'
 					+ id;
 
 			const modal = new bootstrap.Modal(document

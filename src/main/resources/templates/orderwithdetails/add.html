@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layout}">
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
 
@@ -15,34 +14,297 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
 	rel="stylesheet">
 
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+
 <style>
+
 body {
-	background-color: #f8f9fa;
+	background-color: #f8f9fb;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #111827;
 }
 
-.container {
-	max-width: 1200px;
+.order-container {
+	max-width: 1400px;
+	margin: 35px auto 60px;
+	padding: 0 25px;
 }
 
-.card {
+.page-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 25px;
+}
+
+.page-title {
+	font-size: 30px;
+	font-weight: 700;
+	margin: 0;
+	color: #111827;
+}
+
+.page-subtitle {
+	color: #64748b;
+	font-size: 14px;
+	margin-top: 6px;
+}
+
+.back-button {
 	border-radius: 8px;
+	padding: 10px 17px;
+	font-weight: 600;
 }
 
-.card-header {
-	font-size: 22px;
-	font-weight: bold;
+.order-grid {
+	display: grid;
+	grid-template-columns: 1.45fr 0.75fr;
+	gap: 25px;
+	align-items: start;
 }
 
-.form-label {
-	font-weight: 500;
+.order-card {
+	background: #ffffff;
+	border: 1px solid #e1e5ea;
+	border-radius: 12px;
+	padding: 24px;
+	margin-bottom: 20px;
 }
 
-.table th {
+.card-title {
+	font-size: 20px;
+	font-weight: 700;
+	color: #111827;
+	margin-bottom: 5px;
+}
+
+.card-subtitle {
+	font-size: 13px;
+	color: #64748b;
+	margin-bottom: 22px;
+}
+
+.details-table-wrapper {
+	overflow-x: auto;
+}
+
+.details-table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.details-table thead {
+	background-color: #f8fafc;
+}
+
+.details-table th {
+	padding: 13px 12px;
+	text-align: left;
+	color: #64748b;
+	font-size: 13px;
+	font-weight: 700;
+	border-bottom: 1px solid #e2e8f0;
+	white-space: nowrap;
+}
+
+.details-table td {
+	padding: 13px 12px;
+	border-bottom: 1px solid #edf0f3;
 	vertical-align: middle;
 }
 
-.table td {
-	vertical-align: middle;
+.details-table tbody tr:last-child td {
+	border-bottom: none;
+}
+
+.form-select, .form-control {
+	border-radius: 8px;
+	border: 1px solid #d1d5db;
+}
+
+.form-select {
+	min-height: 44px;
+}
+
+.form-control {
+	min-height: 44px;
+}
+
+.form-select:focus, .form-control:focus {
+	border-color: #86b7fe;
+	box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.10);
+}
+
+.row-number {
+	width: 35px;
+	height: 35px;
+	border-radius: 50%;
+	background: #f1f5f9;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 13px;
+	font-weight: 700;
+	color: #475569;
+}
+
+.add-product-button {
+	margin-top: 18px;
+	border-radius: 8px;
+	padding: 9px 15px;
+	font-weight: 600;
+}
+
+.remove-button {
+	border-radius: 7px;
+	font-size: 12px;
+	padding: 7px 11px;
+	white-space: nowrap;
+}
+
+.summary-card {
+	background: #ffffff;
+	border: 1px solid #e1e5ea;
+	border-radius: 12px;
+	padding: 24px;
+	position: sticky;
+	top: 20px;
+}
+
+.summary-title {
+	font-size: 20px;
+	font-weight: 700;
+	color: #111827;
+	margin-bottom: 20px;
+}
+
+.summary-product {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 13px 0;
+	border-bottom: 1px solid #eeeeee;
+}
+
+.summary-product:last-child {
+	border-bottom: none;
+}
+
+.summary-product-name {
+	font-size: 14px;
+	font-weight: 600;
+	color: #111827;
+	line-height: 1.4;
+}
+
+.summary-product-quantity {
+	color: #64748b;
+	font-size: 13px;
+	margin-top: 3px;
+}
+
+.summary-product-price {
+	font-size: 14px;
+	font-weight: 700;
+	color: #111827;
+	white-space: nowrap;
+}
+
+.empty-summary {
+	color: #94a3b8;
+	font-size: 14px;
+	text-align: center;
+	padding: 25px 0;
+}
+
+.summary-divider {
+	border-top: 1px solid #d1d5db;
+	margin: 18px 0;
+}
+
+.total-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.total-label {
+	font-size: 18px;
+	font-weight: 700;
+	color: #111827;
+}
+
+.total-value {
+	font-size: 21px;
+	font-weight: 700;
+	color: #111827;
+}
+
+.currency {
+	font-size: 14px;
+}
+
+#totalAmountDisplay {
+	display: none;
+}
+
+.form-buttons {
+	display: flex;
+	justify-content: flex-end;
+	gap: 10px;
+	margin-top: 20px;
+}
+
+.cancel-button, .save-button {
+	border-radius: 8px;
+	padding: 11px 20px;
+	font-weight: 600;
+}
+
+.save-button {
+	min-width: 130px;
+}
+
+.info-box {
+	background: #f8fafc;
+	border: 1px solid #e5e7eb;
+	border-radius: 8px;
+	padding: 12px 14px;
+	color: #64748b;
+	font-size: 13px;
+	margin-top: 20px;
+}
+
+@media ( max-width : 1000px) {
+	.order-grid {
+		grid-template-columns: 1fr;
+	}
+	.summary-card {
+		position: static;
+	}
+}
+
+@media ( max-width : 700px) {
+	.order-container {
+		padding: 0 15px;
+		margin-top: 20px;
+	}
+	.page-header {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 15px;
+	}
+	.page-title {
+		font-size: 25px;
+	}
+	.form-buttons {
+		flex-direction: column;
+	}
+	.cancel-button, .save-button {
+		width: 100%;
+	}
 }
 </style>
 
@@ -52,125 +314,201 @@ body {
 <body>
 
 
-	<div layout:fragment="content">
+	<div class="order-container">
 
-		<div class="d-flex justify-content-between align-items-center mb-4">
+		<div class="page-header">
 
-			<h1>Add Order</h1>
+			<div>
 
-			<a th:href="@{/order-with-details}" class="btn btn-secondary">
+				<h1 class="page-title">Add Order</h1>
 
-				Back </a>
+
+				<div class="page-subtitle">Add products and create a new
+					order.</div>
+
+			</div>
+
+			<a th:href="@{/order-with-details}"
+				class="btn btn-outline-secondary back-button"> <i
+				class="bi bi-arrow-left"></i> Back to Orders
+
+			</a>
+
 
 		</div>
 
 		<form th:action="@{/order-with-details/save}" method="post">
 
-			<div class="card shadow-sm mb-4">
 
-				<div class="card-header bg-success text-white">Order Details</div>
+			<div class="order-grid">
 
-				<div class="card-body">
-
-
-					<div class="table-responsive">
+				<div>
 
 
-						<table class="table table-bordered">
-
-							<thead class="table-light">
-
-								<tr>
-
-									<th style="width: 5%;">No.</th>
-
-									<th style="width: 35%;">Product</th>
-
-									<th style="width: 20%;">Quantity</th>
-
-									<th style="width: 30%;">Remark</th>
-
-									<th style="width: 10%;">Action</th>
-
-								</tr>
-
-							</thead>
-
-							<tbody id="orderDetailsTable">
-
-								<tr>
-
-									<td class="text-center">1</td>
-
-									<td><select name="orderDetails[0].product_id"
-										class="form-select product-select" required>
+					<div class="order-card">
 
 
-											<option value="">-- Select Product --</option>
+						<div class="card-title">Order Details</div>
 
 
-											<option th:each="product : ${products}"
-												th:value="${product.product_id}"
-												th:text="${product.type_name + ' - ' + product.price}"
-												th:attr="data-price=${product.price}"></option>
+						<div class="card-subtitle">Select the products, quantity and
+							add remarks if necessary.</div>
+
+						<div class="details-table-wrapper">
 
 
-									</select></td>
-
-									<td><input type="number" name="orderDetails[0].quantity"
-										class="form-control quantity-input" min="1" value="1" required>
-
-									</td>
-
-									<td><input type="text" name="orderDetails[0].remark"
-										class="form-control" placeholder="Remark"></td>
-
-									<td class="text-center">
-
-										<button type="button" class="btn btn-danger btn-sm"
-											onclick="removeProduct(this)">Remove</button>
-
-									</td>
+							<table class="details-table">
 
 
-								</tr>
+								<thead>
+
+									<tr>
 
 
-							</tbody>
+										<th style="width: 7%;">No.</th>
 
 
-						</table>
+										<th style="width: 38%;">Product</th>
 
+
+										<th style="width: 17%;">Quantity</th>
+
+
+										<th style="width: 28%;">Remark</th>
+
+
+										<th style="width: 10%;">Action</th>
+
+
+									</tr>
+
+								</thead>
+
+
+								<tbody id="orderDetailsTable">
+
+									<tr>
+
+										<td>
+
+											<div class="row-number">1</div>
+
+										</td>
+
+										<td><select name="orderDetails[0].product_id"
+											class="form-select product-select" required>
+
+
+												<option value="">-- Select Product --</option>
+
+
+												<option th:each="product : ${products}"
+													th:value="${product.product_id}"
+													th:text="${product.type_name + ' - ' + product.price}"
+													th:attr="data-price=${product.price}"></option>
+
+
+										</select></td>
+
+										<td><input type="number" name="orderDetails[0].quantity"
+											class="form-control quantity-input" min="1" value="1"
+											required></td>
+
+										<td><input type="text" name="orderDetails[0].remark"
+											class="form-control" placeholder="Remark"></td>
+
+										<td class="text-center">
+
+
+											<button type="button"
+												class="btn btn-outline-danger remove-button"
+												onclick="removeProduct(this)">
+
+
+												<i class="bi bi-trash"></i> Remove
+
+
+											</button>
+
+
+										</td>
+
+
+									</tr>
+
+
+								</tbody>
+
+
+							</table>
+
+
+						</div>
+
+						<button type="button"
+							class="btn btn-outline-primary add-product-button"
+							onclick="addProduct()">
+
+
+							<i class="bi bi-plus-lg"></i> Add Product
+
+
+						</button>
+
+						<div class="info-box">
+
+							<i class="bi bi-info-circle"></i> Select a product and enter the
+							quantity. The total amount will be calculated automatically.
+
+						</div>
 
 					</div>
 
-					<button type="button" class="btn btn-success"
-						onclick="addProduct()">+ Add Product</button>
-
-
 				</div>
 
-			</div>
 
-			<div class="card shadow-sm mb-4">
+				<div>
 
-				<div class="card-body">
+					<div class="summary-card">
 
+						<div class="summary-title">Order Summary</div>
 
-					<div class="row">
-
-
-						<div class="col-md-8"></div>
+						<div id="summaryProducts">
 
 
-						<div class="col-md-4">
+							<div class="empty-summary">No product selected.</div>
+
+						</div>
+
+						<div class="summary-divider"></div>
+
+						<div class="total-row">
+
+							<span class="total-label"> Total </span> <span
+								class="total-value"> <span id="summaryTotal"> 0.00
+
+							</span> <span class="currency"> Ks </span>
+
+							</span>
+
+						</div>
+
+						<input type="hidden" name="total_amount" id="totalAmount"
+							value="0.00">
+
+						<input type="text" id="totalAmountDisplay" value="0.00" readonly>
+
+						<div class="form-buttons">
+
+							<a th:href="@{/order-with-details}"
+								class="btn btn-outline-secondary cancel-button"> Cancel </a>
 
 
-							<label class="form-label fw-bold"> Total Amount </label> <input
-								type="text" id="totalAmountDisplay"
-								class="form-control form-control-lg fw-bold" value="0.00"
-								readonly> <input type="hidden" name="total_amount"
-								id="totalAmount" value="0.00">
+							<button type="submit" class="btn btn-primary save-button">
+
+								<i class="bi bi-check-lg"></i> Save Order
+
+							</button>
 
 
 						</div>
@@ -180,17 +518,6 @@ body {
 
 
 				</div>
-
-			</div>
-
-
-			<div class="d-flex justify-content-end gap-2">
-
-				<a th:href="@{/order-with-details}" class="btn btn-secondary">
-
-					Cancel </a>
-
-				<button type="submit" class="btn btn-primary">Save Order</button>
 
 
 			</div>
@@ -202,201 +529,560 @@ body {
 	</div>
 
 	<script>
-		function calculateTotal() {
 
-			let total = 0;
+    function calculateTotal() {
 
-			const rows = document.querySelectorAll("#orderDetailsTable tr");
+        let total = 0;
 
-			rows
-					.forEach(function(row) {
+        const rows =
+            document.querySelectorAll(
+                "#orderDetailsTable tr"
+            );
 
-						const product = row.querySelector(".product-select");
+        rows.forEach(function(row) {
 
-						const quantity = row.querySelector(".quantity-input");
+            const product =
+                row.querySelector(".product-select");
 
-						if (product && quantity) {
+            const quantity =
+                row.querySelector(".quantity-input");
 
-							const selectedOption = product.options[product.selectedIndex];
+            if (product && quantity) {
 
-							const price = parseFloat(selectedOption
-									.getAttribute("data-price")) || 0;
+                const selectedOption =
+                    product.options[
+                        product.selectedIndex
+                    ];
 
-							const qty = parseInt(quantity.value) || 0;
+                const price =
+                    parseFloat(
+                        selectedOption.getAttribute(
+                            "data-price"
+                        )
+                    ) || 0;
 
-							total = total + (price * qty);
 
-						}
+                const qty =
+                    parseInt(quantity.value) || 0;
 
-					});
 
-			document.getElementById("totalAmountDisplay").value = total
-					.toFixed(2);
+                total =
+                    total + (price * qty);
+            }
 
-			document.getElementById("totalAmount").value = total.toFixed(2);
+        });
 
-		}
+        document
+            .getElementById("summaryTotal")
+            .innerText =
+            total.toFixed(2);
 
-		document.addEventListener("change", function(event) {
+        document
+            .getElementById("totalAmount")
+            .value =
+            total.toFixed(2);
 
-			if (event.target.classList.contains("product-select")) {
+        document
+            .getElementById("totalAmountDisplay")
+            .value =
+            total.toFixed(2);
 
-				calculateTotal();
+        updateSummary();
 
-			}
+    }
 
-		});
+    function updateSummary() {
 
-		document.addEventListener("input", function(event) {
 
-			if (event.target.classList.contains("quantity-input")) {
+        const summary =
+            document.getElementById(
+                "summaryProducts"
+            );
 
-				calculateTotal();
 
-			}
+        const rows =
+            document.querySelectorAll(
+                "#orderDetailsTable tr"
+            );
 
-		});
 
-		function addProduct() {
+        summary.innerHTML = "";
 
-			const table = document.getElementById("orderDetailsTable");
 
-			const firstSelect = document.querySelector(".product-select");
+        let hasProduct = false;
 
-			const row = document.createElement("tr");
 
-			const numberCell = document.createElement("td");
+        rows.forEach(function(row) {
 
-			numberCell.className = "text-center";
 
-			numberCell.innerText = table.rows.length + 1;
+            const product =
+                row.querySelector(
+                    ".product-select"
+                );
 
-			const productCell = document.createElement("td");
 
-			const productSelect = firstSelect.cloneNode(true);
+            const quantity =
+                row.querySelector(
+                    ".quantity-input"
+                );
 
-			productSelect.value = "";
 
-			productCell.appendChild(productSelect);
+            if (!product || !quantity) {
 
-			const quantityCell = document.createElement("td");
+                return;
 
-			const quantityInput = document.createElement("input");
+            }
 
-			quantityInput.type = "number";
 
-			quantityInput.className = "form-control quantity-input";
+            const selectedOption =
+                product.options[
+                    product.selectedIndex
+                ];
 
-			quantityInput.min = "1";
 
-			quantityInput.value = "1";
+            if (
+                !selectedOption ||
+                selectedOption.value === ""
+            ) {
 
-			quantityInput.required = true;
+                return;
 
-			quantityCell.appendChild(quantityInput);
+            }
 
-			const remarkCell = document.createElement("td");
 
-			const remarkInput = document.createElement("input");
+            hasProduct = true;
 
-			remarkInput.type = "text";
 
-			remarkInput.className = "form-control";
+            const productName =
+                selectedOption.textContent;
 
-			remarkInput.placeholder = "Remark";
 
-			remarkCell.appendChild(remarkInput);
+            const price =
+                parseFloat(
+                    selectedOption.getAttribute(
+                        "data-price"
+                    )
+                ) || 0;
 
-			const actionCell = document.createElement("td");
 
-			actionCell.className = "text-center";
+            const qty =
+                parseInt(quantity.value) || 0;
 
-			const removeButton = document.createElement("button");
 
-			removeButton.type = "button";
+            const lineTotal =
+                price * qty;
 
-			removeButton.className = "btn btn-danger btn-sm";
+            const summaryRow =
+                document.createElement("div");
 
-			removeButton.innerText = "Remove";
 
-			removeButton.onclick = function() {
+            summaryRow.className =
+                "summary-product";
 
-				removeProduct(this);
+            const productInfo =
+                document.createElement("div");
 
-			};
 
-			actionCell.appendChild(removeButton);
+            const productNameElement =
+                document.createElement("div");
 
-			row.appendChild(numberCell);
 
-			row.appendChild(productCell);
+            productNameElement.className =
+                "summary-product-name";
 
-			row.appendChild(quantityCell);
 
-			row.appendChild(remarkCell);
+            productNameElement.innerText =
+                productName.split(" - ")[0];
 
-			row.appendChild(actionCell);
 
-			updateIndexes();
+            const quantityElement =
+                document.createElement("div");
 
-			calculateTotal();
 
-		}
+            quantityElement.className =
+                "summary-product-quantity";
 
-		function removeProduct(button) {
 
-			const row = button.closest("tr");
+            quantityElement.innerText =
+                "Quantity × " + qty;
 
-			row.remove();
 
-			updateIndexes();
+            productInfo.appendChild(
+                productNameElement
+            );
 
-			calculateTotal();
 
-		}
+            productInfo.appendChild(
+                quantityElement
+            );
 
-		function updateIndexes() {
+            const priceElement =
+                document.createElement("div");
 
-			const rows = document.querySelectorAll("#orderDetailsTable tr");
 
-			rows.forEach(function(row, index) {
+            priceElement.className =
+                "summary-product-price";
 
-				row.cells[0].innerText = index + 1;
 
-				const product = row.querySelector(".product-select");
+            priceElement.innerText =
+                lineTotal.toFixed(2) + " Ks";
 
-				if (product) {
+            summaryRow.appendChild(
+                productInfo
+            );
 
-					product.name = "orderDetails[" + index + "].product_id";
 
-				}
+            summaryRow.appendChild(
+                priceElement
+            );
 
-				const quantity = row.querySelector(".quantity-input");
 
-				if (quantity) {
+            summary.appendChild(
+                summaryRow
+            );
 
-					quantity.name = "orderDetails[" + index + "].quantity";
 
-				}
+        });
 
-				const remark = row.querySelector("input[type='text']");
+        if (!hasProduct) {
 
-				if (remark) {
 
-					remark.name = "orderDetails[" + index + "].remark";
+            summary.innerHTML = `
 
-				}
+                <div class="empty-summary">
 
-			});
+                    No product selected.
 
-		}
+                </div>
 
-		document.addEventListener("DOMContentLoaded", function() {
+            `;
 
-			calculateTotal();
+        }
 
-		});
-	</script>
+
+    }
+
+    document.addEventListener(
+        "change",
+        function(event) {
+
+
+            if (
+                event.target.classList.contains(
+                    "product-select"
+                )
+            ) {
+
+                calculateTotal();
+
+            }
+
+        }
+    );
+
+    document.addEventListener(
+        "input",
+        function(event) {
+
+
+            if (
+                event.target.classList.contains(
+                    "quantity-input"
+                )
+            ) {
+
+                calculateTotal();
+
+            }
+
+        }
+    );
+
+
+    function addProduct() {
+
+
+        const table =
+            document.getElementById(
+                "orderDetailsTable"
+            );
+
+
+        const firstSelect =
+            document.querySelector(
+                ".product-select"
+            );
+
+        const row =
+            document.createElement("tr");
+
+        const numberCell =
+            document.createElement("td");
+
+
+        const number =
+            document.createElement("div");
+
+
+        number.className =
+            "row-number";
+
+
+        number.innerText =
+            table.rows.length + 1;
+
+
+        numberCell.appendChild(
+            number
+        );
+
+        const productCell =
+            document.createElement("td");
+
+
+        const productSelect =
+            firstSelect.cloneNode(true);
+
+
+        productSelect.value = "";
+
+
+        productCell.appendChild(
+            productSelect
+        );
+
+        const quantityCell =
+            document.createElement("td");
+
+
+        const quantityInput =
+            document.createElement("input");
+
+
+        quantityInput.type =
+            "number";
+
+
+        quantityInput.className =
+            "form-control quantity-input";
+
+
+        quantityInput.min =
+            "1";
+
+
+        quantityInput.value =
+            "1";
+
+
+        quantityInput.required =
+            true;
+
+
+        quantityCell.appendChild(
+            quantityInput
+        );
+
+        const remarkCell =
+            document.createElement("td");
+
+
+        const remarkInput =
+            document.createElement("input");
+
+
+        remarkInput.type =
+            "text";
+
+
+        remarkInput.className =
+            "form-control";
+
+
+        remarkInput.placeholder =
+            "Remark";
+
+
+        remarkCell.appendChild(
+            remarkInput
+        );
+
+        const actionCell =
+            document.createElement("td");
+
+
+        actionCell.className =
+            "text-center";
+
+
+        const removeButton =
+            document.createElement("button");
+
+
+        removeButton.type =
+            "button";
+
+
+        removeButton.className =
+            "btn btn-outline-danger remove-button";
+
+
+        removeButton.innerHTML =
+            '<i class="bi bi-trash"></i> Remove';
+
+
+        removeButton.onclick =
+            function() {
+
+                removeProduct(this);
+
+            };
+
+
+        actionCell.appendChild(
+            removeButton
+        );
+
+        row.appendChild(
+            numberCell
+        );
+
+
+        row.appendChild(
+            productCell
+        );
+
+
+        row.appendChild(
+            quantityCell
+        );
+
+
+        row.appendChild(
+            remarkCell
+        );
+
+
+        row.appendChild(
+            actionCell
+        );
+
+        table.appendChild(
+            row
+        );
+
+        updateIndexes();
+
+        calculateTotal();
+
+    }
+
+    function removeProduct(button) {
+
+
+        const row =
+            button.closest("tr");
+
+
+        row.remove();
+
+
+        updateIndexes();
+
+
+        calculateTotal();
+
+    }
+    
+    function updateIndexes() {
+
+
+        const rows =
+            document.querySelectorAll(
+                "#orderDetailsTable tr"
+            );
+
+
+        rows.forEach(
+            function(row, index) {
+
+                const number =
+                    row.querySelector(
+                        ".row-number"
+                    );
+
+
+                if (number) {
+
+                    number.innerText =
+                        index + 1;
+
+                }
+
+                const product =
+                    row.querySelector(
+                        ".product-select"
+                    );
+
+
+                if (product) {
+
+                    product.name =
+                        "orderDetails[" +
+                        index +
+                        "].product_id";
+
+                }
+
+
+                const quantity =
+                    row.querySelector(
+                        ".quantity-input"
+                    );
+
+
+                if (quantity) {
+
+                    quantity.name =
+                        "orderDetails[" +
+                        index +
+                        "].quantity";
+
+                }
+
+
+                const remark =
+                    row.querySelector(
+                        "input[type='text']"
+                    );
+
+                if (remark) {
+
+                    remark.name =
+                        "orderDetails[" +
+                        index +
+                        "].remark";
+                }
+
+            }
+        );
+
+    }
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function() {
+
+
+            updateIndexes();
+
+
+            calculateTotal();
+
+        }
+    );
+
+</script>
 
 
 </body>
