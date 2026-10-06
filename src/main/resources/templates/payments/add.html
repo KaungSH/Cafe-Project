@@ -1,69 +1,450 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Checkout</title>
+<title>Checkout | Coffee Shop</title>
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 
-    <style>
+<style>
 
-        body {
-            background-color: #f5f6f8;
-        }
+body {
+	background-color: #f8f9fb;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #111827;
+}
 
-        .container {
-            max-width: 1100px;
-        }
+.checkout-header {
+	height: 60px;
+	background: #ffffff;
+	border-bottom: 1px solid #e5e7eb;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 32px;
+}
 
-        .checkout-title {
-            font-weight: bold;
-            font-size: 30px;
-        }
+.logo {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-size: 18px;
+	font-weight: 700;
+	color: #111827;
+}
 
-        .card {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-        }
+.logo-box {
+	width: 30px;
+	height: 30px;
+	border-radius: 8px;
+	background: #111827;
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 12px;
+	font-weight: 700;
+}
 
-        .card-header {
-            font-size: 20px;
-            font-weight: bold;
-        }
+.checkout-steps {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	font-size: 14px;
+	color: #6b7280;
+}
 
-        .token-box {
-            font-size: 28px;
-            font-weight: bold;
-            text-align: center;
-            padding: 20px;
-        }
+.step-number {
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	background: #111827;
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 12px;
+	font-weight: 700;
+}
 
-        .table th {
-            background-color: #f8f9fa;
-        }
+.step-number.active {
+	background: #111827;
+}
 
-        .table td,
-        .table th {
-            vertical-align: middle;
-        }
+.step-text.active {
+	color: #111827;
+	font-weight: 600;
+}
 
-        .total-box {
-            font-size: 22px;
-            font-weight: bold;
-        }
+.step-line {
+	width: 32px;
+	height: 1px;
+	background: #d1d5db;
+}
 
-    </style>
+.secure-checkout {
+	display: flex;
+	align-items: center;
+	gap: 7px;
+	color: #6b7280;
+	font-size: 13px;
+}
+
+.secure-checkout i {
+	color: #198754;
+}
+
+.checkout-container {
+	max-width: 1400px;
+	margin: 30px auto 60px;
+	padding: 0 25px;
+}
+
+.checkout-grid {
+	display: grid;
+	grid-template-columns: 1.05fr 0.95fr;
+	gap: 30px;
+	align-items: start;
+}
+
+.checkout-card {
+	background: #ffffff;
+	border: 1px solid #e5e7eb;
+	border-radius: 12px;
+	padding: 22px;
+	margin-bottom: 22px;
+}
+
+.card-title {
+	font-size: 19px;
+	font-weight: 700;
+	margin-bottom: 5px;
+	color: #111827;
+}
+
+.card-subtitle {
+	color: #6b7280;
+	font-size: 13px;
+	margin-bottom: 20px;
+}
+
+.info-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 15px;
+}
+
+.info-label {
+	color: #6b7280;
+	font-size: 12px;
+	margin-bottom: 5px;
+}
+
+.info-value {
+	font-size: 14px;
+	font-weight: 600;
+	color: #111827;
+}
+
+.summary-card {
+	background: #ffffff;
+	border: 1px solid #e5e7eb;
+	border-radius: 12px;
+	padding: 22px;
+	margin-bottom: 22px;
+}
+
+.summary-title {
+	font-size: 19px;
+	font-weight: 700;
+	margin-bottom: 18px;
+}
+
+.product-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 15px;
+	padding: 15px 0;
+	border-bottom: 1px solid #eeeeee;
+}
+
+.product-row:last-child {
+	border-bottom: none;
+}
+
+.product-left {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	min-width: 0;
+}
+
+.product-icon {
+	width: 60px;
+	height: 60px;
+	border-radius: 9px;
+	background: #f1f3f5;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	color: #6b7280;
+	font-size: 22px;
+}
+
+.product-info {
+	min-width: 0;
+}
+
+.product-name {
+	font-size: 14px;
+	font-weight: 700;
+	color: #111827;
+	margin-bottom: 5px;
+}
+
+.product-remark {
+	color: #6b7280;
+	font-size: 12px;
+	margin-bottom: 5px;
+}
+
+.product-quantity {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	font-size: 13px;
+	color: #374151;
+}
+
+.quantity-box {
+	border: 1px solid #d1d5db;
+	border-radius: 6px;
+	padding: 3px 10px;
+	background: #ffffff;
+	font-weight: 600;
+}
+
+.product-price {
+	font-size: 14px;
+	font-weight: 700;
+	color: #111827;
+	white-space: nowrap;
+}
+
+.order-total-card {
+	background: #ffffff;
+	border: 1px solid #e5e7eb;
+	border-radius: 12px;
+	padding: 22px;
+	margin-bottom: 22px;
+}
+
+.amount-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 12px;
+	font-size: 14px;
+}
+
+.amount-label {
+	color: #4b5563;
+}
+
+.amount-value {
+	color: #111827;
+	font-weight: 600;
+}
+
+.discount-row {
+	color: #dc2626;
+}
+
+.discount-value {
+	color: #dc2626;
+	font-weight: 600;
+}
+
+.total-divider {
+	border-top: 1px solid #d1d5db;
+	margin: 15px 0;
+}
+
+.total-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.total-label {
+	font-size: 20px;
+	font-weight: 700;
+	color: #111827;
+}
+
+.total-value {
+	font-size: 22px;
+	font-weight: 700;
+	color: #111827;
+}
+
+.discount-badge {
+	display: inline-block;
+	background: #dcfce7;
+	color: #15803d;
+	padding: 5px 9px;
+	border-radius: 20px;
+	font-size: 11px;
+	font-weight: 700;
+	margin-top: 6px;
+}
+
+.payment-method-label {
+	font-size: 13px;
+	font-weight: 600;
+	color: #374151;
+	margin-bottom: 8px;
+}
+
+.payment-select {
+	height: 48px;
+	border-radius: 8px;
+	border: 1px solid #d1d5db;
+}
+
+.note-textarea {
+	border-radius: 8px;
+	border: 1px solid #d1d5db;
+	resize: vertical;
+}
+
+.order-id-box {
+	background: #f8fafc;
+	border: 1px solid #e5e7eb;
+	border-radius: 8px;
+	padding: 12px 14px;
+	font-size: 13px;
+}
+
+.order-id-label {
+	color: #6b7280;
+	margin-right: 8px;
+}
+
+.order-id-value {
+	font-weight: 700;
+	color: #111827;
+}
+
+.security-card {
+	background: #ffffff;
+	border: 1px solid #e5e7eb;
+	border-radius: 12px;
+	padding: 17px 20px;
+}
+
+.security-items {
+	display: flex;
+	justify-content: space-between;
+	gap: 15px;
+	color: #6b7280;
+	font-size: 13px;
+}
+
+.security-item {
+	display: flex;
+	align-items: center;
+	gap: 7px;
+}
+
+.security-item i {
+	color: #198754;
+}
+
+.pay-button {
+	width: 100%;
+	height: 52px;
+	border: none;
+	border-radius: 8px;
+	background: #111111;
+	color: #ffffff;
+	font-size: 16px;
+	font-weight: 700;
+	transition: 0.2s;
+}
+
+.pay-button:hover {
+	background: #000000;
+}
+
+.pay-button i {
+	margin-left: 8px;
+}
+
+.cancel-button {
+	width: 100%;
+	height: 45px;
+	background: #ffffff;
+	border: 1px solid #d1d5db;
+	border-radius: 8px;
+	color: #374151;
+	font-weight: 600;
+	margin-top: 10px;
+}
+
+.cancel-button:hover {
+	background: #f9fafb;
+}
+
+@media ( max-width : 900px) {
+	.checkout-grid {
+		grid-template-columns: 1fr;
+	}
+	.info-grid {
+		grid-template-columns: 1fr;
+	}
+	.secure-checkout {
+		display: none;
+	}
+}
+
+@media ( max-width : 600px) {
+	.checkout-header {
+		padding: 0 15px;
+	}
+	.checkout-steps {
+		display: none;
+	}
+	.checkout-container {
+		margin-top: 20px;
+		padding: 0 15px;
+	}
+	.product-icon {
+		width: 50px;
+		height: 50px;
+	}
+	.product-price {
+		font-size: 13px;
+	}
+	.security-items {
+		flex-direction: column;
+	}
+}
+</style>
 
 </head>
 
@@ -71,319 +452,225 @@
 <body>
 
 
-<div class="container mt-5 mb-5">
+	<div class="checkout-container">
 
 
-    <!-- ================================= -->
-    <!-- TITLE -->
-    <!-- ================================= -->
+		<div class="checkout-grid">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+			<div>
 
-        <h2 class="checkout-title">
-            Checkout
-        </h2>
 
+				<div class="checkout-card">
 
-        <a th:href="@{/order-with-details}"
-           class="btn btn-secondary">
+					<div class="info-label">Token Number</div>
 
-            Back
+					<div class="info-value" th:text="${order.token_number}">001</div>
 
-        </a>
+				</div>
 
-    </div>
+				<div class="checkout-card">
 
 
+					<div class="card-title">Payment Method</div>
 
-    <!-- ================================= -->
-    <!-- ORDER INFORMATION -->
-    <!-- TOKEN ONLY -->
-    <!-- ================================= -->
 
-    <div class="card mb-4">
+					<div class="card-subtitle">Select how you would like to pay.</div>
 
+					<form th:action="@{/payments/add}" th:object="${payment}"
+						method="post">
 
-        <div class="card-header bg-primary text-white">
+						<input type="hidden" name="order_id" th:value="${order.order_id}">
 
-            Order Information
 
-        </div>
+						<div class="mb-4">
 
 
-        <div class="card-body">
+							<div class="payment-method-label">Payment Method</div>
 
-            <div class="token-box">
 
-                Token No.
+							<select name="method_id" class="form-select payment-select"
+								required>
 
-                <span th:text="${order.token_number}">
-                    7
-                </span>
 
-            </div>
+								<option value="">-- Select Payment Method --</option>
 
-        </div>
 
-    </div>
+								<option th:each="method : ${payMethods}"
+									th:value="${method.methodId}" th:text="${method.name}">
 
+									Cash</option>
 
 
-    <!-- ================================= -->
-    <!-- ORDER DETAILS -->
-    <!-- ALL DETAILS -->
-    <!-- ================================= -->
+							</select>
 
-    <div class="card mb-4">
 
+						</div>
 
-        <div class="card-header bg-success text-white">
+						<div class="mb-3">
 
-            Order Details
 
-        </div>
+							<div class="payment-method-label">Note</div>
 
 
-        <div class="card-body">
+							<textarea name="note" class="form-control note-textarea" rows="4"
+								placeholder="Enter payment note if necessary"></textarea>
 
 
-            <div class="table-responsive">
+						</div>
 
+						<button type="submit" class="pay-button">
 
-                <table class="table table-bordered">
+							Pay Now <i class="bi bi-arrow-right"></i>
 
+						</button>
 
-                    <thead>
+						<a th:href="@{/order-with-details}" class="btn cancel-button">
+							<i class="bi bi-arrow-left"></i> Back to Orders
 
-                    <tr>
+						</a>
 
-                        <th style="width: 70px;">
-                            No.
-                        </th>
 
-                        <th>
-                            Product
-                        </th>
+					</form>
 
-                        <th style="width: 150px;">
-                            Quantity
-                        </th>
 
-                        <th>
-                            Remark
-                        </th>
+				</div>
 
-                    </tr>
 
-                    </thead>
+			</div>
 
+			<div>
 
-                    <tbody>
+				<div class="summary-card">
 
 
-                    <tr
-                        th:each="detail, stat : ${orderDetails}">
+					<div class="summary-title">Order Summary</div>
 
 
-                        <td th:text="${stat.count}">
-                            1
-                        </td>
+					<div th:each="detail : ${orderDetails}" class="product-row">
 
 
-                        <td th:text="${detail.product_name}">
-                            Caffe Latte
-                        </td>
+						<div class="product-left">
 
+							<div class="product-icon">
 
-                        <td th:text="${detail.quantity}">
-                            1
-                        </td>
+								<i class="bi bi-cup-hot"></i>
 
+							</div>
 
-                        <td>
+							<div class="product-info">
 
-                            <span
-                                th:if="${detail.remark != null
-                                        and !#strings.isEmpty(detail.remark)}"
-                                th:text="${detail.remark}">
-                                No sugar
-                            </span>
+								<div class="product-name" th:text="${detail.product_name}">
 
-                            <span
-                                th:if="${detail.remark == null
-                                        or #strings.isEmpty(detail.remark)}">
-                                -
-                            </span>
+									Coffee</div>
 
-                        </td>
 
+								<div th:if="${detail.remark != null and detail.remark != ''}"
+									class="product-remark" th:text="'Remark: ' + ${detail.remark}">
 
-                    </tr>
+									Remark</div>
 
 
-                    </tbody>
+								<div class="product-quantity">
 
-                </table>
 
-            </div>
+									<span> Quantity </span> <span class="quantity-box"
+										th:text="${detail.quantity}"> 1 </span>
 
 
+								</div>
 
-            <!-- TOTAL -->
 
-            <div class="d-flex justify-content-end mt-3">
+							</div>
 
-                <div class="total-box">
 
-                    Total Amount:
+						</div>
 
-                    <span th:text="${order.total_amount}">
-                        3000.00
-                    </span>
+					</div>
 
-                </div>
 
-            </div>
+				</div>
 
+				<div class="order-total-card">
 
-        </div>
 
-    </div>
+					<div class="card-title">Order Total</div>
 
 
+					<br>
 
-    <!-- ================================= -->
-    <!-- PAYMENT -->
-    <!-- ================================= -->
+					<div class="amount-row">
 
-    <div class="card mb-4">
 
+						<span class="amount-label"> Subtotal </span> <span
+							class="amount-value"> <span th:text="${subtotal}">
 
-        <div class="card-header bg-warning">
+								0.00 </span> Ks
 
-            Payment
 
-        </div>
+						</span>
 
 
-        <div class="card-body">
+					</div>
 
+					<div th:if="${hasDiscount}" class="amount-row discount-row">
 
-            <form
-                th:action="@{/payments/add}"
-                th:object="${payment}"
-                method="post">
 
+						<span> Discount </span> <span class="discount-value"> - <span
+							th:text="${discountAmount}"> 0.00 </span> Ks
 
-                <!-- ORDER ID -->
-                <!-- Hidden only -->
-                <input
-                    type="hidden"
-                    name="order_id"
-                    th:value="${order.order_id}">
 
+						</span>
 
 
-                <!-- ========================= -->
-                <!-- PAYMENT METHOD -->
-                <!-- ========================= -->
+					</div>
 
-                <div class="mb-3">
+					<div th:if="${hasDiscount}" class="text-end">
 
-                    <label class="form-label fw-bold">
 
-                        Payment Method
+						<span class="discount-badge"> <span
+							th:text="${#numbers.formatDecimal((discountAmount * 100) / subtotal, 1, 0) + '% OFF'}">
 
-                    </label>
+								10% OFF </span>
 
 
-                    <select
-                        name="method_id"
-                        class="form-select"
-                        required>
+						</span>
 
-                        <option value="">
 
-                            -- Select Payment Method --
+					</div>
 
-                        </option>
+					<div class="total-divider"></div>
 
 
-                        <option
-                            th:each="method : ${payMethods}"
-                            th:value="${method.methodId}"
-                            th:text="${method.name}">
+					<div class="total-row">
 
-                        </option>
 
+						<span class="total-label"> Total </span> <span class="total-value">
 
-                    </select>
 
-                </div>
+							<span th:text="${finalAmount}"> 0.00 </span> Ks
 
 
+						</span>
 
-                <!-- ========================= -->
-                <!-- NOTE -->
-                <!-- ========================= -->
 
-                <div class="mb-3">
+					</div>
 
-                    <label class="form-label fw-bold">
 
-                        Note
+				</div>
 
-                    </label>
+			</div>
 
 
-                    <textarea
-                        name="note"
-                        class="form-control"
-                        rows="3"
-                        placeholder="Payment note">
-                    </textarea>
+		</div>
 
-                </div>
 
+	</div>
 
 
-                <!-- ========================= -->
-                <!-- BUTTONS -->
-                <!-- ========================= -->
-
-                <div class="d-flex justify-content-end gap-2">
-
-
-                    <a
-                        th:href="@{/order-with-details}"
-                        class="btn btn-secondary">
-
-                        Cancel
-
-                    </a>
-
-
-                    <button
-                        type="submit"
-                        class="btn btn-success">
-
-                        Pay Now
-
-                    </button>
-
-
-                </div>
-
-
-            </form>
-
-
-        </div>
-
-    </div>
-
-
-</div>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+		
+	</script>
 
 
 </body>

@@ -153,6 +153,10 @@ public class IngredientBatchDto {
   public void setTotal_import_cost(BigDecimal total_import_cost) {
 	this.total_import_cost = total_import_cost;
   }
+
+  
+	
+  
   
 
 }

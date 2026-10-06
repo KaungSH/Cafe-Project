@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import cafe.project.models.DiscountCalculationDto;
 import cafe.project.repositories.entities.OrderDetails;
 import cafe.project.repositories.mappers.OrderDetailsMapper;
 
@@ -19,7 +20,6 @@ public class OrderDetailsRepository {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	// GET ALL
 	public List<OrderDetails> findAll() {
 
 		String sql = "SELECT od.*, pt.name AS product_name\r\n" + "FROM order_details od\r\n"
@@ -29,7 +29,6 @@ public class OrderDetailsRepository {
 		return jdbcTemplate.query(sql, new OrderDetailsMapper());
 	}
 
-	// GET BY ID
 	public OrderDetails findById(String id) {
 
 		String sql = "SELECT od.*, pt.name AS product_name \r\n" + "FROM order_details od \r\n"
@@ -39,7 +38,6 @@ public class OrderDetailsRepository {
 		return jdbcTemplate.queryForObject(sql, new OrderDetailsMapper(), id);
 	}
 
-	// GET BY ORDER ID
 	public List<OrderDetails> findByOrderId(String orderId) {
 
 		String sql = "SELECT od.*, \r\n" + "pt.name AS product_name \r\n" + "FROM order_details od \r\n"
@@ -56,7 +54,6 @@ public class OrderDetailsRepository {
 		return jdbcTemplate.queryForList(sql, String.class);
 	}
 
-	// SAVE
 	public int save(OrderDetails entity) {
 
 		String sql = "INSERT INTO order_details\r\n" + "(order_detail_id, product_id, order_id, quantity, remark) \r\n"
@@ -68,13 +65,60 @@ public class OrderDetailsRepository {
 
 	public BigDecimal calculateTotalAmount(String orderId) {
 
-		String sql = "SELECT COALESCE(SUM(p.price * od.quantity), 0) " + "FROM order_details od " + "JOIN products p "
-				+ "ON od.product_id = p.product_id " + "WHERE od.order_id = ?";
+		String sql = "SELECT COALESCE(SUM(p.price * od.quantity), 0) " + "FROM order_details od "
+				+ "JOIN products p ON od.product_id = p.product_id " + "WHERE od.order_id = ?";
 
 		return jdbcTemplate.queryForObject(sql, BigDecimal.class, orderId);
 	}
 
-	// UPDATE
+	public BigDecimal calculateDiscountAmount(String orderId) {
+
+		String sql = "SELECT " + "p.price, " + "od.quantity, " + "d.discount_value, "
+				+ "pt.type_name AS promo_type_name " + "FROM order_details od " + "JOIN products p "
+				+ "ON od.product_id = p.product_id " + "JOIN discounts_products dp "
+				+ "ON p.product_id = dp.product_id " + "JOIN discounts d " + "ON dp.discount_id = d.discount_id "
+				+ "JOIN promo_types pt " + "ON d.promo_type_id = pt.promo_type_id " + "WHERE od.order_id = ? "
+				+ "AND d.isdeleted = 0 " + "AND d.is_active = 1 " + "AND CURDATE() BETWEEN d.startdate AND d.enddate";
+
+		List<DiscountCalculationDto> discounts = jdbcTemplate.query(sql, (rs, rowNum) -> {
+
+			DiscountCalculationDto dto = new DiscountCalculationDto();
+
+			dto.setPrice(rs.getBigDecimal("price"));
+
+			dto.setQuantity(rs.getInt("quantity"));
+
+			dto.setDiscountValue(rs.getBigDecimal("discount_value"));
+
+			dto.setPromoTypeName(rs.getString("promo_type_name"));
+
+			return dto;
+
+		}, orderId);
+
+		BigDecimal totalDiscount = BigDecimal.ZERO;
+
+		for (DiscountCalculationDto discount : discounts) {
+
+			BigDecimal productSubtotal = discount.getPrice().multiply(BigDecimal.valueOf(discount.getQuantity()));
+
+			BigDecimal discountAmount = BigDecimal.ZERO;
+
+			if (discount.getPromoTypeName().equalsIgnoreCase("Percentage Off")) {
+
+				discountAmount = productSubtotal.multiply(discount.getDiscountValue()).divide(BigDecimal.valueOf(100));
+
+			} else if (discount.getPromoTypeName().equalsIgnoreCase("Fixed Amount Off")) {
+
+				discountAmount = discount.getDiscountValue().multiply(BigDecimal.valueOf(discount.getQuantity()));
+			}
+
+			totalDiscount = totalDiscount.add(discountAmount);
+		}
+
+		return totalDiscount;
+	}
+
 	public int edit(String id, OrderDetails entity) {
 
 		String sql = "UPDATE order_details SET \r\n" + "product_id = ?,order_id = ?, quantity = ?, remark = ? \r\n"
@@ -84,7 +128,6 @@ public class OrderDetailsRepository {
 				entity.getRemark(), id);
 	}
 
-	// DELETE
 	public int delete(String id) {
 
 		String sql = "DELETE FROM order_details WHERE order_detail_id = ?";
