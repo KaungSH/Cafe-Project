@@ -333,8 +333,7 @@
                                 </div>
                                 <!-- Session သို့မဟုတ် Controller မှ employee name မရှိပါက Barista/Manager အမည် အလိုအလျောက် သတ်မှတ်ပြသခြင်း -->
                                 <span class="employee-name" 
-                                      th:text="${session.employee_name != null ? session.employee_name : (session.user != null ? session.user : 'Café Barista')}">
-                                    Café Barista
+                                     th:text="${session.loggedInUser.employee_name}">
                                 </span>
                             </div>
                         </td>
