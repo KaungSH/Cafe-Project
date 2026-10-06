@@ -90,20 +90,36 @@ public List<IngredientBatchItemDto> findBatchesByImportId(String import_id) {
         IngredientBatchItemDto item = new IngredientBatchItemDto();
         item.setIngredientTypeId(rs.getString("ingredient_type_id"));
         item.setIngredientTypeName(rs.getString("ingredient_name"));
+<<<<<<< HEAD
         item.setUnit_name(rs.getString("unit_name"));
         item.setQuantity_ordered(rs.getDouble("quantity_ordered"));
         item.setUnit_cost(rs.getBigDecimal("unit_cost"));
         item.setTotal_import_cost(rs.getDouble("total_import_cost"));
         item.setManufactured_date(rs.getDate("manufactured_date").toLocalDate());
         item.setExpire_date(rs.getDate("expire_date").toLocalDate());
+=======
+//        item.setUnitName(rs.getString("unit_name"));
+//        item.setQuantityOrdered(rs.getDouble("quantity_ordered"));
+//        item.setUnitCost(rs.getBigDecimal("unit_cost"));
+//        item.setTotalImportCost(rs.getDouble("total_import_cost"));
+//        item.setManufacturedDate(rs.getDate("manufactured_date").toLocalDate());
+//        item.setExpireDate(rs.getDate("expire_date").toLocalDate());
+>>>>>>> f0997fc (Update discount)
         return item;
     }, import_id);
 }
 
+<<<<<<< HEAD
 public void updateStockImport(StockImport entity) {
     String sql = "UPDATE stock_imports SET supplier_id = ?, imported_at = ?, total_cost = ?, isedited = 1 WHERE import_id = ?";
     jdbcTemplate.update(sql, entity.getSupplier_id(), entity.getImported_at(), entity.getTotal_cost(), entity.getImport_id());
 }
+=======
+//public void updateStockImport(StockImportEntity entity) {
+//    String sql = "UPDATE stock_imports SET supplier_id = ?, imported_at = ?, total_cost = ?, isedited = 1 WHERE import_id = ?";
+//    jdbcTemplate.update(sql, entity.getSupplierId(), entity.getImportedAt(), entity.getTotalCost(), entity.getImportId());
+//}
+>>>>>>> f0997fc (Update discount)
 
 public void deleteBatchesByImportId(String import_id) {
     String sql = "DELETE FROM ingredient_batches WHERE import_id = ?";
@@ -131,9 +147,15 @@ private final RowMapper<StockImportListDto> listDtoMapper = (rs, rowNum) -> {
     StockImportListDto dto = new StockImportListDto();
     dto.setImport_id(rs.getString("import_id"));
     dto.setImported_at(rs.getTimestamp("imported_at").toLocalDateTime());
+<<<<<<< HEAD
     dto.setSupplier_name(rs.getString("supplier_name"));
     dto.setEmployee_name(rs.getString("employee_name"));
     dto.setBranch_name(rs.getString("branch_name"));
+=======
+//    dto.setSupplierName(rs.getString("supplier_name"));
+//    dto.setEmployeeName(rs.getString("employee_name"));
+//    dto.setBranchName(rs.getString("branch_name"));
+>>>>>>> f0997fc (Update discount)
     dto.setTotal_cost(rs.getBigDecimal("total_cost"));
     dto.setIsedited(rs.getBoolean("isedited"));
     dto.setIsdeleted(rs.getBoolean("isdeleted"));

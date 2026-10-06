@@ -55,21 +55,20 @@ public class OrderDetailsController {
 
 			BigDecimal subtotal = orderDetailsService.calculateTotalAmount(order.getOrder_id());
 
-			BigDecimal discount = orderDetailsService.calculateDiscountAmount(order.getOrder_id());
+			BigDecimal finalAmount = order.getTotal_amount();
 
-			BigDecimal finalAmount = subtotal.subtract(discount);
+			BigDecimal discountAmount = subtotal.subtract(finalAmount);
 
 			order.setSubtotal(subtotal);
-			order.setDiscountAmount(discount);
 			order.setFinalAmount(finalAmount);
+			order.setDiscountAmount(discountAmount);
 
-			boolean hasDiscount = discount.compareTo(BigDecimal.ZERO) > 0;
+			boolean hasDiscount = discountAmount.compareTo(BigDecimal.ZERO) > 0;
 
 			order.setHasDiscount(hasDiscount);
 		}
 
 		model.addAttribute("orders", orders);
-
 		model.addAttribute("orderDetails", orderDetailsService.findAll());
 
 		return "orderwithdetails/list";
@@ -107,7 +106,7 @@ public class OrderDetailsController {
 
 		model.addAttribute("orderDetailsDto", dto);
 
-		model.addAttribute("products", productService.findAll());
+		model.addAttribute("products", productService.findAllForOrder());
 
 		return "orderwithdetails/add";
 	}
@@ -169,7 +168,7 @@ public class OrderDetailsController {
 		model.addAttribute("order", order);
 		model.addAttribute("orderDetailsDto", dto);
 
-		model.addAttribute("products", productService.findAll());
+		model.addAttribute("products", productService.findAllForOrder());
 
 		return "orderwithdetails/edit";
 	}
@@ -185,11 +184,17 @@ public class OrderDetailsController {
 
 		String orderId = order.getOrder_id();
 
-		System.out.println("UPDATE ORDER ID = " + orderId);
-
 		ordersService.edit(orderId, order);
 
 		orderDetailsService.edit(dto, orderId);
+
+		BigDecimal subtotal = orderDetailsService.calculateTotalAmount(orderId);
+
+		BigDecimal discount = orderDetailsService.calculateDiscountAmount(orderId);
+
+		BigDecimal finalAmount = subtotal.subtract(discount);
+
+		ordersService.updateTotalAmount(orderId, finalAmount);
 
 		return "redirect:/order-with-details";
 	}

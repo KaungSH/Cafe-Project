@@ -17,9 +17,7 @@
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-
 <style>
-
 body {
 	background-color: #f8f9fb;
 	font-family: Arial, Helvetica, sans-serif;
@@ -192,6 +190,16 @@ body {
 	border-bottom: none;
 }
 
+.summary-product-info {
+	flex: 1;
+}
+
+.summary-product-discount {
+	font-size: 14px;
+	color: #dc2626;
+	margin-bottom: 4px;
+}
+
 .summary-product-name {
 	font-size: 14px;
 	font-weight: 600;
@@ -310,9 +318,7 @@ body {
 
 </head>
 
-
 <body>
-
 
 	<div class="order-container">
 
@@ -321,7 +327,6 @@ body {
 			<div>
 
 				<h1 class="page-title">Add Order</h1>
-
 
 				<div class="page-subtitle">Add products and create a new
 					order.</div>
@@ -334,51 +339,38 @@ body {
 
 			</a>
 
-
 		</div>
 
 		<form th:action="@{/order-with-details/save}" method="post">
-
 
 			<div class="order-grid">
 
 				<div>
 
-
 					<div class="order-card">
 
-
 						<div class="card-title">Order Details</div>
-
 
 						<div class="card-subtitle">Select the products, quantity and
 							add remarks if necessary.</div>
 
 						<div class="details-table-wrapper">
 
-
 							<table class="details-table">
-
 
 								<thead>
 
 									<tr>
 
-
 										<th style="width: 7%;">No.</th>
-
 
 										<th style="width: 38%;">Product</th>
 
-
 										<th style="width: 17%;">Quantity</th>
-
 
 										<th style="width: 28%;">Remark</th>
 
-
 										<th style="width: 10%;">Action</th>
-
 
 									</tr>
 
@@ -395,9 +387,9 @@ body {
 
 										</td>
 
+
 										<td><select name="orderDetails[0].product_id"
 											class="form-select product-select" required>
-
 
 												<option value="">-- Select Product --</option>
 
@@ -405,43 +397,43 @@ body {
 												<option th:each="product : ${products}"
 													th:value="${product.product_id}"
 													th:text="${product.type_name + ' - ' + product.price}"
-													th:attr="data-price=${product.price}"></option>
+													th:attr="
+                                                    data-price=${product.price},
+                                                    data-product-name=${product.type_name},
+                                                    data-discount=${product.discount_values != null and !product.discount_values.isEmpty() ? product.discount_values[0] : 0}
+                                                ">
 
+												</option>
 
 										</select></td>
+
 
 										<td><input type="number" name="orderDetails[0].quantity"
 											class="form-control quantity-input" min="1" value="1"
 											required></td>
 
+
 										<td><input type="text" name="orderDetails[0].remark"
 											class="form-control" placeholder="Remark"></td>
 
-										<td class="text-center">
 
+										<td class="text-center">
 
 											<button type="button"
 												class="btn btn-outline-danger remove-button"
 												onclick="removeProduct(this)">
 
-
 												<i class="bi bi-trash"></i> Remove
-
 
 											</button>
 
-
 										</td>
-
 
 									</tr>
 
-
 								</tbody>
 
-
 							</table>
-
 
 						</div>
 
@@ -449,23 +441,13 @@ body {
 							class="btn btn-outline-primary add-product-button"
 							onclick="addProduct()">
 
-
 							<i class="bi bi-plus-lg"></i> Add Product
 
-
 						</button>
-
-						<div class="info-box">
-
-							<i class="bi bi-info-circle"></i> Select a product and enter the
-							quantity. The total amount will be calculated automatically.
-
-						</div>
 
 					</div>
 
 				</div>
-
 
 				<div>
 
@@ -475,18 +457,19 @@ body {
 
 						<div id="summaryProducts">
 
-
 							<div class="empty-summary">No product selected.</div>
 
 						</div>
 
+
 						<div class="summary-divider"></div>
+
+
 
 						<div class="total-row">
 
 							<span class="total-label"> Total </span> <span
 								class="total-value"> <span id="summaryTotal"> 0.00
-
 							</span> <span class="currency"> Ks </span>
 
 							</span>
@@ -494,9 +477,9 @@ body {
 						</div>
 
 						<input type="hidden" name="total_amount" id="totalAmount"
-							value="0.00">
+							value="0.00"> <input type="text" id="totalAmountDisplay"
+							value="0.00" readonly>
 
-						<input type="text" id="totalAmountDisplay" value="0.00" readonly>
 
 						<div class="form-buttons">
 
@@ -510,110 +493,621 @@ body {
 
 							</button>
 
-
 						</div>
-
 
 					</div>
 
-
 				</div>
-
 
 			</div>
 
-
 		</form>
-
 
 	</div>
 
+
 	<script>
 
-    function calculateTotal() {
+function calculateTotal() {
 
-        let total = 0;
+    let total = 0;
 
-        const rows =
-            document.querySelectorAll(
-                "#orderDetailsTable tr"
+
+    const rows =
+        document.querySelectorAll(
+            "#orderDetailsTable tr"
+        );
+
+
+    rows.forEach(function(row) {
+
+        const product =
+            row.querySelector(
+                ".product-select"
             );
 
-        rows.forEach(function(row) {
 
-            const product =
-                row.querySelector(".product-select");
-
-            const quantity =
-                row.querySelector(".quantity-input");
-
-            if (product && quantity) {
-
-                const selectedOption =
-                    product.options[
-                        product.selectedIndex
-                    ];
-
-                const price =
-                    parseFloat(
-                        selectedOption.getAttribute(
-                            "data-price"
-                        )
-                    ) || 0;
+        const quantity =
+            row.querySelector(
+                ".quantity-input"
+            );
 
 
-                const qty =
-                    parseInt(quantity.value) || 0;
+        if (!product || !quantity) {
+            return;
+        }
 
 
-                total =
-                    total + (price * qty);
-            }
+        const selectedOption =
+            product.options[
+                product.selectedIndex
+            ];
 
-        });
 
-        document
-            .getElementById("summaryTotal")
-            .innerText =
-            total.toFixed(2);
+        if (
+            !selectedOption ||
+            selectedOption.value === ""
+        ) {
+            return;
+        }
 
-        document
-            .getElementById("totalAmount")
-            .value =
-            total.toFixed(2);
+        const price =
+            parseFloat(
+                selectedOption.getAttribute(
+                    "data-price"
+                )
+            ) || 0;
 
-        document
-            .getElementById("totalAmountDisplay")
-            .value =
-            total.toFixed(2);
+        const discount =
+            parseFloat(
+                selectedOption.getAttribute(
+                    "data-discount"
+                )
+            ) || 0;
 
-        updateSummary();
+        const qty =
+            parseInt(
+                quantity.value
+            ) || 0;
+
+        const subtotal =
+            price * qty;
+
+        let discountAmount = 0;
+
+
+        if (discount > 0) {
+
+            discountAmount =
+                subtotal * discount / 100;
+
+        }
+        const finalAmount =
+            subtotal - discountAmount;
+
+        total =
+            total + finalAmount;
+
+    });
+
+    document
+        .getElementById("summaryTotal")
+        .innerText =
+        total.toFixed(2);
+
+    document
+        .getElementById("totalAmount")
+        .value =
+        total.toFixed(2);
+
+    document
+        .getElementById("totalAmountDisplay")
+        .value =
+        total.toFixed(2);
+
+    updateSummary();
+
+}
+
+function updateSummary() {
+
+    const summary =
+        document.getElementById(
+            "summaryProducts"
+        );
+
+
+    const rows =
+        document.querySelectorAll(
+            "#orderDetailsTable tr"
+        );
+
+
+    summary.innerHTML = "";
+
+
+    let hasProduct = false;
+
+
+    rows.forEach(function(row) {
+
+        const product =
+            row.querySelector(
+                ".product-select"
+            );
+
+
+        const quantity =
+            row.querySelector(
+                ".quantity-input"
+            );
+
+
+        if (!product || !quantity) {
+            return;
+        }
+
+
+        const selectedOption =
+            product.options[
+                product.selectedIndex
+            ];
+
+
+        if (
+            !selectedOption ||
+            selectedOption.value === ""
+        ) {
+            return;
+        }
+
+
+        hasProduct = true;
+
+        const productName =
+            selectedOption.getAttribute(
+                "data-product-name"
+            );
+
+        const price =
+            parseFloat(
+                selectedOption.getAttribute(
+                    "data-price"
+                )
+            ) || 0;
+
+        const discount =
+            parseFloat(
+                selectedOption.getAttribute(
+                    "data-discount"
+                )
+            ) || 0;
+
+        const qty =
+            parseInt(
+                quantity.value
+            ) || 0;
+
+
+        const subtotal =
+            price * qty;
+
+        let discountAmount = 0;
+
+
+        if (discount > 0) {
+
+            discountAmount =
+                subtotal * discount / 100;
+
+        }
+        const finalAmount =
+            subtotal - discountAmount;
+
+        const summaryRow =
+            document.createElement(
+                "div"
+            );
+
+
+        summaryRow.className =
+            "summary-product";
+
+        const productInfo =
+            document.createElement(
+                "div"
+            );
+
+
+        productInfo.className =
+            "summary-product-info";
+
+        if (discount > 0) {
+
+            const discountElement =
+                document.createElement(
+                    "div"
+                );
+
+
+            discountElement.className =
+                "summary-product-discount";
+
+
+            discountElement.innerText =
+                productName +
+                " - " +
+                discount +
+                "%";
+
+
+            productInfo.appendChild(
+                discountElement
+            );
+
+        }
+
+        const productNameElement =
+            document.createElement(
+                "div"
+            );
+
+
+        productNameElement.className =
+            "summary-product-name";
+
+
+        productNameElement.innerText =
+            productName;
+
+
+        productInfo.appendChild(
+            productNameElement
+        );
+
+        const quantityElement =
+            document.createElement(
+                "div"
+            );
+
+
+        quantityElement.className =
+            "summary-product-quantity";
+
+
+        quantityElement.innerText =
+            "Quantity × " +
+            qty;
+
+
+        productInfo.appendChild(
+            quantityElement
+        );
+        const priceElement =
+            document.createElement(
+                "div"
+            );
+
+
+        priceElement.className =
+            "summary-product-price";
+
+
+        priceElement.innerText =
+            finalAmount.toFixed(2) +
+            " Ks";
+
+        summaryRow.appendChild(
+            productInfo
+        );
+
+
+        summaryRow.appendChild(
+            priceElement
+        );
+
+
+        summary.appendChild(
+            summaryRow
+        );
+
+    });
+
+    if (!hasProduct) {
+
+        summary.innerHTML = `
+
+            <div class="empty-summary">
+
+                No product selected.
+
+            </div>
+
+        `;
 
     }
 
-    function updateSummary() {
+}
+
+document.addEventListener(
+    "change",
+    function(event) {
+
+        if (
+            event.target.classList.contains(
+                "product-select"
+            )
+        ) {
+
+            calculateTotal();
+
+        }
+
+    }
+);
+
+document.addEventListener(
+    "input",
+    function(event) {
+
+        if (
+            event.target.classList.contains(
+                "quantity-input"
+            )
+        ) {
+
+            calculateTotal();
+
+        }
+
+    }
+);
+
+function addProduct() {
+
+    const table =
+        document.getElementById(
+            "orderDetailsTable"
+        );
 
 
-        const summary =
-            document.getElementById(
-                "summaryProducts"
+    const firstSelect =
+        document.querySelector(
+            ".product-select"
+        );
+
+
+    const row =
+        document.createElement(
+            "tr"
+        );
+
+    const numberCell =
+        document.createElement(
+            "td"
+        );
+
+
+    const number =
+        document.createElement(
+            "div"
+        );
+
+
+    number.className =
+        "row-number";
+
+
+    number.innerText =
+        table.rows.length + 1;
+
+
+    numberCell.appendChild(
+        number
+    );
+
+    const productCell =
+        document.createElement(
+            "td"
+        );
+
+
+    const productSelect =
+        firstSelect.cloneNode(
+            true
+        );
+
+
+    productSelect.value =
+        "";
+
+
+    productCell.appendChild(
+        productSelect
+    );
+
+    const quantityCell =
+        document.createElement(
+            "td"
+        );
+
+
+    const quantityInput =
+        document.createElement(
+            "input"
+        );
+
+
+    quantityInput.type =
+        "number";
+
+
+    quantityInput.className =
+        "form-control quantity-input";
+
+
+    quantityInput.min =
+        "1";
+
+
+    quantityInput.value =
+        "1";
+
+
+    quantityInput.required =
+        true;
+
+
+    quantityCell.appendChild(
+        quantityInput
+    );
+
+    const remarkCell =
+        document.createElement(
+            "td"
+        );
+
+
+    const remarkInput =
+        document.createElement(
+            "input"
+        );
+
+
+    remarkInput.type =
+        "text";
+
+
+    remarkInput.className =
+        "form-control";
+
+
+    remarkInput.placeholder =
+        "Remark";
+
+
+    remarkCell.appendChild(
+        remarkInput
+    );
+
+    const actionCell =
+        document.createElement(
+            "td"
+        );
+
+
+    actionCell.className =
+        "text-center";
+
+
+    const removeButton =
+        document.createElement(
+            "button"
+        );
+
+
+    removeButton.type =
+        "button";
+
+
+    removeButton.className =
+        "btn btn-outline-danger remove-button";
+
+
+    removeButton.innerHTML =
+        '<i class="bi bi-trash"></i> Remove';
+
+
+    removeButton.onclick =
+        function() {
+
+            removeProduct(
+                this
             );
 
-
-        const rows =
-            document.querySelectorAll(
-                "#orderDetailsTable tr"
-            );
+        };
 
 
-        summary.innerHTML = "";
+    actionCell.appendChild(
+        removeButton
+    );
+
+    row.appendChild(
+        numberCell
+    );
 
 
-        let hasProduct = false;
+    row.appendChild(
+        productCell
+    );
 
 
-        rows.forEach(function(row) {
+    row.appendChild(
+        quantityCell
+    );
 
+
+    row.appendChild(
+        remarkCell
+    );
+
+
+    row.appendChild(
+        actionCell
+    );
+
+
+    table.appendChild(
+        row
+    );
+
+    updateIndexes();
+
+    calculateTotal();
+
+}
+
+
+function removeProduct(button) {
+
+    const row =
+        button.closest(
+            "tr"
+        );
+
+
+    row.remove();
+
+
+    updateIndexes();
+
+
+    calculateTotal();
+
+}
+
+function updateIndexes() {
+
+    const rows =
+        document.querySelectorAll(
+            "#orderDetailsTable tr"
+        );
+
+
+    rows.forEach(
+        function(row, index) {
+            const number =
+                row.querySelector(
+                    ".row-number"
+                );
+
+
+            if (number) {
+
+                number.innerText =
+                    index + 1;
+
+            }
 
             const product =
                 row.querySelector(
@@ -621,469 +1115,61 @@ body {
                 );
 
 
+            if (product) {
+
+                product.name =
+                    "orderDetails[" +
+                    index +
+                    "].product_id";
+
+            }
             const quantity =
                 row.querySelector(
                     ".quantity-input"
                 );
 
 
-            if (!product || !quantity) {
+            if (quantity) {
 
-                return;
-
-            }
-
-
-            const selectedOption =
-                product.options[
-                    product.selectedIndex
-                ];
-
-
-            if (
-                !selectedOption ||
-                selectedOption.value === ""
-            ) {
-
-                return;
+                quantity.name =
+                    "orderDetails[" +
+                    index +
+                    "].quantity";
 
             }
 
-
-            hasProduct = true;
-
-
-            const productName =
-                selectedOption.textContent;
+            const remark =
+                row.querySelector(
+                    "input[type='text']"
+                );
 
 
-            const price =
-                parseFloat(
-                    selectedOption.getAttribute(
-                        "data-price"
-                    )
-                ) || 0;
+            if (remark) {
 
-
-            const qty =
-                parseInt(quantity.value) || 0;
-
-
-            const lineTotal =
-                price * qty;
-
-            const summaryRow =
-                document.createElement("div");
-
-
-            summaryRow.className =
-                "summary-product";
-
-            const productInfo =
-                document.createElement("div");
-
-
-            const productNameElement =
-                document.createElement("div");
-
-
-            productNameElement.className =
-                "summary-product-name";
-
-
-            productNameElement.innerText =
-                productName.split(" - ")[0];
-
-
-            const quantityElement =
-                document.createElement("div");
-
-
-            quantityElement.className =
-                "summary-product-quantity";
-
-
-            quantityElement.innerText =
-                "Quantity × " + qty;
-
-
-            productInfo.appendChild(
-                productNameElement
-            );
-
-
-            productInfo.appendChild(
-                quantityElement
-            );
-
-            const priceElement =
-                document.createElement("div");
-
-
-            priceElement.className =
-                "summary-product-price";
-
-
-            priceElement.innerText =
-                lineTotal.toFixed(2) + " Ks";
-
-            summaryRow.appendChild(
-                productInfo
-            );
-
-
-            summaryRow.appendChild(
-                priceElement
-            );
-
-
-            summary.appendChild(
-                summaryRow
-            );
-
-
-        });
-
-        if (!hasProduct) {
-
-
-            summary.innerHTML = `
-
-                <div class="empty-summary">
-
-                    No product selected.
-
-                </div>
-
-            `;
-
-        }
-
-
-    }
-
-    document.addEventListener(
-        "change",
-        function(event) {
-
-
-            if (
-                event.target.classList.contains(
-                    "product-select"
-                )
-            ) {
-
-                calculateTotal();
+                remark.name =
+                    "orderDetails[" +
+                    index +
+                    "].remark";
 
             }
 
         }
     );
 
-    document.addEventListener(
-        "input",
-        function(event) {
-
-
-            if (
-                event.target.classList.contains(
-                    "quantity-input"
-                )
-            ) {
-
-                calculateTotal();
-
-            }
-
-        }
-    );
-
-
-    function addProduct() {
-
-
-        const table =
-            document.getElementById(
-                "orderDetailsTable"
-            );
-
-
-        const firstSelect =
-            document.querySelector(
-                ".product-select"
-            );
-
-        const row =
-            document.createElement("tr");
-
-        const numberCell =
-            document.createElement("td");
-
-
-        const number =
-            document.createElement("div");
-
-
-        number.className =
-            "row-number";
-
-
-        number.innerText =
-            table.rows.length + 1;
-
-
-        numberCell.appendChild(
-            number
-        );
-
-        const productCell =
-            document.createElement("td");
-
-
-        const productSelect =
-            firstSelect.cloneNode(true);
-
-
-        productSelect.value = "";
-
-
-        productCell.appendChild(
-            productSelect
-        );
-
-        const quantityCell =
-            document.createElement("td");
-
-
-        const quantityInput =
-            document.createElement("input");
-
-
-        quantityInput.type =
-            "number";
-
-
-        quantityInput.className =
-            "form-control quantity-input";
-
-
-        quantityInput.min =
-            "1";
-
-
-        quantityInput.value =
-            "1";
-
-
-        quantityInput.required =
-            true;
-
-
-        quantityCell.appendChild(
-            quantityInput
-        );
-
-        const remarkCell =
-            document.createElement("td");
-
-
-        const remarkInput =
-            document.createElement("input");
-
-
-        remarkInput.type =
-            "text";
-
-
-        remarkInput.className =
-            "form-control";
-
-
-        remarkInput.placeholder =
-            "Remark";
-
-
-        remarkCell.appendChild(
-            remarkInput
-        );
-
-        const actionCell =
-            document.createElement("td");
-
-
-        actionCell.className =
-            "text-center";
-
-
-        const removeButton =
-            document.createElement("button");
-
-
-        removeButton.type =
-            "button";
-
-
-        removeButton.className =
-            "btn btn-outline-danger remove-button";
-
-
-        removeButton.innerHTML =
-            '<i class="bi bi-trash"></i> Remove';
-
-
-        removeButton.onclick =
-            function() {
-
-                removeProduct(this);
-
-            };
-
-
-        actionCell.appendChild(
-            removeButton
-        );
-
-        row.appendChild(
-            numberCell
-        );
-
-
-        row.appendChild(
-            productCell
-        );
-
-
-        row.appendChild(
-            quantityCell
-        );
-
-
-        row.appendChild(
-            remarkCell
-        );
-
-
-        row.appendChild(
-            actionCell
-        );
-
-        table.appendChild(
-            row
-        );
+}
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
 
         updateIndexes();
 
         calculateTotal();
 
     }
-
-    function removeProduct(button) {
-
-
-        const row =
-            button.closest("tr");
-
-
-        row.remove();
-
-
-        updateIndexes();
-
-
-        calculateTotal();
-
-    }
-    
-    function updateIndexes() {
-
-
-        const rows =
-            document.querySelectorAll(
-                "#orderDetailsTable tr"
-            );
-
-
-        rows.forEach(
-            function(row, index) {
-
-                const number =
-                    row.querySelector(
-                        ".row-number"
-                    );
-
-
-                if (number) {
-
-                    number.innerText =
-                        index + 1;
-
-                }
-
-                const product =
-                    row.querySelector(
-                        ".product-select"
-                    );
-
-
-                if (product) {
-
-                    product.name =
-                        "orderDetails[" +
-                        index +
-                        "].product_id";
-
-                }
-
-
-                const quantity =
-                    row.querySelector(
-                        ".quantity-input"
-                    );
-
-
-                if (quantity) {
-
-                    quantity.name =
-                        "orderDetails[" +
-                        index +
-                        "].quantity";
-
-                }
-
-
-                const remark =
-                    row.querySelector(
-                        "input[type='text']"
-                    );
-
-                if (remark) {
-
-                    remark.name =
-                        "orderDetails[" +
-                        index +
-                        "].remark";
-                }
-
-            }
-        );
-
-    }
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        function() {
-
-
-            updateIndexes();
-
-
-            calculateTotal();
-
-        }
-    );
+);
 
 </script>
-
 
 </body>
 

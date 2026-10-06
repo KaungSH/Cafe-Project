@@ -81,6 +81,7 @@ public class PaymentController {
 		model.addAttribute("hasDiscount", hasDiscount);
 
 		return "payments/add";
+		
 	}
 
 	@PostMapping("/add")

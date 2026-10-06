@@ -84,24 +84,19 @@ public class OrderDetailsRepository {
 
 	public BigDecimal calculateDiscountAmount(String orderId) {
 
-		String sql = "SELECT " + "p.price, " + "od.quantity, " + "d.discount_value, "
-				+ "pt.type_name AS promo_type_name " + "FROM order_details od " + "JOIN products p "
-				+ "ON od.product_id = p.product_id " + "JOIN discounts_products dp "
-				+ "ON p.product_id = dp.product_id " + "JOIN discounts d " + "ON dp.discount_id = d.discount_id "
-				+ "JOIN promo_types pt " + "ON d.promo_type_id = pt.promo_type_id " + "WHERE od.order_id = ? "
-				+ "AND d.isdeleted = 0 " + "AND d.is_active = 1 " + "AND CURDATE() BETWEEN d.startdate AND d.enddate";
+		String sql = "SELECT " + "od.product_id, " + "p.price, " + "od.quantity, " + "d.discount_value "
+				+ "FROM order_details od " + "JOIN products p " + "ON od.product_id = p.product_id "
+				+ "JOIN discounts_products dp " + "ON p.product_id = dp.product_id " + "JOIN discounts d "
+				+ "ON dp.discount_id = d.discount_id " + "WHERE od.order_id = ? " + "AND d.isdeleted = 0 "
+				+ "AND d.is_active = 1 " + "AND CURDATE() BETWEEN d.startdate AND d.enddate";
 
 		List<DiscountCalculationDto> discounts = jdbcTemplate.query(sql, (rs, rowNum) -> {
 
 			DiscountCalculationDto dto = new DiscountCalculationDto();
 
 			dto.setPrice(rs.getBigDecimal("price"));
-
 			dto.setQuantity(rs.getInt("quantity"));
-
 			dto.setDiscountValue(rs.getBigDecimal("discount_value"));
-
-			dto.setPromoTypeName(rs.getString("promo_type_name"));
 
 			return dto;
 
@@ -111,18 +106,19 @@ public class OrderDetailsRepository {
 
 		for (DiscountCalculationDto discount : discounts) {
 
-			BigDecimal productSubtotal = discount.getPrice().multiply(BigDecimal.valueOf(discount.getQuantity()));
-
-			BigDecimal discountAmount = BigDecimal.ZERO;
-
-			if (discount.getPromoTypeName().equalsIgnoreCase("Percentage Off")) {
-
-				discountAmount = productSubtotal.multiply(discount.getDiscountValue()).divide(BigDecimal.valueOf(100));
-
-			} else if (discount.getPromoTypeName().equalsIgnoreCase("Fixed Amount Off")) {
-
-				discountAmount = discount.getDiscountValue().multiply(BigDecimal.valueOf(discount.getQuantity()));
+			if (discount.getDiscountValue() == null) {
+				continue;
 			}
+
+			BigDecimal price = discount.getPrice();
+
+			BigDecimal quantity = BigDecimal.valueOf(discount.getQuantity());
+
+			BigDecimal discountValue = discount.getDiscountValue();
+
+			BigDecimal productSubtotal = price.multiply(quantity);
+
+			BigDecimal discountAmount = productSubtotal.multiply(discountValue).divide(BigDecimal.valueOf(100));
 
 			totalDiscount = totalDiscount.add(discountAmount);
 		}
