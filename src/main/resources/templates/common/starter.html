@@ -400,7 +400,7 @@
 	<div layout:fragment="content">
 
 		<!-- ========================================================
-             1. ADMIN VIEW (Branch အားလုံးကို ခြုံငုံပြသပေးမည့် UI)
+             1. ADMIN VIEW (All Branch UI)
         ======================================================== -->
 		<th:block
 			th:if="${session.loggedInUser != null and session.loggedInUser.employee_role == 'ADMIN'}">
@@ -421,7 +421,7 @@
 					<div style="display: flex; gap: 10px; align-items: center;">
 						<select class="form-control"
 							style="padding: 8px 15px; border-radius: 12px; border: 1px solid #ebd9cd; background: #fff; font-size: 13px;">
-							<option value="all">🏢 All Branches (စုစုပေါင်း)</option>
+							<option value="all">🏢 All Branches </option>
 							<!-- Controller မှပေးထားသော branches စာရင်းကို th:each ဖြင့်ဖော်ပြရန် -->
 							<option th:each="b : ${branches}" th:value="${b.branch_id}"
 								th:text="${b.name}"></option>
