@@ -1,5 +1,7 @@
 package cafe.project.repositories.entities;
 
+import java.math.BigDecimal;
+
 public class OrderDetails {
 
 	private String order_detail_id;
@@ -8,12 +10,13 @@ public class OrderDetails {
 	private Integer quantity;
 	private String remark;
 	private String product_name;
+	private BigDecimal price;
 
 	public OrderDetails() {
 	}
 
 	public OrderDetails(String order_detail_id, String product_id, String order_id, Integer quantity, String remark,
-			String product_name) {
+			String product_name,BigDecimal price) {
 		this.order_detail_id = order_detail_id;
 		this.product_id = product_id;
 		this.order_id = order_id;
@@ -68,6 +71,13 @@ public class OrderDetails {
 
 	public void setProduct_name(String product_name) {
 		this.product_name = product_name;
+	}
+	public BigDecimal getPrice() {
+	    return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+	    this.price = price;
 	}
 
 }

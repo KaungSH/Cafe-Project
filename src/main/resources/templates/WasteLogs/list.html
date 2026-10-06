@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 <head>
     <meta charset="UTF-8">
     <title>Waste Logs - Luft Cafe</title>
@@ -82,7 +84,7 @@
     </style>
 </head>
 <body class="p-4">
-    <div class="container container-box">
+    <div layout:fragment="content">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="page-title m-0">Waste Logs Management</h2>
             <a th:href="@{/manager/WasteLogs/create}" class="btn btn-add-new">+ Add New Waste Log</a>

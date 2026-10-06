@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 <head>
     <meta charset="UTF-8">
     <title>Create Waste Log - Luft Cafe</title>
@@ -69,7 +71,7 @@
     </style>
 </head>
 <body class="p-4">
-    <div class="form-card">
+   <div layout:fragment="content">
         <h3 class="page-title">Create Waste Log</h3>
 
         <form th:action="@{/manager/WasteLogs/create}" th:object="${wasteLog}" method="post">

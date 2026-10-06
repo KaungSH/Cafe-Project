@@ -1,80 +1,181 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Edit Size - Luft Cafe</title>
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<title>Café Luft | Edit Size</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <style>
+:root {
+  --espresso: #1a0f09;
+  --accent-gold: #c59b63;
+  --border-tone: #e8d9cb;
+}
+
 body {
-	background-color: #f4f6f9;
-	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: #f7f3ee;
+  color: var(--espresso);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 15px;
 }
 
-.card-box {
-	background: #ffffff;
-	border-radius: 12px;
-	padding: 30px;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-	max-width: 550px;
-	margin: auto;
+.edit-box {
+  width: 560px;
+  max-width: 95%;
+  background: #ffffff;
+  border-radius: 22px;
+  border: 1px solid var(--border-tone);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.06);
+  padding: 35px;
 }
 
-.btn-custom-warning {
-	background-color: #e2a03f;
-	color: #fff;
-	border: none;
-	border-radius: 8px;
-	padding: 8px 20px;
+.card-header-bar {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f2e6dc;
 }
 
-.btn-custom-warning:hover {
-	background-color: #d18f2e;
-	color: #fff;
+.logo-badge {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid var(--accent-gold);
+  padding: 2px;
+}
+
+.logo-badge img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.65rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.form-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #6d5b4e;
+  margin-bottom: 6px;
+}
+
+.form-control {
+  height: 48px;
+  border-radius: 12px;
+  border: 1px solid #dfd1c3;
+  background-color: #fcfbfa;
+}
+
+.form-control:focus {
+  border-color: var(--accent-gold);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(197, 155, 99, 0.15);
+}
+
+.form-check-input:checked {
+  background-color: var(--accent-gold);
+  border-color: var(--accent-gold);
+}
+
+.btn-update {
+  background: linear-gradient(135deg, #c59b63 0%, #a4763f 100%);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  border-radius: 12px;
+  padding: 11px 26px;
+  transition: 0.25s;
+}
+
+.btn-update:hover {
+  box-shadow: 0 5px 18px rgba(197, 155, 99, 0.35);
+  color: #fff;
+}
+
+.btn-cancel {
+  border: 1px solid #dfd1c3;
+  background: transparent;
+  color: #7d6b5e;
+  font-weight: 500;
+  border-radius: 12px;
+  padding: 11px 22px;
+  text-decoration: none;
+}
+
+.btn-cancel:hover {
+  background: #f7efe7;
+  color: var(--espresso);
+}
+
+.error {
+  color: #b03a2e;
+  font-size: 0.82rem;
+  margin-top: 5px;
 }
 </style>
 </head>
-<body class="py-5">
-	<div class="container">
-		<div class="card-box">
-			<h4 class="fw-bold text-secondary mb-4">Edit Size</h4>
 
-			<form
-				th:action="@{/admin/sizes/edit/{size_id}(size_id=${sizeDto.size_id})}"
-				th:object="${sizeDto}" method="post">
-				<input type="hidden" th:field="*{size_id}" />
+<body>
+<div layout:fragment="content">
+  <div class="card-header-bar">
+    <div class="logo-badge">
+      <img th:src="@{/images/luft-logo.png}" alt="Logo">
+    </div>
+    <div>
+      <h3 class="title">Edit Cup Size</h3>
+      <small class="text-muted">Café Luft Beverage Options</small>
+    </div>
+  </div>
 
+  <form th:action="@{/admin/sizes/edit/{size_id}(size_id=${sizeDto.size_id})}" th:object="${sizeDto}" method="post">
+    <input type="hidden" th:field="*{size_id}" />
 
-				<div class="mb-3">
-					<label class="form-label text-secondary fw-medium">Size
-						Name</label> <input type="text" th:field="*{name}" class="form-control" />
-					<div class="text-danger small mt-1"
-						th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
-				</div>
+    <div class="mb-3">
+      <label class="form-label">Size Name</label>
+      <input type="text" th:field="*{name}" class="form-control" />
+      <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+    </div>
 
-				<div class="mb-3">
-					<label class="form-label text-secondary fw-medium">Size
-						Code</label> <input type="text" th:field="*{size_code}"
-						class="form-control" />
-					<div class="text-danger small mt-1"
-						th:if="${#fields.hasErrors('size_code')}" th:errors="*{size_code}"></div>
-				</div>
+    <div class="mb-3">
+      <label class="form-label">Size Code</label>
+      <input type="text" th:field="*{size_code}" class="form-control" />
+      <div class="error" th:if="${#fields.hasErrors('size_code')}" th:errors="*{size_code}"></div>
+    </div>
 
-				<div class="mb-4 form-check">
-					<input type="checkbox" th:field="*{is_active}"
-						class="form-check-input" id="isActive" /> <label
-						class="form-check-label text-secondary" for="isActive">Is
-						Active</label>
-				</div>
+    <div class="mb-4 form-check">
+      <input type="checkbox" th:field="*{is_active}" class="form-check-input" id="isActive" />
+      <label class="form-check-label fw-medium text-secondary" for="isActive">Is Active</label>
+    </div>
 
-				<div class="d-flex justify-content-between align-items-center">
-					<a th:href="@{/admin/sizes}" class="btn btn-light border">Cancel</a>
-					<button type="submit" class="btn btn-custom-warning">Update
-						Size</button>
-				</div>
-			</form>
-		</div>
-	</div>
+    <div class="d-flex justify-content-end gap-2">
+      <a th:href="@{/admin/sizes}" class="btn-cancel">Cancel</a>
+      <button type="submit" class="btn-update"><i class="fa-solid fa-arrows-rotate me-1"></i> Update Size</button>
+    </div>
+  </form>
+</div>
 </body>
 </html>

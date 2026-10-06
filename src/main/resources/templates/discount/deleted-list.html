@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 <head>
     <meta charset="UTF-8">
     <title>Café Luft | Archived Discounts</title>
@@ -88,7 +90,7 @@
 </head>
 
 <body>
-    <div class="container py-5">
+<div layout:fragment="content">
         <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-light-subtle">
             <div>
                 <h2 class="serif-font mb-1 fw-bold" style="font-size: 1.85rem;">Promotion Archive</h2>

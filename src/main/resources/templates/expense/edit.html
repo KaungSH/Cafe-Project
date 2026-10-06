@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 <head>
 <meta charset="UTF-8">
 <title>Edit Expense</title>
@@ -128,7 +130,7 @@ textarea.form-control {
 
 <body>
 
-	<div class="edit-box">
+	<div layout:fragment="content">
 
 		<div class="edit-header">
 
