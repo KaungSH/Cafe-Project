@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 
 <head>
 <meta charset="UTF-8">
@@ -103,7 +105,6 @@ body {
 	font-weight: 600;
 }
 
-
 .btn-action-edit {
 	color: #8C592B;
 	border: 1px solid #E0A96D;
@@ -142,10 +143,10 @@ body {
 
 <body>
 
-	<div class="container-fluid px-5">
+	<div layout:fragment="content">
 		<div class="main-card">
 
-			
+
 			<div class="d-flex justify-content-between align-items-center mb-4">
 				<h2 class="page-title mb-0">Branch Management</h2>
 				<a th:href="@{/manager/branches/create}" class="btn btn-add"> <i
@@ -153,7 +154,7 @@ body {
 				</a>
 			</div>
 
-			
+
 			<div class="table-responsive">
 				<table class="custom-table">
 					<thead>
@@ -178,8 +179,7 @@ body {
 							th:text="${branch.status_name}">Active</span></td>
 						<td style="text-align: right;"><a
 							th:href="@{/manager/branches/edit/{branch_id}(branch_id=${branch.branch_id})}"
-							class="btn-action-edit me-1">Edit</a>
-							<a
+							class="btn-action-edit me-1">Edit</a> <a
 							th:href="@{/manager/branches/status/{branch_id}(branch_id=${branch.branch_id})}"
 							class="btn-action-edit me-1">Change Status</a>
 
@@ -194,7 +194,8 @@ body {
 
 
 					<tr th:if="${#lists.isEmpty(branches)}">
-						<td colspan="7" class="text-center text-muted py-4">No branches found.</td>
+						<td colspan="7" class="text-center text-muted py-4">No
+							branches found.</td>
 					</tr>
 					</tbody>
 				</table>

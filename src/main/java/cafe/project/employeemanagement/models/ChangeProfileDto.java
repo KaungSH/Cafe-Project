@@ -10,11 +10,8 @@ public class ChangeProfileDto {
 	private String photopath;
 	private String phone;
 	private String employee_name;
-	private String salary;
 	private String address;
-	private String role_id;
-	private String branch_id;
-	private String gender_id;
+	
 	
 	public ChangeProfileDto() {}
 
@@ -34,20 +31,8 @@ public class ChangeProfileDto {
 		return employee_name;
 	}
 
-	public String getSalary() {
-		return salary;
-	}
-
 	public String getAddress() {
 		return address;
-	}
-
-	public String getRole_id() {
-		return role_id;
-	}
-
-	public String getBranch_id() {
-		return branch_id;
 	}
 
 	public void setEmployee_id(String employee_id) {
@@ -66,28 +51,8 @@ public class ChangeProfileDto {
 		this.employee_name = employee_name;
 	}
 
-	public void setSalary(String salary) {
-		this.salary = salary;
-	}
-
 	public void setAddress(String address) {
 		this.address = address;
-	}
-
-	public void setRole_id(String role_id) {
-		this.role_id = role_id;
-	}
-
-	public void setBranch_id(String branch_id) {
-		this.branch_id = branch_id;
-	}
-
-	public String getGender_id() {
-		return gender_id;
-	}
-
-	public void setGender_id(String gender_id) {
-		this.gender_id = gender_id;
 	}
 
 	public String getEmail() {

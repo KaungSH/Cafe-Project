@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -68,7 +70,7 @@ body {
 
 <body>
 
-	<div class="container py-4" style="max-width: 650px;">
+	<div layout:fragment="content" style="max-width: 650px;">
 		<div class="main-card">
 
 			<h3 class="page-title mb-4">

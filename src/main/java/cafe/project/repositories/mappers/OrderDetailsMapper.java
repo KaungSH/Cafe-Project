@@ -20,6 +20,7 @@ public class OrderDetailsMapper implements RowMapper<OrderDetails> {
 		detail.setQuantity(rs.getInt("quantity"));
 		detail.setRemark(rs.getString("remark"));
 		detail.setProduct_name(rs.getString("product_name"));
+		detail.setPrice(rs.getBigDecimal("price"));
 
 		return detail;
 	}

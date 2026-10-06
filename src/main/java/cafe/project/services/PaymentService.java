@@ -45,4 +45,12 @@ public class PaymentService {
     public int delete(String id) {
         return paymentRepository.delete(id);
     }
+    
+    public int restore(String id) {
+    	return paymentRepository.restore(id);
+    }
+    
+    public int hardDelete(String id) {
+    	return paymentRepository.hardDelete(id);
+    }
 }

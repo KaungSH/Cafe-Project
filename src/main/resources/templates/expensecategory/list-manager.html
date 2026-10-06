@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -126,7 +128,7 @@ body {
 </head>
 
 <body>
-<div class="luxury-container">
+<div layout:fragment="content">
   <div class="brand-hero">
     <div class="d-flex align-items-center gap-3">
       <div class="logo-wrapper">

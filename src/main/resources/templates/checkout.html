@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 <head>
 <meta charset="UTF-8">
 <title>POS Checkout</title>
@@ -72,8 +74,8 @@ input[type="text"], textarea {
 </head>
 <body>
 
-	<div class="container">
-		<h2>Checkout (ငွေရှင်းရန်)</h2>
+	<div layout:fragment="content">
+		<h2>Checkout </h2>
 
 		<!-- ဝယ်ယူမည့် ပစ္စည်းများကို ပြသရန် ဇယား (Controller မှ cartItems ကို loop ပတ်သည်) -->
 		<table>
@@ -104,14 +106,14 @@ input[type="text"], textarea {
 			<input type="hidden" th:field="*{orderDetailCode}" />
 
 			<div class="form-group">
-				<label for="customerName">Customer Name (ဝယ်ယူသူအမည်)</label>
+				<label for="customerName">Customer Name</label>
 				<!-- th:field ဖြင့် CheckoutForm ရှိ customerName နှင့် ချိတ်ဆက်သည် -->
 				<input type="text" id="customerName" th:field="*{customerName}"
 					required placeholder="အမည်ထည့်ပါ" />
 			</div>
 
 			<div class="form-group">
-				<label for="remark">Remark (မှတ်ချက်)</label>
+				<label for="remark">Remark</label>
 				<!-- th:field ဖြင့် CheckoutForm ရှိ remark နှင့် ချိတ်ဆက်သည် -->
 				<textarea id="remark" th:field="*{remark}" rows="4"
 					placeholder="အထူးမှာကြားလိုသည်များ ရေးရန်..."></textarea>

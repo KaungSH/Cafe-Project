@@ -135,7 +135,7 @@ h2 {
 
 			<h2>🗑️ Deleted Payment Methods</h2>
 
-			<a th:href="@{/manager/paymethod}" class="btn btn-back"> ← Back
+			<a th:href="@{/admin/paymethod}" class="btn btn-back"> ← Back
 				to Payment Methods </a>
 
 		</div>
@@ -179,7 +179,7 @@ h2 {
 						<!-- Logo -->
 
 						<td><img th:if="${pm.logoPath != null and pm.logoPath != ''}"
-							th:src="${pm.logoPath}" alt="logo"
+							th:src="@{'/images/' + ${pm.logoPath}}" alt="logo"
 							style="width: 40px; height: 40px; object-fit: contain; border-radius: 8px;" />
 
 							<span th:if="${pm.logoPath == null or pm.logoPath == ''}"
@@ -207,7 +207,7 @@ h2 {
 						<td class="text-center">
 							<!-- Restore -->
 
-							<form th:action="@{/manager/paymethod/restore}" method="post"
+							<form th:action="@{/admin/paymethod/restore}" method="post"
 								style="display: inline;">
 
 								<input type="hidden" name="methodId" th:value="${pm.methodId}">

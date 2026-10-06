@@ -24,48 +24,53 @@ public class DiscountService {
 
 	public List<DiscountListModel> getAllDiscounts(String branch_id) {
 		List<DiscountListModel> modelList = discountRepository.findAllForList(branch_id);
-		
+
 		for (DiscountListModel m : modelList) {
 			setStatus(m.getDiscount_id(), m.getStartdate(), m.getEnddate());
 			m.setProducts(productService.findListAllByDiscountId(m.getDiscount_id()));
 		}
 		return modelList;
 	}
-	
+
 	public List<DiscountListModel> getAllDiscountsInactive(String branch_id) {
 		List<DiscountListModel> modelList = discountRepository.findAllForListInactive(branch_id);
-		
+
 		for (DiscountListModel m : modelList) {
 			setStatus(m.getDiscount_id(), m.getStartdate(), m.getEnddate());
 			m.setProducts(productService.findListAllByDiscountId(m.getDiscount_id()));
 		}
 		return modelList;
 	}
-	
+
 	public List<DiscountListModel> getAllDiscountsActive(String branch_id) {
 		List<DiscountListModel> modelList = discountRepository.findAllForListActive(branch_id);
-		
+
 		for (DiscountListModel m : modelList) {
 			setStatus(m.getDiscount_id(), m.getStartdate(), m.getEnddate());
 			m.setProducts(productService.findListAllByDiscountId(m.getDiscount_id()));
 		}
 		return modelList;
 	}
-	
+
 	public List<DiscountListModel> getAllDiscountsAdmin() {
 		List<DiscountListModel> modelList = discountRepository.findAllForListAdmin();
-		
+
 		for (DiscountListModel m : modelList) {
 			setStatus(m.getDiscount_id(), m.getStartdate(), m.getEnddate());
 			m.setProducts(productService.findListAllByDiscountId(m.getDiscount_id()));
 		}
 		return modelList;
 	}
-	
+
 	public DiscountListModel getAllDiscountsById(String id) {
 		DiscountListModel listModel = discountRepository.findAllForListById(id);
 		listModel.setProducts(productService.findListAllByDiscountId(listModel.getDiscount_id()));
 		return listModel;
+	}
+
+	public List<DiscountListModel> findActiveDiscountByProductId(String productId) {
+
+		return discountRepository.findActiveDiscountByProductId(productId);
 	}
 
 	public DiscountEntryModel getDiscountById(String id) {
@@ -137,14 +142,14 @@ public class DiscountService {
 	public int hardDelete(String id) {
 		return discountRepository.hardDelete(id);
 	}
-	
+
 	private int setStatus(String discount_id, LocalDate startDate, LocalDate endDate) {
 		boolean isActive = !LocalDate.now().isBefore(startDate) && !LocalDate.now().isAfter(endDate);
 
 		if (isActive) {
-	       return discountRepository.setStatus(discount_id, true);
-	    } else {
-	       return discountRepository.setStatus(discount_id, false);
-	    }
+			return discountRepository.setStatus(discount_id, true);
+		} else {
+			return discountRepository.setStatus(discount_id, false);
+		}
 	}
 }

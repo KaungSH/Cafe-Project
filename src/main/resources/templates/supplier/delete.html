@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -103,7 +105,7 @@
 </head>
 <body>
 
-    <div class="confirm-card">
+    <div layout:fragment="content">
         <div class="confirm-header">
             <div class="danger-icon-circle"><i class="bi bi-exclamation-triangle"></i></div>
             <div>

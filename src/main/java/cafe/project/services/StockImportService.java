@@ -1,264 +1,106 @@
 package cafe.project.services;
 
+import org.springframework.stereotype.Service;
+import cafe.project.models.IngredientBatchItemDto;
+import cafe.project.models.StockImportEntryDto;
+import cafe.project.models.StockImportListDto;
+import cafe.project.repositories.StockImportRepository;
+import cafe.project.repositories.entities.StockImport;
+import cafe.project.repositories.mappers.StockImportMapper;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-
-import org.springframework.stereotype.Service;
-
-import cafe.project.repositories.BranchRepository;
-import cafe.project.repositories.EmployeeRepository;
-import cafe.project.repositories.IngredientBatchRepository;
-import cafe.project.repositories.StockImportDetailRepository;
-import cafe.project.repositories.StockImportRepository;
-import cafe.project.repositories.SupplierRepository;
-import cafe.project.repositories.entities.IngredientBatch;
-import cafe.project.repositories.entities.StockImport;
-import cafe.project.models.StockImportDetailEntry;
-import cafe.project.models.StockImportEntryModel;
-import cafe.project.models.StockImportListModel;
+import java.util.stream.Collectors;
 
 @Service
 public class StockImportService {
+	private final StockImportRepository repository;
+	private final StockImportMapper mapper;
 
-	private final StockImportRepository sir;
-	private final SupplierRepository sr;
-	private final EmployeeRepository er;
-	private final BranchRepository br;
-	private final StockImportDetailRepository sdr;
-	private final IngredientBatchRepository ibr;
-
-	public StockImportService(StockImportRepository sir, SupplierRepository sr, EmployeeRepository er,
-			BranchRepository br, StockImportDetailRepository sdr, IngredientBatchRepository ibr) {
-		this.sir = sir;
-		this.sr = sr;
-		this.er = er;
-		this.br = br;
-		this.sdr = sdr;
-		this.ibr = ibr;
+	public StockImportService(StockImportRepository repository, StockImportMapper mapper) {
+		this.repository = repository;
+		this.mapper = mapper;
 	}
 
-	public List<StockImportListModel> findAll() {
-		List<StockImportListModel> list = new ArrayList<>();
+	public String generateNextImportId() {
+		return repository.generateNextImportId();
+	}
 
-		for (StockImport item : sir.findAll()) {
-			String supplierName = sr.findById(item.getSupplier_id()) != null
-					? sr.findById(item.getSupplier_id()).getName()
-					: "Unknown";
-			String employeeName = er.findById(item.getEmployee_id()) != null
-					? er.findById(item.getEmployee_id()).getName()
-					: "Unknown";
-			String branchName = br.findById(item.getBranch_id()) != null ? br.findById(item.getBranch_id()).getName()
-					: "Unknown";
+	public void addStockImport(StockImportEntryDto dto, String loggedInemployee_id, String loggedInbranch_id) {
+		dto.setEmployee_id(loggedInemployee_id);
+		dto.setBranch_id(loggedInbranch_id);
 
-			list.add(toListModel(item, supplierName, employeeName, branchName));
+		List<IngredientBatchItemDto> selectedItems = dto.getItems().stream().filter(IngredientBatchItemDto::isSelected)
+				.collect(Collectors.toList());
+
+		BigDecimal totalCost = BigDecimal.ZERO;
+		for (IngredientBatchItemDto item : selectedItems) {
+			double total = item.getQuantity_ordered() * item.getUnit_cost().doubleValue();
+			item.setTotal_import_cost(total);
+			totalCost = totalCost.add(BigDecimal.valueOf(total));
 		}
+		dto.setTotal_cost(totalCost);
 
-		return list;
-	}
+		StockImport entity = mapper.toEntity(dto);
+		repository.saveStockImport(entity);
 
-	public List<StockImportListModel> findDeletedAll() {
-		List<StockImportListModel> list = new ArrayList<>();
-
-		for (StockImport item : sir.findDeletedAll()) {
-			String supplierName = sr.findById(item.getSupplier_id()) != null
-					? sr.findById(item.getSupplier_id()).getName()
-					: "Unknown";
-			String employeeName = er.findById(item.getEmployee_id()) != null
-					? er.findById(item.getEmployee_id()).getName()
-					: "Unknown";
-			String branchName = br.findById(item.getBranch_id()) != null ? br.findById(item.getBranch_id()).getName()
-					: "Unknown";
-
-			list.add(toListModel(item, supplierName, employeeName, branchName));
+		for (IngredientBatchItemDto item : selectedItems) {
+			String batchId = "BATCH-" + UUID.randomUUID().toString().substring(0, 8);
+			repository.saveIngredientBatch(batchId, item, loggedInbranch_id, dto.getImport_id());
 		}
-
-		return list;
 	}
 
-	public StockImportEntryModel findById(String id) {
-		return toEntryModel(sir.findById(id));
+	public List<StockImportListDto> getAllActiveImports() {
+		return repository.findAllActive();
 	}
 
-	public StockImportListModel findDetailById(String id) {
-		StockImport item = sir.findById(id);
-		return toListModel(item, sr.findById(item.getSupplier_id()).getName(),
-				er.findById(item.getEmployee_id()).getName(), br.findById(item.getBranch_id()).getName());
+	public List<StockImportListDto> getAllDeletedImports() {
+		return repository.findAllDeleted();
 	}
 
-	public StockImportListModel findDeletedById(String id) {
-		StockImport item = sir.findDeletedById(id);
-		return toListModel(item, sr.findById(item.getSupplier_id()).getName(),
-				er.findById(item.getEmployee_id()).getName(), br.findById(item.getBranch_id()).getName());
+	public StockImportEntryDto getImportById(String import_id) {
+		StockImport entity = repository.findById(import_id)
+				.orElseThrow(() -> new IllegalArgumentException("Invalid Import ID: " + import_id));
+		StockImportEntryDto dto = mapper.toEntryDto(entity);
+		dto.setItems(repository.findBatchesByImportId(import_id));
+		return dto;
 	}
 
-	public int add(StockImportEntryModel se) {
-		int result = sir.add(toEntity(se));
+	public void editStockImport(StockImportEntryDto dto) {
+		List<IngredientBatchItemDto> selectedItems = dto.getItems().stream().filter(IngredientBatchItemDto::isSelected)
+				.collect(Collectors.toList());
 
-		String branch_id = se.getBranch_id();
-		String import_id = se.getImport_id();
-
-		if (se.getDetails() != null) {
-			for (StockImportDetailEntry detail : se.getDetails()) {
-
-				String detailId = "IMPDT-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-				detail.setImport_detail_id(detailId);
-				detail.setImport_id(import_id);
-
-				cafe.project.repositories.entities.StockImportDetail dbDetail = new cafe.project.repositories.entities.StockImportDetail();
-
-				dbDetail.setImport_detail_id(detailId);
-				dbDetail.setImport_id(import_id);
-				dbDetail.setIngredient_type_id(detail.getIngredient_type_id());
-				dbDetail.setQuantity_ordered(detail.getQuantity_ordered());
-				dbDetail.setUnit_cost(detail.getUnit_cost());
-
-				sdr.add(dbDetail);
-
-				IngredientBatch batch = new IngredientBatch();
-				batch.setBatchId("BAT-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
-				batch.setBranchId(branch_id);
-				batch.setIngredientTypeId(detail.getIngredient_type_id());
-				batch.setImportDetailId(detailId);
-				batch.setRemainingQuantity(BigDecimal.valueOf(detail.getQuantity_ordered()));
-				batch.setUnitCost(BigDecimal.valueOf(detail.getUnit_cost()));
-				batch.setManufacturedDate(LocalDate.now());
-				batch.setExpireDate(detail.getExpireDate());
-				batch.setIsExpired(false);
-				batch.setIsDeleted(false);
-				batch.setCreatedAt(LocalDateTime.now());
-
-				ibr.save(batch);
-			}
+		BigDecimal totalCost = BigDecimal.ZERO;
+		for (IngredientBatchItemDto item : selectedItems) {
+			double total = item.getQuantity_ordered() * item.getUnit_cost().doubleValue();
+			item.setTotal_import_cost(total);
+			totalCost = totalCost.add(BigDecimal.valueOf(total));
 		}
+		dto.setTotal_cost(totalCost);
 
-		return result;
-	}
+		StockImport entity = mapper.toEntity(dto);
+		repository.updateStockImport(entity);
 
-	public int edit(StockImportEntryModel se) {
-		int result = sir.edit(toEntity(se));
-
-		String branch_id = se.getBranch_id();
-		String import_id = se.getImport_id();
-
-		List<String> incomingDetailIds = new ArrayList<>();
-		if (se.getDetails() != null) {
-			for (StockImportDetailEntry detail : se.getDetails()) {
-
-				String detailId = detail.getImport_detail_id();
-				if (detailId == null || detailId.isEmpty()) {
-					detailId = "IMPDT-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-					detail.setImport_detail_id(detailId);
-				}
-
-				incomingDetailIds.add(detailId);
-
-				
-				IngredientBatch batch = ibr.findByImportDetailId(detailId);
-				if (batch != null) {
-					
-					batch.setRemainingQuantity(BigDecimal.valueOf(detail.getQuantity_ordered()));
-					batch.setUnitCost(BigDecimal.valueOf(detail.getUnit_cost()));
-					batch.setExpireDate(detail.getExpireDate());
-					ibr.edit(batch.getBatchId(), batch);
-				} else {
-					
-					cafe.project.repositories.entities.StockImportDetail dbDetail = new cafe.project.repositories.entities.StockImportDetail();
-
-					dbDetail.setImport_detail_id(detailId);
-					dbDetail.setImport_id(import_id);
-					dbDetail.setIngredient_type_id(detail.getIngredient_type_id());
-					dbDetail.setQuantity_ordered(detail.getQuantity_ordered());
-					dbDetail.setUnit_cost(detail.getUnit_cost());
-
-					sdr.add(dbDetail); 
-
-					
-					batch = new IngredientBatch();
-					batch.setBatchId("BAT-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
-					batch.setBranchId(branch_id);
-					batch.setIngredientTypeId(detail.getIngredient_type_id());
-					batch.setImportDetailId(detailId);
-					batch.setRemainingQuantity(BigDecimal.valueOf(detail.getQuantity_ordered()));
-					batch.setUnitCost(BigDecimal.valueOf(detail.getUnit_cost()));
-					batch.setManufacturedDate(LocalDate.now());
-					batch.setExpireDate(detail.getExpireDate());
-					batch.setIsExpired(false);
-					batch.setIsDeleted(false);
-					batch.setCreatedAt(LocalDateTime.now());
-					ibr.save(batch);
-				}
-			}
+		repository.deleteBatchesByImportId(dto.getImport_id());
+		for (IngredientBatchItemDto item : selectedItems) {
+			String batchId = "BATCH-" + UUID.randomUUID().toString().substring(0, 8);
+			repository.saveIngredientBatch(batchId, item, dto.getBranch_id(), dto.getImport_id());
 		}
-
-		StockImport updatedImport = sir.findById(import_id);
-		if (updatedImport != null && updatedImport.getStockImportDetails() != null) {
-			for (cafe.project.repositories.entities.StockImportDetail dbDetail : updatedImport
-					.getStockImportDetails()) {
-				if (!incomingDetailIds.contains(dbDetail.getImport_detail_id())) {
-					IngredientBatch batchToDelete = ibr.findByImportDetailId(dbDetail.getImport_detail_id());
-					if (batchToDelete != null) {
-						ibr.softDelete(batchToDelete.getBatchId());
-					}
-				}
-			}
-		}
-
-		return result;
 	}
 
-	public int delete(String id) {
-		int result = sir.deleted(id);
-
-		StockImport stockImport = sir.findDeletedById(id);
-		if (stockImport != null && stockImport.getStockImportDetails() != null) {
-			for (cafe.project.repositories.entities.StockImportDetail detail : stockImport
-					.getStockImportDetails()) {
-				IngredientBatch batch = ibr.findByImportDetailId(detail.getImport_detail_id());
-				if (batch != null) {
-					batch.setIsDeleted(true);
-					ibr.save(batch);
-				}
-			}
-		}
-
-		return result;
+	public void softDelete(String import_id) {
+		repository.softDelete(import_id);
 	}
 
-	public int recover(String id) {
-		int result = sir.recover(id);
-
-		StockImport stockImport = sir.findById(id);
-		if (stockImport != null && stockImport.getStockImportDetails() != null) {
-			for (cafe.project.repositories.entities.StockImportDetail detail : stockImport
-					.getStockImportDetails()) {
-				IngredientBatch batch = ibr.findByImportDetailId(detail.getImport_detail_id());
-				if (batch != null) {
-					batch.setIsDeleted(false);
-					ibr.save(batch);
-				}
-			}
-		}
-
-		return result;
+	public void recover(String import_id) {
+		repository.recover(import_id);
 	}
 
-	private StockImportListModel toListModel(StockImport si, String supplier_name, String employee_name,
-			String branch_name) {
-		return new StockImportListModel(si.getImport_id(), si.getImported_at(), si.getTotal_cost(), si.isIsdeleted(),
-				supplier_name, employee_name, branch_name);
+	public void hardDelete(String import_id) {
+		repository.hardDelete(import_id);
 	}
 
-	private StockImportEntryModel toEntryModel(StockImport si) {
-		return new StockImportEntryModel(si.getImport_id(), si.getImported_at(), si.getTotal_cost(),
-				si.getSupplier_id(), si.getEmployee_id(), si.getBranch_id());
-	}
-
-	private StockImport toEntity(StockImportEntryModel se) {
-		return new StockImport(se.getImport_id(), se.getImported_at(), se.getTotal_cost(), se.getSupplier_id(),
-				se.getEmployee_id(), se.getBranch_id(), false);
+	public List<IngredientBatchItemDto> getBatchesByImportId(String import_id) {
+		return repository.findBatchesByImportId(import_id);
 	}
 }

@@ -48,12 +48,11 @@ public class StatusRepository {
 		return jdbcTemplate.query(sql, new StatusMapper());
 	}
 
-	public Map<String, Object> findById(String type, String id) {
+	public StatusDto findById(String type, String id) {
 		String[] config = getTableAndColumns(type);
-		String sql = "SELECT " + config[1] + " AS id, " + config[2] + " AS name FROM " + config[0] + " WHERE "
-				+ config[1] + " = ?";
-		List<Map<String, Object>> result = jdbcTemplate.queryForList(sql, id);
-		return result.isEmpty() ? null : result.get(0);
+		String sql = "SELECT " + config[1] + " AS id, " + config[2] + " AS name FROM " + config[0] + " WHERE " + config[1] + " = ?";
+		List<StatusDto> entities = jdbcTemplate.query(sql, new StatusMapper(), id);
+		return entities.isEmpty() ? null : entities.get(0);
 	}
 
 }

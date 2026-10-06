@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<form th:action="@{/manager-only/employee/transfer}" th:object="${employeeDto}" method="post" class="w-50 mt-3">
+		<h2>Transfer Employee <span th:text = "*{name}"></span> From Branch <span th:text = "${branch_name}"></span></h2>
+		<input type="hidden" th:field="*{employee_id}" />
+		<div class="mb-3">
+			    <label class="form-label">Branch</label>
+			    <select th:field="*{branch_id}" class="form-control" required="required">
+			        <!-- Placeholder option -->
+			        <option value="" disabled="disabled" selected="selected" hidden="hidden">Select Branch</option>
+			        
+			        <!-- Dynamic options populated from the controller's status list -->
+			        <option th:if="${s.branch_id != employeeDto.branch_id}"
+			        		th:each="s : ${branches}" 
+			                th:value="${s.branch_id}" 
+			                th:text="${s.name}">
+			        </option>
+			    </select>
+			     <button type="submit" class="btn btn-warning">Transfer</button>
+       			 <a th:href="@{/manager-only/employee}" class="btn btn-secondary">Cancel</a>
+		</div>
+	</form>
+</body>
+</html>

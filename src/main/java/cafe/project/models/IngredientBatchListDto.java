@@ -10,6 +10,7 @@ public class IngredientBatchListDto {
 	
 	public IngredientBatchListDto() {}
 	
+
 	public IngredientBatchListDto(List<IngredientBatch> batchList) {
 		this.batchList = batchList;
 	}
@@ -21,7 +22,4 @@ public class IngredientBatchListDto {
 	public void setBatchList(List<IngredientBatch> batchList) {
 		this.batchList = batchList;
 	}
-	
-	
-
 }

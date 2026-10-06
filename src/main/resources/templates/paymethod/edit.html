@@ -20,14 +20,9 @@
 
 					<div class="card-body">
 						<form
-							th:action="@{/manager/paymethod/edit/{id}(id=${payMethod.methodId})}"
-							th:object="${payMethod}" method="post">
-
-							<div class="mb-3">
-								<label class="form-label fw-bold">Method ID</label> <input
-									type="text" class="form-control" th:field="*{methodId}"
-									readonly />
-							</div>
+							th:action="@{/admin/paymethod/edit/{id}(id=${payMethod.methodId})}"
+							th:object="${payMethod}" method="post" enctype="multipart/form-data">
+							<input type="hidden" th:field="*{logoPath}" />
 
 							<div class="mb-3">
 								<label class="form-label fw-bold">Method Name</label> <input
@@ -39,17 +34,30 @@
 								<textarea class="form-control" rows="3"
 									th:field="*{description}"></textarea>
 							</div>
-
+							
 							<div class="mb-3">
-								<label class="form-label fw-bold">Logo Path</label> <input
-									type="text" class="form-control" th:field="*{logoPath}" />
-							</div>
+									<label class="form-label fw-semibold"> Original Cover
+										Image </label><br> <img th:if="*{logoPath != null}"
+										th:src="@{'/images/' + *{logoPath}}"
+										alt="Thumbnail Error"
+										style="height: 300px; width: auto; object-fit: cover;" />
+									<div th:unless="*{logoPath != null}">No Image</div>
+								</div>
+								
+								<div class="mb-3">
 
-							<div class="mb-3">
-								<label class="form-label fw-bold">Employee ID (Created
-									By)</label> <input type="text" class="form-control"
-									th:field="*{employeeId}" />
-							</div>
+									<label for="coverImg" class="form-label fw-semibold">
+										New Cover Image </label> <input type="file" id="coverImg"
+										name="coverImgPart" class="form-control" accept="image/*">
+									<div class="form-text">Select an image to use as the
+										cover of your post.</div>
+
+									<div class="mt-3">
+										<img id="coverPreview" class="img-fluid"
+											style="height: 300px; width: auto;" alt="Cover image Error">
+									</div>
+
+								</div>
 
 							<div class="form-check mb-3">
 								<input class="form-check-input" type="checkbox"
@@ -62,7 +70,7 @@
 							<input type="hidden" th:field="*{createdAt}" />
 
 							<div class="d-flex justify-content-end gap-2 mt-4">
-								<a th:href="@{/manager/paymethod}" class="btn btn-secondary">Cancel</a>
+								<a th:href="@{/admin/paymethod}" class="btn btn-secondary">Cancel</a>
 								<button type="submit" class="btn btn-primary px-4">Update
 									Method</button>
 							</div>
@@ -73,6 +81,31 @@
 			</div>
 		</div>
 	</div>
+	<!-- Bootstrap JavaScript -->
+		<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+
+		<!-- Image Preview -->
+		<script>
+			document.getElementById("coverImg")
+					.addEventListener(
+							"change",
+							function(event) {
+
+								const file = event.target.files[0];
+								const preview = document
+										.getElementById("coverPreview");
+
+								if (file) {
+									preview.src = URL.createObjectURL(file);
+									preview.style.display = "block";
+								} else {
+									preview.src = "";
+									preview.style.display = "none";
+								}
+							});
+		</script>
+
 
 </body>
 </html>
