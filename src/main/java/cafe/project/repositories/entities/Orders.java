@@ -8,18 +8,25 @@ public class Orders {
 	private String order_id;
 	private String employee_id;
 	private String branch_id;
-	
+
 	private LocalDateTime created_time;
 	private LocalDateTime received_time;
-	
+
 	private boolean isedited;
 	private boolean isdeleted;
-	
+
 	private BigDecimal total_amount;
 	private int token_number;
-	
+
 	private String employee_name;
 	private String branch_name;
+
+	private boolean paymentDone;
+
+	private BigDecimal subtotal;
+	private BigDecimal discountAmount;
+	private BigDecimal finalAmount;
+	private boolean hasDiscount;
 
 	public Orders() {
 	}
@@ -128,4 +135,43 @@ public class Orders {
 		this.branch_name = branch_name;
 	}
 
+	public boolean isPaymentDone() {
+		return paymentDone;
+	}
+
+	public void setPaymentDone(boolean paymentDone) {
+		this.paymentDone = paymentDone;
+	}
+
+	public BigDecimal getSubtotal() {
+		return subtotal;
+	}
+
+	public void setSubtotal(BigDecimal subtotal) {
+		this.subtotal = subtotal;
+	}
+
+	public BigDecimal getDiscountAmount() {
+		return discountAmount;
+	}
+
+	public void setDiscountAmount(BigDecimal discountAmount) {
+		this.discountAmount = discountAmount;
+	}
+
+	public BigDecimal getFinalAmount() {
+		return finalAmount;
+	}
+
+	public void setFinalAmount(BigDecimal finalAmount) {
+		this.finalAmount = finalAmount;
+	}
+
+	public boolean isHasDiscount() {
+		return hasDiscount;
+	}
+
+	public void setHasDiscount(boolean hasDiscount) {
+		this.hasDiscount = hasDiscount;
+	}
 }

@@ -29,7 +29,7 @@ public class EmployeeManagementService {
 	
 	public int changePassword(ChangePasswordDto cpdto) {
 		if(repo.findById(cpdto.getEmployee_id()) == null) return 0;
-		return (pws.matches(cpdto.getOldPassword(), repo.findById(cpdto.getEmployee_id()).getPassword())) ? repo.changePassword(cpdto.getEmployee_id(), pws.encode(cpdto.getNewPassword())) : 0;
+		return (pws.matches(cpdto.getOldPassword(), repo.findById(cpdto.getEmployee_id()).getPassword())) ? repo.changePassword(cpdto) : 0;
 	}
 	
 	public int changeProfile(ChangeProfileDto cfdto) {

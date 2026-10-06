@@ -1,12 +1,10 @@
 package cafe.project.models;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -20,29 +18,31 @@ public class EmployeeEntryDto {
 
 	@NotBlank(message = "Email cannot be empty")
 	@Email(message = "Invalid email format")
-	@Size(max = 45, message = "Email must not exceed 45 characters")
+	@Size(max = 200, message = "Email must not exceed 200 characters")
 	private String email;
 
 	@NotBlank(message = "Password cannot be empty")
-	@Size(min = 6, max = 45, message = "Password must be between 6 and 45 characters")
+	@Size(min = 8, max = 25, message = "Password must be between 8 and 25 characters")
+	@Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!_]).*$", message = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character")
 	private String password;
 
+	//Not Required
 	private String photopath;
 
 	@NotBlank(message = "Phone number is required")
-	@Pattern(regexp = "^[0-9+]{8,15}$", message = "Invalid phone number format")
+	@Pattern(regexp = "^09(\\d{7}|\\d{9})$", message = "Invalid phone number format")
 	private String phone;
 
 	@NotNull(message = "Salary is required")
 	@DecimalMin(value = "0.0", inclusive = false, message = "Salary must be greater than 0")
-	private BigDecimal salary;
+	private double salary;
 
 	@NotBlank(message = "Address cannot be empty")
-	@Size(max = 45, message = "Address must not exceed 45 characters")
+	@Size(min = 5, max = 100, message = "Address must be between 5 and 100 characters")
+	@Pattern(regexp = "^[a-zA-Z0-9\\s,.#\\-/]+$", message = "Address contains invalid characters")
 	private String address;
 
-	@NotNull(message = "Date of birth is required")
-	@Past(message = "Date of birth must be a past date")
+	//Checked In The Controller
 	private LocalDate dob;
 
 	@NotNull(message = "Gender is required")
@@ -54,15 +54,12 @@ public class EmployeeEntryDto {
 	@NotBlank(message = "Role is required")
 	private String employee_role_id;
 
-	@NotBlank(message = "Branch is required")
 	private String branch_id;
 
 	public EmployeeEntryDto() {
 	}
 
-	public EmployeeEntryDto(String employee_id, String name, String email, String password, String photopath,
-			String phone, BigDecimal salary, String address, LocalDate dob, Gender gender, String employee_status_id,
-			String employee_role_id, String branch_id) {
+	public EmployeeEntryDto(String employee_id, String name, String email, String password, String photopath, String phone, double salary, String address, LocalDate dob, Gender gender, String employee_status_id, String employee_role_id, String branch_id) {
 		this.employee_id = employee_id;
 		this.name = name;
 		this.email = email;
@@ -102,7 +99,7 @@ public class EmployeeEntryDto {
 		return phone;
 	}
 
-	public BigDecimal getSalary() {
+	public double getSalary() {
 		return salary;
 	}
 
@@ -154,7 +151,7 @@ public class EmployeeEntryDto {
 		this.phone = phone;
 	}
 
-	public void setSalary(BigDecimal salary) {
+	public void setSalary(double salary) {
 		this.salary = salary;
 	}
 
@@ -181,5 +178,6 @@ public class EmployeeEntryDto {
 	public void setBranch_id(String branch_id) {
 		this.branch_id = branch_id;
 	}
+	
 
 }

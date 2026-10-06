@@ -29,6 +29,10 @@ public class OrdersService {
 		return ordersRepository.save(order);
 	}
 
+	public boolean isPaymentDone(String orderId) {
+		return ordersRepository.isPaymentDone(orderId);
+	}
+
 	public int updateTotalAmount(String id, BigDecimal totalAmount) {
 		return ordersRepository.updateTotalAmoun(id, totalAmount);
 	}

@@ -14,6 +14,7 @@ import cafe.project.services.DailyRegisterService;
 import cafe.project.services.DiscountService;
 import cafe.project.services.EmployeeService;
 import cafe.project.services.ExpenseCategoryService;
+import cafe.project.services.PayMethodService;
 import cafe.project.services.SizeService;
 import jakarta.servlet.http.HttpSession;
 
@@ -24,11 +25,13 @@ public class ManagerController {
 	private AtypeAndPtypeRepository typeRepo;
 	private final ExpenseCategoryService expenseCategoryService;
 	private final SizeService sizeService;
+	private final PayMethodService payMethodService;
 	
-	public ManagerController(AtypeAndPtypeRepository typeRepo, ExpenseCategoryService expenseCategoryService, SizeService sizeService) {
+	public ManagerController(AtypeAndPtypeRepository typeRepo, ExpenseCategoryService expenseCategoryService, SizeService sizeService, PayMethodService payMethodService) {
 		this.typeRepo = typeRepo;
 		this.expenseCategoryService = expenseCategoryService;
 		this.sizeService = sizeService;
+		this.payMethodService = payMethodService;
 	}
 	
 	@GetMapping("/types/audience")
@@ -54,9 +57,15 @@ public class ManagerController {
 	}
 	
 	@GetMapping("/sizes")
-	public String list(Model model) {
+	public String listSize(Model model) {
 		model.addAttribute("sizes", sizeService.getAllSizes());
 		return "sizes/list-manager";
+	}
+	
+	@GetMapping("/paymethod")
+	public String listPayMethod(Model model) {
+		model.addAttribute("payMethods", payMethodService.getAllPayMethodsWithRelations());
+		return "paymethod/list-manager";
 	}
 
 }

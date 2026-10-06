@@ -24,7 +24,7 @@ public class OrdersRepository {
 		String sql = "SELECT o.*, " + "e.name AS employee_name, " + "b.name AS branch_name " + "FROM orders o "
 				+ "LEFT JOIN employees e " + "ON o.employee_id = e.employee_id " + "LEFT JOIN branches b "
 				+ "ON o.branch_id = b.branch_id " + "WHERE o.isdeleted = false " + "AND o.received_time IS NULL "
-				+ "ORDER BY o.created_time DESC";
+				+ "ORDER BY o.token_number ASC";
 
 		return jdbcTemplate.query(sql, new OrdersMapper());
 	}
@@ -34,16 +34,17 @@ public class OrdersRepository {
 		String sql = "SELECT o.*, " + "e.name AS employee_name, " + "b.name AS branch_name " + "FROM orders o "
 				+ "LEFT JOIN employees e " + "ON o.employee_id = e.employee_id " + "LEFT JOIN branches b "
 				+ "ON o.branch_id = b.branch_id " + "WHERE o.isdeleted = false " + "AND o.received_time IS NOT NULL "
-				+ "ORDER BY o.received_time DESC";
+				+ "ORDER BY DATE(o.created_time) DESC, o.token_number ASC";
 
 		return jdbcTemplate.query(sql, new OrdersMapper());
 	}
 
 	public List<Orders> findDeletedAll() {
 
-		String sql = "SELECT o.*, \r\n" + "e.name AS employee_name, \r\n" + "b.name AS branch_name \r\n"
-				+ "FROM orders o \r\n" + "LEFT JOIN employees e \r\n" + "ON o.employee_id = e.employee_id \r\n"
-				+ "LEFT JOIN branches b \r\n" + "ON o.branch_id = b.branch_id \r\n" + "WHERE o.isdeleted = true";
+		String sql = "SELECT o.*, " + "e.name AS employee_name, " + "b.name AS branch_name " + "FROM orders o "
+				+ "LEFT JOIN employees e " + "ON o.employee_id = e.employee_id " + "LEFT JOIN branches b "
+				+ "ON o.branch_id = b.branch_id " + "WHERE o.isdeleted = true "
+				+ "ORDER BY DATE(o.created_time) DESC, o.token_number ASC";
 
 		return jdbcTemplate.query(sql, new OrdersMapper());
 	}
@@ -81,6 +82,15 @@ public class OrdersRepository {
 		return jdbcTemplate.update(sql, entity.getOrder_id(), entity.getEmployee_id(), entity.getBranch_id(),
 				entity.getCreated_time(), entity.getReceived_time(), entity.isIsedited(), entity.isIsdeleted(),
 				entity.getTotal_amount(), entity.getToken_number());
+	}
+
+	public boolean isPaymentDone(String orderId) {
+
+		String sql = "SELECT COUNT(*) " + "FROM payments " + "WHERE order_id = ? " + "AND isdeleted = 0";
+
+		Integer count = jdbcTemplate.queryForObject(sql, Integer.class, orderId);
+
+		return count != null && count > 0;
 	}
 
 	public int updateTotalAmoun(String Id, BigDecimal totalAmount) {
@@ -121,12 +131,13 @@ public class OrdersRepository {
 
 	public int permanentDelete(String id) {
 
-		String deleteDetails = "DELETE FROM order_details WHERE order_id = ?";
+		String deletePayments = "DELETE FROM payments WHERE order_id = ?";
+		jdbcTemplate.update(deletePayments, id);
 
+		String deleteDetails = "DELETE FROM order_details WHERE order_id = ?";
 		jdbcTemplate.update(deleteDetails, id);
 
 		String deleteOrder = "DELETE FROM orders WHERE order_id = ?";
-
 		return jdbcTemplate.update(deleteOrder, id);
 	}
 }

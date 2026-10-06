@@ -44,8 +44,31 @@ public class OrderDetailsController {
 
 	@GetMapping
 	public String list(Model model, HttpSession session) {
-		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-		model.addAttribute("orders", ordersService.findNotReceivedAll());
+
+		List<Orders> orders = ordersService.findNotReceivedAll();
+
+		for (Orders order : orders) {
+
+			boolean paymentDone = ordersService.isPaymentDone(order.getOrder_id());
+
+			order.setPaymentDone(paymentDone);
+
+			BigDecimal subtotal = orderDetailsService.calculateTotalAmount(order.getOrder_id());
+
+			BigDecimal discount = orderDetailsService.calculateDiscountAmount(order.getOrder_id());
+
+			BigDecimal finalAmount = subtotal.subtract(discount);
+
+			order.setSubtotal(subtotal);
+			order.setDiscountAmount(discount);
+			order.setFinalAmount(finalAmount);
+
+			boolean hasDiscount = discount.compareTo(BigDecimal.ZERO) > 0;
+
+			order.setHasDiscount(hasDiscount);
+		}
+
+		model.addAttribute("orders", orders);
 
 		model.addAttribute("orderDetails", orderDetailsService.findAll());
 
@@ -55,9 +78,17 @@ public class OrderDetailsController {
 	@GetMapping("/received-list")
 	public String receivedList(Model model) {
 
-		model.addAttribute("orders", ordersService.findReceivedAll());
+		List<Orders> orders = ordersService.findReceivedAll();
 
+		model.addAttribute("orders", orders);
 		model.addAttribute("orderDetails", orderDetailsService.findAll());
+
+		for (Orders order : orders) {
+
+			boolean paid = ordersService.isPaymentDone(order.getOrder_id());
+
+			order.setPaymentDone(paid);
+		}
 
 		return "orderwithdetails/receivedlist";
 	}
@@ -108,10 +139,13 @@ public class OrderDetailsController {
 
 		orderDetailsService.save(dto);
 
-		BigDecimal total = orderDetailsService.calculateTotalAmount(order.getOrder_id());
+		BigDecimal subtotal = orderDetailsService.calculateTotalAmount(order.getOrder_id());
 
-		ordersService.updateTotalAmount(order.getOrder_id(), total);
+		BigDecimal discount = orderDetailsService.calculateDiscountAmount(order.getOrder_id());
 
+		BigDecimal finalAmount = subtotal.subtract(discount);
+
+		ordersService.updateTotalAmount(order.getOrder_id(), finalAmount);
 		return "redirect:/order-with-details";
 	}
 
@@ -123,7 +157,6 @@ public class OrderDetailsController {
 		return "redirect:/order-with-details";
 	}
 
-	// EDIT FORM
 	@GetMapping("/edit/{id}")
 	public String edit(@PathVariable("id") String id, Model model) {
 
