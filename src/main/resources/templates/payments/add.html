@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
@@ -617,20 +617,6 @@ body {
 
 						<span> Discount </span> <span class="discount-value"> - <span
 							th:text="${discountAmount}"> 0.00 </span> Ks
-
-
-						</span>
-
-
-					</div>
-
-					<div th:if="${hasDiscount}" class="text-end">
-
-
-						<span class="discount-badge"> <span
-							th:text="${#numbers.formatDecimal((discountAmount * 100) / subtotal, 1, 0) + '% OFF'}">
-
-								10% OFF </span>
 
 
 						</span>

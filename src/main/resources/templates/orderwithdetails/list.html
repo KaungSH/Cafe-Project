@@ -489,14 +489,7 @@ body {
 								<div th:if="${order.hasDiscount}">
 
 									<span class="discount-text"> - <span
-										th:text="${order.discountAmount}"> 0.00 </span> Ks
-
-
-									</span> <br> <span class="discount-badge"
-										th:text="${#numbers.formatDecimal((order.discountAmount * 100) / order.subtotal, 1, 0) + '% OFF'}">
-
-										10% OFF </span>
-
+										th:text="${order.discountAmount}"> 0.00 </span> Ks <br>Save</span>
 
 								</div> <span th:unless="${order.hasDiscount}" class="no-discount">
 									— </span>
@@ -542,10 +535,9 @@ body {
 										<ul class="dropdown-menu dropdown-menu-end">
 
 											<li><a class="dropdown-item"
-												th:href="@{/order-with-details/edit(order_id=${order.order_id})}">
+												th:href="@{/order-with-details/edit/{id}(id=${order.order_id})}">
 
 													<i class="bi bi-pencil-square"></i> Edit
-
 
 											</a></li>
 
