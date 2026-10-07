@@ -54,6 +54,36 @@ public class PaymentRepository {
 
 		return jdbcTemplate.queryForObject(sql, new PaymentMapper(), id);
 	}
+	
+	public Payment findByOrderId(String orderId) {
+
+	    String sql = "SELECT "
+	            + "p.*, "
+	            + "o.token_number, "
+	            + "pm.name AS pay_method_name, "
+	            + "e.name AS employee_name, "
+	            + "b.name AS branch_name, "
+	            + "o.total_amount, "
+	            + "GROUP_CONCAT(pt.name SEPARATOR ', ') AS product_name "
+	            + "FROM payments p "
+	            + "LEFT JOIN orders o ON p.order_id = o.order_id "
+	            + "LEFT JOIN pay_methods pm ON p.method_id = pm.method_id "
+	            + "LEFT JOIN employees e ON p.employee_id = e.employee_id "
+	            + "LEFT JOIN branches b ON o.branch_id = b.branch_id "
+	            + "LEFT JOIN order_details od ON o.order_id = od.order_id "
+	            + "LEFT JOIN products pr ON od.product_id = pr.product_id "
+	            + "LEFT JOIN product_types pt ON pr.item_id = pt.type_id "
+	            + "WHERE p.order_id = ? "
+	            + "AND p.isdeleted = false "
+	            + "GROUP BY p.payment_id "
+	            + "ORDER BY p.paid_time DESC "
+	            + "LIMIT 1";
+
+	    List<Payment> payments =
+	            jdbcTemplate.query(sql, new PaymentMapper(), orderId);
+
+	    return payments.isEmpty() ? null : payments.get(0);
+	}
 
 	public int save(Payment payment) {
 

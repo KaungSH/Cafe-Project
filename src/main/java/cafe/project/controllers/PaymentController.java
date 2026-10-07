@@ -99,9 +99,13 @@ public class PaymentController {
 			payment.setEmployee_id(user.getEmployee_id());
 		}
 
+		//paymentService.save(payment);
+		//return "redirect:/order-with-details";
+		
 		paymentService.save(payment);
 
-		return "redirect:/order-with-details";
+		return "redirect:/receipt/" + orderId;
+		
 	}
 
 	@GetMapping("/edit/{id}")

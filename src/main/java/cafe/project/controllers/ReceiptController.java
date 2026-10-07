@@ -18,6 +18,9 @@ import cafe.project.repositories.OrderDetailsRepository;
 import cafe.project.repositories.OrdersRepository;
 import cafe.project.repositories.entities.OrderDetails;
 import cafe.project.repositories.entities.Orders;
+import cafe.project.repositories.entities.Payment;
+import cafe.project.services.PaymentService;
+
 
 @Controller
 @RequestMapping("/receipt")
@@ -25,12 +28,16 @@ public class ReceiptController {
 
     private final OrdersRepository ordersRepository;
     private final OrderDetailsRepository orderDetailsRepository;
+    private final PaymentService paymentService;
 
     public ReceiptController(
             OrdersRepository ordersRepository,
-            OrderDetailsRepository orderDetailsRepository) {
+            OrderDetailsRepository orderDetailsRepository,
+            PaymentService paymentService) {
+
         this.ordersRepository = ordersRepository;
         this.orderDetailsRepository = orderDetailsRepository;
+        this.paymentService = paymentService;
     }
 
     @GetMapping("/{orderId}")
@@ -55,7 +62,16 @@ public class ReceiptController {
             orderData.put("created_time", order.getCreated_time());
             orderData.put("received_time", order.getReceived_time());
             orderData.put("total_amount", order.getTotal_amount());
-            orderData.put("payment_method", "Cash");
+            //orderData.put("payment_method", "Cash");
+            
+         // Get Payment information
+            Payment payment = paymentService.findByOrderId(orderId);
+
+            if (payment != null) {
+                orderData.put("payment_method", payment.getPay_method_name());
+            } else {
+                orderData.put("payment_method", "N/A");
+            }
 
             // 4. Convert OrderDetails
             List<Map<String, Object>> items = new java.util.ArrayList<>();

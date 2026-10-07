@@ -150,8 +150,11 @@ public class ReceiptPdfGenerator {
         Object totalObj = orderData != null ? orderData.get("total_amount") : null;
         BigDecimal finalTotal = totalObj != null ? new BigDecimal(totalObj.toString()) : calculatedTotal;
         
-        String payMethod = (orderData != null && orderData.get("payment_method") != null) 
-                           ? orderData.get("payment_method").toString() : "Cash";
+//        String payMethod = (orderData != null && orderData.get("payment_method") != null) 
+//                           ? orderData.get("payment_method").toString() : "Cash";
+        String payMethod = (orderData != null && orderData.get("payment_method") != null)
+                ? orderData.get("payment_method").toString()
+                : "N/A";
 
         Paragraph totalPara = new Paragraph("TOTAL : " + currencyFormat.format(finalTotal) + " MMK", boldFont);
         totalPara.setAlignment(Element.ALIGN_RIGHT);
