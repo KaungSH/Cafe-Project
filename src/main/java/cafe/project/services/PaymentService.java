@@ -26,9 +26,14 @@ public class PaymentService {
         return paymentRepository.findDeletedAll();
     }
 
-    // GET BY ID
+   // GET BY ID
     public Payment findById(String id) {
         return paymentRepository.findById(id);
+    }
+
+    // GET BY ORDER ID
+    public Payment findByOrderId(String orderId) {
+        return paymentRepository.findByOrderId(orderId);
     }
 
     // SAVE
