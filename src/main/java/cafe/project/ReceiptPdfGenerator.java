@@ -14,7 +14,9 @@ import java.util.Map;
 
 public class ReceiptPdfGenerator {
 
-    // 1. Controller မှ byte[] အဖြစ် တိုက်ရိုက်ယူရန် method
+    private String orderTime;
+
+	// 1. Controller မှ byte[] အဖြစ် တိုက်ရိုက်ယူရန် method
     public byte[] generateReceiptPdfBytes(String orderId, 
                                           Map<String, Object> orderData, 
                                           List<Map<String, Object>> items) throws Exception {
@@ -38,15 +40,15 @@ public class ReceiptPdfGenerator {
                                       List<Map<String, Object>> items) throws Exception {
         
         // 80mm Thermal Printer size (width: 226 point, height: 650 point)
-        Rectangle receiptSize = new Rectangle(226, 650);
+        Rectangle receiptSize = new Rectangle(226, 360);
         
         Document document = new Document(receiptSize, 10, 10, 10, 10);
         PdfWriter.getInstance(document, outputStream);
         document.open();
 
         // Fonts 
-        Font titleFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
-        Font tokenFont = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
+        Font titleFont = new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD);
+        Font tokenFont = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD);
         Font boldFont = new Font(Font.FontFamily.HELVETICA, 8, Font.BOLD);
         Font normalFont = new Font(Font.FontFamily.HELVETICA, 7, Font.NORMAL);
         Font italicFont = new Font(Font.FontFamily.HELVETICA, 6.5f, Font.ITALIC);
@@ -82,26 +84,45 @@ public class ReceiptPdfGenerator {
 
         document.add(new Chunk(separator));
 
-        // Order & Cashier Info
-        String cashier = (orderData != null && orderData.get("employee_name") != null) 
-                         ? orderData.get("employee_name").toString() 
-                         : (orderData != null && orderData.get("employee_id") != null 
-                             ? orderData.get("employee_id").toString() : "-");
+//        // Order & Cashier Info
+//        String cashier = (orderData != null && orderData.get("employee_name") != null) 
+//                         ? orderData.get("employee_name").toString() 
+//                         : (orderData != null && orderData.get("employee_id") != null 
+//                             ? orderData.get("employee_id").toString() : "-");
+//
+//        String orderTime = "-";
+//        if (orderData != null) {
+//            if (orderData.get("created_time") != null) {
+//                orderTime = orderData.get("created_time").toString();
+//            } else if (orderData.get("received_time") != null) {
+//                orderTime = orderData.get("received_time").toString();
+//            }
+//        }
+//        
+//        document.add(new Paragraph("Order ID : " + orderId, normalFont));
+//        document.add(new Paragraph("Cashier  : " + cashier, normalFont));
+//        document.add(new Paragraph("Date/Time: " + orderTime, normalFont));
+//
+//        document.add(new Chunk(separator));
+        
+     // Cashier Info (ID နှင့် Name နှစ်ခုလုံး ပေါ်စေရန်)
+        String empId = (orderData != null && orderData.get("employee_id") != null) 
+                       ? orderData.get("employee_id").toString().trim() : "";
+        String empName = (orderData != null && orderData.get("employee_name") != null) 
+                         ? orderData.get("employee_name").toString().trim() : "";
 
-        String orderTime = "-";
-        if (orderData != null) {
-            if (orderData.get("created_time") != null) {
-                orderTime = orderData.get("created_time").toString();
-            } else if (orderData.get("received_time") != null) {
-                orderTime = orderData.get("received_time").toString();
-            }
+        String cashierDisplay = "-";
+        if (!empId.isEmpty() && !empName.isEmpty()) {
+            cashierDisplay = empId + " (" + empName + ")"; // ဥပမာ - EMP-001 (ADMIN)
+        } else if (!empName.isEmpty()) {
+            cashierDisplay = empName;
+        } else if (!empId.isEmpty()) {
+            cashierDisplay = empId;
         }
         
-        document.add(new Paragraph("Order ID : " + orderId, normalFont));
-        document.add(new Paragraph("Cashier  : " + cashier, normalFont));
-        document.add(new Paragraph("Date/Time: " + orderTime, normalFont));
-
-        document.add(new Chunk(separator));
+        document.add(new Paragraph("Order ID : " + orderId, boldFont));
+        document.add(new Paragraph("Cashier  : " + cashierDisplay, boldFont));
+        document.add(new Paragraph("Date/Time: " + orderTime, boldFont));
 
         // Items Table (4 Columns: Item, Qty, Price, Total)
         PdfPTable table = new PdfPTable(4);
@@ -160,7 +181,7 @@ public class ReceiptPdfGenerator {
         totalPara.setAlignment(Element.ALIGN_RIGHT);
         document.add(totalPara);
 
-        Paragraph payPara = new Paragraph("Payment: " + payMethod, normalFont);
+        Paragraph payPara = new Paragraph("Paymethod: " + payMethod, normalFont);
         payPara.setAlignment(Element.ALIGN_RIGHT);
         document.add(payPara);
 
