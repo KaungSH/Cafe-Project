@@ -22,6 +22,7 @@ public class Payment {
 	private String branch_name;
 	private BigDecimal total_amount;
 	private String product_name;
+	private Double discount;
 
 	public Payment() {
 	}
@@ -167,5 +168,11 @@ public class Payment {
 
 	public void setProduct_name(String product_name) {
 		this.product_name = product_name;
+	}
+	public Double getDiscount() {
+	    return discount;
+	}
+	public void setDiscount(Double discount) {
+	    this.discount = discount;
 	}
 }
