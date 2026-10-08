@@ -16,22 +16,32 @@ import cafe.project.repositories.entities.Product;
 public class ProductService {
 
 	private final ProductRepository prepo;
+	private final IngredientBatchService ingredientBatchService;
 
-	public ProductService(ProductRepository prepo) {
+	public ProductService(ProductRepository prepo, IngredientBatchService ingredientBatchService) {
 		this.prepo = prepo;
+		this.ingredientBatchService = ingredientBatchService;
 	}
 
 	public List<ProductListModel> findListAll() {
 		return prepo.findListAll().stream().map(this::toListModel2).toList();
 	}
-
-	public List<ProductListModel> findAllForOrder() {
+	
+	public List<ProductListModel> findAllForOrder(String branchId) {
 
 		List<Product> allProducts = new ArrayList<>();
-
 		allProducts.addAll(prepo.findListAllForOrder());
 
-		return allProducts.stream().map(this::toListModel2).toList();
+		List<ProductListModel> products = allProducts.stream().map(this::toListModel2).toList();
+
+		for (ProductListModel product : products) {
+
+			boolean available = prepo.isProductAvailable(product.getProduct_id(), branchId);
+
+			product.setAvailable(available);
+		}
+
+		return products;
 	}
 
 	public List<ProductListModel> findListAllByTypeId(String type_id) {

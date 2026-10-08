@@ -13,6 +13,7 @@ public class ProductListModel {
 	private List<Double> quantity_required;
 	private List<String> unit_code, discount_names, ingredient_names;
 	private List<Double> discount_values;
+	private boolean available;
 	
 	public ProductListModel() {}
 	
@@ -160,7 +161,13 @@ public class ProductListModel {
 	public void setDiscount_values(List<Double> discount_values) {
 		this.discount_values = discount_values;
 	}
-	
-	
 
+	public boolean isAvailable() {
+		return available;
+	}
+
+	public void setAvailable(boolean available) {
+		this.available = available;
+	}
+	
 }

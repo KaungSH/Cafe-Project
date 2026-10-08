@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import cafe.project.models.OrderDetailsDto;
+import cafe.project.models.ProductEntryModel;
 import cafe.project.repositories.OrderDetailsRepository;
 import cafe.project.repositories.entities.OrderDetails;
 
@@ -13,9 +14,15 @@ import cafe.project.repositories.entities.OrderDetails;
 public class OrderDetailsService {
 
 	private final OrderDetailsRepository orderDetailsRepository;
+	private final IngredientBatchService ingredientBatchService;
+	private final ProductService productService;
 
-	public OrderDetailsService(OrderDetailsRepository orderDetailsRepository) {
+	public OrderDetailsService(OrderDetailsRepository orderDetailsRepository,
+			IngredientBatchService ingredientBatchService, ProductService productService) {
+
 		this.orderDetailsRepository = orderDetailsRepository;
+		this.ingredientBatchService = ingredientBatchService;
+		this.productService = productService;
 	}
 
 	// Get all order details
@@ -107,6 +114,85 @@ public class OrderDetailsService {
 		for (OrderDetails orderDetail : dto.getOrderDetails()) {
 
 			orderDetailsRepository.delete(orderDetail.getOrder_detail_id());
+		}
+	}
+
+	public void checkStock(OrderDetailsDto dto, String branchId) {
+
+		for (OrderDetails orderDetail : dto.getOrderDetails()) {
+
+			ProductEntryModel product = productService.findById(orderDetail.getProduct_id());
+
+			if (product == null) {
+				throw new IllegalArgumentException("Product not found.");
+			}
+
+			List<String> ingredientIds = product.getIngredient_ids();
+
+			List<Double> quantities = product.getQuantity_required();
+
+			int orderQuantity = orderDetail.getQuantity();
+
+			for (int i = 0; i < ingredientIds.size(); i++) {
+
+				String ingredientId = ingredientIds.get(i);
+
+				BigDecimal requiredPerProduct = BigDecimal.valueOf(quantities.get(i));
+
+				BigDecimal requiredQuantity = requiredPerProduct.multiply(BigDecimal.valueOf(orderQuantity));
+
+				BigDecimal availableQuantity = ingredientBatchService.getAvailableQuantity(ingredientId, branchId);
+
+				if (availableQuantity.compareTo(requiredQuantity) < 0) {
+
+					throw new IllegalArgumentException("Not enough ingredient stock. " + "Required: " + requiredQuantity
+							+ ", Available: " + availableQuantity);
+				}
+			}
+		}
+	}
+
+	public void reduceStock(OrderDetailsDto dto, String branchId) {
+
+		for (OrderDetails orderDetail : dto.getOrderDetails()) {
+
+			ProductEntryModel product = productService.findById(orderDetail.getProduct_id());
+
+			System.out.println("================================");
+			System.out.println("PRODUCT ID: " + orderDetail.getProduct_id());
+
+			System.out.println("ORDER QUANTITY: " + orderDetail.getQuantity());
+
+			System.out.println("INGREDIENT IDS: " + product.getIngredient_ids());
+
+			System.out.println("QUANTITIES: " + product.getQuantity_required());
+
+			System.out.println("BRANCH ID: " + branchId);
+
+			List<String> ingredientIds = product.getIngredient_ids();
+
+			List<Double> quantities = product.getQuantity_required();
+
+			int orderQuantity = orderDetail.getQuantity();
+
+			for (int i = 0; i < ingredientIds.size(); i++) {
+
+				String ingredientId = ingredientIds.get(i);
+
+				BigDecimal requiredPerProduct = BigDecimal.valueOf(quantities.get(i));
+
+				BigDecimal requiredQuantity = requiredPerProduct.multiply(BigDecimal.valueOf(orderQuantity));
+
+				System.out.println("INGREDIENT ID: " + ingredientId);
+
+				System.out.println("REQUIRED: " + requiredQuantity);
+
+				ingredientBatchService.reduceStockFIFO(ingredientId, branchId, requiredQuantity);
+
+				System.out.println("STOCK REDUCED");
+			}
+
+			System.out.println("================================");
 		}
 	}
 }

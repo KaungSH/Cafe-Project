@@ -21,10 +21,10 @@ public class OrdersRepository {
 
 	public List<Orders> findNotReceivedAll() {
 
-		String sql = "SELECT o.*, " + "e.name AS employee_name, " + "b.name AS branch_name " + "FROM orders o "
-				+ "LEFT JOIN employees e " + "ON o.employee_id = e.employee_id " + "LEFT JOIN branches b "
-				+ "ON o.branch_id = b.branch_id " + "WHERE o.isdeleted = false " + "AND o.received_time IS NULL "
-				+ "ORDER BY o.token_number ASC";
+		String sql = "SELECT o.*, e.name AS employee_name, b.name AS branch_name FROM orders o \r\n"
+				+ "LEFT JOIN employees e ON o.employee_id = e.employee_id LEFT JOIN branches b \r\n"
+				+ "ON o.branch_id = b.branch_id WHERE o.isdeleted = false AND o.received_time IS NULL \r\n"
+				+ "ORDER BY DATE(o.created_time) DESC, o.token_number ASC;";
 
 		return jdbcTemplate.query(sql, new OrdersMapper());
 	}

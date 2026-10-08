@@ -11,6 +11,8 @@ public class ProductEntryModel {
 	
 	private List<Double> quantity_required;
 	
+	private boolean available;
+	
 	public ProductEntryModel() {}
 	
 	public ProductEntryModel(String product_id, String employee_id, String type_id, String size_id, double price, boolean is_active, List<String> discount_ids, List<String> ingredient_ids, List<Double> quantity_required) {
@@ -96,8 +98,13 @@ public class ProductEntryModel {
 	public void setQuantity_required(List<Double> quantity_required) {
 		this.quantity_required = quantity_required;
 	}
-	
-	
-	
 
+	public boolean isAvailable() {
+		return available;
+	}
+
+	public void setAvailable(boolean available) {
+		this.available = available;
+	}
+	
 }
