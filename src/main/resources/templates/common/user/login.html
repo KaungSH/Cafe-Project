@@ -3,22 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Login | Café Luft</title>
 
-    <!-- Bootstrap 5 -->
+    <title>Employee Login| Coffee House</title>
+
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
-    <!-- Google Fonts: Luxury Editorial Font Pairing (Playfair Display + DM Sans) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
 
     <style>
         /* =========================================================
-           GLOBAL & VARIABLES
+           GLOBAL & PALETTE
         ========================================================= */
         * {
             box-sizing: border-box;
@@ -27,16 +26,21 @@
         }
 
         :root {
-            --espresso: #120904;
-            --dark-coffee: #1d0d07;
-            --coffee: #3a1b0f;
-            --coffee-light: #704127;
-            --caramel: #c8874a;
-            --gold: #e4ad72;
-            --cream: #fff8ef;
-            --cream-muted: #d7c0ac;
-            --input-bg: rgba(255, 255, 255, 0.055);
-            --border: rgba(255, 235, 215, 0.13);
+            --espresso: #0e0602;
+            --dark-roast: #1a0a04;
+            --mocha: #2d140a;
+            --caramel-accent: #d88945;
+            --gold: #f0bd84;
+            --gold-bright: #ffd49e;
+            --cream: #fdf8f2;
+            --cream-soft: #d8c3b2;
+            --cream-faint: rgba(253, 248, 242, 0.65);
+            
+            --glass-bg: rgba(22, 10, 5, 0.48);
+            --glass-border: rgba(240, 189, 132, 0.18);
+            --input-bg: rgba(12, 5, 2, 0.55);
+            --input-border: rgba(240, 189, 132, 0.22);
+            --input-focus-border: #f0bd84;
         }
 
         html, body {
@@ -48,65 +52,58 @@
             min-height: 100vh;
             display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 30px 18px;
+            justify-content: flex-end;
+            padding: 40px 7vw 40px 24px;
             font-family: 'DM Sans', sans-serif;
             color: var(--cream);
             background:
+                radial-gradient(circle at 85% 50%, rgba(216, 137, 69, 0.12) 0%, transparent 45%),
                 linear-gradient(
-                    115deg,
-                    rgba(20, 9, 4, 0.40),
-                    rgba(50, 25, 14, 0.25),
-                    rgba(15, 7, 3, 0.40)
+                    120deg,
+                    rgba(14, 6, 2, 0.55) 0%,
+                    rgba(35, 15, 8, 0.35) 50%,
+                    rgba(10, 4, 1, 0.65) 100%
                 ),
-                url('/images/welcome page.png') center / cover no-repeat;
+                url('/images/Wallpage.jpg') center / cover no-repeat;
             position: relative;
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
-        /* Subtle radial spotlight overlay */
+        /* Ambient Lighting */
         body::before {
             content: "";
             position: fixed;
             inset: 0;
-            background:
-                radial-gradient(
-                    circle at center,
-                    rgba(255, 190, 120, 0.08),
-                    transparent 60%
-                );
+            background: radial-gradient(circle at center, rgba(240, 189, 132, 0.05), transparent 60%);
             pointer-events: none;
             z-index: 0;
         }
 
-        /* =========================================================
-           DECORATIVE LIGHTS
-        ========================================================= */
         .glow {
             position: fixed;
-            width: 420px;
-            height: 420px;
+            width: 520px;
+            height: 520px;
             border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.13;
+            filter: blur(130px);
+            opacity: 0.16;
             pointer-events: none;
             z-index: 0;
         }
 
         .glow-one {
-            background: #d88a4d;
-            top: -180px;
-            left: -120px;
+            background: #d88945;
+            top: -160px;
+            right: 15vw;
         }
 
         .glow-two {
-            background: #7c3f20;
-            bottom: -220px;
-            right: -120px;
+            background: #8b3c16;
+            bottom: -200px;
+            right: -80px;
         }
 
         /* =========================================================
-           FALLING COFFEE BEANS ANIMATION
+           BACKGROUND COFFEE BEANS
         ========================================================= */
         #coffee-rain {
             position: fixed;
@@ -119,12 +116,12 @@
         .coffee-bean {
             position: absolute;
             top: -40px;
-            width: 9px;
-            height: 14px;
+            width: 10px;
+            height: 15px;
             border-radius: 50% 45% 50% 45%;
             background: linear-gradient(135deg, #160803 0%, #633019 50%, #210a04 100%);
             opacity: 0.35;
-            box-shadow: inset -2px -2px 3px rgba(0, 0, 0, 0.5);
+            box-shadow: inset -2px -2px 3px rgba(0, 0, 0, 0.55);
             animation: beanFall var(--duration) linear var(--delay) forwards;
         }
 
@@ -132,11 +129,11 @@
             content: "";
             position: absolute;
             left: 50%;
-            top: 1px;
+            top: 2px;
             width: 2px;
             height: 11px;
             border-radius: 50%;
-            background: rgba(0, 0, 0, 0.25);
+            background: rgba(0, 0, 0, 0.3);
             transform: translateX(-50%) rotate(10deg);
         }
 
@@ -146,7 +143,7 @@
                 transform: translateX(0) rotate(var(--rot)) scale(.7);
                 opacity: 0;
             }
-            15% { opacity: .4; }
+            15% { opacity: .45; }
             50% {
                 top: 50vh;
                 transform: translateX(var(--drift1)) rotate(190deg);
@@ -159,95 +156,96 @@
         }
 
         /* =========================================================
-           LOGIN CARD (GLASSMORPHISM)
+           GRAND LOGIN CARD
         ========================================================= */
         .login-card {
             position: relative;
             z-index: 5;
-            width: min(440px, 100%);
-            padding: 44px 38px 36px;
-            text-align: center;
-            border: 1px solid rgba(255, 238, 220, 0.16);
-            border-radius: 30px;
-            background: rgba(30, 14, 8, 0.24);
-            backdrop-filter: blur(9px);
-            -webkit-backdrop-filter: blur(9px);
+            /* Expanded Width & Padding */
+            width: min(510px, 100%);
+            padding: 52px 46px 44px;
+            border-radius: 34px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             box-shadow:
-                0 25px 60px rgba(0, 0, 0, 0.35),
-                inset 0 1px 0 rgba(255, 255, 255, 0.10);
-            overflow: hidden;
-            animation: cardAppear .7s ease-out;
+                0 30px 80px rgba(0, 0, 0, 0.55),
+                0 1px 0 rgba(255, 255, 255, 0.15) inset,
+                0 0 40px rgba(216, 137, 69, 0.08);
+            animation: cardEntrance .75s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .login-card::before {
             content: "";
             position: absolute;
-            width: 320px;
-            height: 320px;
+            width: 360px;
+            height: 360px;
             top: -200px;
             left: 50%;
             transform: translateX(-50%);
-            background: radial-gradient(circle, rgba(221, 144, 78, 0.28), transparent 70%);
-            filter: blur(25px);
+            background: radial-gradient(circle, rgba(240, 189, 132, 0.22), transparent 70%);
+            filter: blur(35px);
             pointer-events: none;
         }
 
-        .login-card::after {
-            content: "";
-            position: absolute;
-            left: 12%;
-            right: 12%;
-            bottom: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(228, 173, 114, 0.5), transparent);
+        @keyframes cardEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.97);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
-        @keyframes cardAppear {
-            from { opacity: 0; transform: translateY(22px) scale(.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+        /* Card Header Layout */
+        .card-header-area {
+            text-align: center;
+            margin-bottom: 34px;
         }
 
-        /* =========================================================
-           LOGO
-        ========================================================= */
         .coffee-logo {
             position: relative;
-            width: 78px;
-            height: 78px;
-            margin: 0 auto 16px;
+            width: 86px;
+            height: 86px;
+            margin: 0 auto 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            background: linear-gradient(145deg, #754021, #2a0d06);
-            border: 1px solid rgba(228, 173, 114, 0.35);
-            box-shadow: 0 0 0 7px rgba(216, 139, 77, 0.07), 0 16px 35px rgba(0, 0, 0, 0.42);
+            background: linear-gradient(145deg, #7c4323, #1f0a04);
+            border: 1.5px solid rgba(240, 189, 132, 0.45);
+            box-shadow:
+                0 0 0 8px rgba(216, 137, 69, 0.09),
+                0 16px 36px rgba(0, 0, 0, 0.5);
             animation: logoFloat 4s ease-in-out infinite;
         }
 
         .coffee-logo .cup {
-            font-size: 32px;
-            color: #fff8ef;
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+            font-size: 36px;
+            color: var(--cream);
+            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.6));
             animation: cupSway 3.5s ease-in-out infinite;
         }
 
         .steam {
             position: absolute;
-            top: 10px;
+            top: 14px;
             width: 3px;
             height: 18px;
-            border-left: 2px solid rgba(255, 241, 225, 0.65);
+            border-left: 2px solid rgba(255, 241, 225, 0.75);
             border-radius: 50%;
             animation: steam 2.4s ease-in-out infinite;
         }
-        .steam.s1 { left: 28px; }
-        .steam.s2 { left: 38px; height: 17px; animation-delay: .45s; }
-        .steam.s3 { left: 48px; height: 19px; animation-delay: .9s; }
+        .steam.s1 { left: 32px; }
+        .steam.s2 { left: 42px; height: 20px; animation-delay: .45s; }
+        .steam.s3 { left: 52px; height: 18px; animation-delay: .9s; }
 
         @keyframes logoFloat {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
+            50% { transform: translateY(-6px); }
         }
         @keyframes cupSway {
             0%, 100% { transform: rotate(-3deg); }
@@ -255,155 +253,146 @@
         }
         @keyframes steam {
             0% { opacity: 0; transform: translateY(5px) scale(.8); }
-            35% { opacity: .8; }
-            100% { opacity: 0; transform: translateY(-15px) translateX(4px) scale(1.1); }
+            35% { opacity: .85; }
+            100% { opacity: 0; transform: translateY(-16px) translateX(5px) scale(1.1); }
         }
 
-        /* =========================================================
-           VOGUE EDITORIAL STYLE TYPOGRAPHY
-        ========================================================= */
-        .vogue-title-box {
-            margin: 6px auto 14px;
-            text-align: center;
-        }
-
-        .vogue-main-title {
-            margin: 0;
-            font-family: 'Playfair Display', Georgia, serif;
-            font-size: clamp(2.05rem, 5.4vw, 2.75rem);
-            font-weight: 700;
-            text-transform: uppercase;
-            color: #ffffff;
-            letter-spacing: 5px;
-            line-height: 1.15;
-            text-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
-        }
-
-        .vogue-sub-title {
-            display: block;
-            margin-top: 8px;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.70rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 6px;
+        .brand-badge {
+            display: inline-block;
+            margin-bottom: 10px;
             color: var(--gold);
-            opacity: 0.95;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3.5px;
+            text-transform: uppercase;
+        }
+
+        .login-title {
+            margin: 0;
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.1rem, 3vw, 2.5rem);
+            font-weight: 700;
+            line-height: 1.15;
+            color: #fffaf5;
+            letter-spacing: -0.5px;
         }
 
         .login-subtitle {
-            margin: 8px 0 24px;
-            color: var(--cream-muted);
-            font-size: .86rem;
-            line-height: 1.5;
+            margin: 10px auto 0;
+            max-width: 380px;
+            color: var(--cream-soft);
+            font-size: 0.94rem;
+            line-height: 1.55;
         }
 
-        /* =========================================================
-           ERROR BANNER
-        ========================================================= */
+        /* Error Banner */
         .error-banner {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 9px;
-            margin-bottom: 18px;
-            padding: 11px 14px;
-            border-radius: 13px;
-            background: rgba(220, 53, 69, .12);
-            border: 1px solid rgba(220, 53, 69, .28);
-            color: #ffb7bd;
-            font-size: .82rem;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding: 13px 18px;
+            border-radius: 15px;
+            background: rgba(220, 53, 69, 0.16);
+            border: 1px solid rgba(220, 53, 69, 0.35);
+            color: #ffccd0;
+            font-size: 0.88rem;
             font-weight: 500;
+            text-align: left;
         }
 
         /* =========================================================
-           FORM CONTROLS
+           FORM CONTROLS (SPACIOUS & STRUCTURED)
         ========================================================= */
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 0.81rem;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: var(--gold);
+        }
+
         .form-control-wrap {
             position: relative;
-            margin-bottom: 15px;
         }
 
         .form-control-wrap .input-icon {
             position: absolute;
-            left: 17px;
+            left: 20px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--gold);
-            font-size: .9rem;
-            z-index: 2;
+            font-size: 1.05rem;
             pointer-events: none;
+            z-index: 2;
         }
 
         .form-control-wrap .toggle-password {
             position: absolute;
-            right: 16px;
+            right: 18px;
             top: 50%;
             transform: translateY(-50%);
-            color: #9e8979;
+            color: var(--cream-soft);
             cursor: pointer;
             z-index: 3;
-            padding: 7px;
-            background: transparent;
-            border: none;
-            transition: .2s ease;
+            padding: 8px;
+            font-size: 1.05rem;
+            transition: color .2s ease, transform .2s ease;
         }
 
         .form-control-wrap .toggle-password:hover {
-            color: var(--gold);
-            transform: translateY(-50%) scale(1.08);
-        }
-
-        .form-control-wrap .toggle-password:focus-visible {
-            outline: 2px solid var(--gold);
-            border-radius: 6px;
+            color: var(--gold-bright);
+            transform: translateY(-50%) scale(1.1);
         }
 
         .form-control-wrap .select-arrow {
             position: absolute;
-            right: 18px;
+            right: 22px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--gold);
             pointer-events: none;
-            font-size: .75rem;
+            font-size: 0.85rem;
             z-index: 2;
         }
 
         .form-control {
             width: 100%;
-            height: 54px;
-            padding: 0 46px;
-            border-radius: 15px;
-            border: 1px solid var(--border);
+            height: 58px; /* Taller, stately input */
+            padding: 0 52px;
+            border-radius: 16px;
+            border: 1px solid var(--input-border);
             outline: none;
             color: #fffaf5 !important;
             font-family: 'DM Sans', sans-serif;
-            font-size: .9rem;
-            background: rgba(7, 3, 2, .42) !important;
-            box-shadow: inset 0 1px 7px rgba(0, 0, 0, .2);
-            transition:
-                border-color .25s ease,
-                box-shadow .25s ease,
-                background .25s ease,
-                transform .2s ease;
+            font-size: 0.98rem;
+            background: var(--input-bg) !important;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.35);
+            transition: border-color .25s ease, box-shadow .25s ease, background .25s ease, transform .2s ease;
         }
 
         .form-control:hover {
-            border-color: rgba(228, 173, 114, .28);
+            border-color: rgba(240, 189, 132, 0.45);
         }
 
         .form-control:focus {
-            border-color: var(--gold);
-            background: rgba(7, 3, 2, .58) !important;
+            border-color: var(--input-focus-border);
+            background: rgba(14, 5, 2, 0.72) !important;
             box-shadow:
-                0 0 0 3px rgba(228, 173, 114, .10),
-                0 8px 20px rgba(0, 0, 0, .18);
+                0 0 0 4px rgba(240, 189, 132, 0.15),
+                0 10px 24px rgba(0, 0, 0, 0.28);
             transform: translateY(-1px);
         }
 
         .form-control::placeholder {
-            color: #9f8878;
+            color: #8c7362;
             opacity: 1;
         }
 
@@ -415,36 +404,90 @@
         }
 
         select.form-control option {
-            background: #1d0d07;
-            color: #fff8ef;
-            padding: 10px;
+            background: #180904;
+            color: #fffaf5;
+            padding: 12px;
         }
 
+        /* Autofill Styling */
         input:-webkit-autofill,
         input:-webkit-autofill:hover,
         input:-webkit-autofill:focus {
             -webkit-text-fill-color: #fff8ef !important;
-            -webkit-box-shadow: 0 0 0 1000px #1b0c07 inset !important;
+            -webkit-box-shadow: 0 0 0 1000px #150803 inset !important;
             transition: background-color 9999s ease-in-out 0s;
         }
 
-        /* =========================================================
-           LOGIN BUTTON
-        ========================================================= */
+        /* Form Utility Row (Remember Me & Help) */
+        .form-utility-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 6px 2px 24px;
+            font-size: 0.86rem;
+        }
+
+        .custom-check {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            color: var(--cream-soft);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .custom-check input[type="checkbox"] {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 1.5px solid var(--input-border);
+            border-radius: 5px;
+            background: rgba(10, 4, 1, 0.6);
+            cursor: pointer;
+            display: grid;
+            place-content: center;
+            transition: all .2s ease;
+        }
+
+        .custom-check input[type="checkbox"]:checked {
+            background: var(--caramel-accent);
+            border-color: var(--gold);
+        }
+
+        .custom-check input[type="checkbox"]:checked::after {
+            content: "✓";
+            color: white;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .utility-link {
+            color: var(--gold);
+            text-decoration: none;
+            transition: color .2s ease, text-decoration .2s ease;
+        }
+
+        .utility-link:hover {
+            color: var(--gold-bright);
+            text-decoration: underline;
+        }
+
+        /* Grand Button */
         .btn-primary-login {
             position: relative;
             width: 100%;
-            height: 54px;
-            margin-top: 10px;
+            height: 60px;
             border: none;
-            border-radius: 15px;
+            border-radius: 17px;
             overflow: hidden;
-            background: linear-gradient(135deg, #a85d2d 0%, #d99857 100%);
+            background: linear-gradient(135deg, #b3632f 0%, #e29f5b 100%);
             color: #fffaf5;
-            font-size: .94rem;
+            font-size: 1.05rem;
             font-weight: 700;
-            letter-spacing: .4px;
-            box-shadow: 0 12px 25px rgba(160, 79, 31, .25), inset 0 1px 0 rgba(255, 255, 255, .25);
+            letter-spacing: 0.5px;
+            box-shadow:
+                0 14px 30px rgba(160, 79, 31, 0.35),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
             transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
         }
 
@@ -453,57 +496,100 @@
             position: absolute;
             top: 0;
             left: -100%;
-            width: 70%;
+            width: 75%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .22), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.26), transparent);
             transform: skewX(-20deg);
-            transition: left .6s ease;
+            transition: left .65s ease;
         }
 
         .btn-primary-login:hover {
             color: white;
             transform: translateY(-2px);
             filter: brightness(1.06);
-            box-shadow: 0 16px 32px rgba(160, 79, 31, .36);
+            box-shadow: 0 18px 36px rgba(160, 79, 31, 0.45);
         }
 
-        .btn-primary-login:hover::before { left: 140%; }
-        .btn-primary-login:active { transform: translateY(0); box-shadow: 0 7px 15px rgba(160, 79, 31, .25); }
+        .btn-primary-login:hover::before {
+            left: 140%;
+        }
+
+        .btn-primary-login:active {
+            transform: translateY(0);
+            box-shadow: 0 8px 18px rgba(160, 79, 31, 0.3);
+        }
 
         .btn-cup {
             display: inline-block;
-            margin-right: 7px;
-            animation: buttonCup 2s ease-in-out infinite;
+            margin-right: 8px;
+            animation: buttonCup 2.2s ease-in-out infinite;
         }
 
         @keyframes buttonCup {
             0%, 100% { transform: rotate(-5deg); }
-            50% { transform: rotate(5deg) translateY(-1px); }
+            50% { transform: rotate(5deg) translateY(-2px); }
         }
 
-        /* =========================================================
-           FOOTER
-        ========================================================= */
+        /* Footer */
         .login-footer {
-            margin-top: 22px;
-            color: #806d5e;
-            font-size: .72rem;
-            letter-spacing: .2px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(240, 189, 132, 0.12);
+            color: var(--cream-soft);
+            font-size: 0.78rem;
+            letter-spacing: 0.4px;
+            text-align: center;
         }
 
         .login-footer i {
-            color: #a66b3d;
-            margin-right: 4px;
+            color: var(--caramel-accent);
+            margin-right: 6px;
         }
 
         /* =========================================================
-           RESPONSIVENESS & ACCESSIBILITY
+           RESPONSIVE RULES
         ========================================================= */
-        @media (max-width: 480px) {
-            body { padding: 20px 14px; }
-            .login-card { padding: 34px 20px 28px; border-radius: 24px; }
-            .vogue-main-title { font-size: 1.8rem; letter-spacing: 4px; }
-            .form-control, .btn-primary-login { height: 50px; }
+        @media (max-width: 900px) {
+            body {
+                justify-content: center;
+                padding: 30px 20px;
+            }
+            .login-card {
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 520px) {
+            body {
+                padding: 20px 14px;
+            }
+
+            .login-card {
+                padding: 38px 24px 30px;
+                border-radius: 26px;
+            }
+
+            .coffee-logo {
+                width: 74px;
+                height: 74px;
+                margin-bottom: 16px;
+            }
+
+            .coffee-logo .cup {
+                font-size: 30px;
+            }
+
+            .login-title {
+                font-size: 1.95rem;
+            }
+
+            .login-subtitle {
+                font-size: 0.88rem;
+            }
+
+            .form-control, .btn-primary-login {
+                height: 52px;
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -518,195 +604,199 @@
 
 <body>
 
-<!-- Decorative glow (hidden from screen readers) -->
-<div class="glow glow-one" aria-hidden="true"></div>
-<div class="glow glow-two" aria-hidden="true"></div>
+    <!-- Ambient Glows -->
+    <div class="glow glow-one"></div>
+    <div class="glow glow-two"></div>
 
-<!-- Falling coffee beans animation -->
-<div id="coffee-rain" aria-hidden="true"></div>
+    <!-- Falling Coffee Beans -->
+    <div id="coffee-rain" aria-hidden="true"></div>
 
-<!-- =========================================================
-     LOGIN CARD
-========================================================= -->
-<main class="login-card" role="main" aria-labelledby="loginTitle">
+    <!-- =========================================================
+         LARGE LUXURY LOGIN CARD
+    ========================================================== -->
+    <main class="login-card">
 
-    <!-- Coffee Logo -->
-    <div class="coffee-logo" role="img" aria-label="Café Luft Logo">
-        <span class="steam s1" aria-hidden="true"></span>
-        <span class="steam s2" aria-hidden="true"></span>
-        <span class="steam s3" aria-hidden="true"></span>
-        <i class="fa-solid fa-mug-hot cup" aria-hidden="true"></i>
-    </div>
+        <!-- Header -->
+        <header class="card-header-area">
+            <div class="coffee-logo" aria-label="Coffee House Brand">
+                <span class="steam s1"></span>
+                <span class="steam s2"></span>
+                <span class="steam s3"></span>
+                <i class="fa-solid fa-mug-hot cup"></i>
+            </div>
 
-    <!-- Editorial Vogue Typography Title -->
-    <div class="vogue-title-box">
-        <h1 class="vogue-main-title" id="loginTitle">
-            EMPLOYEE LOGIN
-        </h1>
-        <span class="vogue-sub-title" aria-hidden="true">
-            CAFÉ LUFT
-        </span>
-    </div>
+            <span class="brand-badge">Cafe Luft</span>
+            <h1 class="login-title">Employee Login</h1>
+           
+        </header>
 
-    <!-- Subtitle -->
-    <p class="login-subtitle" id="loginDesc">
-        Welcome back. Start your shift with a perfect cup of coffee.
-    </p>
-
-    <!-- Error Banner (Live region for screen readers) -->
-    <div class="error-banner" 
-         th:if="${error}" 
-         role="alert" 
-         aria-live="assertive" 
-         aria-atomic="true">
-        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
-        <span th:text="${error}"></span>
-    </div>
-
-    <!-- Login Form -->
-    <form th:action="@{/login}" method="post" aria-describedby="loginDesc">
-
-        <!-- Email Field -->
-        <div class="form-control-wrap">
-            <i class="fa-solid fa-envelope input-icon" aria-hidden="true"></i>
-            <input type="text"
-                   class="form-control"
-                   id="email"
-                   name="email"
-                   placeholder="Email address"
-                   autocomplete="username"
-                   required
-                   autofocus
-                   aria-required="true"
-                   aria-label="Email address">
+        <!-- Error Alert -->
+        <div class="error-banner" th:if="${error}" role="alert">
+            <i class="fa-solid fa-circle-exclamation fs-5"></i>
+            <span th:text="${error}"></span>
         </div>
 
-        <!-- Password Field -->
-        <div class="form-control-wrap">
-            <i class="fa-solid fa-lock input-icon" aria-hidden="true"></i>
-            <input type="password"
-                   class="form-control"
-                   id="password"
-                   name="password"
-                   placeholder="Password"
-                   autocomplete="current-password"
-                   required
-                   aria-required="true"
-                   aria-label="Password">
+        <!-- =====================================================
+             FORM
+        ====================================================== -->
+        <form th:action="@{/login}" method="post">
 
-            <!-- Password Toggle with ARIA -->
-            <button type="button"
-                    class="toggle-password"
-                    id="togglePassword"
-                    aria-label="Show password"
-                    aria-pressed="false"
-                    aria-controls="password"
-                    title="Show password">
-                <i class="fa-solid fa-eye" id="toggleIcon" aria-hidden="true"></i>
+            <!-- Email -->
+            <div class="form-group">
+                <label for="email" class="form-label">Employee Email</label>
+                <div class="form-control-wrap">
+                    <i class="fa-solid fa-envelope input-icon"></i>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="email"
+                        name="email"
+                        placeholder="name@coffeehouse.com"
+                        autocomplete="username"
+                        required
+                        autofocus>
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <div class="form-control-wrap">
+                    <i class="fa-solid fa-lock input-icon"></i>
+                    <input
+                        type="password"
+                        class="form-control"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your security password"
+                        autocomplete="current-password"
+                        required>
+                    <i
+                        class="fa-solid fa-eye toggle-password"
+                        id="togglePassword"
+                        role="button"
+                        tabindex="0"
+                        aria-label="Show password"
+                        title="Show password">
+                    </i>
+                </div>
+            </div>
+
+            <!-- Branch Selection -->
+            <div class="form-group">
+                <label for="branchId" class="form-label">Assigned Branch</label>
+                <div class="form-control-wrap">
+                    <i class="fa-solid fa-store input-icon"></i>
+                    <select
+                        class="form-control"
+                        id="branchId"
+                        name="branch_id"
+                        required>
+                        <option value="" disabled selected>
+                            Choose your branch location
+                        </option>
+                        <option
+                            th:each="b : ${branches}"
+                            th:if="${b.branch_id != 'deleted'}"
+                            th:value="${b.branch_id}"
+                            th:text="${b.name}">
+                        </option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down select-arrow"></i>
+                </div>
+            </div>
+
+            <!-- Utility Row: Remember Shift & Help -->
+            <div class="form-utility-row">
+                <label class="custom-check">
+                    <input type="checkbox" name="remember-me" id="rememberMe">
+                    <span>Keep me signed in</span>
+                </label>
+                <a href="#support" class="utility-link">Shift help?</a>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary-login">
+                <span class="btn-cup">☕</span>
+                Start Shift &amp; Login
             </button>
-        </div>
 
-        <!-- Branch Selector Field -->
-        <div class="form-control-wrap">
-            <i class="fa-solid fa-store input-icon" aria-hidden="true"></i>
-            <select class="form-control"
-                    id="branchId"
-                    name="branch_id"
-                    required
-                    aria-required="true"
-                    aria-label="Select Branch Location">
-                <option value="" disabled selected>Select Branch</option>
-                <option th:each="b : ${branches}"
-                        th:if="${b.branch_id != 'deleted'}"
-                        th:value="${b.branch_id}"
-                        th:text="${b.name}">
-                </option>
-            </select>
-            <i class="fa-solid fa-chevron-down select-arrow" aria-hidden="true"></i>
-        </div>
+        </form>
 
-        <!-- Submit Button -->
-        <button type="submit" 
-                class="btn btn-primary-login" 
-                aria-label="Log in to employee portal">
-            <span class="btn-cup" aria-hidden="true">☕</span>
-            Login
-        </button>
-    </form>
+        <!-- Footer -->
+        <footer class="login-footer">
+            <i class="fa-solid fa-shield-halved"></i>
+            Authorized Personnel Only &bull; Coffee House Internal Systems
+        </footer>
 
-    <!-- Footer -->
-    <footer class="login-footer" role="contentinfo">
-        <i class="fa-solid fa-mug-hot" aria-hidden="true"></i>
-        <span>Coffee House Employee Portal</span>
-    </footer>
+    </main>
 
-</main>
+    <!-- =========================================================
+         SCRIPT
+    ========================================================== -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
 
-<!-- =========================================================
-     JAVASCRIPT
-========================================================= -->
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
+            /* Ambient Coffee Beans Animation */
+            const rain = document.getElementById("coffee-rain");
+            const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-        /* Falling Coffee Bean Animation */
-        const rain = document.getElementById("coffee-rain");
-        const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            if (!prefersReduced && rain) {
+                function makeBean(initial = false) {
+                    if (document.hidden) return;
 
-        if (!prefersReduced && rain) {
-            function makeBean(initial = false) {
-                if (document.hidden) return;
+                    const bean = document.createElement("span");
+                    bean.className = "coffee-bean";
 
-                const bean = document.createElement("span");
-                bean.className = "coffee-bean";
-                bean.setAttribute("aria-hidden", "true");
+                    const size = 7 + Math.random() * 8;
+                    const duration = 7 + Math.random() * 5;
 
-                const size = 6 + Math.random() * 7;
-                const duration = 7 + Math.random() * 5;
+                    bean.style.width = size + "px";
+                    bean.style.height = (size * 1.45) + "px";
+                    bean.style.left = (Math.random() * 100) + "vw";
 
-                bean.style.width = size + "px";
-                bean.style.height = (size * 1.45) + "px";
-                bean.style.left = (Math.random() * 100) + "vw";
+                    bean.style.setProperty("--drift1", ((Math.random() * 80) - 40) + "px");
+                    bean.style.setProperty("--drift2", ((Math.random() * 140) - 70) + "px");
+                    bean.style.setProperty("--rot", ((Math.random() * 90) - 45) + "deg");
+                    bean.style.setProperty("--duration", duration + "s");
+                    bean.style.setProperty("--delay", initial ? (-Math.random() * duration) + "s" : "0s");
 
-                bean.style.setProperty("--drift1", ((Math.random() * 80) - 40) + "px");
-                bean.style.setProperty("--drift2", ((Math.random() * 130) - 65) + "px");
-                bean.style.setProperty("--rot", ((Math.random() * 80) - 40) + "deg");
-                bean.style.setProperty("--duration", duration + "s");
-                bean.style.setProperty("--delay", initial ? (-Math.random() * duration) + "s" : "0s");
+                    rain.appendChild(bean);
 
-                rain.appendChild(bean);
+                    setTimeout(() => bean.remove(), (duration + .5) * 1000);
+                }
 
-                setTimeout(() => bean.remove(), (duration + .5) * 1000);
+                for (let i = 0; i < 20; i++) {
+                    makeBean(true);
+                }
+
+                setInterval(() => makeBean(false), 600);
             }
 
-            for (let i = 0; i < 18; i++) {
-                makeBean(true);
+            /* Password Visibility Toggle */
+            const toggle = document.getElementById("togglePassword");
+            const password = document.getElementById("password");
+
+            if (toggle && password) {
+                function togglePassword() {
+                    const show = password.type === "password";
+                    password.type = show ? "text" : "password";
+
+                    toggle.classList.toggle("fa-eye", !show);
+                    toggle.classList.toggle("fa-eye-slash", show);
+
+                    toggle.title = show ? "Hide password" : "Show password";
+                    toggle.setAttribute("aria-label", show ? "Hide password" : "Show password");
+                }
+
+                toggle.addEventListener("click", togglePassword);
+                toggle.addEventListener("keydown", function (event) {
+                    if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        togglePassword();
+                    }
+                });
             }
-
-            setInterval(() => makeBean(false), 650);
-        }
-
-        /* Password Visibility Toggle with ARIA updates */
-        const toggleBtn = document.getElementById("togglePassword");
-        const toggleIcon = document.getElementById("toggleIcon");
-        const passwordInput = document.getElementById("password");
-
-        if (toggleBtn && passwordInput && toggleIcon) {
-            toggleBtn.addEventListener("click", function () {
-                const isPassword = passwordInput.type === "password";
-                passwordInput.type = isPassword ? "text" : "password";
-
-                toggleIcon.classList.toggle("fa-eye", !isPassword);
-                toggleIcon.classList.toggle("fa-eye-slash", isPassword);
-
-                const newLabel = isPassword ? "Hide password" : "Show password";
-                toggleBtn.setAttribute("aria-label", newLabel);
-                toggleBtn.setAttribute("aria-pressed", isPassword ? "true" : "false");
-                toggleBtn.title = newLabel;
-            });
-        }
-
-    });
-</script>
-
+        });
+    </script>
 </body>
-</html>
