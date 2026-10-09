@@ -1,41 +1,102 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-<head>
-<meta charset="UTF-8">
-<title layout:title-pattern = "$CONTENT_TITLE - Café Луфт"></title>
-<script th:src = "@{/js/bootstrap.bundle.min.js}"></script>
-<link rel = "stylesheet" th:href = "@{/css/bootstrap.min.css}">
-<style>
-	html, body {
-		height: 100%;
-	}
-	
-	.row {
-		min-height: calc(100vh - 112px);
-	}
-	
-	.list-group-item {
-		border-radius: 0;
-	}
-	
-	footer {
-		width: 100%;
-	}
-	
-	.table-striped > tbody > tr:nth-of-type(odd) > * {
-        --bs-table-bg-type: #e3f2fd;
-    }
-</style>
-</head>
-<body>
-	<div class="d-flex">
-   
-    <div th:replace="~{common/fragments/sidebar :: sidebar}"></div>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
-    
-    <div class="flex-grow-1 p-4" layout:fragment="content">
-       
-    </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title layout:title-pattern="$CONTENT_TITLE - Café Shop">Café Shop</title>
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+	<script th:src="@{/js/bootstrap.bundle.min.js}"></script>	
+    <style>
+        * { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; min-height: 100%; }
+        body { background: #f8f1eb; font-family: Arial, Helvetica, sans-serif; color: #34251f; }
+
+        .cafe-layout { display: flex; min-height: 100vh; width: 100%; }
+
+        .cafe-sidebar {
+            width: 245px;
+            min-width: 245px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 25px 15px 15px;
+            overflow-y: auto;
+            position: sticky;
+            top: 0;
+        }
+
+        /* MANAGER SIDEBAR */
+        .manager-sidebar { background: #fffaf5; border-right: 1px solid #ead8c8; }
+        .manager-sidebar .cafe-brand-icon { background: #f6dfca; color: #c77b3b; }
+        .manager-sidebar .cafe-brand-name span { color: #d88945; }
+        .manager-sidebar .cafe-menu-item:hover { background: #f8e5d3; color: #bd7137; }
+        .manager-sidebar .cafe-menu-item:hover i { color: #bd7137; }
+        .manager-sidebar .cafe-role { color: #c77b3b; }
+
+        /* ADMIN SIDEBAR */
+        .admin-sidebar { background: #211713; border-right: 1px solid #4a3025; }
+        .admin-sidebar .cafe-brand-name { color: #fff7f0; }
+        .admin-sidebar .cafe-brand-name span { color: #d99350; }
+        .admin-sidebar .cafe-brand-icon { background: #493025; color: #e2a05e; }
+        .admin-sidebar .cafe-role { color: #e2a05e; }
+        .admin-sidebar .cafe-menu-item { color: #d7c4b8; }
+        .admin-sidebar .cafe-menu-item:hover { background: #3a2821; color: #f0ad68; }
+        .admin-sidebar .cafe-menu-item:hover i { color: #f0ad68; }
+        .admin-sidebar .cafe-divider { background: #4a3025; }
+        .admin-sidebar .logout-item:hover { background: #3b2520; color: #e47b63; }
+
+        .cafe-brand { display: flex; align-items: center; padding: 0 12px; margin-bottom: 30px; }
+        .cafe-brand-icon { width: 42px; height: 42px; border-radius: 13px; display: flex; align-items: center; justify-content: center; margin-right: 10px; font-size: 20px; }
+        .cafe-brand-name { font-size: 20px; font-weight: 700; }
+        .cafe-role { font-size: 11px; font-weight: 700; margin-top: 3px; letter-spacing: 1px; }
+
+        .cafe-menu { display: flex; flex-direction: column; gap: 5px; }
+        .cafe-menu-item { min-height: 44px; display: flex; align-items: center; padding: 0 14px; border-radius: 11px; text-decoration: none; font-size: 14px; transition: all 0.2s ease; }
+        .cafe-menu-item i { width: 28px; margin-right: 8px; font-size: 17px; }
+
+        .cafe-divider { height: 1px; background: #eaded6; margin: 18px 8px; }
+        .cafe-bottom-menu { margin-top: auto; }
+        .logout-item:hover { color: #d9534f; }
+
+        .cafe-content { flex: 1; min-width: 0; min-height: 100vh; padding: 30px; background: #fdf8f4; }
+        .manager-content { background: #fffaf6; }
+        .admin-content { background: #f4ebe5; }
+
+        .page-role-badge { display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; margin-bottom: 20px; }
+        .manager-badge { background: #f5dfca; color: #9c5727; }
+        .admin-badge { background: #3b2922; color: #efb06f; }
+
+        @media (max-width: 768px) {
+            .cafe-sidebar { width: 200px; min-width: 200px; padding-left: 10px; padding-right: 10px; }
+            .cafe-content { padding: 20px; }
+        }
+    </style>
+</head>
+
+<body>
+<div class="cafe-layout">
+
+    <!-- ================= MANAGER ================= -->
+    <th:block th:if="${session.loggedInUser != null and session.loggedInUser.employee_role == 'MANAGER'}">
+        <div th:replace="~{common/fragments/sidebar_manager :: sidebar_manager}"></div>
+    </th:block>
+
+    <!-- ================= ADMIN ================= -->
+    <th:block th:if="${session.loggedInUser != null and session.loggedInUser.employee_role == 'ADMIN'}">
+        <div th:replace="~{common/fragments/sidebar_admin :: sidebar_admin}"></div>
+    </th:block>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="cafe-content"
+          th:classappend="${session.loggedInUser != null and session.loggedInUser.employee_role == 'ADMIN' ? ' admin-content' : ' manager-content'}"
+          layout:fragment="content">
+    </main>
+
 </div>
 </body>
 </html>

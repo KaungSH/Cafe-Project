@@ -1,39 +1,35 @@
 package cafe.project.repositories.entities;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class StockImport {
 	private String import_id;
 	private LocalDateTime imported_at;
-	private double total_cost;
-	private String supplier_id;
 	private String employee_id;
 	private String branch_id;
+	private String supplier_id;
+	private BigDecimal total_cost;
+	private boolean isedited;
 	private boolean isdeleted;
-
-	private List<StockImportDetail> stockImportDetails;
+	private LocalDateTime created_at;
 
 	public StockImport() {
 	}
 
-	public StockImport(String import_id, LocalDateTime imported_at, double total_cost, String supplier_id,
-			String employee_id, String branch_id, boolean isdeleted) {
+	public StockImport(String import_id, LocalDateTime imported_at, String employee_id, String branch_id,
+			String supplier_id, BigDecimal total_cost, boolean isedited, boolean isdeleted, LocalDateTime created_at) {
 		this.import_id = import_id;
 		this.imported_at = imported_at;
-		this.total_cost = total_cost;
-		this.supplier_id = supplier_id;
 		this.employee_id = employee_id;
 		this.branch_id = branch_id;
+		this.supplier_id = supplier_id;
+		this.total_cost = total_cost;
+		this.isedited = isedited;
 		this.isdeleted = isdeleted;
-	}
+		this.created_at = created_at;
+		;
 
-	public List<StockImportDetail> getStockImportDetails() {
-		return stockImportDetails;
-	}
-
-	public void setStockImportDetails(List<StockImportDetail> stockImportDetails) {
-		this.stockImportDetails = stockImportDetails;
 	}
 
 	public String getImport_id() {
@@ -52,22 +48,6 @@ public class StockImport {
 		this.imported_at = imported_at;
 	}
 
-	public double getTotal_cost() {
-		return total_cost;
-	}
-
-	public void setTotal_cost(double total_cost) {
-		this.total_cost = total_cost;
-	}
-
-	public String getSupplier_id() {
-		return supplier_id;
-	}
-
-	public void setSupplier_id(String supplier_id) {
-		this.supplier_id = supplier_id;
-	}
-
 	public String getEmployee_id() {
 		return employee_id;
 	}
@@ -84,12 +64,44 @@ public class StockImport {
 		this.branch_id = branch_id;
 	}
 
+	public String getSupplier_id() {
+		return supplier_id;
+	}
+
+	public void setSupplier_id(String supplier_id) {
+		this.supplier_id = supplier_id;
+	}
+
+	public BigDecimal getTotal_cost() {
+		return total_cost;
+	}
+
+	public void setTotal_cost(BigDecimal total_cost) {
+		this.total_cost = total_cost;
+	}
+
+	public boolean isIsedited() {
+		return isedited;
+	}
+
+	public void setIsedited(boolean isedited) {
+		this.isedited = isedited;
+	}
+
 	public boolean isIsdeleted() {
 		return isdeleted;
 	}
 
 	public void setIsdeleted(boolean isdeleted) {
 		this.isdeleted = isdeleted;
+	}
+
+	public LocalDateTime getCreated_at() {
+		return created_at;
+	}
+
+	public void setCreated_at(LocalDateTime created_at) {
+		this.created_at = created_at;
 	}
 
 }

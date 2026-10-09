@@ -93,9 +93,9 @@ public class UnitService {
         entity.setEmployee_id(dto.getEmployee_id());
         entity.setName(dto.getName());
         entity.setAbbreviation(dto.getAbbreviation());
-        entity.setIs_active(dto.getIs_active());
-        entity.setIsdeleted(dto.getIsedited());
-        entity.setIsdeleted(dto.getIsdeleted());
+        entity.setIs_active(dto.isIs_active());
+        entity.setIsdeleted(dto.isIsedited());
+        entity.setIsdeleted(dto.isIsdeleted());
         entity.setCreated_at(dto.getCreated_at());
 
         return entity;

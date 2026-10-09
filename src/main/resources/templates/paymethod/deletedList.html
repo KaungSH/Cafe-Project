@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archived Payment Methods | Cafe Luft</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-canvas: #f6f2ec;
+            --surface: #ffffff;
+            --espresso: #1e130c;
+            --caramel: #b58356;
+            --border-subtle: #ede4d8;
+            --sage-success: #3f6e52;
+        }
+
+        body {
+            background-color: var(--bg-canvas);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #2b1d14;
+        }
+
+        .brand-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--espresso);
+            font-weight: 700;
+        }
+
+        .main-card {
+            background: var(--surface);
+            border-radius: 24px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 16px 40px -10px rgba(43, 29, 20, 0.07);
+            padding: 36px;
+        }
+
+        .luxury-table {
+            border-collapse: separate;
+            border-spacing: 0 8px;
+            width: 100%;
+        }
+        .luxury-table thead th {
+            color: #827265;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            border: none;
+            padding: 14px 18px;
+        }
+        .luxury-table tbody tr {
+            background-color: #faf8f5;
+            border-radius: 14px;
+        }
+        .luxury-table tbody td {
+            padding: 16px 18px;
+            vertical-align: middle;
+            border: none;
+            border-top: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .luxury-table tbody td:first-child {
+            border-left: 1px solid var(--border-subtle);
+            border-top-left-radius: 14px;
+            border-bottom-left-radius: 14px;
+        }
+        .luxury-table tbody td:last-child {
+            border-right: 1px solid var(--border-subtle);
+            border-top-right-radius: 14px;
+            border-bottom-right-radius: 14px;
+        }
+
+        .btn-restore {
+            background-color: var(--sage-success);
+            color: #fff;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            padding: 7px 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+        .btn-restore:hover {
+            background-color: #2f533e;
+            color: #fff;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container py-5">
+    <div class="main-card">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <span class="text-uppercase fw-semibold" style="font-size: 0.75rem; letter-spacing: 1.5px; color: var(--caramel);">Archive Vault</span>
+                <h2 class="brand-title mb-0">Deleted Payment Methods</h2>
+            </div>
+            <a th:href="@{/admin/paymethod}" class="btn btn-light px-3 py-2 fw-semibold" style="border-radius: 12px; border: 1.5px solid var(--border-subtle);">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="luxury-table align-middle">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Logo</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Deleted By</th>
+                        <th class="text-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="pm, state : ${payMethods}">
+                        <td class="text-muted fw-bold" th:text="${state.count < 10 ? '0' + state.count : state.count}">01</td>
+                        <td>
+                            <img th:if="${pm.logoPath != null and pm.logoPath != ''}"
+                                 th:src="@{'/images/' + ${pm.logoPath}}" alt="logo"
+                                 style="width: 40px; height: 40px; object-fit: contain; border-radius: 8px; background: #fff; border: 1px solid var(--border-subtle);" />
+                            <span th:if="${pm.logoPath == null or pm.logoPath == ''}" class="text-muted">—</span>
+                        </td>
+                        <td class="fw-bold" style="color: var(--espresso);" th:text="${pm.name}"></td>
+                        <td class="text-muted small" th:text="${pm.description}"></td>
+                        <td>
+                            <span class="badge" style="background-color: #faeae8; color: #b04638; border-radius: 20px; padding: 6px 12px;">Archived</span>
+                        </td>
+                        <td th:text="${employeeName != null ? employeeName : 'Admin'}"></td>
+                        <td class="text-end">
+                            <form th:action="@{/admin/paymethod/restore}" method="post" class="d-inline">
+                                <input type="hidden" name="methodId" th:value="${pm.methodId}">
+                                <button type="submit" class="btn-restore" onclick="return confirm('Restore this payment method?');">
+                                    <i class="bi bi-arrow-counterclockwise"></i> Restore
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(payMethods)}">
+                        <td colspan="7" class="text-center py-5">
+                            <i class="bi bi-archive fs-1 text-muted"></i>
+                            <p class="text-muted mt-2 mb-0">No archived payment methods found.</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

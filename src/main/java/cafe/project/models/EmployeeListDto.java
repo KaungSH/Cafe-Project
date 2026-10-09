@@ -1,6 +1,5 @@
 package cafe.project.models;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class EmployeeListDto {
@@ -8,22 +7,20 @@ public class EmployeeListDto {
 	private String name;
 	private String email;
 	private String phone;
-	private BigDecimal salary;
+	private double salary;
 	private String address;
 	private LocalDate dob;
 	private String photopath;
-	private String gender_name;
-
-	private String ESname;
+	private Gender gender;
+	
 	private String role_name;
 	private String branch_name;
+	private String status_name;
 
 	public EmployeeListDto() {
 	}
 
-	public EmployeeListDto(String employee_id, String name, String email, String phone, BigDecimal salary,
-			String address, LocalDate dob, String photopath, String gender_name, String ESname, String role_name,
-			String branch_name) {
+	public EmployeeListDto(String employee_id, String name, String email, String phone, double salary, String address, LocalDate dob, String photopath, Gender gender, String role_name, String branch_name, String status_name) {
 		this.employee_id = employee_id;
 		this.name = name;
 		this.email = email;
@@ -32,10 +29,10 @@ public class EmployeeListDto {
 		this.address = address;
 		this.dob = dob;
 		this.photopath = photopath;
-		this.gender_name = gender_name;
-		this.ESname = ESname;
+		this.gender= gender;
 		this.role_name = role_name;
 		this.branch_name = branch_name;
+		this.status_name = status_name;
 	}
 
 	public String getEmployee_id() {
@@ -54,7 +51,7 @@ public class EmployeeListDto {
 		return phone;
 	}
 
-	public BigDecimal getSalary() {
+	public double getSalary() {
 		return salary;
 	}
 
@@ -69,18 +66,13 @@ public class EmployeeListDto {
 	public String getPhotopath() {
 		return photopath;
 	}
-	
 
-	public String getGender_name() {
-		return gender_name;
+	public Gender getGender() {
+		return gender;
 	}
 
-	public void setGender_name(String gender_name) {
-		this.gender_name = gender_name;
-	}
-
-	public String getESname() {
-		return ESname;
+	public void setGender(Gender gender) {
+		this.gender = gender;
 	}
 
 	public String getRole_name() {
@@ -107,7 +99,7 @@ public class EmployeeListDto {
 		this.phone = phone;
 	}
 
-	public void setSalary(BigDecimal salary) {
+	public void setSalary(double salary) {
 		this.salary = salary;
 	}
 
@@ -123,11 +115,6 @@ public class EmployeeListDto {
 		this.photopath = photopath;
 	}
 
-
-	public void setESname(String eSname) {
-		ESname = eSname;
-	}
-
 	public void setRole_name(String role_name) {
 		this.role_name = role_name;
 	}
@@ -135,5 +122,15 @@ public class EmployeeListDto {
 	public void setBranch_name(String branch_name) {
 		this.branch_name = branch_name;
 	}
+
+	public String getStatus_name() {
+		return status_name;
+	}
+
+	public void setStatus_name(String status_name) {
+		this.status_name = status_name;
+	}
+	
+	
 
 }

@@ -12,101 +12,114 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import cafe.project.employeemanagement.models.LoginDto;
 import cafe.project.models.ExpenseDto;
-import cafe.project.repositories.BranchRepository;
 import cafe.project.repositories.ExpenseCategoryRepository;
+import cafe.project.services.BranchService;
 import cafe.project.services.ExpenseService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
-@RequestMapping("/manager/expense")
+@RequestMapping("/manager-only/expense")
 public class ExpenseController {
 
 	private final ExpenseService expenseService;
-	private final BranchRepository branchRepository;
+	private final BranchService branchService;
 	private final ExpenseCategoryRepository expenseCategoryRepository;
 
-	public ExpenseController(ExpenseService expenseService, BranchRepository branchRepository,
-			ExpenseCategoryRepository expenseCategoryRepository) {
+	public ExpenseController(ExpenseService expenseService, ExpenseCategoryRepository expenseCategoryRepository,
+			BranchService branchService) {
 		this.expenseService = expenseService;
-		this.branchRepository = branchRepository;
 		this.expenseCategoryRepository = expenseCategoryRepository;
+		this.branchService = branchService;
 	}
 
 	@GetMapping
-	public String ExpenseList(Model model) {
-		model.addAttribute("expense", this.expenseService.findAll());
+	public String ExpenseList(Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		model.addAttribute("expense", this.expenseService.findAll(ldto.getBranch_id()));
 		return "expense/list";
 	}
 
 	@GetMapping("/add")
-	public String addExpense(Model model) {
+	public String addExpense(Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		model.addAttribute("expense", new ExpenseDto());
-		model.addAttribute("branches", branchRepository.findAll());
+		model.addAttribute("branch", branchService.findById(ldto.getBranch_id()).getName());
 		model.addAttribute("expenseCategories", expenseCategoryRepository.findAll());
 		return "expense/add";
 	}
 
 	@PostMapping("/add")
 	public String addExpense(@Valid @ModelAttribute("expense") ExpenseDto expense, BindingResult bindingResult,
-			Model model) {
+			Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+
 		if (bindingResult.hasErrors()) {
-			model.addAttribute("branches", branchRepository.findAll());
+			model.addAttribute("branch", branchService.findById(ldto.getBranch_id()).getName());
 			model.addAttribute("expenseCategories", expenseCategoryRepository.findAll());
 			return "expense/add";
 		}
+		expense.setBranch_id(ldto.getBranch_id());
+		expense.setEmployee_id(ldto.getEmployee_id());
 		expense.setCreated_at(LocalDateTime.now());
 		expenseService.add(expense);
-		return "redirect:/manager/expense";
+		return "redirect:/manager-only/expense";
 	}
 
 	@GetMapping("/edit/{expense_id}")
-	public String editExpense(@PathVariable String expense_id, Model model) {
-		ExpenseDto existingEp = expenseService.findById(expense_id);
+	public String editExpense(@PathVariable String expense_id, Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		ExpenseDto existingEp = expenseService.findById(expense_id, ldto.getBranch_id());
 		if (existingEp != null) {
 			model.addAttribute("expense", existingEp);
-			model.addAttribute("branches", branchRepository.findAll());
+			model.addAttribute("branch", branchService.findById(ldto.getBranch_id()).getName());
 			model.addAttribute("expenseCategories", expenseCategoryRepository.findAll());
 			return "expense/edit";
 		}
-		return "redirect:/manager/expense";
+		return "redirect:/manager-only/expense";
 	}
 
 	@PostMapping("/edit")
 	public String editExpense(@Valid @ModelAttribute("expense") ExpenseDto expense, BindingResult bindingResult,
-			Model model) {
+			Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		if (bindingResult.hasErrors()) {
-			model.addAttribute("branches", branchRepository.findAll());
+			model.addAttribute("branch", branchService.findById(ldto.getBranch_id()).getName());
 			model.addAttribute("expenseCategories", expenseCategoryRepository.findAll());
 			return "expense/edit";
 		}
+		expense.setBranch_id(ldto.getBranch_id());
+		expense.setEmployee_id(ldto.getEmployee_id());
 		expense.setCreated_at(LocalDateTime.now());
 		expenseService.edit(expense.getExpense_id(), expense);
-		return "redirect:/manager/expense";
+		return "redirect:/manager-only/expense";
 	}
 
 	@PostMapping("/delete")
 	public String deletedExpense(@RequestParam String expense_id) {
 		expenseService.delete(expense_id);
-		return "redirect:/manager/expense";
+		return "redirect:/manager-only/expense";
 	}
 
 	@GetMapping("/deleted")
-	public String deletedExpenseList(Model model) {
-		model.addAttribute("expense", expenseService.deletedList());
+	public String deletedExpenseList(Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		model.addAttribute("expense", expenseService.deletedList(ldto.getBranch_id()));
 		return "expense/deletedList";
 	}
 
 	@PostMapping("/restore")
 	public String restoreSupplier(@RequestParam String expense_id) {
 		expenseService.restore(expense_id);
-		return "redirect:/manager/expense/deleted";
+		return "redirect:/manager-only/expense/deleted";
 	}
 
 	@PostMapping("/real-delete")
 	public String realDeleteExpense(@ModelAttribute("expense") ExpenseDto expense) {
 		expenseService.hardDelete(expense.getExpense_id());
-		return "redirect:/manager/expense/deleted";
+		return "redirect:/manager-only/expense/deleted";
 	}
 
 }

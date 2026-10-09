@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Employee | Café Luft</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-canvas: #fcf9f5;
+            --surface: #ffffff;
+            --espresso: #1f140e;
+            --caramel: #c49a6c;
+            --border-subtle: #ede4d8;
+        }
+        body { background-color: var(--bg-canvas); font-family: 'Plus Jakarta Sans', sans-serif; color: #2a1d17; }
+        .luxury-card {
+            background: var(--surface); border-radius: 24px; border: 1px solid var(--border-subtle);
+            box-shadow: 0 16px 40px -10px rgba(43, 29, 20, 0.06); padding: 40px; max-width: 900px; margin: 40px auto;
+        }
+        .brand-title { font-family: 'Playfair Display', serif; color: var(--espresso); font-weight: 700; }
+        .form-label { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #5c4335; margin-bottom: 6px; }
+        .form-control, .form-select { border: 1.5px solid var(--border-subtle); border-radius: 12px; padding: 10px 14px; }
+        .btn-luxury {
+            background: linear-gradient(135deg, #c49a6c 0%, #aa7e4e 100%); color: #ffffff; border: none;
+            border-radius: 12px; font-weight: 600; padding: 11px 26px;
+        }
+        .field-error { font-size: 0.8rem; color: #b04638; margin-top: 4px; display: block; }
+    </style>
+</head>
+<body>
+<div class="container py-4">
+    <div class="luxury-card">
+        <div class="mb-4">
+            <a th:href="@{/admin/employee}" class="text-decoration-none text-muted small fw-semibold">
+                <i class="bi bi-arrow-left"></i> Back to Employee List
+            </a>
+            <h2 class="brand-title mt-2 mb-1">Edit Employee Profile</h2>
+            <p class="text-muted small">Update role assignments, salary, or personal information.</p>
+        </div>
+
+        <form th:action="@{/admin/employee/edit}" th:object="${employeeDto}" method="post">
+            <input type="hidden" th:field="*{employee_id}" />
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" th:field="*{name}" class="form-control">
+                    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="field-error"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" th:field="*{email}" class="form-control">
+                    <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="field-error"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Password</label>
+                    <input type="text" th:field="*{password}" class="form-control">
+                    <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="field-error"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Phone</label>
+                    <input type="text" th:field="*{phone}" class="form-control">
+                    <span th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="field-error"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Salary</label>
+                    <input type="number" step="0.01" th:field="*{salary}" class="form-control">
+                    <span th:if="${#fields.hasErrors('salary')}" th:errors="*{salary}" class="field-error"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Date of Birth</label>
+                    <input type="date" th:field="*{dob}" class="form-control">
+                    <span th:if="${#fields.hasErrors('dob')}" th:errors="*{dob}" class="field-error"></span>
+                    <span th:text="${error}" class="field-error"></span>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Address</label>
+                    <input type="text" th:field="*{address}" class="form-control">
+                    <span th:if="${#fields.hasErrors('address')}" th:errors="*{address}" class="field-error"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Role</label>
+                    <select th:field="*{employee_role_id}" class="form-select" required>
+                        <option value="" disabled selected hidden>Select Role</option>
+                        <option th:each="s : ${roles}" th:value="${s.role_id}" th:text="${s.name}"></option>
+                    </select>
+                    <span th:if="${#fields.hasErrors('employee_role_id')}" th:errors="*{employee_role_id}" class="field-error"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Branch</label>
+                    <select th:field="*{branch_id}" class="form-select" required>
+                        <option value="" disabled selected hidden>Select Branch</option>
+                        <option th:each="s : ${branches}" th:value="${s.branch_id}" th:text="${s.name}"></option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Gender</label>
+                    <select th:field="*{gender}" class="form-select" required>
+                        <option value="" disabled selected hidden>Select Gender</option>
+                        <option th:each="g : ${T(cafe.project.models.Gender).values()}" th:value="${g}" th:text="${g}"></option>
+                    </select>
+                    <span th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}" class="field-error"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Status</label>
+                    <select th:field="*{employee_status_id}" class="form-select" required>
+                        <option value="" disabled selected hidden>Select Status</option>
+                        <option th:each="s : ${statuses}" th:value="${s.status_id}" th:text="${s.name}"></option>
+                    </select>
+                    <span th:if="${#fields.hasErrors('employee_status_id')}" th:errors="*{employee_status_id}" class="field-error"></span>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                <a th:href="@{/admin/employee}" class="btn btn-light px-4" style="border-radius: 12px; font-weight: 600;">Cancel</a>
+                <button type="submit" class="btn btn-luxury px-4">Update Employee</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

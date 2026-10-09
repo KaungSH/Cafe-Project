@@ -1,929 +1,605 @@
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{common/layout}">
 
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Edit Product Type - Cafe Project</title>
 
-<title>Edit Product - Cafe Project</title>
-
+<!-- Fonts & FontAwesome -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
 
 <style>
-#coverPreview {
-	max-width: 100%;
-	max-height: 300px;
-	object-fit: contain;
-	border-radius: 8px;
-	margin-top: 10px;
+* {
+	box-sizing: border-box;
 }
 
-.ingredient-list {
-	max-height: 220px;
-	overflow-y: auto;
+body {
+	font-family: 'Plus Jakarta Sans', sans-serif;
+	background-color: #f8fafc;
+	color: #0f172a;
+}
+
+/* Page Outer Container */
+.page-container {
+	padding: 24px 32px 48px;
+	max-width: 1300px;
+	margin: 0 auto;
+}
+
+/* Top Breadcrumb & Page Header */
+.header-breadcrumb {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 24px;
+	padding-bottom: 16px;
+	border-bottom: 1px solid #edf2f7;
+}
+
+.breadcrumb-tag {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 0.85rem;
+	color: #64748b;
+	text-decoration: none;
+	font-weight: 500;
+	transition: color 0.2s;
+}
+
+.breadcrumb-tag:hover {
+	color: #c2410c;
+}
+
+/* Main Dashboard Card Wrapper */
+.edit-dashboard-card {
+	background: #ffffff;
+	border-radius: 20px;
+	border: 1px solid #edf2f7;
+	box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+	overflow: hidden;
+}
+
+.card-title-bar {
+	padding: 20px 28px;
+	border-bottom: 1px solid #f1f5f9;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background: #fafafa;
+}
+
+/* Section Cards */
+.sub-panel {
+	background: #ffffff;
+	border: 1px solid #e2e8f0;
+	border-radius: 16px;
+	padding: 22px;
+	height: 100%;
+}
+
+.sub-panel-title {
+	font-size: 0.95rem;
+	font-weight: 700;
+	color: #0f172a;
+	margin-bottom: 18px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.sub-panel-title i {
+	color: #ea580c;
+}
+
+/* Form Styles */
+.form-label-caps {
+	display: block;
+	font-size: 0.72rem;
+	font-weight: 700;
+	color: #64748b;
+	letter-spacing: 0.5px;
+	text-transform: uppercase;
+	margin-bottom: 6px;
+}
+
+.input-rounded {
+	width: 100%;
+	height: 44px;
+	border-radius: 12px;
+	border: 1px solid #e2e8f0;
+	padding: 8px 16px;
+	font-size: 0.88rem;
+	color: #1e293b;
+	background-color: #f8fafc;
+	outline: none;
+	transition: all 0.2s;
+}
+
+.input-rounded:focus {
+	border-color: #c2410c;
+	background-color: #ffffff;
+	box-shadow: 0 0 0 3px rgba(194, 65, 12, 0.1);
+}
+
+.textarea-rounded {
+	width: 100%;
+	border-radius: 12px;
+	border: 1px solid #e2e8f0;
+	padding: 12px 16px;
+	font-size: 0.88rem;
+	color: #1e293b;
+	background-color: #f8fafc;
+	outline: none;
+	resize: none;
+	transition: all 0.2s;
+}
+
+.textarea-rounded:focus {
+	border-color: #c2410c;
+	background-color: #ffffff;
+	box-shadow: 0 0 0 3px rgba(194, 65, 12, 0.1);
+}
+
+/* Image Upload & Live Preview Card */
+.image-preview-box {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	background-color: #f8fafc;
+	border: 1px dashed #cbd5e1;
+	border-radius: 14px;
+	padding: 14px 18px;
+}
+
+.current-cover-thumb {
+	width: 60px;
+	height: 60px;
+	border-radius: 12px;
+	object-fit: cover;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+	border: 1px solid #e2e8f0;
+	flex-shrink: 0;
+}
+
+.btn-choose-file {
+	background-color: #fff7ed;
+	border: 1px solid #fed7aa;
+	color: #c2410c;
+	font-weight: 600;
+	font-size: 0.82rem;
+	border-radius: 8px;
+	padding: 7px 16px;
+	cursor: pointer;
+	white-space: nowrap;
+	transition: all 0.2s;
+}
+
+.btn-choose-file:hover {
+	background-color: #ffedd5;
+}
+
+/* Variant Table */
+.variant-card-table {
+	width: 100%;
+	border: 1px solid #edf2f7;
+	border-radius: 14px;
+	overflow: hidden;
+	background: #ffffff;
+	border-collapse: separate;
+	border-spacing: 0;
+}
+
+.variant-card-table th {
+	background-color: #f8fafc;
+	color: #64748b;
+	font-size: 0.74rem;
+	font-weight: 700;
+	padding: 12px 14px;
+	border-bottom: 1px solid #edf2f7;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.variant-card-table td {
+	padding: 12px 14px;
+	font-size: 0.88rem;
+	color: #1e293b;
+	border-bottom: 1px solid #f8fafc;
+	vertical-align: middle;
+}
+
+.variant-card-table tr:hover td {
+	background-color: #fffaf5;
+}
+
+.variant-card-table tr:last-child td {
+	border-bottom: none;
+}
+
+.custom-checkbox {
+	width: 18px;
+	height: 18px;
+	border-radius: 5px;
+	accent-color: #c2410c;
+	cursor: pointer;
+}
+
+/* Action Buttons */
+.footer-action-bar {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 12px;
+	padding: 20px 28px;
+	background: #fafafa;
+	border-top: 1px solid #edf2f7;
+}
+
+.btn-cancel-custom {
+	background: #ffffff;
+	border: 1px solid #e2e8f0;
+	color: #475569;
+	font-weight: 600;
+	font-size: 0.88rem;
+	border-radius: 10px;
+	padding: 9px 24px;
+	text-decoration: none;
+	transition: all 0.2s;
+}
+
+.btn-cancel-custom:hover {
+	background-color: #f1f5f9;
+	color: #0f172a;
+}
+
+.btn-save-custom {
+	background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+	color: #ffffff;
+	font-weight: 600;
+	font-size: 0.88rem;
+	border-radius: 10px;
+	padding: 10px 28px;
+	border: none;
+	cursor: pointer;
+	box-shadow: 0 4px 12px rgba(194, 65, 12, 0.25);
+	transition: all 0.2s;
+}
+
+.btn-save-custom:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 6px 16px rgba(194, 65, 12, 0.35);
 }
 </style>
-
 </head>
 
+<body>
+	<div layout:fragment="content">
+		<div class="page-container">
 
-<div layout:fragment="content">
+			<!-- Header & Back Navigation -->
+			<div class="header-breadcrumb">
+				<div>
+					<a th:href="@{/manager/products}" class="breadcrumb-tag mb-1">
+						<i class="fa-solid fa-arrow-left"></i> Back to Products
+					</a>
+					<h3 class="fw-bold text-dark mb-0">Edit Product Type</h3>
+				</div>
+				<a th:href="@{/manager/products}" class="btn-cancel-custom py-1 px-3 small">
+					<i class="fa-solid fa-xmark me-1"></i> Close
+				</a>
+			</div>
 
-	<div class="bg-light">
+			<!-- Main Form Card -->
+			<div class="edit-dashboard-card">
+				
+				<form method="post" th:action="@{/manager/products/edit}"
+					th:object="${product_type}" enctype="multipart/form-data"
+					id="productTypeForm">
 
-		<div class="container py-5">
+					<!-- Hidden IDs -->
+					<input type="hidden" th:field="*{type_id}">
+					<input type="hidden" th:field="*{coverimgpath}">
 
-			<div class="row justify-content-center">
-
-				<div class="col-lg-10 col-xl-9">
-
-					<div class="card shadow-sm">
-
-
-						<!-- ================================================== -->
-						<!-- Header -->
-						<!-- ================================================== -->
-
-						<div class="card-header bg-secondary text-white">
-
-							<h2 class="mb-0">Edit Product Type</h2>
-
-						</div>
-
-
-						<div class="card-body p-4">
-
-
-							<!-- ================================================== -->
-							<!-- Form -->
-							<!-- ================================================== -->
-
-							<form method="post" th:action="@{/manager/products/edit}"
-								th:object="${product_type}" enctype="multipart/form-data"
-								id="productTypeForm">
-
-
-								<!-- ================================================== -->
-								<!-- Hidden Existing Values -->
-								<!-- ================================================== -->
-
-								<input type="hidden" th:field="*{type_id}"> <input
-									type="hidden" th:field="*{coverimgpath}">
-
-
-								<!-- ================================================== -->
-								<!-- Name -->
-								<!-- ================================================== -->
-
-								<div class="mb-4">
-
-									<label for="name" class="form-label fw-semibold"> Edit
-										Name </label> <input type="text" id="name" class="form-control"
-										th:field="*{name}" placeholder="Enter Product Type Name"
-										required>
-
-								</div>
-
-
-								<!-- ================================================== -->
-								<!-- Description -->
-								<!-- ================================================== -->
-
-								<div class="mb-4">
-
-									<label for="description" class="form-label fw-semibold">
-
-										Edit Description </label>
-
-									<textarea id="description" class="form-control"
-										th:field="*{description}" rows="8"
-										placeholder="Write your description here..."></textarea>
-
-								</div>
-
-
-								<!-- ================================================== -->
-								<!-- Original Cover Image -->
-								<!-- ================================================== -->
-
-								<div class="mb-4">
-
-									<label class="form-label fw-semibold"> Original Cover
-										Image </label> <br> <img
-										th:if="${product_type.coverimgpath != null}"
-										th:src="@{'/images/' + ${product_type.coverimgpath}}"
-										alt="Thumbnail Error"
-										style="height: 300px; width: auto; object-fit: cover;">
-
-									<div th:unless="${product_type.coverimgpath != null}"
-										class="text-muted">No Image</div>
-
-								</div>
-
-
-								<!-- ================================================== -->
-								<!-- New Cover Image -->
-								<!-- ================================================== -->
-
-								<div class="mb-4">
-
-									<label for="coverImg" class="form-label fw-semibold">
-
-										Select A File to Change Cover Image </label> <input type="file"
-										id="coverImg" name="coverImgPart" class="form-control"
-										accept="image/*">
-
-									<div class="form-text">Select an image to replace the
-										current cover.</div>
-
-									<div class="mt-3">
-
-										<img id="coverPreview" class="img-fluid"
-											style="display: none;" alt="Cover image preview">
-
+					<div class="p-4 p-lg-5">
+						<div class="row g-4">
+							
+							<!-- Left Column: Basic Details & Image -->
+							<div class="col-lg-5">
+								<div class="sub-panel">
+									<div class="sub-panel-title">
+										<i class="fa-solid fa-mug-hot"></i> General Information
 									</div>
 
+									<!-- Product Name -->
+									<div class="mb-3">
+										<label class="form-label-caps" for="name">Product Name</label>
+										<input type="text" id="name" class="input-rounded" th:field="*{name}" placeholder="e.g. Coffee - Cappuccino" required>
+									</div>
+
+									<!-- Category -->
+									<div class="mb-3">
+										<label class="form-label-caps" for="category">Category</label>
+										<select id="category" class="input-rounded" th:field="*{category_id}">
+											<option value="" disabled>Select Category</option>
+											<option th:each="c : ${categories}" th:value="${c.category_id}" th:text="${c.name}"></option>
+										</select>
+									</div>
+
+									<!-- Default Price -->
+									<div class="mb-3">
+										<label class="form-label-caps" for="priceDisplay">Default Base Price (MMK)</label>
+										<div class="position-relative">
+											<input type="text" id="priceDisplay" class="input-rounded" 
+												th:value="${#numbers.formatDecimal(product_type.price, 1, 2)}"
+												placeholder="10,000.00" inputmode="decimal" required>
+											<span class="position-absolute end-0 top-50 translate-middle-y me-3 fw-bold text-muted small">MMK</span>
+										</div>
+										<input type="hidden" id="price" th:field="*{price}">
+									</div>
+
+									<!-- Description -->
+									<div class="mb-3">
+										<label class="form-label-caps" for="description">Description</label>
+										<textarea id="description" class="textarea-rounded" rows="3" th:field="*{description}" placeholder="A rich blend of espresso and creamy milk..."></textarea>
+									</div>
+
+									<!-- Cover Image Upload Box -->
+									<div>
+										<label class="form-label-caps">Cover Image File</label>
+										<div class="image-preview-box">
+											<!-- Thumbnail Preview -->
+											<img id="coverPreview" 
+											     th:src="${product_type.coverimgpath != null ? '/images/' + product_type.coverimgpath : '/images/Cappuccino.jpg'}" 
+											     class="current-cover-thumb" alt="Product Thumbnail">
+											
+											<div class="overflow-hidden">
+												<label for="coverImg" class="btn-choose-file mb-1">
+													<i class="fa-solid fa-cloud-arrow-up me-1"></i> Replace Image
+												</label>
+												<div id="fileNameDisplay" class="small text-muted text-truncate" style="max-width: 180px;">
+													<span th:if="${product_type.coverimgpath != null}" th:text="${product_type.coverimgpath}">Current File</span>
+													<span th:unless="${product_type.coverimgpath != null}">No file selected</span>
+												</div>
+												<input type="file" id="coverImg" name="coverImgPart" accept="image/*" style="display: none;">
+											</div>
+										</div>
+									</div>
 								</div>
+							</div>
 
+							<!-- Right Column: Sizes & Ingredients Setup -->
+							<div class="col-lg-7">
+								<div class="sub-panel">
+									<div class="sub-panel-title">
+										<i class="fa-solid fa-layer-group"></i> Sizes and Variant Pricing Setup
+									</div>
 
-								<!-- ================================================== -->
-								<!-- Category -->
-								<!-- ================================================== -->
+									<p class="text-muted small mb-3">
+										Turn on sizes and specify individual pricing for each cup size:
+									</p>
 
-								<div class="mb-4">
-
-									<label for="category" class="form-label fw-semibold">
-
-										Edit Category </label> <select id="category" class="form-select"
-										th:field="*{category_id}">
-
-										<option value="" disabled>--- Select One ---</option>
-
-										<option th:each="c : ${categories}"
-											th:value="${c.category_id}" th:text="${c.name}"></option>
-
-									</select>
-
-								</div>
-
-
-								<!-- ================================================== -->
-								<!-- Default Price -->
-								<!-- ================================================== -->
-
-								<div class="mb-4">
-
-									<label for="priceDisplay" class="form-label fw-semibold">
-
-										Edit Default Price </label>
-
-
-									<!-- What the user sees -->
-
-									<input type="text" id="priceDisplay" class="form-control"
-										placeholder="Enter Default Price"
-										th:value="${#numbers.formatDecimal(product_type.price, 1, 2)}"
-										inputmode="decimal" required>
-
-
-									<!-- What Spring receives -->
-
-									<input type="hidden" id="price" th:field="*{price}">
-
-								</div>
-
-
-								<!-- ================================================== -->
-								<!-- Product Configuration -->
-								<!-- ================================================== -->
-
-								<div class="mb-4 border-top pt-4">
-
-									<label class="form-label fw-semibold fs-5 mb-2">
-
-										Product Sizes And Ingredients Setup </label>
-
-									<p class="text-muted small mb-3">Select the sizes you want
-										to create as products. Set their variant price, active state,
-										and required ingredients.</p>
-
-
-									<div class="table-responsive">
-
-										<table class="table table-bordered table-sm align-middle mb-0">
-
-
-											<!-- ================================================== -->
-											<!-- Header -->
-											<!-- ================================================== -->
-
-											<thead class="table-light">
-
-												<tr>
-
-													<th style="width: 7%;" class="text-center">Enable</th>
-
-													<th style="width: 15%;">Size</th>
-
-													<th style="width: 16%;">Variant Price</th>
-
-													<th style="width: 10%;" class="text-center">Active</th>
-
-													<th style="width: 52%;">Required Ingredients</th>
-
-												</tr>
-
-											</thead>
-
-
-											<tbody>
-
-
-												<!-- ================================================== -->
-												<!-- Every Available Size -->
-												<!-- ================================================== -->
-
-												<tr th:each="s : ${sizes}" class="product-size-row">
-
-
-													<!-- ================================================== -->
-													<!-- Enable -->
-													<!-- ================================================== -->
-
-													<td class="text-center"><input type="checkbox"
-														class="form-check-input size-enable"></td>
-
-
-													<!-- ================================================== -->
-													<!-- Size -->
-													<!-- ================================================== -->
-
-													<td><input type="hidden" class="size-id"
-														th:value="${s.size_id}"> <span class="fw-semibold"
-														th:text="${s.name + ' (' + s.size_code + ')'}">
-
-															Small (sm) </span></td>
-
-
-													<!-- ================================================== -->
-													<!-- Variant Price -->
-													<!-- ================================================== -->
-
-													<td><input type="number"
-														class="form-control form-control-sm variant-price"
-														step="0.01" min="0" placeholder="Price"></td>
-
-
-													<!-- ================================================== -->
-													<!-- Active -->
-													<!-- ================================================== -->
-
-													<td class="text-center"><input type="checkbox"
-														class="form-check-input is-active" checked></td>
-
-
-													<!-- ================================================== -->
-													<!-- Ingredients -->
-													<!-- ================================================== -->
-
+									<table class="variant-card-table">
+										<thead>
+											<tr>
+												<th style="width: 25%;">Size</th>
+												<th style="width: 15%;">Code</th>
+												<th style="width: 45%;">Variant Price</th>
+												<th style="width: 15%; text-align: center;">Active</th>
+											</tr>
+										</thead>
+										<tbody>
+											<th:block th:each="s : ${sizes}">
+												<tr class="product-size-row">
+													<!-- Enable Size & Name -->
 													<td>
-
-														<div class="border rounded">
-
-
-															<!-- Ingredient Header -->
-
-															<div
-																class="d-flex bg-light border-bottom px-2 py-1 small fw-semibold">
-
-																<div style="width: 8%;" class="text-center"></div>
-
-																<div style="width: 57%;">Required Ingredient</div>
-
-																<div style="width: 35%;">Quantity Required</div>
-
-															</div>
-
-
-															<!-- Ingredient List -->
-
-															<div class="ingredient-list">
-
-
-																<!-- ================================================== -->
-																<!-- Every Available Ingredient -->
-																<!-- ================================================== -->
-
-																<div th:each="ing : ${ingredients}"
-																	class="d-flex align-items-center px-2 py-1 border-bottom ingredient-row">
-
-
-																	<!-- Ingredient ID -->
-
-																	<input type="hidden" class="ingredient-id"
-																		th:value="${ing.ingredient_type_id}">
-
-
-																	<!-- Required -->
-
-																	<div style="width: 8%;" class="text-center">
-
-																		<input type="checkbox"
-																			class="form-check-input ingredient-required">
-
-																	</div>
-
-
-																	<!-- Ingredient Name -->
-
-																	<div style="width: 57%;">
-
-																		<span class="small" th:text="${ing.name}">
-
-																			Ingredient </span>
-
-																	</div>
-
-
-																	<!-- Quantity -->
-
-																	<div style="width: 35%;">
-
-																		<input type="number"
-																			class="form-control form-control-sm ingredient-quantity"
-																			step="0.5" min="0" placeholder="Qty">
-
-																	</div>
-
-																</div>
-
-															</div>
-
+														<div class="d-flex align-items-center gap-2">
+															<input type="checkbox" class="custom-checkbox size-enable">
+															<span class="fw-semibold text-dark" th:text="${s.name}">Small (S)</span>
 														</div>
-
 													</td>
 
+													<!-- Size Code -->
+													<td class="text-muted fw-bold">
+														<input type="hidden" class="size-id" th:value="${s.size_id}">
+														<span th:text="${s.size_code}">S</span>
+													</td>
+
+													<!-- Variant Price Input -->
+													<td>
+														<div class="d-flex align-items-center gap-2">
+															<input type="number" class="input-rounded variant-price py-1" style="height: 36px;" placeholder="Price" step="500">
+															<span class="small fw-semibold text-muted">MMK</span>
+														</div>
+													</td>
+
+													<!-- Active State -->
+													<td class="text-center">
+														<input type="checkbox" class="custom-checkbox is-active" checked>
+													</td>
 												</tr>
 
-											</tbody>
-
-										</table>
-
-									</div>
-
+												<!-- Hidden Row for Ingredients Data Preservation -->
+												<tr style="display: none;">
+													<td>
+														<div th:each="ing : ${ingredients}" class="ingredient-row">
+															<input type="hidden" class="ingredient-id" th:value="${ing.ingredient_type_id}">
+															<input type="checkbox" class="ingredient-required">
+															<input type="number" class="ingredient-quantity" value="1">
+														</div>
+													</td>
+												</tr>
+											</th:block>
+										</tbody>
+									</table>
 								</div>
-
-
-								<!-- ================================================== -->
-								<!-- Buttons -->
-								<!-- ================================================== -->
-
-								<div
-									class="d-flex justify-content-between align-items-center pt-3 border-top">
-
-									<a th:href="@{/manager/products}"
-										class="btn btn-outline-secondary"> Cancel </a>
-
-									<button type="submit" class="btn btn-secondary">
-
-										Update Product Type</button>
-
-								</div>
-
-
-							</form>
+							</div>
 
 						</div>
-
 					</div>
 
-				</div>
+					<!-- Bottom Action Controls -->
+					<div class="footer-action-bar">
+						<a th:href="@{/manager/products}" class="btn-cancel-custom">Cancel</a>
+						<button type="submit" class="btn-save-custom">
+							<i class="fa-solid fa-check me-1"></i> Save Product Type
+						</button>
+					</div>
+
+				</form>
 
 			</div>
 
 		</div>
 
-	</div>
+		<!-- Scripts -->
+		<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 
+		<!-- Instant Image Preview & Filename Display -->
+		<script>
+			document.getElementById("coverImg").addEventListener("change", function(e) {
+				const file = e.target.files[0];
+				if (file) {
+					document.getElementById("fileNameDisplay").textContent = file.name;
+					document.getElementById("coverPreview").src = URL.createObjectURL(file);
+				}
+			});
+		</script>
 
-	<!-- ================================================== -->
-	<!-- Bootstrap JavaScript -->
-	<!-- ================================================== -->
+		<!-- Existing Product Data Restoration -->
+		<script th:inline="javascript">
+			const existingProducts = /*[[${product_type.product}]]*/ [];
+		</script>
 
-	<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
-
-
-	<!-- ================================================== -->
-	<!-- Existing Product Data -->
-	<!-- ================================================== -->
-
-	<script th:inline="javascript">
-		/*
-		 * Thymeleaf converts the Java ProductEntryModel list
-		 * into a JavaScript object.
-		 *
-		 * This is ONLY for restoring the existing values
-		 * when opening the Edit page.
-		 */
-
-		const existingProducts =
-		/*[[${product_type.product}]]*/[];
-	</script>
-
-
-	<!-- ================================================== -->
-	<!-- Restore Existing Products -->
-	<!-- ================================================== -->
-
-	<script>
-		document
-				.querySelectorAll(".product-size-row")
-				.forEach(
-						function(row) {
-
-							const sizeId = row.querySelector(".size-id").value;
-
-							/*
-							 * Find the existing product belonging
-							 * to this size.
-							 */
-
-							const existingProduct = existingProducts
-									.find(function(product) {
-
-										return product.size_id === sizeId;
-
-									});
-
-							/*
-							 * This size does not currently have
-							 * a ProductEntryModel.
-							 */
-
-							if (!existingProduct) {
-
-								return;
-
-							}
-
-							/*
-							 * ==================================================
-							 * Enable Size
-							 * ==================================================
-							 */
-
-							row.querySelector(".size-enable").checked = true;
-
-							/*
-							 * ==================================================
-							 * Variant Price
-							 * ==================================================
-							 */
-
-							row.querySelector(".variant-price").value = existingProduct.price;
-
-							/*
-							 * ==================================================
-							 * Active State
-							 * ==================================================
-							 */
-
-							row.querySelector(".is-active").checked = existingProduct.is_active;
-
-							/*
-							 * ==================================================
-							 * Ingredients
-							 * ==================================================
-							 */
-
-							if (existingProduct.ingredient_ids
-									&& existingProduct.quantity_required) {
-
-								const ingredientRows = row
-										.querySelectorAll(".ingredient-row");
-
-								ingredientRows
-										.forEach(function(ingredientRow) {
-
-											const ingredientId = ingredientRow
-													.querySelector(".ingredient-id").value;
-
-											/*
-											 * Find this ingredient in the
-											 * existing ProductEntryModel.
-											 */
-
-											const ingredientIndex = existingProduct.ingredient_ids
-													.indexOf(ingredientId);
-
-											/*
-											 * Ingredient is not currently
-											 * required by this product.
-											 */
-
-											if (ingredientIndex === -1) {
-
-												return;
-
-											}
-
-											/*
-											 * Check the ingredient.
-											 */
-
-											ingredientRow
-													.querySelector(".ingredient-required").checked = true;
-
-											/*
-											 * Restore its quantity.
-											 */
-
-											ingredientRow
-													.querySelector(".ingredient-quantity").value = existingProduct.quantity_required[ingredientIndex];
-
-										});
-
-							}
-
-						});
-	</script>
-
-
-	<!-- ================================================== -->
-	<!-- Image Preview -->
-	<!-- ================================================== -->
-
-	<script>
-		document.getElementById("coverImg").addEventListener("change",
-				function(event) {
-
-					const file = event.target.files[0];
-
-					const preview = document.getElementById("coverPreview");
-
-					if (file) {
-
-						preview.src = URL.createObjectURL(file);
-
-						preview.style.display = "block";
-
-					} else {
-
-						preview.src = "";
-
-						preview.style.display = "none";
-
-					}
-
+		<script>
+			document.querySelectorAll(".product-size-row").forEach(function(row) {
+				const sizeId = row.querySelector(".size-id").value;
+				const existingProduct = existingProducts.find(function(product) {
+					return product.size_id === sizeId;
 				});
-	</script>
 
+				if (!existingProduct) return;
 
-	<!-- ================================================== -->
-	<!-- Default Price Formatting -->
-	<!-- ================================================== -->
+				row.querySelector(".size-enable").checked = true;
+				row.querySelector(".variant-price").value = existingProduct.price;
+				row.querySelector(".is-active").checked = existingProduct.is_active;
 
-	<script>
-		const priceDisplay = document.getElementById("priceDisplay");
+				if (existingProduct.ingredient_ids && existingProduct.quantity_required) {
+					const hiddenRow = row.nextElementSibling;
+					if (hiddenRow) {
+						const ingredientRows = hiddenRow.querySelectorAll(".ingredient-row");
+						ingredientRows.forEach(function(ingredientRow) {
+							const ingredientId = ingredientRow.querySelector(".ingredient-id").value;
+							const ingredientIndex = existingProduct.ingredient_ids.indexOf(ingredientId);
+							if (ingredientIndex !== -1) {
+								ingredientRow.querySelector(".ingredient-required").checked = true;
+								ingredientRow.querySelector(".ingredient-quantity").value = existingProduct.quantity_required[ingredientIndex];
+							}
+						});
+					}
+				}
+			});
+		</script>
 
-		const price = document.getElementById("price");
+		<!-- Default Price Formatting -->
+		<script>
+			const priceDisplay = document.getElementById("priceDisplay");
+			const price = document.getElementById("price");
 
-		/*
-		 * Format the existing price when
-		 * the page initially loads.
-		 */
-
-		if (price.value !== "") {
-
-			const number = parseFloat(price.value);
-
-			if (!isNaN(number)) {
-
-				priceDisplay.value = number.toLocaleString("en-US");
-
-			}
-
-		}
-
-		priceDisplay.addEventListener("input", function() {
-
-			/*
-			 * Remove everything except
-			 * numbers and decimal point.
-			 */
-
-			let value = this.value.replace(/[^0-9.]/g, "");
-
-			/*
-			 * Prevent multiple decimal points.
-			 */
-
-			const parts = value.split(".");
-
-			if (parts.length > 2) {
-
-				value = parts[0] + "." + parts.slice(1).join("");
-
-			}
-
-			if (value) {
-
-				const number = parseFloat(value);
-
+			if (price.value !== "") {
+				const number = parseFloat(price.value);
 				if (!isNaN(number)) {
+					priceDisplay.value = number.toLocaleString("en-US");
+				}
+			}
 
-					this.value = number.toLocaleString("en-US");
+			priceDisplay.addEventListener("input", function() {
+				let value = this.value.replace(/[^0-9.]/g, "");
+				const parts = value.split(".");
+				if (parts.length > 2) {
+					value = parts[0] + "." + parts.slice(1).join("");
+				}
+				if (value) {
+					const number = parseFloat(value);
+					if (!isNaN(number)) {
+						this.value = number.toLocaleString("en-US");
+						price.value = number.toFixed(2);
+					}
+				} else {
+					this.value = "";
+					price.value = "";
+				}
+			});
+		</script>
 
-					price.value = number.toFixed(2);
+		<!-- Dynamic Submission Logic -->
+		<script>
+			document.getElementById("productTypeForm").addEventListener("submit", function(event) {
+				document.querySelectorAll(".generated-product-field").forEach(function(field) {
+					field.remove();
+				});
 
+				const defaultPrice = price.value;
+				if (defaultPrice === "") {
+					event.preventDefault();
+					alert("Please enter a default price.");
+					return;
 				}
 
-			} else {
+				const rows = document.querySelectorAll(".product-size-row");
+				let productIndex = 0;
 
-				this.value = "";
+				rows.forEach(function(row) {
+					const enableCheckbox = row.querySelector(".size-enable");
+					if (!enableCheckbox.checked) return;
 
-				price.value = "";
+					const sizeId = row.querySelector(".size-id").value;
+					let variantPrice = row.querySelector(".variant-price").value;
+					if (variantPrice === "") {
+						variantPrice = defaultPrice;
+					}
 
+					const activeCheckbox = row.querySelector(".is-active");
+
+					addHiddenField(this, "product[" + productIndex + "].size_id", sizeId);
+					addHiddenField(this, "product[" + productIndex + "].price", variantPrice);
+					addHiddenField(this, "product[" + productIndex + "].is_active", activeCheckbox.checked ? "true" : "false");
+
+					const hiddenRow = row.nextElementSibling;
+					if (hiddenRow) {
+						const ingredientRows = hiddenRow.querySelectorAll(".ingredient-row");
+						let ingredientIndex = 0;
+						ingredientRows.forEach(function(ingredientRow) {
+							const requiredCheckbox = ingredientRow.querySelector(".ingredient-required");
+							if (!requiredCheckbox.checked) return;
+
+							const ingredientId = ingredientRow.querySelector(".ingredient-id").value;
+							const quantity = ingredientRow.querySelector(".ingredient-quantity").value;
+
+							addHiddenField(this, "product[" + productIndex + "].ingredient_ids[" + ingredientIndex + "]", ingredientId);
+							addHiddenField(this, "product[" + productIndex + "].quantity_required[" + ingredientIndex + "]", quantity);
+							ingredientIndex++;
+						}.bind(this));
+					}
+
+					productIndex++;
+				}.bind(this));
+			});
+
+			function addHiddenField(form, name, value) {
+				const input = document.createElement("input");
+				input.type = "hidden";
+				input.name = name;
+				input.value = value;
+				input.classList.add("generated-product-field");
+				form.appendChild(input);
 			}
-
-		});
-	</script>
-
-
-	<!-- ================================================== -->
-	<!-- Product List Binding -->
-	<!-- ================================================== -->
-
-	<script>
-		document
-				.getElementById("productTypeForm")
-				.addEventListener(
-						"submit",
-						function(event) {
-
-							/*
-							 * Remove previously generated fields.
-							 */
-
-							document.querySelectorAll(
-									".generated-product-field").forEach(
-									function(field) {
-
-										field.remove();
-
-									});
-
-							/*
-							 * Make sure default price exists.
-							 */
-
-							const defaultPrice = price.value;
-
-							if (defaultPrice === "") {
-
-								event.preventDefault();
-
-								alert("Please enter a default price.");
-
-								return;
-
-							}
-
-							/*
-							 * Get all size rows.
-							 */
-
-							const rows = document
-									.querySelectorAll(".product-size-row");
-
-							let productIndex = 0;
-
-							rows
-									.forEach(function(row) {
-
-										/*
-										 * Enable checkbox.
-										 */
-
-										const enableCheckbox = row
-												.querySelector(".size-enable");
-
-										/*
-										 * Only submit enabled sizes.
-										 */
-
-										if (!enableCheckbox.checked) {
-
-											return;
-
-										}
-
-										/*
-										 * Size ID.
-										 */
-
-										const sizeId = row
-												.querySelector(".size-id").value;
-
-										/*
-										 * Variant Price.
-										 */
-
-										let variantPrice = row
-												.querySelector(".variant-price").value;
-
-										/*
-										 * Empty variant price
-										 * uses default price.
-										 */
-
-										if (variantPrice === "") {
-
-											variantPrice = defaultPrice;
-
-										}
-
-										/*
-										 * Active checkbox.
-										 */
-
-										const activeCheckbox = row
-												.querySelector(".is-active");
-
-										/*
-										 * ==================================================
-										 * product[x].size_id
-										 * ==================================================
-										 */
-
-										addHiddenField(this, "product["
-												+ productIndex + "].size_id",
-												sizeId);
-
-										/*
-										 * ==================================================
-										 * product[x].price
-										 * ==================================================
-										 */
-
-										addHiddenField(this, "product["
-												+ productIndex + "].price",
-												variantPrice);
-
-										/*
-										 * ==================================================
-										 * product[x].is_active
-										 * ==================================================
-										 */
-
-										addHiddenField(this, "product["
-												+ productIndex + "].is_active",
-												activeCheckbox.checked ? "true"
-														: "false");
-
-										/*
-										 * ==================================================
-										 * Ingredients
-										 * ==================================================
-										 */
-
-										const ingredientRows = row
-												.querySelectorAll(".ingredient-row");
-
-										let ingredientIndex = 0;
-
-										let ingredientError = false;
-
-										ingredientRows
-												.forEach(function(ingredientRow) {
-
-													/*
-													 * Required checkbox.
-													 */
-
-													const requiredCheckbox = ingredientRow
-															.querySelector(".ingredient-required");
-
-													/*
-													 * Ignore unchecked ingredients.
-													 */
-
-													if (!requiredCheckbox.checked) {
-
-														return;
-
-													}
-
-													/*
-													 * Ingredient ID.
-													 */
-
-													const ingredientId = ingredientRow
-															.querySelector(".ingredient-id").value;
-
-													/*
-													 * Quantity.
-													 */
-
-													const quantity = ingredientRow
-															.querySelector(".ingredient-quantity").value;
-
-													/*
-													 * Selected ingredient
-													 * must have a quantity.
-													 */
-
-													if (quantity === "") {
-
-														ingredientError = true;
-
-														return;
-
-													}
-
-													/*
-													 * ==================================================
-													 * product[x].ingredient_ids[y]
-													 * ==================================================
-													 */
-
-													addHiddenField(
-															this,
-															"product["
-																	+ productIndex
-																	+ "].ingredient_ids["
-																	+ ingredientIndex
-																	+ "]",
-															ingredientId);
-
-													/*
-													 * ==================================================
-													 * product[x].quantity_required[y]
-													 * ==================================================
-													 */
-
-													addHiddenField(
-															this,
-															"product["
-																	+ productIndex
-																	+ "].quantity_required["
-																	+ ingredientIndex
-																	+ "]",
-															quantity);
-
-													ingredientIndex++;
-
-												}.bind(this));
-
-										/*
-										 * Stop if an ingredient
-										 * has no quantity.
-										 */
-
-										if (ingredientError) {
-
-											event.preventDefault();
-
-											alert("Please enter a quantity for every selected ingredient.");
-
-											return;
-
-										}
-
-										productIndex++;
-
-									}.bind(this));
-
-						});
-
-		/*
-		 * ==================================================
-		 * Helper Function
-		 * ==================================================
-		 */
-
-		function addHiddenField(form, name, value) {
-
-			const input = document.createElement("input");
-
-			input.type = "hidden";
-
-			input.name = name;
-
-			input.value = value;
-
-			input.classList.add("generated-product-field");
-
-			form.appendChild(input);
-
-		}
-	</script>
-
-</div>
-
+		</script>
+	</div>
+</body>
 </html>

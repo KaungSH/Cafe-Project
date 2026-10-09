@@ -6,12 +6,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import cafe.project.employeemanagement.models.LoginDto;
 import cafe.project.models.UnitDto;
+import cafe.project.repositories.entities.Unit;
 import cafe.project.services.UnitService;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
+@RequestMapping("/admin")
 public class UnitController {
 
 	private final UnitService unitService;
@@ -31,16 +36,16 @@ public class UnitController {
 	@GetMapping("/units/add")
 	public String addUnit(Model model) {
 
-		model.addAttribute("unit", new UnitDto());
+		model.addAttribute("unit", new Unit());
 
 		return "units/add";
 	}
 
 	@PostMapping("/units/add")
-	public String addUnit(@ModelAttribute("unit") UnitDto unit, Model model) {
-
+	public String addUnit(@ModelAttribute("unit") Unit unit, Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		unit.setEmployee_id(ldto.getEmployee_id());
 		this.unitService.add(unit);
-
 		return "redirect:/units";
 	}
 
@@ -59,11 +64,11 @@ public class UnitController {
 		return "redirect:/notfound";
 	}
 
-	@PostMapping("/units/edit")
-	public String editUnit(@ModelAttribute("unit") UnitDto unit, Model model) {
-
+	@PostMapping("/units/edit/{id}")
+	public String editUnit(@ModelAttribute("unit") Unit unit, Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		unit.setEmployee_id(ldto.getEmployee_id());
 		this.unitService.edit(unit.getUnit_id(), unit);
-
 		return "redirect:/units";
 	}
 

@@ -5,12 +5,13 @@ package cafe.project.services;
 import org.springframework.stereotype.Service;
 
 import cafe.project.models.IngredientBatchDto;
+import cafe.project.repositories.entities.IngredientBatch;
 import cafe.project.models.WasteLogsEntryDto;
 import cafe.project.models.WasteLogsListDto;
 import cafe.project.repositories.WasteLogsRepository;
-import cafe.project.repositories.entities.IngredientBatch;
 import cafe.project.repositories.entities.WasteLogs;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -18,22 +19,36 @@ public class WasteLogsService {
 
   
     private final  WasteLogsRepository wasteLogsRepository;
+    private final BranchService branchService;
     
-    public WasteLogsService( WasteLogsRepository wasteLogsRepository) {
+    public WasteLogsService( WasteLogsRepository wasteLogsRepository, BranchService branchService) {
     	this.wasteLogsRepository=wasteLogsRepository;
+    	this.branchService = branchService;
     	
     }
 
-    public List<WasteLogsListDto> getAllWasteLogs() {
-        return wasteLogsRepository.findAll();
+    public List<WasteLogsListDto> getAllWasteLogs(String branch_id) {
+        return wasteLogsRepository.findAll(branch_id);
+    }
+    
+    public List<WasteLogsListDto> getAllWasteLogsAdmin() {
+        return wasteLogsRepository.findAllAdmin();
+    }
+    
+    public List<WasteLogsListDto> getAllWasteLogsDeleted(String branch_id) {
+        return wasteLogsRepository.findAllDeleted(branch_id);
+    }
+    
+    public List<WasteLogsListDto> getAllWasteLogsDeletedAdmin() {
+        return wasteLogsRepository.findAllAdminDeleted();
     }
     
     public List<IngredientBatchDto> getTodayExpired() {
     	return wasteLogsRepository.findExpiredBatchToday().stream().map(this::toDto).toList();
     }
 
-    public WasteLogsEntryDto getWasteLogsEntryById(String waste_id) {
-        WasteLogs entity = wasteLogsRepository.findById(waste_id);
+    public WasteLogsEntryDto getWasteLogsEntryById(String waste_id, String branch_id) {
+        WasteLogs entity = wasteLogsRepository.findById(waste_id, branch_id);
 
         WasteLogsEntryDto entryDto = new WasteLogsEntryDto();
         entryDto.setWaste_id(entity.getWaste_id());
@@ -43,6 +58,7 @@ public class WasteLogsService {
         entryDto.setFinancial_loss(entity.getFinancial_loss());
         entryDto.setEmployee_id(entity.getEmployee_id());
         entryDto.setNotes(entity.getNotes());
+        entryDto.setBranch_id(entity.getBranch_id());
 
         return entryDto;
     }
@@ -55,6 +71,7 @@ public class WasteLogsService {
         entity.setFinancial_loss(entryDto.getFinancial_loss());
         entity.setEmployee_id(entryDto.getEmployee_id());
         entity.setNotes(entryDto.getNotes());
+        entity.setBranch_id(entryDto.getBranch_id());
 
         wasteLogsRepository.save(entity);
     }
@@ -76,21 +93,44 @@ public class WasteLogsService {
         wasteLogsRepository.softDelete(waste_id);
     }
     
+    public void recoverWasteLog(String waste_id) {
+        wasteLogsRepository.recover(waste_id);
+    }
+    
+    public void hardDeleteWasteLog(String waste_id) {
+        wasteLogsRepository.hardDelete(waste_id);
+    }
+    
+    public int deductFromIngredientBatches(String batch_id, BigDecimal quantity) {
+    	return wasteLogsRepository.deductFromIngredientBatch(batch_id, quantity);
+    }
+    
     private IngredientBatchDto toDto(IngredientBatch entity) {
 
 		IngredientBatchDto dto = new IngredientBatchDto();
+		dto.setBatch_id(entity.getBatch_id());
+		dto.setRemaining_quantity(entity.getRemaining_quantity());
+		dto.setManufactured_date(entity.getManufactured_date());
+		dto.setExpire_date(entity.getExpire_date());
+		dto.setBranch_name((branchService.findById(entity.getBranch_id())).getName());
+		dto.setIngredientType_name(entity.getIngredient_type_id());
+		dto.setUnit_cost(entity.getUnit_cost());
+		dto.setIsdeleted(entity.getIsdeleted());
+		dto.setCreated_at(entity.getCreated_at());
+		dto.setQuantity_ordered(entity.getQuantity_ordered());
 
-		dto.setBatchId(entity.getBatchId());
-		dto.setRemainingQuantity(entity.getRemainingQuantity());
-		dto.setManufacturedDate(entity.getManufacturedDate());
-		dto.setExpireDate(entity.getExpireDate());
-		dto.setBranchId(entity.getBranchId());
-		dto.setImportDetailId(entity.getImportDetailId());
-		dto.setIngredientTypeId(entity.getIngredientTypeId());
-		dto.setUnitCost(entity.getUnitCost());
-		dto.setIsExpired(entity.getIsExpired());
-		dto.setIsDeleted(entity.getIsDeleted());
-		dto.setCreatedAt(entity.getCreatedAt());
+//		dto.setBatchId(entity.getBatch_id());
+//		dto.setRemainingQuantity(entity.getRemaining_quantity());
+//		dto.setManufacturedDate(entity.getManufactured_date());
+//		dto.setExpireDate(entity.getExpire_date());
+//		dto.setBranchId(entity.getBranch_id());
+//		dto.setImportDetailId(entity.getImport_id());
+//		dto.setIngredientTypeId(entity.getIngredient_type_id());
+//		dto.setUnitCost(entity.getUnit_cost());
+//		dto.setIsExpired(entity.isIsExpired());
+//		dto.setIsDeleted(entity.getIsDeleted());
+//		dto.setCreatedAt(entity.getCreatedAt());
+
 
 		return dto;
 	}

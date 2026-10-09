@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Products List - Manager</title>
+
+<style>
+.product-cover {
+	height: 180px;
+	width: 180px;
+	object-fit: cover;
+	border-radius: 8px;
+}
+
+.detail-table th, .detail-table td {
+	vertical-align: middle;
+}
+</style>
+
+</head>
+
+
+<div layout:fragment="content">
+
+	<div class="container py-4">
+
+		<!-- Page Header -->
+		<div class="d-flex justify-content-between align-items-center mb-3">
+
+			<h3 class="fw-bold mb-0">Discount And Promotions</h3>
+
+			<div class="d-flex gap-2"></div>
+
+		</div>
+
+
+		<!-- Product Types Table -->
+		<div class="table-responsive">
+
+			<table class="table table-bordered table-striped align-middle">
+
+				<thead class="table-secondary">
+
+					<tr>
+
+						<th>Discount Name</th>
+						<th>Branch</th>
+						<th>Promo Type</th>
+						<th>Audience</th>
+						<th>Value</th>
+
+						<th>Duration</th> <<<<<<< HEAD
+						<th
+							th:if="${session.loggedInUser != null and session.loggedInUser.employee_role == 'ADMIN'}">Status</th>
+						=======
+						<th>Status</th> >>>>>>> origin/YinminThiriSoe
+						<th>Created By</th>
+						<th class="text-end pe-4">Actions</th>
+
+					</tr>
+
+				</thead>
+
+
+				<tbody>
+
+					<!-- Loop through each Product Type -->
+					<th:block th:each="discount, state : ${discounts}">
+						<tr>
+							<td><strong th:text="${discount.name}">Summer Sale</strong>
+								<br th:if="${discount.description != null}"> <small
+								class="text-muted" th:text="${discount.description}">Description</small>
+							</td>
+							<td><span class="badge bg-info text-dark"
+								th:text="${discount.branch_name}">Branch</span></td>
+							<td><span class="badge bg-info text-dark"
+								th:text="${discount.promo_type_name}">Promo</span></td>
+							<td><span class="badge bg-secondary"
+								th:text="${discount.audience_type_name}">Audience</span></td>
+							<td><span class="fw-bold text-success"
+								th:text="${discount.discount_value}">10.00</span></td>
+							<td><small> <i class="bi bi-calendar3 me-1"></i><span
+									th:text="${discount.startdate}">2026-09-01</span> <br> <i
+									class="bi bi-calendar-check me-1"></i><span
+									th:text="${discount.enddate}">2026-09-30</span>
+							</small></td>
+
+							<td
+								th:if="${session.loggedInUser != null and session.loggedInUser.employee_role == 'ADMIN'}">
+								<span th:if="${discount.is_active == true}"> Active </span>
+							</td>
+							<td><span th:if="${discount.is_active == true}"
+								class="badge bg-success">Active</span> <span
+								th:if="${discount.is_active== false}" class="badge bg-danger">Inactive</span>
+							</td>
+							<td><small
+								th:text="${discount.ename != null ? discount.ename : 'N/A'}">Employee</small>
+							</td>
+							<td class="text-end pe-4">
+								<!-- View Details -->
+								<div>
+									<button class="btn btn-sm btn-info text-white" type="button"
+										data-bs-toggle="collapse"
+										th:data-bs-target="'#detailRow-' + ${state.index}"
+										aria-expanded="false">View Details ▼</button>
+
+								</div>
+							</td>
+
+						</tr>
+
+
+
+						<!-- Expandable Detail Row -->
+						<tr class="collapse" th:id="'detailRow-' + ${state.index}">
+
+							<td colspan="10" class="bg-light p-4">
+
+
+								<div class="card shadow-sm">
+
+									<div class="card-body">
+
+
+										<!-- Detail Title -->
+										<h5 class="text-primary mb-3">
+
+											Details for <span th:text="${discount.name}"> Product
+											</span>
+
+										</h5>
+
+
+										<!-- Products / Sizes -->
+										<div
+											th:if="${discount.products != null and !discount.products.empty}">
+
+											<div class="table-responsive">
+
+												<table id="productsTable">
+
+													<thead>
+
+														<tr>
+
+															<th style="width: 35%;">DISCOUNT</th>
+
+															<th style="width: 50%;">PRODUCTS</th>
+
+
+
+														</tr>
+
+													</thead>
+
+
+													<tbody>
+
+														<tr th:each="dp : ${discount.products}">
+
+															<td th:text="${discount.name}">Discount Name</td>
+
+
+															<td class="product-list" th:text="${dp.type_name}">
+																Product Name</td>
+
+
+
+
+														</tr>
+
+														<tr th:if="${#lists.isEmpty(discount.products)}">
+
+															<td colspan="3" class="empty-message">No discount
+																products found.</td>
+
+														</tr>
+
+													</tbody>
+
+												</table>
+
+											</div>
+
+										</div>
+
+
+										<!-- No Products -->
+										<div
+											th:unless="${discount.products != null and !discount.products.empty}"
+											class="text-muted">This discount currently has no
+											products. Add products to get started.</div>
+
+
+									</div>
+
+								</div>
+
+							</td>
+
+						</tr>
+
+
+					</th:block>
+
+				</tbody>
+
+			</table>
+
+		</div>
+
+	</div>
+
+</div>
+
+</html>

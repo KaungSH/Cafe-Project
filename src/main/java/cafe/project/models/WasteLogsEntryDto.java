@@ -29,6 +29,8 @@ import jakarta.validation.constraints.Size;
 
 	    @Size(max = 255, message = "Notes must not above 255")
 	    private String notes;
+	    
+	    private String branch_id;
 
 	    public WasteLogsEntryDto() {}
 
@@ -86,6 +88,14 @@ import jakarta.validation.constraints.Size;
 
 		public void setNotes(String notes) {
 			this.notes = notes;
+		}
+
+		public String getBranch_id() {
+			return branch_id;
+		}
+
+		public void setBranch_id(String branch_id) {
+			this.branch_id = branch_id;
 		}
 
 	    

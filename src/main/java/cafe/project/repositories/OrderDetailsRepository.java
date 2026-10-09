@@ -1,10 +1,13 @@
 package cafe.project.repositories;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import cafe.project.models.DiscountCalculationDto;
 import cafe.project.repositories.entities.OrderDetails;
 import cafe.project.repositories.mappers.OrderDetailsMapper;
 
@@ -17,77 +20,113 @@ public class OrderDetailsRepository {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	// GET ALL
 	public List<OrderDetails> findAll() {
 
-		String sql = "SELECT * FROM order_details";
-
-		return jdbcTemplate.query(sql, new OrderDetailsMapper());
-	}
-	
-	public List<OrderDetails> findAllByRelation() {
-
-		String sql = "SELECT * FROM order_details";
+		String sql = "SELECT od.*,\r\n" + "pt.name AS product_name,\r\n" + "p.price AS price\r\n"
+				+ "FROM order_details od\r\n" + "LEFT JOIN products p\r\n" + "ON od.product_id = p.product_id\r\n"
+				+ "LEFT JOIN product_types pt\r\n" + "ON p.item_id = pt.type_id;";
 
 		return jdbcTemplate.query(sql, new OrderDetailsMapper());
 	}
 
-	// GET BY ID
 	public OrderDetails findById(String id) {
 
-		String sql = "SELECT * FROM order_details WHERE order_detail_id = ?";
+		String sql = "SELECT od.*, pt.name AS product_name \r\n" + "FROM order_details od \r\n"
+				+ "LEFT JOIN products p ON od.product_id = p.product_id \r\n"
+				+ "LEFT JOIN product_types pt ON p.item_id = pt.type_id \r\n" + "WHERE od.order_detail_id = ?";
 
-		return jdbcTemplate.queryForObject(
-				sql,
-				new OrderDetailsMapper(),
-				id);
+		return jdbcTemplate.queryForObject(sql, new OrderDetailsMapper(), id);
 	}
 
-	// GET BY ORDER ID
 	public List<OrderDetails> findByOrderId(String orderId) {
 
-		String sql = "SELECT * FROM order_details WHERE order_id = ?";
+		String sql = "SELECT od.*, " + "pt.name AS product_name, " + "p.price AS price " + "FROM order_details od "
+				+ "LEFT JOIN products p " + "ON od.product_id = p.product_id " + "LEFT JOIN product_types pt "
+				+ "ON p.item_id = pt.type_id " + "WHERE od.order_id = ?";
 
-		return jdbcTemplate.query(
-				sql,
-				new OrderDetailsMapper(),
-				orderId);
+		return jdbcTemplate.query(sql, new OrderDetailsMapper(), orderId);
 	}
 
-	// SAVE
+	public List<String> findOrderIds() {
+
+		String sql = "SELECT order_id FROM orders WHERE isdeleted = false";
+
+		return jdbcTemplate.queryForList(sql, String.class);
+	}
+
 	public int save(OrderDetails entity) {
 
-		String sql = "INSERT INTO order_details "
-				+ "(order_detail_id, product_id, order_id, quantity, remark) "
-				+ "VALUES (?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO order_details\r\n" + "(order_detail_id, product_id, order_id, quantity, remark) \r\n"
+				+ "VALUES (?, ?, ?, ?, ?);\r\n";
 
-		return jdbcTemplate.update(sql,
-				entity.getOrder_detail_id(),
-				entity.getProduct_id(),
-				entity.getOrder_id(),
-				entity.getQuantity(),
-				entity.getRemark());
+		return jdbcTemplate.update(sql, UUID.randomUUID().toString(), entity.getProduct_id(), entity.getOrder_id(),
+				entity.getQuantity(), entity.getRemark());
 	}
 
-	// UPDATE
+	public BigDecimal calculateTotalAmount(String orderId) {
+
+		String sql = "SELECT COALESCE(SUM(p.price * od.quantity), 0) " + "FROM order_details od "
+				+ "JOIN products p ON od.product_id = p.product_id " + "WHERE od.order_id = ?";
+
+		return jdbcTemplate.queryForObject(sql, BigDecimal.class, orderId);
+	}
+
+	public BigDecimal calculateDiscountAmount(String orderId) {
+
+		String sql = "SELECT od.product_id, p.price,od.quantity,\r\n" + "MAX(d.discount_value) AS discount_value\r\n"
+				+ "FROM order_details od\r\n" + "JOIN products p ON od.product_id = p.product_id\r\n"
+				+ "JOIN discounts_products dp ON p.product_id = dp.product_id\r\n"
+				+ "JOIN discounts d ON dp.discount_id = d.discount_id\r\n" + "WHERE od.order_id = ?\r\n"
+				+ "AND d.isdeleted = 0 AND d.is_active = 1\r\n" + "AND CURDATE() BETWEEN d.startdate AND d.enddate\r\n"
+				+ "GROUP BY od.product_id,p.price,od.quantity;";
+
+		List<DiscountCalculationDto> discounts = jdbcTemplate.query(sql, (rs, rowNum) -> {
+
+			DiscountCalculationDto dto = new DiscountCalculationDto();
+
+			dto.setPrice(rs.getBigDecimal("price"));
+
+			dto.setQuantity(rs.getInt("quantity"));
+
+			dto.setDiscountValue(rs.getBigDecimal("discount_value"));
+
+			return dto;
+
+		}, orderId);
+
+		BigDecimal totalDiscount = BigDecimal.ZERO;
+
+		for (DiscountCalculationDto discount : discounts) {
+
+			if (discount.getDiscountValue() == null) {
+				continue;
+			}
+
+			BigDecimal price = discount.getPrice();
+
+			BigDecimal quantity = BigDecimal.valueOf(discount.getQuantity());
+
+			BigDecimal discountValue = discount.getDiscountValue();
+
+			BigDecimal productSubtotal = price.multiply(quantity);
+
+			BigDecimal discountAmount = productSubtotal.multiply(discountValue).divide(BigDecimal.valueOf(100));
+
+			totalDiscount = totalDiscount.add(discountAmount);
+		}
+
+		return totalDiscount;
+	}
+
 	public int edit(String id, OrderDetails entity) {
 
-		String sql = "UPDATE order_details SET "
-				+ "product_id = ?, "
-				+ "order_id = ?, "
-				+ "quantity = ?, "
-				+ "remark = ? "
+		String sql = "UPDATE order_details SET \r\n" + "product_id = ?,order_id = ?, quantity = ?, remark = ? \r\n"
 				+ "WHERE order_detail_id = ?";
 
-		return jdbcTemplate.update(sql,
-				entity.getProduct_id(),
-				entity.getOrder_id(),
-				entity.getQuantity(),
-				entity.getRemark(),
-				id);
+		return jdbcTemplate.update(sql, entity.getProduct_id(), entity.getOrder_id(), entity.getQuantity(),
+				entity.getRemark(), id);
 	}
 
-	// DELETE
 	public int delete(String id) {
 
 		String sql = "DELETE FROM order_details WHERE order_detail_id = ?";

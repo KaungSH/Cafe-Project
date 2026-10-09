@@ -10,39 +10,51 @@ import cafe.project.repositories.entities.Payment;
 @Service
 public class PaymentService {
 
-    private final PaymentRepository paymentRepository;
+	private final PaymentRepository paymentRepository;
 
-    public PaymentService(PaymentRepository paymentRepository) {
-        this.paymentRepository = paymentRepository;
-    }
+	public PaymentService(PaymentRepository paymentRepository) {
+		this.paymentRepository = paymentRepository;
+	}
 
-    // GET ALL
-    public List<Payment> findAll() {
-        return paymentRepository.findAll();
-    }
+	// GET ALL
+	public List<Payment> findAll() {
+		return paymentRepository.findAll();
+	}
 
-    // GET DELETED
-    public List<Payment> findDeletedAll() {
-        return paymentRepository.findDeletedAll();
-    }
+	// GET DELETED
+	public List<Payment> findDeletedAll() {
+		return paymentRepository.findDeletedAll();
+	}
 
-    // GET BY ID
-    public Payment findById(String id) {
-        return paymentRepository.findById(id);
-    }
+	// GET BY ID
+	public Payment findById(String id) {
+		return paymentRepository.findById(id);
+	}
 
-    // SAVE
-    public int save(Payment payment) {
-        return paymentRepository.save(payment);
-    }
+	public boolean existsByOrderId(String orderId) {
+		return paymentRepository.existsByOrderId(orderId);
+	}
 
-    // UPDATE
-    public int edit(String id, Payment payment) {
-        return paymentRepository.edit(id, payment);
-    }
+	// SAVE
+	public int save(Payment payment) {
+		return paymentRepository.save(payment);
+	}
 
-    // DELETE
-    public int delete(String id) {
-        return paymentRepository.delete(id);
-    }
+	// UPDATE
+	public int edit(String id, Payment payment) {
+		return paymentRepository.edit(id, payment);
+	}
+
+	// DELETE
+	public int delete(String id) {
+		return paymentRepository.delete(id);
+	}
+
+	public int restore(String id) {
+		return paymentRepository.restore(id);
+	}
+
+	public int hardDelete(String id) {
+		return paymentRepository.hardDelete(id);
+	}
 }

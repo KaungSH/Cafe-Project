@@ -1,10 +1,846 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate = "~{/common/layout}">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
+
 <head>
-<meta charset="UTF-8">
-<title>Home - User</title>
+<title>Café Shop - Dashboard</title>
+<style>
+/* Manager UI Styles (Light Cream Theme) */
+.mgr-container {
+	display: flex;
+	flex-direction: column;
+	gap: 25px;
+	width: 100%;
+}
+
+.stats-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: 15px;
+}
+
+.stat-card {
+	background: #fff;
+	padding: 20px;
+	border-radius: 18px;
+	border: 1px solid #ebd9cd;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+	display: flex;
+	align-items: center;
+	gap: 15px;
+}
+
+.stat-icon {
+	width: 50px;
+	height: 50px;
+	border-radius: 14px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 22px;
+}
+
+.stat-info h4 {
+	margin: 0;
+	font-size: 13px;
+	color: #8c7365;
+	font-weight: 600;
+}
+
+.stat-info .stat-value {
+	margin: 4px 0 0 0;
+	font-size: 20px;
+	font-weight: 700;
+	color: #34251f;
+}
+
+.operations-grid {
+	display: grid;
+	grid-template-columns: 2fr 1fr;
+	gap: 25px;
+}
+
+.op-card {
+	background: #fff;
+	border-radius: 20px;
+	padding: 22px;
+	border: 1px solid #ebd9cd;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+.op-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 18px;
+}
+
+.op-title {
+	font-size: 17px;
+	font-weight: 700;
+	color: #34251f;
+	margin: 0;
+}
+
+.order-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 13px;
+}
+
+.order-table th {
+	text-align: left;
+	padding: 10px;
+	color: #8c7365;
+	border-bottom: 1px solid #ebd9cd;
+	font-weight: 600;
+}
+
+.order-table td {
+	padding: 12px 10px;
+	border-bottom: 1px solid #f7ede6;
+	color: #34251f;
+}
+
+.badge-status {
+	padding: 4px 10px;
+	border-radius: 12px;
+	font-size: 11px;
+	font-weight: 700;
+}
+
+.status-preparing {
+	background: #fff3cd;
+	color: #856404;
+}
+
+.status-completed {
+	background: #d4edda;
+	color: #155724;
+}
+
+.stock-list {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.stock-item {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 12px;
+	border-radius: 12px;
+	background: #fffaf5;
+	border-left: 4px solid #d9534f;
+}
+
+.stock-name {
+	font-weight: 600;
+	font-size: 13px;
+	color: #34251f;
+}
+
+.stock-qty {
+	font-size: 12px;
+	color: #d9534f;
+	font-weight: 700;
+}
+
+.quick-action-btn {
+	background: #b57a55;
+	color: #fff;
+	border: none;
+	padding: 8px 14px;
+	border-radius: 10px;
+	font-size: 12px;
+	font-weight: bold;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+@media ( max-width : 900px) {
+	.operations-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* STAFF MENU UI ONLY — Admin/Manager blocks are unchanged */
+.staff-menu-page {
+	margin: -24px;
+	background: #f7f3ee;
+	min-height: 100vh;
+	color: #2f241e;
+	font-family: Arial, sans-serif
+}
+
+.staff-topbar {
+	height: 74px;
+	background: #211a16;
+	color: #fff;
+	display: flex;
+	align-items: center;
+	gap: 30px;
+	padding: 0 34px
+}
+
+.staff-brand {
+	font-size: 25px;
+	font-weight: 800;
+	white-space: nowrap
+}
+
+.staff-brand small {
+	display: block;
+	font-size: 10px;
+	font-weight: 400;
+	color: #d7c8bd
+}
+
+.staff-nav {
+	display: flex;
+	gap: 8px
+}
+
+.staff-nav a {
+	color: #f6eee8;
+	text-decoration: none;
+	padding: 11px 17px;
+	border-radius: 9px;
+	font-size: 14px
+}
+
+.staff-nav a.active {
+	background: #9b6a49
+}
+
+.staff-search {
+	margin-left: auto;
+	min-width: 250px;
+	border: 1px solid #8e8178;
+	border-radius: 22px;
+	padding: 9px 15px;
+	color: #cfc6c0
+}
+
+.staff-hero {
+    height: 195px;
+
+    background-image:
+        linear-gradient(
+            rgba(35, 22, 15, 0.30),
+            rgba(35, 22, 15, 0.30)
+        ),
+        url('/images/menu.png');
+
+    background-size: cover;
+    background-position: center 45%;
+    background-repeat: no-repeat;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    color: #fff;
+}
+
+.staff-hero h1 {
+    font-size: 52px;
+    margin: 0 0 8px;
+    font-family: Georgia, serif;
+    font-style: italic;
+    text-shadow: 0 2px 8px rgba(0,0,0,.5);
+}
+
+.staff-hero p {
+    margin: 0;
+    font-size: 17px;
+    color: #fff;
+    text-shadow: 0 1px 5px rgba(0,0,0,.5);
+}
+.staff-menu-shell {
+	display: grid;
+	grid-template-columns: 220px minmax(0, 1fr) 245px;
+	gap: 18px;
+	padding: 22px 28px
+}
+
+.staff-panel {
+	background: #fff;
+	border: 1px solid #e4d9d0;
+	border-radius: 12px;
+	padding: 16px
+}
+
+.staff-panel h3 {
+	margin: 0 0 14px
+}
+
+.staff-cat {
+	display: flex;
+	justify-content: space-between;
+	padding: 12px;
+	border-radius: 8px;
+	margin-bottom: 5px
+}
+
+.staff-cat.active {
+	background: #a97753;
+	color: #fff
+}
+
+.staff-section-title {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin: 5px 0 14px
+}
+
+.staff-section-title h2 {
+	margin: 0;
+	font-family: Georgia, serif;
+	font-style: italic
+}
+
+.staff-section-title:after {
+	content: '';
+	height: 1px;
+	background: #cdbbad;
+	flex: 1
+}
+
+.staff-products {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(140px, 1fr));
+	gap: 13px
+}
+
+.staff-product-img {
+    height: 200px;
+    overflow: hidden;
+    background: #f5eee8;
+}
+
+.staff-product-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.staff-product-body {
+	padding: 11px
+}
+
+.staff-product h4 {
+	margin: 0 0 5px
+}
+
+.staff-product p {
+	font-size: 12px;
+	color: #77685e;
+	min-height: 30px;
+	margin: 0 0 8px
+}
+
+.staff-price {
+	font-weight: 800;
+	margin-bottom: 9px
+}
+
+.staff-add, .staff-checkout {
+	width: 100%;
+	border: 0;
+	border-radius: 7px;
+	padding: 9px;
+	background: #986443;
+	color: #fff;
+	font-weight: 700;
+	cursor: pointer
+}
+
+.staff-cart-item {
+	display: flex;
+	justify-content: space-between;
+	border-bottom: 1px solid #eee2d9;
+	padding: 10px 0;
+	font-size: 13px
+}
+
+.staff-total {
+	display: flex;
+	justify-content: space-between;
+	font-weight: 800;
+	margin: 16px 0
+}
+
+.staff-note {
+	font-size: 11px;
+	color: #8b7769;
+	margin-top: 12px
+}
+
+@media ( max-width :1100px) {
+	.staff-menu-shell {
+		grid-template-columns: 190px 1fr
+	}
+	.staff-cart {
+		grid-column: 1/-1
+	}
+	.staff-products {
+		grid-template-columns: repeat(2, 1fr)
+	}
+}
+</style>
 </head>
-<div layout:fragment = "content">
-	Hello!!!
-</div>
+
+<body>
+	<div layout:fragment="content">
+
+		<!-- ========================================================
+             1. ADMIN VIEW (All Branch UI)
+        ======================================================== -->
+		<th:block
+			th:if="${session.loggedInUser != null and session.loggedInUser.employee_role == 'ADMIN'}">
+			<div class="mgr-container">
+
+				<!-- Admin Header & All Branches Selector -->
+				<div
+					style="display: flex; justify-content: space-between; align-items: center;">
+					<div>
+						<h2
+							style="font-size: 22px; font-weight: 700; color: #34251f; margin: 0;">Admin
+							Dashboard - All Branches Overview</h2>
+						<p style="font-size: 13px; color: #8c7365; margin: 4px 0 0 0;">Monitoring
+							data across all coffee shop branches</p>
+					</div>
+
+					
+					<div style="display: flex; gap: 10px; align-items: center;">
+						<select class="form-control"
+							style="padding: 8px 15px; border-radius: 12px; border: 1px solid #ebd9cd; background: #fff; font-size: 13px;">
+							<option value="all">🏢 All Branches </option>
+							<!-- Controller မှပေးထားသော branches စာရင်းကို th:each ဖြင့်ဖော်ပြရန် -->
+							<option th:each="b : ${branches}" th:value="${b.branch_id}"
+								th:text="${b.name}"></option>
+						</select>
+					</div>
+				</div>
+
+				<div class="stats-grid">
+					<div class="stat-card">
+						<div class="stat-icon"
+							style="background: #eaf6ea; color: #28a745;">
+							<i class="bi bi-currency-dollar"></i>
+						</div>
+						<div class="stat-info">
+							<h4>Total Revenue (All Branches)</h4>
+							<div class="stat-value">$4,850.00</div>
+						</div>
+					</div>
+					<div class="stat-card">
+						<div class="stat-icon"
+							style="background: #eef2fa; color: #007bff;">
+							<i class="bi bi-receipt"></i>
+						</div>
+						<div class="stat-info">
+							<h4>Total Orders</h4>
+							<div class="stat-value">312</div>
+						</div>
+					</div>
+					<div class="stat-card">
+						<div class="stat-icon"
+							style="background: #fdf0f0; color: #dc3545;">
+							<i class="bi bi-building"></i>
+						</div>
+						<div class="stat-info">
+							<h4>Total Branches</h4>
+							<div class="stat-value"
+								th:text="${branches != null ? branches.size() : '5'}">5
+								Active</div>
+						</div>
+					</div>
+					<div class="stat-card">
+						<div class="stat-icon"
+							style="background: #fef7ec; color: #fd7e14;">
+							<i class="bi bi-people"></i>
+						</div>
+						<div class="stat-info">
+							<h4>Total Employees</h4>
+							<div class="stat-value">24 Staffs</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Operational Action Split -->
+				<div class="operations-grid">
+					<div class="op-card">
+						<div class="op-header">
+							<h3 class="op-title">Recent Orders Across Branches</h3>
+							<a th:href="@{/orders}"
+								style="font-size: 13px; color: #b57a55; text-decoration: none;">View
+								All</a>
+						</div>
+						<table class="order-table">
+							<thead>
+								<tr>
+									<th>Branch</th>
+									<th>Order ID</th>
+									<th>Items</th>
+									<th>Amount</th>
+									<th>Status</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><b>Downtown Branch</b></td>
+									<td>#ORD-201</td>
+									<td>2x Cappuccino</td>
+									<td>$3.00</td>
+									<td><span class="badge-status status-completed">Completed</span></td>
+								</tr>
+								<tr>
+									<td><b>Suburban Branch</b></td>
+									<td>#ORD-104</td>
+									<td>1x Latte, 1x Croissant</td>
+									<td>$3.60</td>
+									<td><span class="badge-status status-preparing">Preparing</span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="op-card">
+						<div class="op-header">
+							<h3 class="op-title">Branches Status Summary</h3>
+							<a th:href="@{/manager/branches}" class="quick-action-btn"
+								style="padding: 5px 10px; font-size: 11px;"> Manage </a>
+						</div>
+						<div class="stock-list">
+							<div class="stock-item" style="border-left-color: #28a745;">
+								<div>
+									<div class="stock-name">Downtown Branch</div>
+									<small style="color: #8c7365;">Manager: Aung Aung</small>
+								</div>
+								<div class="stock-qty" style="color: #28a745;">Open</div>
+							</div>
+
+							<div class="stock-item" style="border-left-color: #28a745;">
+								<div>
+									<div class="stock-name">Suburban Branch</div>
+									<small style="color: #8c7365;">Manager: Mya Mya</small>
+								</div>
+								<div class="stock-qty" style="color: #28a745;">Open</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</th:block>
+
+
+		<!-- ========================================================
+             2. MANAGER VIEW (Light Cream Operations Theme)
+        ======================================================== -->
+		<th:block
+			th:if="${session.loggedInUser != null and session.loggedInUser.employee_role == 'MANAGER'}">
+			<div class="mgr-container">
+				<div
+					style="display: flex; justify-content: space-between; align-items: center;">
+					<h2
+						style="font-size: 22px; font-weight: 700; color: #34251f; margin: 0;">Store
+						Daily Operations</h2>
+					<a th:href="@{/manager/daily-registers/all}"
+						class="quick-action-btn"> <i class="bi bi-calendar-check"></i>
+						Register Status
+					</a>
+				</div>
+
+				<!-- Operations Stats Cards -->
+				<div class="stats-grid">
+					<div class="stat-card">
+						<div class="stat-icon"
+							style="background: #eaf6ea; color: #28a745;">
+							<i class="bi bi-currency-dollar"></i>
+						</div>
+						<div class="stat-info">
+							<h4>Today's Sales</h4>
+							<div class="stat-value">$320.50</div>
+						</div>
+					</div>
+					<div class="stat-card">
+						<div class="stat-icon"
+							style="background: #eef2fa; color: #007bff;">
+							<i class="bi bi-receipt"></i>
+						</div>
+						<div class="stat-info">
+							<h4>Today's Orders</h4>
+							<div class="stat-value">42</div>
+						</div>
+					</div>
+					<div class="stat-card">
+						<div class="stat-icon"
+							style="background: #fdf0f0; color: #dc3545;">
+							<i class="bi bi-exclamation-triangle"></i>
+						</div>
+						<div class="stat-info">
+							<h4>Low Stock Items</h4>
+							<div class="stat-value">3 Types</div>
+						</div>
+					</div>
+					<div class="stat-card">
+						<div class="stat-icon"
+							style="background: #fef7ec; color: #fd7e14;">
+							<i class="bi bi-trash"></i>
+						</div>
+						<div class="stat-info">
+							<h4>Today's Waste</h4>
+							<div class="stat-value">2 Logs</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Operational Action Split -->
+				<div class="operations-grid">
+					<div class="op-card">
+						<div class="op-header">
+							<h3 class="op-title">Recent Store Orders</h3>
+							<a th:href="@{/orders}"
+								style="font-size: 13px; color: #b57a55; text-decoration: none;">View
+								All</a>
+						</div>
+						<table class="order-table">
+							<thead>
+								<tr>
+									<th>Order ID</th>
+									<th>Items</th>
+									<th>Amount</th>
+									<th>Status</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>#ORD-104</td>
+									<td>2x Cappuccino, 1x Croissant</td>
+									<td>$5.20</td>
+									<td><span class="badge-status status-preparing">Preparing</span></td>
+								</tr>
+								<tr>
+									<td>#ORD-103</td>
+									<td>1x Americano</td>
+									<td>$1.55</td>
+									<td><span class="badge-status status-completed">Completed</span></td>
+								</tr>
+								<tr>
+									<td>#ORD-102</td>
+									<td>3x Latte, 2x Donut</td>
+									<td>$8.40</td>
+									<td><span class="badge-status status-completed">Completed</span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="op-card">
+						<div class="op-header">
+							<h3 class="op-title">Low Stock Alert</h3>
+							<a th:href="@{/manager/stock_imports}" class="quick-action-btn"
+								style="padding: 5px 10px; font-size: 11px;"> + Import </a>
+						</div>
+						<div class="stock-list">
+							<div class="stock-item">
+								<div>
+									<div class="stock-name">Fresh Whole Milk</div>
+									<small style="color: #8c7365;">Threshold: 5 Liters</small>
+								</div>
+								<div class="stock-qty">1.5 L left</div>
+							</div>
+							<div class="stock-item">
+								<div>
+									<div class="stock-name">Espresso Roast Beans</div>
+									<small style="color: #8c7365;">Threshold: 2 kg</small>
+								</div>
+								<div class="stock-qty">0.8 kg left</div>
+							</div>
+							<div class="stock-item">
+								<div>
+									<div class="stock-name">Paper Cups (Medium)</div>
+									<small style="color: #8c7365;">Threshold: 50 pcs</small>
+								</div>
+								<div class="stock-qty">15 pcs left</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</th:block>
+
+		<!-- STAFF VIEW: Coffee Shop Menu UI -->
+		<th:block
+			th:if="${session.loggedInUser != null and session.loggedInUser.employee_role == 'STAFF'}">
+			<div class="staff-menu-page">
+				<header class="staff-topbar">
+					<div class="staff-brand">
+						☕ Coffee Shop<small>Good Coffee · Good Mood</small>
+					</div>
+					<nav class="staff-nav">
+						<a href="#">⌂ Home</a><a href="#" class="active">☕ Menu</a> <a
+							href="#">ⓘ About</a><a href="#">✉ Contact</a>
+					</nav>
+					<div class="staff-search">⌕ &nbsp; Search menu...</div>
+					<div>👤</div>
+				</header>
+
+				<section class="staff-hero">
+					
+				</section>
+
+				<main class="staff-menu-shell">
+					<aside class="staff-panel">
+						<h3>☕ Categories</h3>
+						<div class="staff-cat active">
+							<span>☕ All Items</span><span>24</span>
+						</div>
+						<div class="staff-cat">
+							<span>☕ Coffee</span><span>8</span>
+						</div>
+						<div class="staff-cat">
+							<span>🧋 Milk Tea</span><span>6</span>
+						</div>
+						<div class="staff-cat">
+							<span>🥛 Non Coffee</span><span>4</span>
+						</div>
+						<div class="staff-cat">
+							<span>🥤 Smoothies</span><span>4</span>
+						</div>
+						<div class="staff-cat">
+							<span>🥐 Bakery</span><span>2</span>
+						</div>
+					</aside>
+
+					<section>
+						<div class="staff-section-title">
+							<h2>☕ Coffee</h2>
+						</div>
+						<div class="staff-products">
+							<article class="staff-product">
+								<div class="staff-product-img">
+								<img src="/images/Americano.jpg" alt="Americano">
+							</div>
+								<div class="staff-product-body">
+									<h4>Americano</h4>
+									<p>Pure coffee, rich flavor.</p>
+									<div class="staff-price">2,500 MMK</div>
+									<button type="button" class="staff-add">🛒 Add to Cart</button>
+								</div>
+							</article>
+							<article class="staff-product">
+								<div class="staff-product-img">
+								<img src="/images/Latte.jpg" alt="Americano">
+							</div>
+								<div class="staff-product-body">
+									<h4>Latte</h4>
+									<p>Espresso with steamed milk.</p>
+									<div class="staff-price">3,500 MMK</div>
+									<button type="button" class="staff-add">🛒 Add to Cart</button>
+								</div>
+							</article>
+							<article class="staff-product">
+								<div class="staff-product-img">
+								<img src="/images/Cappuccino.jpg" alt="Americano">
+							</div>
+								<div class="staff-product-body">
+									<h4>Cappuccino</h4>
+									<p>Espresso, milk, foam.</p>
+									<div class="staff-price">3,500 MMK</div>
+									<button type="button" class="staff-add">🛒 Add to Cart</button>
+								</div>
+							</article>
+							<article class="staff-product">
+								<div class="staff-product-img">
+								<img src="/images/Mocha.jpg" alt="Americano">
+							</div>
+								<div class="staff-product-body">
+									<h4>Mocha</h4>
+									<p>Chocolate + coffee.</p>
+									<div class="staff-price">4,000 MMK</div>
+									<button type="button" class="staff-add">🛒 Add to Cart</button>
+								</div>
+							</article>
+						</div>
+
+						<div class="staff-section-title" style="margin-top: 22px">
+							<h2>🧋 Milk Tea</h2>
+						</div>
+						<div class="staff-products">
+							<article class="staff-product">
+								<div class="staff-product-img">
+								<img src="/images/LifeBegin.jpg" alt="Americano">
+							</div>
+								<div class="staff-product-body">
+									<h4>Classic Milk Tea</h4>
+									<p>Smooth & creamy.</p>
+									<div class="staff-price">2,800 MMK</div>
+									<button type="button" class="staff-add">🛒 Add to Cart</button>
+								</div>
+							</article>
+							<article class="staff-product">
+								<div class="staff-product-img">
+								<img src="/images/classic milk tea.jpg" alt="Americano">
+							</div>
+								<div class="staff-product-body">
+									<h4>Oolong Milk Tea</h4>
+									<p>Light and fragrant.</p>
+									<div class="staff-price">3,200 MMK</div>
+									<button type="button" class="staff-add">🛒 Add to Cart</button>
+								</div>
+							</article>
+							<article class="staff-product">
+								<div class="staff-product-img">
+								<img src="/images/oolong milk tea.jpg" alt="Americano">
+							</div>
+								<div class="staff-product-body">
+									<h4>Thai Milk Tea</h4>
+									<p>Rich and sweet.</p>
+									<div class="staff-price">3,500 MMK</div>
+									<button type="button" class="staff-add">🛒 Add to Cart</button>
+								</div>
+							</article>
+							<article class="staff-product">
+								<div class="staff-product-img">
+								<img src="/images/ThaiMilkTea.jpg" alt="Americano">
+							</div>
+								<div class="staff-product-body">
+									<h4>Brown Sugar Milk Tea</h4>
+									<p>Sweet & chewy.</p>
+									<div class="staff-price">3,800 MMK</div>
+									<button type="button" class="staff-add">🛒 Add to Cart</button>
+								</div>
+							</article>
+						</div>
+					</section>
+
+					<aside class="staff-panel staff-cart">
+						<h3>🛒 Your Cart</h3>
+						<div class="staff-cart-item">
+							<span>Latte × 1</span><b>3,500</b>
+						</div>
+						<div class="staff-cart-item">
+							<span>Brown Sugar Milk Tea × 1</span><b>3,800</b>
+						</div>
+						<div class="staff-total">
+							<span>Total</span><span>7,300 MMK</span>
+						</div>
+						<button type="button" class="staff-checkout">🛒 Checkout</button>
+						<div class="staff-note">Connect these buttons to your
+							existing Staff cart/order handlers.</div>
+					</aside>
+				</main>
+			</div>
+		</th:block>
+
+	</div>
+</body>
 </html>

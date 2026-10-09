@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -68,14 +70,14 @@ body {
 
 <body>
 
-	<div class="container py-4" style="max-width: 650px;">
+	<div layout:fragment="content" style="max-width: 650px;">
 		<div class="main-card">
 
 			<h3 class="page-title mb-4">
 				<i class="fa-solid fa-pen-to-square me-2"></i>Edit Branch
 			</h3>
 
-			<form th:action="@{/manager/branches/edit/{branch_id}(branch_id=${branch_id})}"
+			<form th:action="@{/admin/branches/edit/{branch_id}(branch_id=${branch_id})}"
 				th:object="${branchDto}" method="post">
 
 
@@ -119,6 +121,17 @@ body {
 						th:if="${#fields.hasErrors('branch_status_id')}"
 						th:errors="*{branch_status_id}"></div>
 				</div>
+				
+				<div class="mb-3">
+					<label for="branch_finance" class="form-label fw-bold">
+						Branch Finance<span class="text-danger">*</span>
+					</label> <input type="number" id="branch_finance" th:field="*{branch_finance}"
+						class="form-control" step="0.01" min="0" placeholder="0.000"
+						th:classappend="${#fields.hasErrors('branch_finance')} ? 'is-invalid' : ''">
+					<div class="invalid-feedback"
+						th:if="${#fields.hasErrors('branch_finance')}"
+						th:errors="*{branch_finance}"></div>
+				</div>
 
 
 				<div class="mb-3">
@@ -144,7 +157,7 @@ body {
 
 
 				<div class="mt-4 d-flex gap-2 justify-content-end">
-					<a th:href="@{/manager/branches}" class="btn btn-cancel"><i
+					<a th:href="@{/admin/branches}" class="btn btn-cancel"><i
 						class="fa-solid fa-xmark me-1"></i>Cancel</a>
 					<button type="submit" class="btn btn-submit">
 						<i class="fa-solid fa-pen me-1"></i>Update Branch

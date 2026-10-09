@@ -6,148 +6,169 @@ import java.time.LocalDateTime;
 
 public class IngredientBatch {
 
-	private String batchId;
-	private BigDecimal remainingQuantity;
-	private LocalDate manufacturedDate;
-	private LocalDate expireDate;
-	private String branchId;
-	private String importDetailId;
-	private Boolean isExpired;
-	private Boolean isDeleted;
-	private LocalDateTime createdAt;
-	private String ingredientTypeId;
-	private BigDecimal unitCost;
-	private String branchName;
-	private String ingredientTypeName;
-
+	private String batch_id;
+	private BigDecimal remaining_quantity;
+	private LocalDate manufactured_date;
+	private LocalDate expire_date;
+	private String branch_id;
+	private Boolean isdeleted;
+	private LocalDateTime created_at;
+	private String ingredient_type_id;
+	private BigDecimal unit_cost;
+	private BigDecimal quantity_ordered;
+	private BigDecimal total_import_cost;
+	private String import_id;
+	
+	private String branch_name; //branch name
+	private String ingredientType_name; //ingredientTypeName
+	private String name;//unit name
+	
+	
 	public IngredientBatch() {
 	}
 
-	public IngredientBatch(String batchId, BigDecimal remainingQuantity, LocalDate manufacturedDate,
-			LocalDate expireDate, String branchId, String importDetailId, Boolean isExpired, Boolean isDeleted,
-			LocalDateTime createdAt, String ingredientTypeId, BigDecimal unitCost, String branchName,
-			String ingredientTypeName) {
-		this.batchId = batchId;
-		this.remainingQuantity = remainingQuantity;
-		this.manufacturedDate = manufacturedDate;
-		this.expireDate = expireDate;
-		this.branchId = branchId;
-		this.importDetailId = importDetailId;
-		this.isExpired = isExpired;
-		this.isDeleted = isDeleted;
-		this.createdAt = createdAt;
-		this.ingredientTypeId = ingredientTypeId;
-		this.unitCost = unitCost;
-		this.branchName = branchName;
-		this.ingredientTypeName = ingredientTypeName;
+	public IngredientBatch(String batch_id, BigDecimal remaining_quantity, LocalDate manufactured_date,
+			LocalDate expire_date, String branch_id, Boolean isdeleted,
+			LocalDateTime created_at, String ingredient_type_id, BigDecimal unit_cost,BigDecimal quantity_ordered,
+			BigDecimal total_import_cost,String import_id, String branch_name,String ingredientType_name,String name) {
+		this.batch_id = batch_id;
+		this.remaining_quantity = remaining_quantity;
+		this.manufactured_date = manufactured_date;
+		this.expire_date = expire_date;
+		this.branch_id = branch_id;
+		this.isdeleted = isdeleted;
+		this.created_at = created_at;
+		this.ingredient_type_id = ingredient_type_id;
+		this.unit_cost = unit_cost;
+		this.quantity_ordered=quantity_ordered;
+		this.total_import_cost=total_import_cost;
+		this.import_id=import_id;
+		this.branch_name=branch_name;
+		this.ingredientType_name = ingredientType_name;
+		this.name=name;
 	}
 
-	public String getBranchName() {
-		return branchName;
+	public String getBatch_id() {
+		return batch_id;
 	}
 
-	public void setBranchName(String branchName) {
-		this.branchName = branchName;
+	public void setBatch_id(String batch_id) {
+		this.batch_id = batch_id;
 	}
 
-	public String getIngredientTypeName() {
-		return ingredientTypeName;
+	public BigDecimal getRemaining_quantity() {
+		return remaining_quantity;
 	}
 
-	public void setIngredientTypeName(String ingredientTypeName) {
-		this.ingredientTypeName = ingredientTypeName;
+	public void setRemaining_quantity(BigDecimal remaining_quantity) {
+		this.remaining_quantity = remaining_quantity;
 	}
 
-	public void setRemainingQuantity(BigDecimal remainingQuantity) {
-		this.remainingQuantity = remainingQuantity;
+	public LocalDate getManufactured_date() {
+		return manufactured_date;
 	}
 
-	public String getBatchId() {
-		return batchId;
+	public void setManufactured_date(LocalDate manufactured_date) {
+		this.manufactured_date = manufactured_date;
 	}
 
-	public void setBatchId(String batchId) {
-		this.batchId = batchId;
+	public LocalDate getExpire_date() {
+		return expire_date;
 	}
 
-	public BigDecimal getRemainingQuantity() {
-		return remainingQuantity;
+	public void setExpire_date(LocalDate expire_date) {
+		this.expire_date = expire_date;
 	}
 
-	public void setRmainingQuantity(BigDecimal remainingQuantity) {
-		this.remainingQuantity = remainingQuantity;
+	public String getBranch_id() {
+		return branch_id;
 	}
 
-	public LocalDate getManufacturedDate() {
-		return manufacturedDate;
+	public void setBranch_id(String branch_id) {
+		this.branch_id = branch_id;
 	}
 
-	public void setManufacturedDate(LocalDate manufacturedDate) {
-		this.manufacturedDate = manufacturedDate;
+
+	public Boolean getIsdeleted() {
+		return isdeleted;
 	}
 
-	public LocalDate getExpireDate() {
-		return expireDate;
+	public void setIsdeleted(Boolean isdeleted) {
+		this.isdeleted = isdeleted;
 	}
 
-	public void setExpireDate(LocalDate expireDate) {
-		this.expireDate = expireDate;
+	public LocalDateTime getCreated_at() {
+		return created_at;
 	}
 
-	public String getBranchId() {
-		return branchId;
+	public void setCreated_at(LocalDateTime created_at) {
+		this.created_at = created_at;
 	}
 
-	public void setBranchId(String branchId) {
-		this.branchId = branchId;
+	public String getIngredient_type_id() {
+		return ingredient_type_id;
 	}
 
-	public String getImportDetailId() {
-		return importDetailId;
+	public void setIngredient_type_id(String ingredient_type_id) {
+		this.ingredient_type_id = ingredient_type_id;
 	}
 
-	public void setImportDetailId(String importDetailId) {
-		this.importDetailId = importDetailId;
+	public BigDecimal getUnit_cost() {
+		return unit_cost;
 	}
 
-	public Boolean getIsExpired() {
-		return isExpired;
+	public void setUnit_cost(BigDecimal unit_cost) {
+		this.unit_cost = unit_cost;
 	}
 
-	public void setIsExpired(Boolean isExpired) {
-		this.isExpired = isExpired;
+	public BigDecimal getQuantity_ordered() {
+		return quantity_ordered;
 	}
 
-	public Boolean getIsDeleted() {
-		return isDeleted;
+	public void setQuantity_ordered(BigDecimal quantity_ordered) {
+		this.quantity_ordered = quantity_ordered;
 	}
 
-	public void setIsDeleted(Boolean isDeleted) {
-		this.isDeleted = isDeleted;
+	public BigDecimal getTotal_import_cost() {
+		return total_import_cost;
 	}
 
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
+	public void setTotal_import_cost(BigDecimal total_import_cost) {
+		this.total_import_cost = total_import_cost;
 	}
 
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
+	public String getImport_id() {
+		return import_id;
 	}
 
-	public String getIngredientTypeId() {
-		return ingredientTypeId;
+	public void setImport_id(String import_id) {
+		this.import_id = import_id;
 	}
 
-	public void setIngredientTypeId(String ingredientTypeId) {
-		this.ingredientTypeId = ingredientTypeId;
+	public String getBranch_name() {
+		return branch_name;
 	}
 
-	public BigDecimal getUnitCost() {
-		return unitCost;
+	public void setBranch_name(String branch_name) {
+		this.branch_name = branch_name;
 	}
 
-	public void setUnitCost(BigDecimal unitCost) {
-		this.unitCost = unitCost;
+	public String getIngredientType_name() {
+		return ingredientType_name;
 	}
 
+	public void setIngredientType_name(String ingredientType_name) {
+		this.ingredientType_name = ingredientType_name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	
+	
 }

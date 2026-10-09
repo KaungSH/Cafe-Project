@@ -13,7 +13,7 @@ import cafe.project.repositories.AtypeAndPtypeRepository;
 import cafe.project.repositories.entities.AtypeAndPtype;
 
 @Controller
-@RequestMapping("/manager/types")
+@RequestMapping("/admin/types")
 public class AtypeAndPtypeController {
 	
 	private AtypeAndPtypeRepository repo;
@@ -56,11 +56,11 @@ public class AtypeAndPtypeController {
 		if (name.equals("promo")) {
 			isPromo = true;
 			repo.addType(type.getPromo_type_name(), isPromo);
-			return "redirect:/manager/types/promo";
+			return "redirect:/admin/types/promo";
 		}
 		
 		repo.addType(type.getAudience_type_name(), isPromo);
-		return "redirect:/manager/types/audience";
+		return "redirect:/admin/types/audience";
 	}
 	
 	@GetMapping("/promo/edit/{id}")
@@ -74,7 +74,7 @@ public class AtypeAndPtypeController {
 	@PostMapping("/promo/edit")
 	public String editTypes(@ModelAttribute AtypeAndPtype type, Model model) {
 		repo.editType(type.getPromo_type_id(), type.getPromo_type_name(), true);
-		return "redirect:/manager/types/promo";
+		return "redirect:/admin/types/promo";
 	}
 	
 	@GetMapping("/audience/edit/{id}")
@@ -88,18 +88,18 @@ public class AtypeAndPtypeController {
 	@PostMapping("/audience/edit")
 	public String editTypes2(@ModelAttribute AtypeAndPtype type, Model model) {
 		repo.editType(type.getAudience_type_id(), type.getAudience_type_name(), false);
-		return "redirect:/manager/types/audience";
+		return "redirect:/admin/types/audience";
 	}
 	
 	@GetMapping("/promo/delete/{id}")
 	public String deleteTypes(@PathVariable String id, Model model) {
 		repo.deleteType(id, true);
-		return "redirect:/manager/types/promo";
+		return "redirect:/admin/types/promo";
 	}
 	
 	@GetMapping("/audience/delete/{id}")
 	public String deleteTypes2(@PathVariable String id, Model model) {
 		repo.deleteType(id, false);
-		return "redirect:/manager/types/audience";
+		return "redirect:/admin/types/audience";
 	}
 }

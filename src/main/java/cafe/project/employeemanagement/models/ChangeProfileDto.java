@@ -1,22 +1,49 @@
 package cafe.project.employeemanagement.models;
 
-public class ChangeProfileDto {
-	
-	//For Validation Checks
-	private String email;
-	private String password;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
-	private String employee_id;
+public class ChangeProfileDto {
+	//Here Password is only here for security, one can not change password through this
+	@NotBlank(message = "Password cannot be empty")
+	private String password;
+	
+	@NotBlank(message = "Email cannot be empty")
+	@Email(message = "Invalid email format")
+	@Size(max = 200, message = "Email must not exceed 200 characters")
+	private String email;
+	
+	//No Validation Check here, because a validation check here would break the photo uploads
 	private String photopath;
+	
+	@NotBlank(message = "Phone number is required")
+	@Pattern(regexp = "^09(\\d{7}|\\d{9})$", message = "Invalid phone number format")
 	private String phone;
+	
+	@NotBlank(message = "Name cannot be empty")
+	@Size(max = 45, message = "Name must not exceed 45 characters")
 	private String employee_name;
-	private String salary;
+	
+	@NotBlank(message = "Address cannot be empty")
+	@Size(min = 5, max = 100, message = "Address must be between 5 and 100 characters")
+	@Pattern(regexp = "^[a-zA-Z0-9\\s,.#\\-/]+$", message = "Address contains invalid characters")
 	private String address;
-	private String role_id;
-	private String branch_id;
-	private String gender_id;
+	
+	private String employee_id;
 	
 	public ChangeProfileDto() {}
+	
+	public ChangeProfileDto(String password, String email, String photopath, String phone, String employee_name, String address, String employee_id) {
+		this.password = password;
+		this.email = email;
+		this.photopath = photopath;
+		this.phone = phone;
+		this.employee_name = employee_name;
+		this.address = address;
+		this.employee_id = employee_id;
+	}
 
 	public String getEmployee_id() {
 		return employee_id;
@@ -34,20 +61,8 @@ public class ChangeProfileDto {
 		return employee_name;
 	}
 
-	public String getSalary() {
-		return salary;
-	}
-
 	public String getAddress() {
 		return address;
-	}
-
-	public String getRole_id() {
-		return role_id;
-	}
-
-	public String getBranch_id() {
-		return branch_id;
 	}
 
 	public void setEmployee_id(String employee_id) {
@@ -66,28 +81,8 @@ public class ChangeProfileDto {
 		this.employee_name = employee_name;
 	}
 
-	public void setSalary(String salary) {
-		this.salary = salary;
-	}
-
 	public void setAddress(String address) {
 		this.address = address;
-	}
-
-	public void setRole_id(String role_id) {
-		this.role_id = role_id;
-	}
-
-	public void setBranch_id(String branch_id) {
-		this.branch_id = branch_id;
-	}
-
-	public String getGender_id() {
-		return gender_id;
-	}
-
-	public void setGender_id(String gender_id) {
-		this.gender_id = gender_id;
 	}
 
 	public String getEmail() {

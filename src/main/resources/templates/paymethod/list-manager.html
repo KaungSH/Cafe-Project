@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Methods | Café Luft</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-canvas: #f6f2ec;
+            --surface: #ffffff;
+            --espresso: #1e130c;
+            --caramel: #b58356;
+            --border-subtle: #ede4d8;
+            --text-dark: #2b1d14;
+            --text-muted: #827265;
+            --active-bg: #eaf6ed;
+            --active-text: #2d7a46;
+        }
+
+        body {
+            background-color: var(--bg-canvas);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        .main-wrapper {
+            max-width: 1140px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* Luxury Card Container */
+        .main-card {
+            background: var(--surface);
+            border-radius: 24px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 16px 40px -10px rgba(43, 29, 20, 0.06);
+            padding: 40px;
+        }
+
+        .category-subtitle {
+            font-size: 0.75rem;
+            letter-spacing: 1.5px;
+            color: var(--caramel);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .brand-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: var(--espresso);
+            font-size: 2rem;
+            letter-spacing: -0.5px;
+        }
+
+        /* Clean Luxury Table */
+        .luxury-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 10px;
+        }
+
+        .luxury-table thead th {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-weight: 700;
+            padding: 16px 18px;
+            border-bottom: 1.5px solid var(--border-subtle);
+        }
+
+        .luxury-table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        .luxury-table tbody tr:not(:last-child) td {
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .luxury-table tbody tr:hover {
+            background-color: #faf7f2;
+        }
+
+        .luxury-table tbody td {
+            padding: 18px;
+            vertical-align: middle;
+            font-size: 0.92rem;
+        }
+
+        /* Logo Square Frame */
+        .logo-box {
+            width: 42px;
+            height: 42px;
+            background: #faf7f2;
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .logo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 2px;
+        }
+
+        /* Soft Active / Inactive Badge */
+        .badge-status {
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge-status.active {
+            background: var(--active-bg);
+            color: var(--active-text);
+        }
+
+        .badge-status.inactive {
+            background: #f1edeb;
+            color: #8c827a;
+        }
+
+        /* Empty State */
+        .empty-state-box {
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 60px 20px;
+            text-align: center;
+            background: #ffffff;
+            margin-top: 15px;
+        }
+
+        .empty-state-icon {
+            font-size: 2.5rem;
+            color: #a89f91;
+            margin-bottom: 12px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-wrapper">
+    <div class="main-card">
+        
+        <!-- Header Section -->
+        <div class="mb-4">
+            <span class="category-subtitle">Settings &amp; Management</span>
+            <h1 class="brand-title mt-1 mb-0">Payment Methods</h1>
+        </div>
+
+        <!-- Table View -->
+        <div class="table-responsive">
+            <table class="luxury-table">
+                <thead>
+                    <tr>
+                        <th style="width: 10%;">No.</th>
+                        <th style="width: 15%;">Logo</th>
+                        <th style="width: 25%;">Method</th>
+                        <th style="width: 35%;">Description</th>
+                        <th class="text-end" style="width: 15%;">Status</th>
+                    </tr>
+                </thead>
+                <tbody th:unless="${#lists.isEmpty(payMethods)}">
+                    <tr th:each="pm, state : ${payMethods}">
+                        <!-- No. -->
+                        <td class="fw-bold text-muted" th:text="${state.count < 10 ? '0' + state.count : state.count}">01</td>
+
+                        <!-- Logo -->
+                        <td>
+                            <div class="logo-box">
+                                <img th:if="${pm.logoPath != null and pm.logoPath != ''}"
+                                     th:src="@{'/images/' + ${pm.logoPath}}" alt="logo" />
+                                <span th:unless="${pm.logoPath != null and pm.logoPath != ''}" 
+                                      class="fw-bold text-muted" 
+                                      th:text="${#strings.substring(pm.name,0,1)}">C</span>
+                            </div>
+                        </td>
+
+                        <!-- Name -->
+                        <td>
+                            <span class="fw-bold" style="color: var(--espresso);" th:text="${pm.name}">KBZPay</span>
+                        </td>
+
+                        <!-- Description -->
+                        <td>
+                            <span class="text-muted" th:text="${pm.description != null ? pm.description : '—'}">Mobile Banking &amp; QR Scan</span>
+                        </td>
+
+                        <!-- Status Badge -->
+                        <td class="text-end">
+                            <span th:if="${pm.active}" class="badge-status active">
+                                <i class="bi bi-check2"></i> Active
+                            </span>
+                            <span th:unless="${pm.active}" class="badge-status inactive">
+                                <i class="bi bi-dash"></i> Inactive
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Empty State Display (Data မရှိလျှင် ပြသမည့် Box) -->
+            <div th:if="${#lists.isEmpty(payMethods)}" class="empty-state-box">
+                <i class="bi bi-inbox empty-state-icon"></i>
+                <div class="text-muted" style="font-size: 0.95rem;">No payment methods found.</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

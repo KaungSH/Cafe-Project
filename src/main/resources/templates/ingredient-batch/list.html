@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<meta charset="UTF-8">
+<title>Ingredient Batch Lists</title>
+
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<style>
+body {
+	background-color: #f8f9fa;
+	color: #333;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+		sans-serif;
+}
+
+.stat-card {
+	background-color: #f1ede6;
+	border: none;
+	border-radius: 12px;
+	padding: 20px;
+}
+
+.stat-card-warning {
+	background-color: #fbf3d5;
+}
+
+.stat-card-danger {
+	background-color: #fbe3e3;
+}
+
+.stat-number {
+	font-size: 2.2rem;
+	font-weight: 600;
+	line-height: 1;
+}
+
+.stat-label {
+	font-size: 0.85rem;
+	color: #777;
+	margin-top: 6px;
+}
+
+.badge-near-expiry {
+	background-color: #fcedc8;
+	color: #8a6300;
+	font-weight: 500;
+}
+
+.badge-fresh {
+	background-color: #e2f0d9;
+	color: #385d26;
+	font-weight: 500;
+}
+
+.badge-expired {
+	background-color: #fbe3e3;
+	color: #a82a2a;
+	font-weight: 500;
+}
+
+.table-custom {
+	font-size: 0.9rem;
+}
+
+.table-custom th {
+	color: #888;
+	font-weight: 600;
+	text-transform: uppercase;
+	font-size: 0.75rem;
+	border-bottom: 1px solid #eee;
+	padding-bottom: 12px;
+}
+
+.table-custom td {
+	padding-top: 14px;
+	padding-bottom: 14px;
+}
+</style>
+
+
+<div class="container-fluid">
+
+
+	<div class="d-flex justify-content-between align-items-start mb-2">
+		<div>
+			<h3 class="fw-bold mb-1">Batches & expiry</h3>
+			<p class="text-muted small mb-0">Every dated batch of perishable
+				stock — cakes and pastries on the shelf, plus raw ingredients like
+				milk and beans — sorted by what runs out soonest.</p>
+		</div>
+		<div class="d-flex gap-2">
+		<!--  	<a th:href="@{/ingredient-batches/add}" class="btn btn-primary">+
+				Add New Batch</a>--> <a th:href="@{/ingredient-batches/deleted-list}"
+				class="btn btn-outline-danger">Trash / Deleted Batches</a>
+		</div>
+	</div>
+
+
+	<div class="row g-3 my-3"
+		th:with="today=${T(java.time.LocalDate).now()}">
+
+
+		<div class="col-md-4">
+			<div class="stat-card">
+				<div class="stat-number" th:text="${#lists.size(batches)}">0</div>
+				<div class="stat-label">Total batches</div>
+			</div>
+		</div>
+
+
+		<div class="col-md-4">
+			<div class="stat-card stat-card-warning">
+				<div class="stat-number"
+					th:text="${#lists.size(batches.?[expire_date != null and T(java.time.temporal.ChronoUnit).DAYS.between(#root.today, expire_date) >= 0 and T(java.time.temporal.ChronoUnit).DAYS.between(#root.today, expire_date) <= 7])}">0</div>
+				<div class="stat-label">Near expiry</div>
+			</div>
+		</div>
+
+
+		<div class="col-md-4">
+			<div class="stat-card stat-card-danger">
+				<div class="stat-number"
+					th:text="${#lists.size(batches.?[expire_date != null and T(java.time.temporal.ChronoUnit).DAYS.between(#root.today, expire_date) < 0])}">0</div>
+				<div class="stat-label">Expired</div>
+			</div>
+		</div>
+	</div>
+
+	<div
+		class="table-responsive bg-white rounded-3 p-3 shadow-sm border mt-4">
+		<table class="table table-borderless table-custom align-middle mb-0">
+			<thead>
+				<tr>
+					<th>BATCH ID</th>
+					<th>INGREDIENT</th>
+					<th>BRANCH</th>
+					<th>MADE</th>
+					<th>EXPIRES</th>
+					<th>REMAINING</th>
+					<th>UNIT COST</th>
+					<th>TOTAL COST</th>
+					<th>STATUS</th>
+					<th>SHELF-LIFE</th>
+					<th class="text-end">ACTIONS</th>
+				</tr>
+			</thead>
+			<tbody>
+
+				<tr th:if="${#lists.isEmpty(batches)}">
+					<td colspan="11" class="text-center text-muted py-4">No
+						ingredient batches found.</td>
+				</tr>
+
+
+				<tr th:each="batch : ${batches}"
+					th:with="today=${T(java.time.LocalDate).now()},
+             expireDate=${batch.expire_date},
+             daysLeft=${expireDate != null ? T(java.time.temporal.ChronoUnit).DAYS.between(today, expireDate) : 999}"
+					th:classappend="${daysLeft <= 5} ? 'table-warning-subtle' : ''">
+
+					<td class="text-muted fw-bold" th:text="${batch.batch_id}"></td>
+					<td class="fw-medium" th:text="${batch.ingredientType_name}"></td>
+					<td class="text-muted" th:text="${batch.branch_name}"></td>
+					<td class="text-muted"
+						th:text="${batch.manufactured_date != null ? #temporals.format(batch.manufactured_date, 'MMM dd, yyyy') : '-'}"></td>
+					<td class="text-muted fw-semibold"
+						th:text="${batch.expire_date != null ? #temporals.format(batch.expire_date, 'MMM dd, yyyy') : '-'}"></td>
+					<td class="fw-medium" th:text="${batch.remaining_quantity}"></td>
+					<td class="text-muted" th:text="${batch.unit_cost}"></td>
+					<td class="text-muted" th:text="${batch.total_import_cost}"></td>
+
+					<td><span th:if="${daysLeft < 0}"
+						class="badge badge-expired rounded-pill px-3 py-1">Expired</span>
+						<span th:if="${daysLeft >= 0 and daysLeft <= 7}"
+						class="badge badge-near-expiry rounded-pill px-3 py-1">NearExpiry</span>
+						<span th:if="${daysLeft > 7}"
+						class="badge badge-fresh rounded-pill px-3 py-1">Fresh</span></td>
+
+					<td class="text-muted"><span th:if="${daysLeft < 0}">Expired</span>
+						<span th:if="${daysLeft >= 0}" th:text="${daysLeft + 'd left'}"></span>
+					</td>
+
+					<td class="text-end"><!-- <a
+						 th:href="@{/ingredient-batches/edit/{id}(id=${batch.batch_id})}"
+						class="btn btn-sm btn-outline-warning me-1">Edit</a>--> <a
+						th:href="@{/ingredient-batches/delete/{id}(id=${batch.batch_id})}"
+						class="btn btn-sm btn-outline-danger"
+						onclick="return confirm('Are you sure you want to soft delete this batch?');">Delete</a>
+					</td>
+				</tr>
+
+			</tbody>
+		</table>
+		
+	</div>
+	<!--  <a th:href="@{/ingredient-batches/add(importId=${imp.import_id})}" class="btn btn-success btn-sm">
+    <i class="bi bi-plus"></i> Add Ingredient Batch
+</a>-->
+</div>
+</body>
+</html>

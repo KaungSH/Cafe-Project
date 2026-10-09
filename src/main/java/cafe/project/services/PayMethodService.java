@@ -40,8 +40,13 @@ public class PayMethodService {
 	public PayMethodDto getPayMethodByIdWithRelations(String methodId) {
 		return payMethodRepository.findByIdWithRelations(methodId);
 	}
+	
+	public void changeIsActive(String methodId) {
+		payMethodRepository.changeIsActive(methodId, !payMethodRepository.findById(methodId).isActive());
+	}
 
 	public void createPayMethod(PayMethod pm) {
+		System.out.println("Service - " + pm.getLogoPath());
 		if (pm.getMethodId() == null || pm.getMethodId().trim().isEmpty()) {
 			pm.setMethodId(UUID.randomUUID().toString());
 		}
@@ -57,5 +62,13 @@ public class PayMethodService {
 
 	public void deletePayMethod(String methodId) {
 		payMethodRepository.softDelete(methodId);
+	}
+
+	public List<PayMethodDto> findDeleted() {
+		return this.payMethodRepository.deletedList();
+	}
+
+	public int restore(String methodId) {
+		return this.payMethodRepository.restore(methodId);
 	}
 }

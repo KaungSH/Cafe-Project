@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transfer Employee | Café Luft</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-canvas: #fcf9f5;
+            --surface: #ffffff;
+            --espresso: #1f140e;
+            --caramel: #c49a6c;
+            --border-subtle: #ede4d8;
+        }
+        body { background-color: var(--bg-canvas); font-family: 'Plus Jakarta Sans', sans-serif; color: #2a1d17; }
+        .transfer-card {
+            background: var(--surface); border-radius: 24px; border: 1px solid var(--border-subtle);
+            box-shadow: 0 16px 40px -10px rgba(43, 29, 20, 0.06); padding: 40px; max-width: 580px; margin: 60px auto;
+        }
+        .brand-title { font-family: 'Playfair Display', serif; color: var(--espresso); font-weight: 700; }
+        .form-select { border: 1.5px solid var(--border-subtle); border-radius: 12px; padding: 12px 16px; }
+        .btn-luxury {
+            background: linear-gradient(135deg, #c49a6c 0%, #aa7e4e 100%); color: #ffffff; border: none;
+            border-radius: 12px; font-weight: 600; padding: 11px 26px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="transfer-card">
+        <div class="text-center mb-4">
+            <div class="mx-auto mb-3 d-flex align-items-center justify-content-center"
+                 style="width: 55px; height: 55px; border-radius: 50%; background: #fbf5ee; color: var(--caramel); border: 1.5px solid var(--border-subtle);">
+                <i class="bi bi-arrow-left-right fs-4"></i>
+            </div>
+            <h2 class="brand-title mb-1">Transfer Employee</h2>
+            <p class="text-muted small">
+                Moving <strong th:text="*{employeeDto.name}" style="color: var(--espresso);">Staff</strong> 
+                from branch <strong th:text="${branch_name}" style="color: var(--espresso);">Branch</strong>
+            </p>
+        </div>
+
+        <form th:action="@{/manager-only/employee/transfer}" th:object="${employeeDto}" method="post">
+            <input type="hidden" th:field="*{employee_id}" />
+
+            <div class="mb-4">
+                <label class="form-label fw-bold small text-uppercase">Destination Branch</label>
+                <select th:field="*{branch_id}" class="form-select" required>
+                    <option value="" disabled selected hidden>Select Target Branch</option>
+                    <option th:if="${s.branch_id != employeeDto.branch_id}"
+                            th:each="s : ${branches}" 
+                            th:value="${s.branch_id}" 
+                            th:text="${s.name}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="d-flex justify-content-center gap-2 pt-2">
+                <a th:href="@{/manager-only/employee}" class="btn btn-light px-4" style="border-radius: 12px; font-weight: 600;">Cancel</a>
+                <button type="submit" class="btn btn-luxury px-4">Complete Transfer</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

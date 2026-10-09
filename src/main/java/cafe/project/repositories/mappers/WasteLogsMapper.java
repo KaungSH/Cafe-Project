@@ -21,6 +21,7 @@ public class WasteLogsMapper implements RowMapper<WasteLogs> {
 		entity.setEmployee_id(rs.getString("employee_id"));
 		entity.setNotes(rs.getString("notes"));
 		entity.setIsdeleted(rs.getBoolean("isdeleted"));
+		entity.setBranch_id(rs.getString("branch_id"));
 
 		Timestamp loggedAt = rs.getTimestamp("logged_at");
 		if (loggedAt != null) {

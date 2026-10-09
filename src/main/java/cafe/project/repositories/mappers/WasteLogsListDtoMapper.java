@@ -20,6 +20,7 @@ public class WasteLogsListDtoMapper implements RowMapper<WasteLogsListDto> {
 		dto.setFinancial_loss(rs.getBigDecimal("financial_loss"));
 		dto.setName(rs.getString("name"));
 		dto.setNotes(rs.getString("notes"));
+		dto.setBranch_name(rs.getString("branch_name"));
 
 		Timestamp loggedAt = rs.getTimestamp("logged_at");
 		if (loggedAt != null) {
