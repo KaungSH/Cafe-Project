@@ -1,5 +1,6 @@
 package cafe.project.services;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,69 @@ public class ProductService {
 	public List<ProductListModel> findListAll() {
 		return prepo.findListAll().stream().map(this::toListModel2).toList();
 	}
-	
+
+	private ProductListModel calculateAvailability(Product product, ProductListModel productModel, String branchId) {
+
+		List<String> ingredientIds = product.getIngredient_ids();
+		List<Double> quantityRequired = product.getQuantity_required();
+
+		// Product has no ingredients
+		if (ingredientIds == null || ingredientIds.isEmpty() || quantityRequired == null
+				|| quantityRequired.isEmpty()) {
+
+			productModel.setAvailable(false);
+			productModel.setRemainingServings(0);
+			productModel.setAvailabilityStatus("OUT OF STOCK");
+
+			return productModel;
+		}
+
+		int remainingServings = Integer.MAX_VALUE;
+
+		for (int i = 0; i < ingredientIds.size(); i++) {
+
+			String ingredientTypeId = ingredientIds.get(i);
+			double requiredQuantity = quantityRequired.get(i);
+
+			if (requiredQuantity <= 0) {
+				continue;
+			}
+
+			BigDecimal availableQuantity = ingredientBatchService.getAvailableQuantity(ingredientTypeId, branchId);
+
+			int servings = availableQuantity
+					.divide(BigDecimal.valueOf(requiredQuantity), 0, java.math.RoundingMode.FLOOR).intValue();
+
+			if (servings < remainingServings) {
+				remainingServings = servings;
+			}
+		}
+
+		if (remainingServings == Integer.MAX_VALUE) {
+			remainingServings = 0;
+		}
+
+		productModel.setRemainingServings(remainingServings);
+
+		if (remainingServings <= 0) {
+
+			productModel.setAvailable(false);
+			productModel.setAvailabilityStatus("OUT OF STOCK");
+
+		} else if (remainingServings <= 5) {
+
+			productModel.setAvailable(true);
+			productModel.setAvailabilityStatus("LOW STOCK");
+
+		} else {
+
+			productModel.setAvailable(true);
+			productModel.setAvailabilityStatus("AVAILABLE");
+		}
+
+		return productModel;
+	}
+
 	public List<ProductListModel> findAllForOrder(String branchId) {
 
 		List<Product> allProducts = new ArrayList<>();
@@ -34,14 +97,33 @@ public class ProductService {
 
 		List<ProductListModel> products = allProducts.stream().map(this::toListModel2).toList();
 
-		for (ProductListModel product : products) {
+		for (int i = 0; i < products.size(); i++) {
 
-			boolean available = prepo.isProductAvailable(product.getProduct_id(), branchId);
+			Product product = allProducts.get(i);
+			ProductListModel productModel = products.get(i);
 
-			product.setAvailable(available);
+			calculateAvailability(product, productModel, branchId);
 		}
 
 		return products;
+	}
+
+	public List<ProductListModel> findListAllByTypeIdForOrder(String typeId, String branchId) {
+
+		List<Product> products = prepo.findListAllByTypeId(typeId);
+
+		List<ProductListModel> result = new ArrayList<>();
+
+		for (Product product : products) {
+
+			ProductListModel productModel = toListModel2(product);
+
+			calculateAvailability(product, productModel, branchId);
+
+			result.add(productModel);
+		}
+
+		return result;
 	}
 
 	public List<ProductListModel> findListAllByTypeId(String type_id) {
@@ -132,14 +214,15 @@ public class ProductService {
 	private ProductListModel toListModel(Product ep) {
 		return new ProductListModel(ep.getProduct_id(), ep.getEmployee_name(), ep.getType_name(), ep.getSize_code(),
 				ep.getPrice(), ep.isIsedited(), ep.isIsdeleted(), ep.isIs_active(), ep.getCreated_at(),
-				ep.getQuantity_required(), ep.getDiscount_names(), ep.getUnit_code(), ep.getIngredient_names());
+				ep.getIngredient_ids(), ep.getQuantity_required(), ep.getDiscount_names(), ep.getUnit_code(),
+				ep.getIngredient_names());
 	}
 
 	private ProductListModel toListModel2(Product ep) {
 		return new ProductListModel(ep.getProduct_id(), ep.getEmployee_name(), ep.getType_name(), ep.getSize_code(),
 				ep.getPrice(), ep.isIsedited(), ep.isIsdeleted(), ep.isIs_active(), ep.getCreated_at(),
-				ep.getQuantity_required(), ep.getDiscount_names(), ep.getUnit_code(), ep.getIngredient_names(),
-				ep.getDiscount_values());
+				ep.getIngredient_ids(), ep.getQuantity_required(), ep.getDiscount_names(), ep.getUnit_code(),
+				ep.getIngredient_names(), ep.getDiscount_values());
 	}
 
 	private ProductEntryModel toEntryModel(Product ep) {

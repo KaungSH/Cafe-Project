@@ -326,18 +326,12 @@ body {
 			<h1 class="page-title">Orders</h1>
 
 			<div class="d-flex gap-2 flex-wrap">
-
-				<a th:href="@{/order-with-details/received-list}"
+				<a th:href="@{/staff/products}"
+					class="btn btn-success top-btn"> Back To Menu Page </a> <a
+					th:href="@{/order-with-details/received-list}"
 					class="btn btn-success top-btn"> Received List </a> <a
 					th:href="@{/order-with-details/deleted}"
-					class="btn btn-secondary top-btn"> Deleted List </a> <a
-					th:href="@{/order-with-details/add}"
-					class="btn btn-primary top-btn"> <i class="bi bi-plus-lg"></i>
-
-					Create Order
-
-				</a>
-
+					class="btn btn-secondary top-btn"> Deleted List </a>
 
 			</div>
 
@@ -489,7 +483,8 @@ body {
 								<div th:if="${order.hasDiscount}">
 
 									<span class="discount-text"> - <span
-										th:text="${order.discountAmount}"> 0.00 </span> Ks <br>Save</span>
+										th:text="${order.discountAmount}"> 0.00 </span> Ks <br>Save
+									</span>
 
 								</div> <span th:unless="${order.hasDiscount}" class="no-discount">
 									— </span>
@@ -541,22 +536,19 @@ body {
 
 											</a></li>
 
-											<li>
 
+											<li th:if="${!order.paymentDone}">
 												<form
 													th:action="@{/order-with-details/delete/{id}(id=${order.order_id})}"
 													method="post"
-													onsubmit="return confirm('Are you sure you want to delete this order?');">
+													onsubmit="return confirm('Are you sure you want to cancel this order?');">
 
 													<button type="submit" class="dropdown-item text-danger">
-
-														<i class="bi bi-trash"></i> Delete
-
+														<i class="bi bi-x-circle"></i> Cancel Order
 													</button>
-
 												</form>
-
 											</li>
+
 
 										</ul>
 

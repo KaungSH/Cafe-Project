@@ -167,5 +167,9 @@ public class IngredientBatchRepository {
 				remainingToUse = remainingToUse.subtract(batchRemaining);
 			}
 		}
+
+		if (remainingToUse.compareTo(BigDecimal.ZERO) > 0) {
+			throw new IllegalArgumentException("Not enough ingredient stock.");
+		}
 	}
 }

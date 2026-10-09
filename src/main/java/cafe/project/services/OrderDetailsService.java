@@ -158,17 +158,6 @@ public class OrderDetailsService {
 
 			ProductEntryModel product = productService.findById(orderDetail.getProduct_id());
 
-			System.out.println("================================");
-			System.out.println("PRODUCT ID: " + orderDetail.getProduct_id());
-
-			System.out.println("ORDER QUANTITY: " + orderDetail.getQuantity());
-
-			System.out.println("INGREDIENT IDS: " + product.getIngredient_ids());
-
-			System.out.println("QUANTITIES: " + product.getQuantity_required());
-
-			System.out.println("BRANCH ID: " + branchId);
-
 			List<String> ingredientIds = product.getIngredient_ids();
 
 			List<Double> quantities = product.getQuantity_required();
@@ -183,16 +172,9 @@ public class OrderDetailsService {
 
 				BigDecimal requiredQuantity = requiredPerProduct.multiply(BigDecimal.valueOf(orderQuantity));
 
-				System.out.println("INGREDIENT ID: " + ingredientId);
-
-				System.out.println("REQUIRED: " + requiredQuantity);
-
 				ingredientBatchService.reduceStockFIFO(ingredientId, branchId, requiredQuantity);
 
-				System.out.println("STOCK REDUCED");
 			}
-
-			System.out.println("================================");
 		}
 	}
 }

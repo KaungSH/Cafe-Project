@@ -4,20 +4,30 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class ProductListModel {
-	
+
 	private String product_id, employee_name, type_name, size_code;
 	private double price;
 	private boolean isedited, isdeleted, is_active;
 	private LocalDateTime created_at;
-	
+
 	private List<Double> quantity_required;
+	private List<String> ingredient_ids;
 	private List<String> unit_code, discount_names, ingredient_names;
 	private List<Double> discount_values;
+
 	private boolean available;
-	
-	public ProductListModel() {}
-	
-	public ProductListModel(String product_id, String employee_name, String type_name, String size_code, double price, boolean isedited, boolean isdeleted, boolean is_active, LocalDateTime created_at, List<Double> quantity_required, List<String> discount_names, List<String> unit_code, List<String> ingredient_names, List<Double> discount_values) {
+	private int remainingServings;
+	private String availabilityStatus;
+
+	public ProductListModel() {
+	}
+
+	// Constructor with discount values
+	public ProductListModel(String product_id, String employee_name, String type_name, String size_code, double price,
+			boolean isedited, boolean isdeleted, boolean is_active, LocalDateTime created_at,
+			List<String> ingredient_ids, List<Double> quantity_required, List<String> discount_names,
+			List<String> unit_code, List<String> ingredient_names, List<Double> discount_values) {
+
 		this.product_id = product_id;
 		this.employee_name = employee_name;
 		this.type_name = type_name;
@@ -27,14 +37,21 @@ public class ProductListModel {
 		this.isdeleted = isdeleted;
 		this.is_active = is_active;
 		this.created_at = created_at;
+
+		this.ingredient_ids = ingredient_ids;
 		this.quantity_required = quantity_required;
 		this.discount_names = discount_names;
 		this.ingredient_names = ingredient_names;
 		this.unit_code = unit_code;
 		this.discount_values = discount_values;
 	}
-	
-	public ProductListModel(String product_id, String employee_name, String type_name, String size_code, double price, boolean isedited, boolean isdeleted, boolean is_active, LocalDateTime created_at, List<Double> quantity_required, List<String> discount_names, List<String> unit_code, List<String> ingredient_names) {
+
+	// Constructor without discount values
+	public ProductListModel(String product_id, String employee_name, String type_name, String size_code, double price,
+			boolean isedited, boolean isdeleted, boolean is_active, LocalDateTime created_at,
+			List<String> ingredient_ids, List<Double> quantity_required, List<String> discount_names,
+			List<String> unit_code, List<String> ingredient_names) {
+
 		this.product_id = product_id;
 		this.employee_name = employee_name;
 		this.type_name = type_name;
@@ -44,6 +61,8 @@ public class ProductListModel {
 		this.isdeleted = isdeleted;
 		this.is_active = is_active;
 		this.created_at = created_at;
+
+		this.ingredient_ids = ingredient_ids;
 		this.quantity_required = quantity_required;
 		this.discount_names = discount_names;
 		this.ingredient_names = ingredient_names;
@@ -130,6 +149,14 @@ public class ProductListModel {
 		this.quantity_required = quantity_required;
 	}
 
+	public List<String> getIngredient_ids() {
+		return ingredient_ids;
+	}
+
+	public void setIngredient_ids(List<String> ingredient_ids) {
+		this.ingredient_ids = ingredient_ids;
+	}
+
 	public List<String> getDiscount_names() {
 		return discount_names;
 	}
@@ -169,5 +196,20 @@ public class ProductListModel {
 	public void setAvailable(boolean available) {
 		this.available = available;
 	}
-	
+
+	public int getRemainingServings() {
+		return remainingServings;
+	}
+
+	public void setRemainingServings(int remainingServings) {
+		this.remainingServings = remainingServings;
+	}
+
+	public String getAvailabilityStatus() {
+		return availabilityStatus;
+	}
+
+	public void setAvailabilityStatus(String availabilityStatus) {
+		this.availabilityStatus = availabilityStatus;
+	}
 }

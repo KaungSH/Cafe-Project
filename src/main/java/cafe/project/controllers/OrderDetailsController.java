@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cafe.project.employeemanagement.models.LoginDto;
 import cafe.project.models.OrderDetailsDto;
@@ -94,18 +95,22 @@ public class OrderDetailsController {
 
 	@GetMapping("/add")
 	public String add(Model model, HttpSession session) {
+
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 
 		Orders order = new Orders();
-		order.setEmployee_id(ldto.getEmployee_id());
-		order.setBranch_id(ldto.getBranch_id());
+		OrderDetailsDto orderDetailsDto;
 
-		OrderDetailsDto dto = new OrderDetailsDto();
+		List<OrderDetails> selectedDetails = (List<OrderDetails>) session.getAttribute("selectedOrderDetails");
+
+		if (selectedDetails != null && !selectedDetails.isEmpty()) {
+			orderDetailsDto = new OrderDetailsDto(selectedDetails);
+		} else {
+			orderDetailsDto = new OrderDetailsDto();
+		}
 
 		model.addAttribute("order", order);
-
-		model.addAttribute("orderDetailsDto", dto);
-
+		model.addAttribute("orderDetailsDto", orderDetailsDto);
 		model.addAttribute("products", productService.findAllForOrder(ldto.getBranch_id()));
 
 		return "orderwithdetails/add";
@@ -143,8 +148,6 @@ public class OrderDetailsController {
 
 			orderDetailsService.save(dto);
 
-			orderDetailsService.reduceStock(dto, order.getBranch_id());
-
 			BigDecimal subtotal = orderDetailsService.calculateTotalAmount(order.getOrder_id());
 
 			BigDecimal discount = orderDetailsService.calculateDiscountAmount(order.getOrder_id());
@@ -152,6 +155,8 @@ public class OrderDetailsController {
 			BigDecimal finalAmount = subtotal.subtract(discount);
 
 			ordersService.updateTotalAmount(order.getOrder_id(), finalAmount);
+
+			session.removeAttribute("selectedOrderDetails");
 
 			return "redirect:/order-with-details";
 
@@ -245,10 +250,18 @@ public class OrderDetailsController {
 	}
 
 	@PostMapping("/permanent-delete/{id}")
-	public String permanentDelete(@PathVariable("id") String id) {
+	public String permanentDelete(@PathVariable("id") String id, RedirectAttributes redirect) {
 
-		ordersService.permanentDelete(id);
+		if (ordersService.isPaymentDone(id)) {
+			redirect.addFlashAttribute("error", "This order has already been paid.");
 
-		return "redirect:/order-with-details/deleted";
+			return "redirect:/order-with-details";
+		}
+
+		ordersService.delete(id);
+
+		redirect.addFlashAttribute("success", "Order cancelled successfully!");
+
+		return "redirect:/order-with-details";
 	}
 }
