@@ -23,6 +23,12 @@ public class ExpenseService {
 		return expenses;
 	}
 	
+	public List<ExpenseDto> findAllAdmin(){
+		List<Expense> entities = this.repo.findAllAdmin();
+		List<ExpenseDto> expenses = entities.stream().map(this::toDto).toList();
+		return expenses;
+	}
+	
 	public ExpenseDto findById(String expense_id, String branch_id) {
 		Expense entity =this.repo.findById(expense_id, branch_id);
 		if(entity == null)

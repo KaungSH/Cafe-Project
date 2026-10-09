@@ -199,7 +199,7 @@ body {
 
 			<div>
 
-				<a th:href="@{/manager/branchesStats}" class="btn-back"> <i
+				<a th:href="@{/manager-only/branchstats}" class="btn-back"> <i
 					class="bi bi-arrow-left"></i> Back to List
 
 				</a>
@@ -256,7 +256,7 @@ body {
 
 					<td class="text-end">
 					<a
-						th:href="@{/manager/branchesStats/restore(
+						th:href="@{/manager-only/branchstats/restore(
                         branch_stats_id=${branchesStats.branch_stats_id})}"
 						class="btn-restore"
 						onclick="return confirm('Are you sure you want to restore this record?')">
@@ -264,7 +264,7 @@ body {
 							<i class="bi bi-arrow-counterclockwise"></i> Restore
 
 					</a>  <a
-						th:href="@{/manager/branchesStats/real-delete(
+						th:href="@{/manager-only/branchstats/real-delete(
                         branch_stats_id=${branchesStats.branch_stats_id})}"
 						class="btn-hard-delete"
 						onclick="return confirm('This record will be permanently deleted. Are you sure?')">

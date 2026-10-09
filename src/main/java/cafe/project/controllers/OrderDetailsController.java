@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cafe.project.employeemanagement.models.LoginDto;
 import cafe.project.models.OrderDetailsDto;
@@ -19,6 +20,7 @@ import cafe.project.services.BranchService;
 import cafe.project.services.EmployeeService;
 import cafe.project.services.OrderDetailsService;
 import cafe.project.services.OrdersService;
+import cafe.project.services.PaymentService;
 import cafe.project.services.ProductService;
 import jakarta.servlet.http.HttpSession;
 
@@ -31,15 +33,18 @@ public class OrderDetailsController {
 	private final OrdersService ordersService;
 	private final BranchService branchService;
 	private final EmployeeService employeeService;
+	private final PaymentService paymentService;
 
 	public OrderDetailsController(OrderDetailsService orderDetailsService, ProductService productService,
-			OrdersService ordersService, BranchService branchService, EmployeeService employeeService) {
+			OrdersService ordersService, BranchService branchService, EmployeeService employeeService,
+			PaymentService paymentService) {
 
 		this.orderDetailsService = orderDetailsService;
 		this.productService = productService;
 		this.ordersService = ordersService;
 		this.branchService = branchService;
 		this.employeeService = employeeService;
+		this.paymentService = paymentService;
 	}
 
 	@GetMapping
@@ -94,58 +99,79 @@ public class OrderDetailsController {
 
 	@GetMapping("/add")
 	public String add(Model model, HttpSession session) {
+
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 
 		Orders order = new Orders();
-		order.setEmployee_id(ldto.getEmployee_id());
-		order.setBranch_id(ldto.getBranch_id());
+		OrderDetailsDto orderDetailsDto;
 
-		OrderDetailsDto dto = new OrderDetailsDto();
+		List<OrderDetails> selectedDetails = (List<OrderDetails>) session.getAttribute("selectedOrderDetails");
+
+		if (selectedDetails != null && !selectedDetails.isEmpty()) {
+			orderDetailsDto = new OrderDetailsDto(selectedDetails);
+		} else {
+			orderDetailsDto = new OrderDetailsDto();
+		}
 
 		model.addAttribute("order", order);
-
-		model.addAttribute("orderDetailsDto", dto);
-
-		model.addAttribute("products", productService.findAllForOrder());
+		model.addAttribute("orderDetailsDto", orderDetailsDto);
+		model.addAttribute("products", productService.findAllForOrder(ldto.getBranch_id()));
 
 		return "orderwithdetails/add";
 	}
 
 	@PostMapping("/save")
 	public String save(@ModelAttribute("order") Orders order, @ModelAttribute("orderDetailsDto") OrderDetailsDto dto,
-			HttpSession session) {
+			Model model, HttpSession session) {
 
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 
 		order.setEmployee_id(ldto.getEmployee_id());
 		order.setBranch_id(ldto.getBranch_id());
-
 		order.setReceived_time(null);
 
-		ordersService.save(order);
+		try {
 
-		for (OrderDetails detail : dto.getOrderDetails()) {
+			orderDetailsService.checkStock(dto, order.getBranch_id());
 
-			if (detail.getProduct_id() == null || detail.getProduct_id().trim().isEmpty()) {
+			ordersService.save(order);
 
-				System.out.println("ERROR: Product ID is null!");
+			for (OrderDetails detail : dto.getOrderDetails()) {
 
-				return "redirect:/order-with-details/add";
+				if (detail.getProduct_id() == null || detail.getProduct_id().trim().isEmpty()) {
+
+					model.addAttribute("error", "Please select a product.");
+
+					model.addAttribute("products", productService.findAllForOrder(ldto.getBranch_id()));
+
+					return "orderwithdetails/add";
+				}
+
+				detail.setOrder_id(order.getOrder_id());
 			}
 
-			detail.setOrder_id(order.getOrder_id());
+			orderDetailsService.save(dto);
+
+			BigDecimal subtotal = orderDetailsService.calculateTotalAmount(order.getOrder_id());
+
+			BigDecimal discount = orderDetailsService.calculateDiscountAmount(order.getOrder_id());
+
+			BigDecimal finalAmount = subtotal.subtract(discount);
+
+			ordersService.updateTotalAmount(order.getOrder_id(), finalAmount);
+
+			session.removeAttribute("selectedOrderDetails");
+
+			return "redirect:/order-with-details";
+
+		} catch (IllegalArgumentException e) {
+
+			model.addAttribute("error", e.getMessage());
+
+			model.addAttribute("products", productService.findAllForOrder(ldto.getBranch_id()));
+
+			return "orderwithdetails/add";
 		}
-
-		orderDetailsService.save(dto);
-
-		BigDecimal subtotal = orderDetailsService.calculateTotalAmount(order.getOrder_id());
-
-		BigDecimal discount = orderDetailsService.calculateDiscountAmount(order.getOrder_id());
-
-		BigDecimal finalAmount = subtotal.subtract(discount);
-
-		ordersService.updateTotalAmount(order.getOrder_id(), finalAmount);
-		return "redirect:/order-with-details";
 	}
 
 	@PostMapping("/received/{id}")
@@ -157,9 +183,23 @@ public class OrderDetailsController {
 	}
 
 	@GetMapping("/edit/{id}")
-	public String edit(@PathVariable("id") String id, Model model) {
+	public String edit(@PathVariable("id") String id, Model model, HttpSession session, RedirectAttributes redirect) {
+
+		if (paymentService.existsByOrderId(id)) {
+			redirect.addFlashAttribute("error", "Paid orders cannot be edited.");
+
+			return "redirect:/order-with-details";
+		}
+
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 
 		Orders order = ordersService.findById(id);
+
+		if (order == null) {
+			redirect.addFlashAttribute("error", "Order not found.");
+
+			return "redirect:/order-with-details";
+		}
 
 		List<OrderDetails> details = orderDetailsService.findByOrderId(id);
 
@@ -167,36 +207,58 @@ public class OrderDetailsController {
 
 		model.addAttribute("order", order);
 		model.addAttribute("orderDetailsDto", dto);
-
-		model.addAttribute("products", productService.findAllForOrder());
+		model.addAttribute("products", productService.findAllForOrder(ldto.getBranch_id()));
 
 		return "orderwithdetails/edit";
 	}
 
 	@PostMapping("/update")
 	public String update(@ModelAttribute("order") Orders order, @ModelAttribute("orderDetailsDto") OrderDetailsDto dto,
-			HttpSession session) {
+			HttpSession session, RedirectAttributes redirect) {
+
+		String orderId = order.getOrder_id();
+
+		if (orderId == null || orderId.trim().isEmpty()) {
+			redirect.addFlashAttribute("error", "Invalid order.");
+
+			return "redirect:/order-with-details";
+		}
+
+		if (paymentService.existsByOrderId(orderId)) {
+			redirect.addFlashAttribute("error", "Paid orders cannot be edited.");
+
+			return "redirect:/order-with-details";
+		}
 
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 
 		order.setEmployee_id(ldto.getEmployee_id());
 		order.setBranch_id(ldto.getBranch_id());
 
-		String orderId = order.getOrder_id();
+		try {
+			orderDetailsService.checkStock(dto, order.getBranch_id());
 
-		ordersService.edit(orderId, order);
+			ordersService.edit(orderId, order);
 
-		orderDetailsService.edit(dto, orderId);
+			orderDetailsService.edit(dto, orderId);
 
-		BigDecimal subtotal = orderDetailsService.calculateTotalAmount(orderId);
+			BigDecimal subtotal = orderDetailsService.calculateTotalAmount(orderId);
 
-		BigDecimal discount = orderDetailsService.calculateDiscountAmount(orderId);
+			BigDecimal discount = orderDetailsService.calculateDiscountAmount(orderId);
 
-		BigDecimal finalAmount = subtotal.subtract(discount);
+			BigDecimal finalAmount = subtotal.subtract(discount);
 
-		ordersService.updateTotalAmount(orderId, finalAmount);
+			ordersService.updateTotalAmount(orderId, finalAmount);
 
-		return "redirect:/order-with-details";
+			redirect.addFlashAttribute("success", "Order updated successfully.");
+
+			return "redirect:/order-with-details";
+
+		} catch (IllegalArgumentException e) {
+			redirect.addFlashAttribute("error", e.getMessage());
+
+			return "redirect:/order-with-details/edit/" + orderId;
+		}
 	}
 
 	@PostMapping("/delete/{id}")
@@ -226,10 +288,18 @@ public class OrderDetailsController {
 	}
 
 	@PostMapping("/permanent-delete/{id}")
-	public String permanentDelete(@PathVariable("id") String id) {
+	public String permanentDelete(@PathVariable("id") String id, RedirectAttributes redirect) {
 
-		ordersService.permanentDelete(id);
+		if (ordersService.isPaymentDone(id)) {
+			redirect.addFlashAttribute("error", "This order has already been paid.");
 
-		return "redirect:/order-with-details/deleted";
+			return "redirect:/order-with-details";
+		}
+
+		ordersService.delete(id);
+
+		redirect.addFlashAttribute("success", "Order cancelled successfully!");
+
+		return "redirect:/order-with-details";
 	}
 }

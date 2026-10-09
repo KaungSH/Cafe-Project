@@ -74,12 +74,9 @@ public class EmployeeControllerManager {
 			return "employee/create-manager";
 		}
 		if (result.hasErrors()) {
-			System.out.println("HERE1");
 			bindAvilableData(model);
 			return "employee/create-manager";
 		}
-		System.out.println("HERE2");
-		System.out.println(dto.getGender());
 		dto.setBranch_id(ldto.getBranch_id());
 		employeeService.createEmployee(dto);
 		return "redirect:/manager-only/employee";
@@ -87,7 +84,6 @@ public class EmployeeControllerManager {
 
 	@GetMapping("/edit/{id}")
 	public String showEditForm(@PathVariable("id") String id, Model model) {
-		System.out.println("Password - " + employeeService.getEmployeeById(id).getPassword());
 		model.addAttribute("employeeDto", employeeService.getEmployeeById(id));
 		bindAvilableData(model);
 		return "employee/edit-manager";
@@ -103,7 +99,6 @@ public class EmployeeControllerManager {
 			return "employee/edit-manager";
 		}
 		if (result.hasErrors()) {
-			System.out.println("this!!!");
 			bindAvilableData(model);
 			return "employee/edit-manager";
 		}

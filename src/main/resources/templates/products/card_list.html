@@ -16,18 +16,17 @@
 
 	<h2 class="fw-bold text-center text-decoration-underline mb-4">
 		MENU - Café Луфт</h2>
-		
-	<form method="post" th:action="@{/staff/products/search}" th:object="${keywordmodel}" id="search" class="d-flex gap-2 align-items-center">
-	    <input type="text" 
-	           th:field="*{keyword}" 
-	           class="form-control" 
-	           placeholder="Search products..." 
-	           aria-label="Search">
-	    <button type="submit" class="btn btn-submit">
-	        <i class="fa-solid fa-magnifying-glass me-1"></i> Search
-	    </button>
+
+	<form method="post" th:action="@{/staff/products/search}"
+		th:object="${keywordmodel}" id="search"
+		class="d-flex gap-2 align-items-center">
+		<input type="text" th:field="*{keyword}" class="form-control"
+			placeholder="Search products..." aria-label="Search">
+		<button type="submit" class="btn btn-submit">
+			<i class="fa-solid fa-magnifying-glass me-1"></i> Search
+		</button>
 	</form>
-	
+
 	<form method="post" th:action="@{/staff/products}"
 		th:object="${product_quantities}" id="productTypeForm">
 
@@ -75,6 +74,7 @@
 										<th>Size Code</th>
 										<th>Price</th>
 										<th>Discounts</th>
+										<th>Stock</th>
 										<th>Add To Cart</th>
 										<th>Quantity</th>
 										<th></th>
@@ -133,22 +133,37 @@
 
 											</td>
 
+											<!-- Stock -->
+											<td class="text-nowrap">
+												<!-- Available --> <span
+												th:if="${p2.available and p2.remainingServings > 5}"
+												class="badge bg-success"
+												th:text="'Available: ' + ${p2.remainingServings}">
+													Available </span> <!-- Low Stock --> <span
+												th:if="${p2.available and p2.remainingServings > 0 and p2.remainingServings <= 5}"
+												class="badge bg-warning text-dark"
+												th:text="'Low Stock: ' + ${p2.remainingServings}">
+													Low Stock </span> <!-- Out of Stock --> <span
+												th:if="${!p2.available}" class="badge bg-danger"> Out
+													of Stock </span>
+
+											</td>
+
 
 											<!-- Add To Cart -->
 											<td><input type="checkbox"
 												class="form-check-input product-checkbox" name="product_ids"
 												th:value="${p2.product_id}"
-												th:id="'product-' + ${state.index} + '-' + ${state2.index}">
-
-											</td>
+												th:id="'product-' + ${state.index} + '-' + ${state2.index}"
+												th:disabled="${!p2.available}"></td>
 
 
 											<!-- Quantity -->
 											<td><input type="number"
 												class="form-control form-control-sm product-quantity"
-												name="quantities" value="1" min="1" step="1" disabled>
-
-											</td>
+												name="quantities" value="1" min="1" step="1"
+												th:max="${p2.remainingServings}"
+												th:disabled="${!p2.available}"></td>
 
 
 											<!-- View Ingredients -->
@@ -262,7 +277,8 @@
 		<div
 			class="d-flex justify-content-between align-items-center pt-3 border-top mt-4">
 
-			<input class = "btn btn-lg mb-2" style = "background-color: #ffca2c;" type = "reset" value = "Clear">
+			<input class="btn btn-lg mb-2" style="background-color: #ffca2c;"
+				type="reset" value="Clear">
 
 			<button type="submit" class="btn btn-secondary">Go to Order
 

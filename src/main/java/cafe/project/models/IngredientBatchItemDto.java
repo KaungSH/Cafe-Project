@@ -6,20 +6,20 @@ import java.time.LocalDate;
 public class IngredientBatchItemDto {
 	private String ingredientTypeId;
 	private String ingredientTypeName;
-	private String unit_name;
+	private String Uname;
 	private Double quantity_ordered;
 	private BigDecimal unit_cost;
 	private Double total_import_cost;
 	private LocalDate manufactured_date;
 	private LocalDate expire_date;
-	private boolean selected; // Form selection checkbox 
+	private Boolean selected=false; // Form selection checkbox 
 
 	public  IngredientBatchItemDto() {}
-	public  IngredientBatchItemDto( String ingredientTypeId,String ingredientTypeName,String unit_name,Double quantity_ordered,
+	public  IngredientBatchItemDto( String ingredientTypeId,String ingredientTypeName,String Uname,Double quantity_ordered,
 			BigDecimal unit_cost,Double total_import_cost, LocalDate manufactured_date,LocalDate expire_date,boolean selected) {
 		this.ingredientTypeId=ingredientTypeId;
 		this.ingredientTypeName=ingredientTypeName;
-		this.unit_name=unit_name;
+		this.Uname=Uname;
 		this.quantity_ordered=quantity_ordered;
 		this.unit_cost=unit_cost;
 		this.total_import_cost=total_import_cost;
@@ -39,11 +39,18 @@ public class IngredientBatchItemDto {
 	public void setIngredientTypeName(String ingredientTypeName) {
 		this.ingredientTypeName = ingredientTypeName;
 	}
-	public String getUnit_name() {
-		return unit_name;
+	
+	public String getUname() {
+		return Uname;
 	}
-	public void setUnit_name(String unit_name) {
-		this.unit_name = unit_name;
+	public void setUname(String uname) {
+		Uname = uname;
+	}
+	public Boolean getSelected() {
+		return selected;
+	}
+	public void setSelected(Boolean selected) {
+		this.selected = selected;
 	}
 	public Double getQuantity_ordered() {
 		return quantity_ordered;
@@ -81,4 +88,5 @@ public class IngredientBatchItemDto {
 	public void setSelected(boolean selected) {
 		this.selected = selected;
 	}
+	
 }

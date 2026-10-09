@@ -112,10 +112,10 @@ body {
 					<i class="bi bi-bar-chart-fill"></i> Add Branch Stats
 				</h2>
 
-				<p>Add monthly statistics for a branch</p>
+				<p>Add monthly statistics for <span th:text = "${branch_name}"></span>        Month : <span th:text = "${month_name}"></span></p>
 			</div>
 
-			<form th:action="@{/manager/branchesStats/add}"
+			<form th:action="@{/manager-only/branchstats/add}"
 				th:object="${branchesStats}" method="post">
 
 				<div class="mb-3">
@@ -130,11 +130,6 @@ body {
 				</div>
 
 				<div class="mb-3">
-					<label class="form-label">Month</label> <input type="month"
-						class="form-control" th:field="*{month}" required>
-				</div>
-
-				<div class="mb-3">
 					<label class="form-label">Employee Cost</label> <input
 						type="number" class="form-control" th:field="*{employee_cost}"
 						min="0" step="0.01" required>
@@ -142,7 +137,7 @@ body {
 
 				<button type="submit" class="btn-save">Save</button>
 
-				<a th:href="@{/manager/branchesStats}" class="btn-cancel">
+				<a th:href="@{/manager-only/branchstats}" class="btn-cancel">
 					Cancel </a>
 
 			</form>

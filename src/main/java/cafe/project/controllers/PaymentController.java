@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cafe.project.employeemanagement.models.LoginDto;
+import cafe.project.models.OrderDetailsDto;
 import cafe.project.repositories.entities.OrderDetails;
 import cafe.project.repositories.entities.Orders;
 import cafe.project.repositories.entities.Payment;
@@ -22,6 +24,7 @@ import cafe.project.services.OrderDetailsService;
 import cafe.project.services.OrdersService;
 import cafe.project.services.PayMethodService;
 import cafe.project.services.PaymentService;
+import cafe.project.services.PaymentStockService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -32,13 +35,17 @@ public class PaymentController {
 	private final OrdersService ordersService;
 	private final OrderDetailsService orderDetailsService;
 	private final PayMethodService payMethodService;
+	private final PaymentStockService paymentStockService;
 
 	public PaymentController(PaymentService paymentService, OrdersService orderService,
-			OrderDetailsService orderDetailsService, PayMethodService payMethodService) {
+			OrderDetailsService orderDetailsService, PayMethodService payMethodService,
+			PaymentStockService paymentStockService) {
+
 		this.paymentService = paymentService;
 		this.ordersService = orderService;
 		this.orderDetailsService = orderDetailsService;
 		this.payMethodService = payMethodService;
+		this.paymentStockService = paymentStockService;
 	}
 
 	@GetMapping
@@ -81,36 +88,58 @@ public class PaymentController {
 		model.addAttribute("hasDiscount", hasDiscount);
 
 		return "payments/add";
-		
+
 	}
 
 	@PostMapping("/add")
-	public String save(@ModelAttribute("payment") Payment payment, 
-	                   @RequestParam("order_id") String orderId,
-	                   @RequestParam(value = "discount", required = false) Double discount,
-	                   HttpSession session) {
+	public String save(@ModelAttribute("payment") Payment payment, @RequestParam("order_id") String orderId,
+			HttpSession session, RedirectAttributes redirect) {
 
-	    LoginDto user = (LoginDto) session.getAttribute("loggedInUser");
+		try {
+			Orders order = ordersService.findById(orderId);
 
-	    payment.setOrder_id(orderId);
-	    payment.setPaid_time(LocalDateTime.now());
-	    payment.setDate(LocalDate.now());
-	    payment.setFilepath("");
+			if (order == null) {
+				throw new IllegalArgumentException("Order not found.");
+			}
 
-	    // Form မှ discount ရိုက်ထည့်လိုက်ပါက payment ထဲသို့ သေချာထည့်သွင်းခြင်း
-	    if (discount != null) {
-	        payment.setDiscount(discount);
-	    } else if (payment.getDiscount() == null) {
-	        payment.setDiscount(0.0);
-	    }
+			if (paymentService.existsByOrderId(orderId)) {
+				throw new IllegalArgumentException("This order has already been paid.");
+			}
 
-	    if (user != null) {
-	        payment.setEmployee_id(user.getEmployee_id());
-	    }
+			List<OrderDetails> details = orderDetailsService.findByOrderId(orderId);
 
-	    paymentService.save(payment);
+			if (details == null || details.isEmpty()) {
+				throw new IllegalArgumentException("Order has no products.");
+			}
 
-	    return "redirect:/receipt/" + orderId;
+			OrderDetailsDto dto = new OrderDetailsDto(details);
+
+			// Check stock before saving payment.
+			orderDetailsService.checkStock(dto, order.getBranch_id());
+
+			LoginDto user = (LoginDto) session.getAttribute("loggedInUser");
+
+			payment.setOrder_id(orderId);
+			payment.setPaid_time(LocalDateTime.now());
+			payment.setDate(LocalDate.now());
+			payment.setFilepath("");
+
+			if (user != null) {
+				payment.setEmployee_id(user.getEmployee_id());
+			}
+
+			// Save payment and reduce stock in one transaction.
+			paymentStockService.completePayment(payment, dto, order.getBranch_id());
+
+			redirect.addFlashAttribute("success", "Payment completed successfully.");
+
+			return "redirect:/order-with-details";
+
+		} catch (IllegalArgumentException e) {
+			redirect.addFlashAttribute("error", e.getMessage());
+
+			return "redirect:/payments/add?order_id=" + orderId;
+		}
 	}
 
 	@GetMapping("/edit/{id}")
@@ -127,7 +156,6 @@ public class PaymentController {
 
 		return "redirect:/payments";
 	}
-
 
 	@PostMapping("/edit/{id}")
 	public String update(@PathVariable String id, @ModelAttribute("payment") Payment payment) {

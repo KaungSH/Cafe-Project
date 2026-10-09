@@ -121,7 +121,7 @@ body {
 			</div>
 
 
-			<form th:action="@{/manager/branchesStats/edit}"
+			<form th:action="@{/manager-only/branchstats/edit}"
 				th:object="${branchesStats}" method="post">
 
 
@@ -168,7 +168,7 @@ body {
 					</button>
 
 
-					<a th:href="@{/manager/branchesStats}" class="btn-cancel">
+					<a th:href="@{/manager-only/branchstats}" class="btn-cancel">
 
 						Cancel </a>
 

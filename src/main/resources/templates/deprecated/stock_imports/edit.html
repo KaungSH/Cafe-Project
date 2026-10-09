@@ -8,6 +8,7 @@
     <div class="card p-4">
         <h3>Edit Stock Import</h3>
         <form th:action="@{/stock-imports/edit}" th:object="${stockImport}" method="post">
+        	<input type="hidden" th:field="*{import_id}" />
             <input type="hidden" th:field="*{employee_id}" />
             <input type="hidden" th:field="*{branch_id}" />
 

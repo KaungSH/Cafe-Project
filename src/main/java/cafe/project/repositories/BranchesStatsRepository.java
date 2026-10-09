@@ -18,7 +18,15 @@ public class BranchesStatsRepository {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	public List<BranchesStats> findAll() {
+	public List<BranchesStats> findAll(String branch_id) {
+		String sql = "SELECT bs.*, b.name AS branch_name, e.name AS employee_name\r\n" + "FROM branches_stats bs\r\n"
+				+ "LEFT JOIN branches b ON bs.branch_id= b.branch_id\r\n"
+				+ "LEFT JOIN employees e ON bs.employee_id = e.employee_id\r\n" + "WHERE bs.isdeleted = 0 AND bs.branch_id = ?";
+		List<BranchesStats> entities = this.jdbcTemplate.query(sql, new BranchesStatsMapper(), branch_id);
+		return entities;
+	}
+	
+	public List<BranchesStats> findAllAdmin() {
 		String sql = "SELECT bs.*, b.name AS branch_name, e.name AS employee_name\r\n" + "FROM branches_stats bs\r\n"
 				+ "LEFT JOIN branches b ON bs.branch_id= b.branch_id\r\n"
 				+ "LEFT JOIN employees e ON bs.employee_id = e.employee_id\r\n" + "WHERE bs.isdeleted = 0";
@@ -26,7 +34,16 @@ public class BranchesStatsRepository {
 		return entities;
 	}
 
-	public BranchesStats findById(String branch_stats_id) {
+	public BranchesStats findById(String branch_stats_id, String branch_id) {
+		String sql = "SELECT bs.*, \r\n" + "b.name AS branch_name, \r\n" + "e.name AS employee_name \r\n"
+				+ "FROM branches_stats bs \r\n" + "LEFT JOIN branches b ON bs.branch_id = b.branch_id \r\n"
+				+ "LEFT JOIN employees e ON bs.employee_id = e.employee_id \r\n" + "WHERE bs.branch_stat_id = ? \r\n"
+				+ "AND bs.isdeleted = 0 AND bs.branch_id = ?";
+		List<BranchesStats> entities = this.jdbcTemplate.query(sql, new BranchesStatsMapper(), branch_stats_id, branch_id);
+		return entities.isEmpty() ? null : entities.get(0);
+	}
+	
+	public BranchesStats findByIdAdmin(String branch_stats_id) {
 		String sql = "SELECT bs.*, \r\n" + "b.name AS branch_name, \r\n" + "e.name AS employee_name \r\n"
 				+ "FROM branches_stats bs \r\n" + "LEFT JOIN branches b ON bs.branch_id = b.branch_id \r\n"
 				+ "LEFT JOIN employees e ON bs.employee_id = e.employee_id \r\n" + "WHERE bs.branch_stat_id = ? \r\n"

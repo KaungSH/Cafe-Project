@@ -201,9 +201,13 @@ body {
 				<p>Manage your Branch Stats</p>
 			</div>
 			<div>
-				<a th:href="@{/manager/branchesStats/add}" class="btn-add"><i
+				<a th:href="@{/manager-only/branches/status}" class="btn-add"><i
+					class="bi bi-plus-lg"></i> Change Current Branch's Status</a>
+				<a th:href="@{/manager-only/branches/finance}" class="btn-add"><i
+					class="bi bi-plus-lg"></i> Update Current Branch's Finances</a>
+				<a th:href="@{/manager-only/branchstats/add}" class="btn-add"><i
 					class="bi bi-plus-lg"></i> Add Branches Stats</a> <a
-					th:href="@{/manager/branchesStats/deleted}" class="btn-deleted"><i
+					th:href="@{/manager-only/branchstats/deleted}" class="btn-deleted"><i
 					class="bi bi-trash"></i> Deleted List</a>
 			</div>
 		</div>
@@ -215,8 +219,8 @@ body {
 					<th>Sale Count</th>
 					<th>Sale amount</th>
 					<th>Month</th>
-					<th>employee_cost</th>
-					<th>employee name</th>
+					<th>Employee Salaries</th>
+					<th>Created By</th>
 					<th class="text-end">Actions</th>
 				</tr>
 			</thead>
@@ -230,9 +234,9 @@ body {
 					<td th:text="${branchesStats.employee_cost}"></td>
 					<td th:text="${branchesStats.employee_name}"></td>
 					<td class="text-end"><a
-						th:href="@{/manager/branchesStats/edit/{branch_stats_id}(branch_stats_id=${branchesStats.branch_stats_id})}"
+						th:href="@{/manager-only/branchstats/edit/{branch_stats_id}(branch_stats_id=${branchesStats.branch_stats_id})}"
 						class="btn-edit">Edit</a> <a
-						th:href="@{/manager/branchesStats/delete/{branch_stats_id}(branch_stats_id=${branchesStats.branch_stats_id})}"
+						th:href="@{/manager-only/branchstats/delete/{branch_stats_id}(branch_stats_id=${branchesStats.branch_stats_id})}"
 						class="btn-delete" onclick="return confirm('Are you sure?')">Delete</a>
 					</td>
 				</tr>

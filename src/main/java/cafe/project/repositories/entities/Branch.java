@@ -1,5 +1,6 @@
 package cafe.project.repositories.entities;
 
+import java.math.BigDecimal;
 import java.sql.Time;
 import java.time.LocalDateTime;
 
@@ -12,16 +13,15 @@ public class Branch {
 	private String branch_status_id;
 	private Time opening_time;
 	private Time closing_time;
-	private boolean isdeleted;
 	private LocalDateTime created_at;
+	private BigDecimal branch_finance;
 
 	private String status_name;
 
 	public Branch() {
 	}
 
-	public Branch(String branch_id, String name, String location, String description, String branch_status_id,
-			Time opening_time, Time closing_time, boolean isdeleted, LocalDateTime created_at, String status_name) {
+	public Branch(String branch_id, String name, String location, String description, String branch_status_id, Time opening_time, Time closing_time, LocalDateTime created_at, String status_name, BigDecimal branch_finance) {
 
 		this.branch_id = branch_id;
 		this.name = name;
@@ -30,9 +30,9 @@ public class Branch {
 		this.branch_status_id = branch_status_id;
 		this.opening_time = opening_time;
 		this.closing_time = closing_time;
-		this.isdeleted = isdeleted;
 		this.created_at = created_at;
 		this.status_name = status_name;
+		this.branch_finance = branch_finance;
 	}
 
 	public String getBranch_id() {
@@ -91,14 +91,6 @@ public class Branch {
 		this.closing_time = closing_time;
 	}
 
-	public boolean Isdeleted() {
-		return isdeleted;
-	}
-
-	public void setIsdeleted(boolean isdeleted) {
-		this.isdeleted = isdeleted;
-	}
-
 	public LocalDateTime getCreated_at() {
 		return created_at;
 	}
@@ -114,4 +106,14 @@ public class Branch {
 	public void setStatus_name(String status_name) {
 		this.status_name = status_name;
 	}
+
+	public BigDecimal getBranch_finance() {
+		return branch_finance;
+	}
+
+	public void setBranch_finance(BigDecimal branch_finance) {
+		this.branch_finance = branch_finance;
+	}
+	
+	
 }

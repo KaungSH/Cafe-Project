@@ -21,10 +21,10 @@ public class OrdersRepository {
 
 	public List<Orders> findNotReceivedAll() {
 
-		String sql = "SELECT o.*, " + "e.name AS employee_name, " + "b.name AS branch_name " + "FROM orders o "
-				+ "LEFT JOIN employees e " + "ON o.employee_id = e.employee_id " + "LEFT JOIN branches b "
-				+ "ON o.branch_id = b.branch_id " + "WHERE o.isdeleted = false " + "AND o.received_time IS NULL "
-				+ "ORDER BY o.token_number ASC";
+		String sql = "SELECT o.*, e.name AS employee_name, b.name AS branch_name FROM orders o \r\n"
+				+ "LEFT JOIN employees e ON o.employee_id = e.employee_id LEFT JOIN branches b \r\n"
+				+ "ON o.branch_id = b.branch_id WHERE o.isdeleted = false AND o.received_time IS NULL \r\n"
+				+ "ORDER BY DATE(o.created_time) DESC, o.token_number ASC;";
 
 		return jdbcTemplate.query(sql, new OrdersMapper());
 	}
@@ -63,10 +63,13 @@ public class OrdersRepository {
 		String orderId = UUID.randomUUID().toString();
 
 		entity.setOrder_id(orderId);
-
 		entity.setCreated_time(java.time.LocalDateTime.now());
-
 		entity.setReceived_time(null);
+
+		// Set initial total amount to zero if it is null
+		if (entity.getTotal_amount() == null) {
+			entity.setTotal_amount(java.math.BigDecimal.ZERO);
+		}
 
 		String tokenSql = "SELECT COALESCE(MAX(token_number), 0) + 1 " + "FROM orders " + "WHERE branch_id = ? "
 				+ "AND DATE(created_time) = CURDATE() " + "AND isdeleted = 0";
@@ -75,9 +78,8 @@ public class OrdersRepository {
 
 		entity.setToken_number(nextToken);
 
-		String sql = "INSERT INTO orders " + "(order_id, employee_id,branch_id, "
-				+ "created_time, received_time, isedited, isdeleted, total_amount, token_number) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO orders " + "(order_id, employee_id, branch_id, created_time, received_time, "
+				+ "isedited, isdeleted, total_amount, token_number) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		return jdbcTemplate.update(sql, entity.getOrder_id(), entity.getEmployee_id(), entity.getBranch_id(),
 				entity.getCreated_time(), entity.getReceived_time(), entity.isIsedited(), entity.isIsdeleted(),

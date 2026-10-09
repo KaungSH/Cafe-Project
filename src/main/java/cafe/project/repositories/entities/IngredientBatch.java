@@ -21,7 +21,7 @@ public class IngredientBatch {
 	
 	private String branch_name; //branch name
 	private String ingredientType_name; //ingredientTypeName
-	private String unit_name;
+	private String name;//unit name
 	
 	
 	public IngredientBatch() {
@@ -30,7 +30,7 @@ public class IngredientBatch {
 	public IngredientBatch(String batch_id, BigDecimal remaining_quantity, LocalDate manufactured_date,
 			LocalDate expire_date, String branch_id, Boolean isdeleted,
 			LocalDateTime created_at, String ingredient_type_id, BigDecimal unit_cost,BigDecimal quantity_ordered,
-			BigDecimal total_import_cost,String import_id, String branch_name,String ingredientType_name,String unit_name) {
+			BigDecimal total_import_cost,String import_id, String branch_name,String ingredientType_name,String name) {
 		this.batch_id = batch_id;
 		this.remaining_quantity = remaining_quantity;
 		this.manufactured_date = manufactured_date;
@@ -45,7 +45,7 @@ public class IngredientBatch {
 		this.import_id=import_id;
 		this.branch_name=branch_name;
 		this.ingredientType_name = ingredientType_name;
-		this.unit_name=unit_name;
+		this.name=name;
 	}
 
 	public String getBatch_id() {
@@ -161,13 +161,14 @@ public class IngredientBatch {
 		this.ingredientType_name = ingredientType_name;
 	}
 
-	public String getUnit_name() {
-		return unit_name;
+	public String getName() {
+		return name;
 	}
 
-	public void setUnit_name(String unit_name) {
-		this.unit_name = unit_name;
+	public void setName(String name) {
+		this.name = name;
 	}
 
+	
 	
 }

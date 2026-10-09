@@ -340,6 +340,9 @@ body {
 			</a>
 
 		</div>
+		<div th:if="${error}" class="alert alert-danger">
+			<span th:text="${error}"></span>
+		</div>
 
 		<form th:action="@{/order-with-details/save}" method="post">
 
@@ -378,57 +381,37 @@ body {
 
 
 								<tbody id="orderDetailsTable">
+									<tr th:each="detail, stat : ${orderDetailsDto.orderDetails}">
+										<td>
+											<div class="row-number" th:text="${stat.count}"></div>
+										</td>
 
-									<tr>
+										<td><span class="selected-product"
+											th:each="product : ${products}"
+											th:if="${product.product_id == detail.product_id}"
+											th:text="${product.type_name + ' - ' + product.size_code}"
+											th:attr="data-price=${product.price},
+                   data-discount=${product.discount_values != null and !product.discount_values.isEmpty() ? product.discount_values[0] : 0},
+                   data-product-name=${product.type_name + ' - ' + product.size_code}">
+										</span> <input type="hidden"
+											th:name="|orderDetails[${stat.index}].product_id|"
+											th:value="${detail.product_id}"></td>
+
+										<td><input type="number"
+											th:name="'orderDetails[' + ${stat.index} + '].quantity'"
+											class="form-control quantity-input" min="1"
+											th:value="${detail.quantity}" required></td>
+
+										<td><input type="text"
+											th:name="'orderDetails[' + ${stat.index} + '].remark'"
+											class="form-control" placeholder="Remark"
+											th:value="${detail.remark}"></td>
 
 										<td>
-
-											<div class="row-number">1</div>
-
-										</td>
-
-
-										<td><select name="orderDetails[0].product_id"
-											class="form-select product-select" required>
-
-												<option value="">-- Select Product --</option>
-
-
-												<option th:each="product : ${products}"
-													th:value="${product.product_id}"
-													th:text="${product.type_name + ' - ' + product.price}"
-													th:attr="
-                                                    data-price=${product.price},
-                                                    data-product-name=${product.type_name},
-                                                    data-discount=${product.discount_values != null and !product.discount_values.isEmpty() ? product.discount_values[0] : 0}
-                                                ">
-
-												</option>
-
-										</select></td>
-
-
-										<td><input type="number" name="orderDetails[0].quantity"
-											class="form-control quantity-input" min="1" value="1"
-											required></td>
-
-
-										<td><input type="text" name="orderDetails[0].remark"
-											class="form-control" placeholder="Remark"></td>
-
-
-										<td class="text-center">
-
 											<button type="button"
 												class="btn btn-outline-danger remove-button"
-												onclick="removeProduct(this)">
-
-												<i class="bi bi-trash"></i> Remove
-
-											</button>
-
+												onclick="removeProduct(this)">Remove</button>
 										</td>
-
 									</tr>
 
 								</tbody>
@@ -437,739 +420,179 @@ body {
 
 						</div>
 
-						<button type="button"
-							class="btn btn-outline-primary add-product-button"
-							onclick="addProduct()">
+						<div>
 
-							<i class="bi bi-plus-lg"></i> Add Product
+							<div class="summary-card">
 
-						</button>
+								<div class="summary-title">Order Summary</div>
 
-					</div>
+								<div id="summaryProducts">
 
-				</div>
+									<div class="empty-summary">No product selected.</div>
 
-				<div>
-
-					<div class="summary-card">
-
-						<div class="summary-title">Order Summary</div>
-
-						<div id="summaryProducts">
-
-							<div class="empty-summary">No product selected.</div>
-
-						</div>
+								</div>
 
 
-						<div class="summary-divider"></div>
+								<div class="summary-divider"></div>
 
 
 
-						<div class="total-row">
+								<div class="total-row">
 
-							<span class="total-label"> Total </span> <span
-								class="total-value"> <span id="summaryTotal"> 0.00
-							</span> <span class="currency"> Ks </span>
+									<span class="total-label"> Total </span> <span
+										class="total-value"> <span id="summaryTotal">
+											0.00 </span> <span class="currency"> Ks </span>
 
-							</span>
+									</span>
 
-						</div>
+								</div>
 
-						<input type="hidden" name="total_amount" id="totalAmount"
-							value="0.00"> <input type="text" id="totalAmountDisplay"
-							value="0.00" readonly>
-
-
-						<div class="form-buttons">
-
-							<a th:href="@{/order-with-details}"
-								class="btn btn-outline-secondary cancel-button"> Cancel </a>
+								<input type="hidden" name="total_amount" id="totalAmount"
+									value="0.00"> <input type="text"
+									id="totalAmountDisplay" value="0.00" readonly>
 
 
-							<button type="submit" class="btn btn-primary save-button">
+								<div class="form-buttons">
 
-								<i class="bi bi-check-lg"></i> Save Order
+									<a th:href="@{/staff/products}"
+										class="btn btn-outline-secondary cancel-button"> Cancel </a>
 
-							</button>
+									<button type="submit" class="btn btn-primary save-button">
+
+										<i class="bi bi-check-lg"></i> Save Order
+
+									</button>
+
+								</div>
+
+							</div>
 
 						</div>
 
 					</div>
-
-				</div>
-
-			</div>
-
 		</form>
 
 	</div>
 
 
 	<script>
-
-function calculateTotal() {
-
-    let total = 0;
-
-
-    const rows =
-        document.querySelectorAll(
-            "#orderDetailsTable tr"
-        );
-
-
-    rows.forEach(function(row) {
-
-        const product =
-            row.querySelector(
-                ".product-select"
-            );
-
-
-        const quantity =
-            row.querySelector(
-                ".quantity-input"
-            );
-
-
-        if (!product || !quantity) {
-            return;
-        }
-
-
-        const selectedOption =
-            product.options[
-                product.selectedIndex
-            ];
-
-
-        if (
-            !selectedOption ||
-            selectedOption.value === ""
-        ) {
-            return;
-        }
-
-        const price =
-            parseFloat(
-                selectedOption.getAttribute(
-                    "data-price"
-                )
-            ) || 0;
-
-        const discount =
-            parseFloat(
-                selectedOption.getAttribute(
-                    "data-discount"
-                )
-            ) || 0;
-
-        const qty =
-            parseInt(
-                quantity.value
-            ) || 0;
-
-        const subtotal =
-            price * qty;
-
-        let discountAmount = 0;
-
-
-        if (discount > 0) {
-
-            discountAmount =
-                subtotal * discount / 100;
-
-        }
-        const finalAmount =
-            subtotal - discountAmount;
-
-        total =
-            total + finalAmount;
-
-    });
-
-    document
-        .getElementById("summaryTotal")
-        .innerText =
-        total.toFixed(2);
-
-    document
-        .getElementById("totalAmount")
-        .value =
-        total.toFixed(2);
-
-    document
-        .getElementById("totalAmountDisplay")
-        .value =
-        total.toFixed(2);
-
-    updateSummary();
-
-}
-
-function updateSummary() {
-
-    const summary =
-        document.getElementById(
-            "summaryProducts"
-        );
-
-
-    const rows =
-        document.querySelectorAll(
-            "#orderDetailsTable tr"
-        );
-
-
-    summary.innerHTML = "";
-
-
-    let hasProduct = false;
-
-
-    rows.forEach(function(row) {
-
-        const product =
-            row.querySelector(
-                ".product-select"
-            );
-
-
-        const quantity =
-            row.querySelector(
-                ".quantity-input"
-            );
-
-
-        if (!product || !quantity) {
-            return;
-        }
-
-
-        const selectedOption =
-            product.options[
-                product.selectedIndex
-            ];
-
-
-        if (
-            !selectedOption ||
-            selectedOption.value === ""
-        ) {
-            return;
-        }
-
-
-        hasProduct = true;
-
-        const productName =
-            selectedOption.getAttribute(
-                "data-product-name"
-            );
-
-        const price =
-            parseFloat(
-                selectedOption.getAttribute(
-                    "data-price"
-                )
-            ) || 0;
-
-        const discount =
-            parseFloat(
-                selectedOption.getAttribute(
-                    "data-discount"
-                )
-            ) || 0;
-
-        const qty =
-            parseInt(
-                quantity.value
-            ) || 0;
-
-
-        const subtotal =
-            price * qty;
-
-        let discountAmount = 0;
-
-
-        if (discount > 0) {
-
-            discountAmount =
-                subtotal * discount / 100;
-
-        }
-        const finalAmount =
-            subtotal - discountAmount;
-
-        const summaryRow =
-            document.createElement(
-                "div"
-            );
-
-
-        summaryRow.className =
-            "summary-product";
-
-        const productInfo =
-            document.createElement(
-                "div"
-            );
-
-
-        productInfo.className =
-            "summary-product-info";
-
-        if (discount > 0) {
-
-            const discountElement =
-                document.createElement(
-                    "div"
-                );
-
-
-            discountElement.className =
-                "summary-product-discount";
-
-
-            discountElement.innerText =
-                productName +
-                " - " +
-                discount +
-                "%";
-
-
-            productInfo.appendChild(
-                discountElement
-            );
-
-        }
-
-        const productNameElement =
-            document.createElement(
-                "div"
-            );
-
-
-        productNameElement.className =
-            "summary-product-name";
-
-
-        productNameElement.innerText =
-            productName;
-
-
-        productInfo.appendChild(
-            productNameElement
-        );
-
-        const quantityElement =
-            document.createElement(
-                "div"
-            );
-
-
-        quantityElement.className =
-            "summary-product-quantity";
-
-
-        quantityElement.innerText =
-            "Quantity × " +
-            qty;
-
-
-        productInfo.appendChild(
-            quantityElement
-        );
-        const priceElement =
-            document.createElement(
-                "div"
-            );
-
-
-        priceElement.className =
-            "summary-product-price";
-
-
-        priceElement.innerText =
-            finalAmount.toFixed(2) +
-            " Ks";
-
-        summaryRow.appendChild(
-            productInfo
-        );
-
-
-        summaryRow.appendChild(
-            priceElement
-        );
-
-
-        summary.appendChild(
-            summaryRow
-        );
-
-    });
-
-    if (!hasProduct) {
-
-        summary.innerHTML = `
-
-            <div class="empty-summary">
-
-                No product selected.
-
-            </div>
-
-        `;
-
-    }
-
-}
-
-document.addEventListener(
-    "change",
-    function(event) {
-
-        if (
-            event.target.classList.contains(
-                "product-select"
-            )
-        ) {
-
-            calculateTotal();
-
-        }
-
-    }
-);
-
-document.addEventListener(
-    "input",
-    function(event) {
-
-        if (
-            event.target.classList.contains(
-                "quantity-input"
-            )
-        ) {
-
-            calculateTotal();
-
-        }
-
-    }
-);
-
-function addProduct() {
-
-    const table =
-        document.getElementById(
-            "orderDetailsTable"
-        );
-
-
-    const firstSelect =
-        document.querySelector(
-            ".product-select"
-        );
-
-
-    const row =
-        document.createElement(
-            "tr"
-        );
-
-    const numberCell =
-        document.createElement(
-            "td"
-        );
-
-
-    const number =
-        document.createElement(
-            "div"
-        );
-
-
-    number.className =
-        "row-number";
-
-
-    number.innerText =
-        table.rows.length + 1;
-
-
-    numberCell.appendChild(
-        number
-    );
-
-    const productCell =
-        document.createElement(
-            "td"
-        );
-
-
-    const productSelect =
-        firstSelect.cloneNode(
-            true
-        );
-
-
-    productSelect.value =
-        "";
-
-
-    productCell.appendChild(
-        productSelect
-    );
-
-    const quantityCell =
-        document.createElement(
-            "td"
-        );
-
-
-    const quantityInput =
-        document.createElement(
-            "input"
-        );
-
-
-    quantityInput.type =
-        "number";
-
-
-    quantityInput.className =
-        "form-control quantity-input";
-
-
-    quantityInput.min =
-        "1";
-
-
-    quantityInput.value =
-        "1";
-
-
-    quantityInput.required =
-        true;
-
-
-    quantityCell.appendChild(
-        quantityInput
-    );
-
-    const remarkCell =
-        document.createElement(
-            "td"
-        );
-
-
-    const remarkInput =
-        document.createElement(
-            "input"
-        );
-
-
-    remarkInput.type =
-        "text";
-
-
-    remarkInput.className =
-        "form-control";
-
-
-    remarkInput.placeholder =
-        "Remark";
-
-
-    remarkCell.appendChild(
-        remarkInput
-    );
-
-    const actionCell =
-        document.createElement(
-            "td"
-        );
-
-
-    actionCell.className =
-        "text-center";
-
-
-    const removeButton =
-        document.createElement(
-            "button"
-        );
-
-
-    removeButton.type =
-        "button";
-
-
-    removeButton.className =
-        "btn btn-outline-danger remove-button";
-
-
-    removeButton.innerHTML =
-        '<i class="bi bi-trash"></i> Remove';
-
-
-    removeButton.onclick =
-        function() {
-
-            removeProduct(
-                this
-            );
-
-        };
-
-
-    actionCell.appendChild(
-        removeButton
-    );
-
-    row.appendChild(
-        numberCell
-    );
-
-
-    row.appendChild(
-        productCell
-    );
-
-
-    row.appendChild(
-        quantityCell
-    );
-
-
-    row.appendChild(
-        remarkCell
-    );
-
-
-    row.appendChild(
-        actionCell
-    );
-
-
-    table.appendChild(
-        row
-    );
-
-    updateIndexes();
-
-    calculateTotal();
-
-}
-
-
-function removeProduct(button) {
-
-    const row =
-        button.closest(
-            "tr"
-        );
-
-
-    row.remove();
-
-
-    updateIndexes();
-
-
-    calculateTotal();
-
-}
-
-function updateIndexes() {
-
-    const rows =
-        document.querySelectorAll(
-            "#orderDetailsTable tr"
-        );
-
-
-    rows.forEach(
-        function(row, index) {
-            const number =
-                row.querySelector(
-                    ".row-number"
-                );
-
-
-            if (number) {
-
-                number.innerText =
-                    index + 1;
-
-            }
-
-            const product =
-                row.querySelector(
-                    ".product-select"
-                );
-
-
-            if (product) {
-
-                product.name =
-                    "orderDetails[" +
-                    index +
-                    "].product_id";
-
-            }
-            const quantity =
-                row.querySelector(
-                    ".quantity-input"
-                );
-
-
-            if (quantity) {
-
-                quantity.name =
-                    "orderDetails[" +
-                    index +
-                    "].quantity";
-
-            }
-
-            const remark =
-                row.querySelector(
-                    "input[type='text']"
-                );
-
-
-            if (remark) {
-
-                remark.name =
-                    "orderDetails[" +
-                    index +
-                    "].remark";
-
-            }
-
-        }
-    );
-
-}
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function() {
-
-        updateIndexes();
-
-        calculateTotal();
-
-    }
-);
-
-</script>
+		function calculateTotal() {
+			let total = 0;
+			const summary = document.getElementById("summaryProducts");
+			summary.innerHTML = "";
+
+			const rows = document.querySelectorAll("#orderDetailsTable tr");
+			let hasProduct = false;
+
+			rows
+					.forEach(function(row) {
+						const product = row.querySelector(".selected-product");
+						const quantity = row.querySelector(".quantity-input");
+
+						if (!product || !quantity) {
+							return;
+						}
+
+						const price = parseFloat(product
+								.getAttribute("data-price")) || 0;
+						const discount = parseFloat(product
+								.getAttribute("data-discount")) || 0;
+						const qty = parseInt(quantity.value) || 0;
+
+						const subtotal = price * qty;
+						const discountAmount = subtotal * discount / 100;
+						const finalAmount = subtotal - discountAmount;
+
+						total += finalAmount;
+						hasProduct = true;
+
+						const item = document.createElement("div");
+						item.className = "summary-product";
+
+						const info = document.createElement("div");
+						info.className = "summary-product-info";
+
+						if (discount > 0) {
+							const discountLabel = document.createElement("div");
+							discountLabel.className = "summary-product-discount";
+							discountLabel.innerText = discount + "% discount";
+							info.appendChild(discountLabel);
+						}
+
+						const name = document.createElement("div");
+						name.className = "summary-product-name";
+						name.innerText = product
+								.getAttribute("data-product-name");
+						info.appendChild(name);
+
+						const qtyLabel = document.createElement("div");
+						qtyLabel.className = "summary-product-quantity";
+						qtyLabel.innerText = "Quantity × " + qty;
+						info.appendChild(qtyLabel);
+
+						const amount = document.createElement("div");
+						amount.className = "summary-product-price";
+						amount.innerText = finalAmount.toFixed(2) + " Ks";
+
+						item.appendChild(info);
+						item.appendChild(amount);
+						summary.appendChild(item);
+					});
+
+			if (!hasProduct) {
+				summary.innerHTML = '<div class="empty-summary">No product selected.</div>';
+			}
+
+			document.getElementById("summaryTotal").innerText = total
+					.toFixed(2);
+			document.getElementById("totalAmount").value = total.toFixed(2);
+			document.getElementById("totalAmountDisplay").value = total
+					.toFixed(2);
+		}
+
+		function removeProduct(button) {
+			button.closest("tr").remove();
+			updateIndexes();
+			calculateTotal();
+		}
+
+		function updateIndexes() {
+			const rows = document.querySelectorAll("#orderDetailsTable tr");
+
+			rows.forEach(function(row, index) {
+				const number = row.querySelector(".row-number");
+				if (number) {
+					number.innerText = index + 1;
+				}
+
+				const productId = row.querySelector("input[type='hidden']");
+				if (productId) {
+					productId.name = "orderDetails[" + index + "].product_id";
+				}
+
+				const quantity = row.querySelector(".quantity-input");
+				if (quantity) {
+					quantity.name = "orderDetails[" + index + "].quantity";
+				}
+
+				const remark = row.querySelector("input[type='text']");
+				if (remark) {
+					remark.name = "orderDetails[" + index + "].remark";
+				}
+			});
+		}
+
+		document.addEventListener("input", function(event) {
+			if (event.target.classList.contains("quantity-input")) {
+				calculateTotal();
+			}
+		});
+
+		document.addEventListener("DOMContentLoaded", function() {
+			updateIndexes();
+			calculateTotal();
+		});
+	</script>
 
 </body>
 

@@ -1,56 +1,54 @@
 package cafe.project.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import cafe.project.models.IngredientBatchListDto;
-import cafe.project.repositories.entities.IngredientBatch;
+
+import cafe.project.models.IngredientBatchEntryDto;
+import cafe.project.models.StockImportEntryDto;
 import cafe.project.services.IngredientBatchService;
+import cafe.project.services.StockImportService;
 
 @Controller
 @RequestMapping("/ingredient-batches")
 public class IngredientBatchController {
 	private final IngredientBatchService service;
+	private final StockImportService stockImportService;
 
-	public IngredientBatchController(IngredientBatchService service) {
+	public IngredientBatchController(IngredientBatchService service, StockImportService stockImportService) {
 		this.service = service;
+		this.stockImportService = stockImportService;
 	}
 
-	@GetMapping
+	@GetMapping("")
 	public String listBatches(Model model) {
 		model.addAttribute("batches", service.getAllBatches());
 		return "ingredient-batch/list";
 	}
 
 	@GetMapping("/add")
-	public String showAddForm(Model model) {
-		IngredientBatchListDto dto = new IngredientBatchListDto();
-		List<IngredientBatch> initialList = new ArrayList<>();
-		initialList.add(new IngredientBatch());
-		dto.setBatchList(initialList);
+	public String showAddBatchForm(@RequestParam("import_id") String import_id, Model model) {
+		IngredientBatchEntryDto dto = new IngredientBatchEntryDto();
+		dto.setImport_id(import_id);
+		dto.setItems(stockImportService.getAllIngredientTypes());
 
-		model.addAttribute("batchListDto", dto);
+		model.addAttribute("batchEntry", dto);
 		return "ingredient-batch/add";
 	}
 
 	@PostMapping("/add")
-	public String saveBatches(@ModelAttribute("batchListDto") IngredientBatchListDto batchListDto) {
-		service.createBatch(batchListDto);
-		return "redirect:/ingredient-batches";
+	public String saveIngredientBatches(@ModelAttribute("batchEntry") IngredientBatchEntryDto dto) {
+		String mockBranchId = "BR-001"; // Session/User Context မှ ယူနိုင်သည်
+		stockImportService.addIngredientBatchesToImport(dto, mockBranchId);
+		return "redirect:/stock-imports";
 	}
 
-	@GetMapping("/edit/{id}")
-	public String showEditForm(@PathVariable("id") String id, Model model) {
-		model.addAttribute("batch", service.getBatchById(id));
-		return "ingredient-batch/edit";
-	}
-
-	@PostMapping("/edit")
-	public String updateBatch(@ModelAttribute("batch") IngredientBatch batch) {
-		service.updateBatch(batch);
-		return "redirect:/ingredient-batches";
+	@GetMapping("/edit/{import_id}")
+	public String editIngredientBatches(@PathVariable("import_id") String import_id, Model model) {
+		StockImportEntryDto dto = stockImportService.getImportById(import_id);
+		model.addAttribute("stockImport", dto);
+		model.addAttribute("suppliers", stockImportService.getAllSuppliers());
+		return "stock-import/edit";
 	}
 
 	@GetMapping("/delete/{id}")

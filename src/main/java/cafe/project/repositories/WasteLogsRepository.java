@@ -1,5 +1,7 @@
 package cafe.project.repositories;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,33 +23,39 @@ public class WasteLogsRepository {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	public List<WasteLogsListDto> findAll() {
-		String sql = "SELECT w.*, r.reason_name, e.name " + "FROM waste_logs w "
-				+ "LEFT JOIN waste_reasons r ON w.waste_reason_id = r.waste_reason_id "
-				+ "LEFT JOIN employees e ON w.employee_id = e.employee_id "
-				+ "WHERE w.isdeleted = 0 ORDER BY w.logged_at DESC";
+	public List<WasteLogsListDto> findAll(String branch_id) {
+		String sql = "SELECT w.*, r.reason_name, e.name, b.name branch_name FROM waste_logs w LEFT JOIN waste_reasons r ON w.waste_reason_id = r.waste_reason_id LEFT JOIN employees e ON w.employee_id = e.employee_id LEFT JOIN branches b ON e.branch_id = b.branch_id WHERE w.isdeleted = 0 AND e.branch_id = ? ORDER BY w.logged_at DESC;";
+		return jdbcTemplate.query(sql, new WasteLogsListDtoMapper(), branch_id);
+	}
+	
+	public List<WasteLogsListDto> findAllAdmin() {
+		String sql = "SELECT w.*, r.reason_name, e.name, b.name branch_name FROM waste_logs w LEFT JOIN waste_reasons r ON w.waste_reason_id = r.waste_reason_id LEFT JOIN employees e ON w.employee_id = e.employee_id LEFT JOIN branches b ON e.branch_id = b.branch_id WHERE w.isdeleted = 0 ORDER BY w.logged_at DESC;";
+		return jdbcTemplate.query(sql, new WasteLogsListDtoMapper());
+	}
+	
+	public List<WasteLogsListDto> findAllDeleted(String branch_id) {
+		String sql = "SELECT w.*, r.reason_name, e.name, b.name branch_name FROM waste_logs w LEFT JOIN waste_reasons r ON w.waste_reason_id = r.waste_reason_id LEFT JOIN employees e ON w.employee_id = e.employee_id LEFT JOIN branches b ON e.branch_id = b.branch_id WHERE w.isdeleted = 1 AND e.branch_id = ? ORDER BY w.logged_at DESC;";
+		return jdbcTemplate.query(sql, new WasteLogsListDtoMapper(), branch_id);
+	}
+	
+	public List<WasteLogsListDto> findAllAdminDeleted() {
+		String sql = "SELECT w.*, r.reason_name, e.name, b.name branch_name FROM waste_logs w LEFT JOIN waste_reasons r ON w.waste_reason_id = r.waste_reason_id LEFT JOIN employees e ON w.employee_id = e.employee_id LEFT JOIN branches b ON e.branch_id = b.branch_id WHERE w.isdeleted = 1 ORDER BY w.logged_at DESC;";
 		return jdbcTemplate.query(sql, new WasteLogsListDtoMapper());
 	}
 
-	public WasteLogs findById(String waste_id) {
-		String sql = "SELECT * FROM waste_logs WHERE waste_id = ? AND isdeleted = 0";
-		return jdbcTemplate.queryForObject(sql, new WasteLogsMapper(), waste_id);
+	public WasteLogs findById(String waste_id, String branch_id) {
+		String sql = "SELECT * FROM waste_logs WHERE waste_id = ? AND isdeleted = 0 AND branch_id = ?";
+		return jdbcTemplate.queryForObject(sql, new WasteLogsMapper(), waste_id, branch_id);
 	}
 
 	public int save(WasteLogs entity) {
-		String sql = "INSERT INTO waste_logs (waste_id, batch_id, waste_reason_id, quantity_lost, financial_loss, employee_id, notes) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?)";
-		return jdbcTemplate.update(sql, UUID.randomUUID().toString(), entity.getBatch_id(), entity.getWaste_reason_id(),
-				entity.getQuantity_lost(), entity.getFinancial_loss(), entity.getEmployee_id(), entity.getNotes());
-
+		String sql = "INSERT INTO waste_logs (waste_id, batch_id, waste_reason_id, quantity_lost, financial_loss, employee_id, notes, branch_id, logged_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		return jdbcTemplate.update(sql, UUID.randomUUID().toString(), entity.getBatch_id(), entity.getWaste_reason_id(), entity.getQuantity_lost(), entity.getFinancial_loss(), entity.getEmployee_id(), entity.getNotes(), entity.getBranch_id(), LocalDateTime.now());
 	}
 
 	public int update(WasteLogs entity) {
-		String sql = "UPDATE waste_logs SET batch_id = ?, waste_reason_id = ?, quantity_lost = ?, financial_loss = ?, employee_id = ?, notes = ? "
-				+ "WHERE waste_id = ? AND isdeleted = 0";
-		return jdbcTemplate.update(sql, entity.getBatch_id(), entity.getWaste_reason_id(), entity.getQuantity_lost(),
-				entity.getFinancial_loss(), entity.getEmployee_id(), entity.getNotes(), entity.getWaste_id());
-
+		String sql = "UPDATE waste_logs SET batch_id = ?, waste_reason_id = ?, quantity_lost = ?, financial_loss = ?, employee_id = ?, notes = ? WHERE waste_id = ? AND isdeleted = 0";
+		return jdbcTemplate.update(sql, entity.getBatch_id(), entity.getWaste_reason_id(), entity.getQuantity_lost(), entity.getFinancial_loss(), entity.getEmployee_id(), entity.getNotes(), entity.getWaste_id());
 	}
 
 	public int softDelete(String waste_id) {
@@ -55,9 +63,24 @@ public class WasteLogsRepository {
 		return jdbcTemplate.update(sql, waste_id);
 	}
 	
+	public int recover(String waste_id) {
+		String sql = "UPDATE waste_logs SET isdeleted = 0 WHERE waste_id = ?";
+		return jdbcTemplate.update(sql, waste_id);
+	}
+	
+	public int hardDelete(String waste_id) {
+		String sql = "DELETE FROM waste_logs WHERE waste_id = ?";
+		return jdbcTemplate.update(sql, waste_id);
+	}
+	
 	public List<IngredientBatch> findExpiredBatchToday() {
 		String sql = "SELECT ib.*, b.name AS branch_name, it.name AS ingredient_type_name FROM ingredient_batches ib LEFT JOIN branches b ON ib.branch_id = b.branch_id LEFT JOIN ingredient_types it ON ib.ingredient_type_id = it.ingredient_type_id WHERE ib.expire_date = CURRENT_DATE AND ib.isdeleted = 0";
 		return jdbcTemplate.query(sql, new IngredientBatchMapper());
+		
+	}
+	
+	public int deductFromIngredientBatch(String batch_id, BigDecimal quantity) {
+		return jdbcTemplate.update("UPDATE ingredient_batches SET remaining_quantity = ? WHERE batch_id = ?", quantity, batch_id);
 		
 	}
 }

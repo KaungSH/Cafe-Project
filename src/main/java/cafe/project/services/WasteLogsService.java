@@ -11,6 +11,7 @@ import cafe.project.models.WasteLogsListDto;
 import cafe.project.repositories.WasteLogsRepository;
 import cafe.project.repositories.entities.WasteLogs;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -26,16 +27,28 @@ public class WasteLogsService {
     	
     }
 
-    public List<WasteLogsListDto> getAllWasteLogs() {
-        return wasteLogsRepository.findAll();
+    public List<WasteLogsListDto> getAllWasteLogs(String branch_id) {
+        return wasteLogsRepository.findAll(branch_id);
+    }
+    
+    public List<WasteLogsListDto> getAllWasteLogsAdmin() {
+        return wasteLogsRepository.findAllAdmin();
+    }
+    
+    public List<WasteLogsListDto> getAllWasteLogsDeleted(String branch_id) {
+        return wasteLogsRepository.findAllDeleted(branch_id);
+    }
+    
+    public List<WasteLogsListDto> getAllWasteLogsDeletedAdmin() {
+        return wasteLogsRepository.findAllAdminDeleted();
     }
     
     public List<IngredientBatchDto> getTodayExpired() {
     	return wasteLogsRepository.findExpiredBatchToday().stream().map(this::toDto).toList();
     }
 
-    public WasteLogsEntryDto getWasteLogsEntryById(String waste_id) {
-        WasteLogs entity = wasteLogsRepository.findById(waste_id);
+    public WasteLogsEntryDto getWasteLogsEntryById(String waste_id, String branch_id) {
+        WasteLogs entity = wasteLogsRepository.findById(waste_id, branch_id);
 
         WasteLogsEntryDto entryDto = new WasteLogsEntryDto();
         entryDto.setWaste_id(entity.getWaste_id());
@@ -45,6 +58,7 @@ public class WasteLogsService {
         entryDto.setFinancial_loss(entity.getFinancial_loss());
         entryDto.setEmployee_id(entity.getEmployee_id());
         entryDto.setNotes(entity.getNotes());
+        entryDto.setBranch_id(entity.getBranch_id());
 
         return entryDto;
     }
@@ -57,6 +71,7 @@ public class WasteLogsService {
         entity.setFinancial_loss(entryDto.getFinancial_loss());
         entity.setEmployee_id(entryDto.getEmployee_id());
         entity.setNotes(entryDto.getNotes());
+        entity.setBranch_id(entryDto.getBranch_id());
 
         wasteLogsRepository.save(entity);
     }
@@ -78,10 +93,21 @@ public class WasteLogsService {
         wasteLogsRepository.softDelete(waste_id);
     }
     
+    public void recoverWasteLog(String waste_id) {
+        wasteLogsRepository.recover(waste_id);
+    }
+    
+    public void hardDeleteWasteLog(String waste_id) {
+        wasteLogsRepository.hardDelete(waste_id);
+    }
+    
+    public int deductFromIngredientBatches(String batch_id, BigDecimal quantity) {
+    	return wasteLogsRepository.deductFromIngredientBatch(batch_id, quantity);
+    }
+    
     private IngredientBatchDto toDto(IngredientBatch entity) {
 
 		IngredientBatchDto dto = new IngredientBatchDto();
-
 		dto.setBatch_id(entity.getBatch_id());
 		dto.setRemaining_quantity(entity.getRemaining_quantity());
 		dto.setManufactured_date(entity.getManufactured_date());

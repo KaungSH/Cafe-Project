@@ -1,10 +1,12 @@
 package cafe.project.controllers;
 
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import cafe.project.employeemanagement.models.LoginDto;
 import cafe.project.models.DiscountEntryModel;
@@ -108,6 +110,10 @@ public class DiscountController {
 	public String showEditForm(@PathVariable("id") String id, Model model, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		DiscountEntryModel discountModel = discountService.getDiscountById(id);
+		if(!discountModel.getBranches_branch_id().equals(ldto.getBranch_id())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "NOT YOUR BRANCH!!!");
+			//error
+		}
 		model.addAttribute("discountForm", discountModel);
 		model.addAttribute("branch", branchService.findById(ldto.getBranch_id()).getName());
 		model.addAttribute("promoTypes", repo.findTypesAll(true));

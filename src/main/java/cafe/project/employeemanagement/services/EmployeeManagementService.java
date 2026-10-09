@@ -6,16 +6,20 @@ import cafe.project.employeemanagement.models.ChangePasswordDto;
 import cafe.project.employeemanagement.models.ChangeProfileDto;
 import cafe.project.employeemanagement.models.LoginDto;
 import cafe.project.employeemanagement.repositories.EmployeeManagementRepository;
+import cafe.project.repositories.EmployeeRepository;
+import cafe.project.repositories.entities.Employee;
 
 @Service
 public class EmployeeManagementService {
 	
 	private final EmployeeManagementRepository repo;
 	private final PasswordService pws;
+	private final EmployeeRepository erepo;
 	
-	public EmployeeManagementService(EmployeeManagementRepository repo, PasswordService pws) {
+	public EmployeeManagementService(EmployeeManagementRepository repo, PasswordService pws, EmployeeRepository erepo) {
 		this.repo = repo;
 		this.pws = pws;
+		this.erepo = erepo;
 	}
 	
 	public LoginDto findByEmail(String email) {
@@ -27,8 +31,13 @@ public class EmployeeManagementService {
 		return (pws.matches(dto.getPassword(), repo.findByEmail(dto.getEmail()).getPassword())) ? repo.findByLogin(dto.getEmail(), repo.findByEmail(dto.getEmail()).getPassword()) : null;
 	}
 	
+	public ChangeProfileDto getChangeProfileDtoById(String id) {
+		return toCPDTO(erepo.findByIdAdmin(id));
+	}
+	
 	public int changePassword(ChangePasswordDto cpdto) {
 		if(repo.findById(cpdto.getEmployee_id()) == null) return 0;
+		cpdto.setNewPassword(pws.encode(cpdto.getNewPassword()));
 		return (pws.matches(cpdto.getOldPassword(), repo.findById(cpdto.getEmployee_id()).getPassword())) ? repo.changePassword(cpdto) : 0;
 	}
 	
@@ -40,6 +49,10 @@ public class EmployeeManagementService {
 	public int changeStatus(String id, String status_id) {
 		if(repo.findById(id) == null) {return 0;}
 		return repo.changeStatus(id, status_id);
+	}
+	
+	private ChangeProfileDto toCPDTO(Employee entity) {
+		return new ChangeProfileDto(entity.getPassword(), entity.getEmail(), entity.getPhotopath(), entity.getPhone(), entity.getName(), entity.getAddress(), entity.getEmployee_id());
 	}
 
 }
