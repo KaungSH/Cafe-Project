@@ -326,8 +326,8 @@ body {
 			<h1 class="page-title">Orders</h1>
 
 			<div class="d-flex gap-2 flex-wrap">
-				<a th:href="@{/staff/products}"
-					class="btn btn-success top-btn"> Back To Menu Page </a> <a
+				<a th:href="@{/staff/products}" class="btn btn-success top-btn">
+					Back To Menu Page </a> <a
 					th:href="@{/order-with-details/received-list}"
 					class="btn btn-success top-btn"> Received List </a> <a
 					th:href="@{/order-with-details/deleted}"
@@ -519,21 +519,19 @@ body {
 
 									</form>
 
-									<div class="dropdown">
-
-
-										<button class="btn btn-outline-secondary dropdown-toggle"
-											type="button" data-bs-toggle="dropdown" aria-expanded="false">
-
-											Actions</button>
+									<div class="dropdown" th:if="${!order.paymentDone}">
+										<button
+											class="btn btn-sm btn-outline-secondary dropdown-toggle"
+											type="button" data-bs-toggle="dropdown">
+											<i class="bi bi-three-dots"></i> Actions
+										</button>
 
 										<ul class="dropdown-menu dropdown-menu-end">
 
-											<li><a class="dropdown-item"
+											<li th:if="${!order.paymentDone}"><a
+												class="dropdown-item"
 												th:href="@{/order-with-details/edit/{id}(id=${order.order_id})}">
-
-													<i class="bi bi-pencil-square"></i> Edit
-
+													<i class="bi bi-pencil"></i> Edit
 											</a></li>
 
 
