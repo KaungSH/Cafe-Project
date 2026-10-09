@@ -17,14 +17,27 @@ public class BranchesStatsService {
 		this.bsrepo = bsrepo;
 	}
 
-	public List<BranchesStatsDto> findAll() {
-		List<BranchesStats> entities = this.bsrepo.findAll();
+	public List<BranchesStatsDto> findAll(String branch_id) {
+		List<BranchesStats> entities = this.bsrepo.findAll(branch_id);
+		List<BranchesStatsDto> branchesStats = entities.stream().map(this::toDto).toList();
+		return branchesStats;
+	}
+	
+	public List<BranchesStatsDto> findAllAdmin() {
+		List<BranchesStats> entities = this.bsrepo.findAllAdmin();
 		List<BranchesStatsDto> branchesStats = entities.stream().map(this::toDto).toList();
 		return branchesStats;
 	}
 
-	public BranchesStatsDto findById(String branch_stats_id) {
-		BranchesStats entity = this.bsrepo.findById(branch_stats_id);
+	public BranchesStatsDto findById(String branch_stats_id, String branch_id) {
+		BranchesStats entity = this.bsrepo.findById(branch_stats_id, branch_id);
+		if (entity == null)
+			return null;
+		return toDto(entity);
+	}
+	
+	public BranchesStatsDto findByIdAdmin(String branch_stats_id) {
+		BranchesStats entity = this.bsrepo.findByIdAdmin(branch_stats_id);
 		if (entity == null)
 			return null;
 		return toDto(entity);

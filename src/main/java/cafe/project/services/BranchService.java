@@ -1,5 +1,6 @@
 package cafe.project.services;
 
+import java.math.BigDecimal;
 import java.sql.Time;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -53,7 +54,6 @@ public class BranchService {
 		Branch entity = toEntity(dto);
 		entity.setBranch_id(UUID.randomUUID().toString());
 		entity.setCreated_at(LocalDateTime.now());
-		entity.setIsdeleted(false);
 
 		return this.branchRepository.save(entity) > 0;
 	}
@@ -76,6 +76,10 @@ public class BranchService {
 
 		return this.branchRepository.changeStatus(branch_id, status_id) > 0;
 	}
+	
+	public int updateFinance(String branch_id, BigDecimal finance) {
+		return this.branchRepository.updateFinance(branch_id, finance);
+	}
 
 	private BranchListDto toListDto(Branch entity) {
 		BranchListDto dto = new BranchListDto();
@@ -85,9 +89,9 @@ public class BranchService {
 		dto.setDescription(entity.getDescription());
 		dto.setOpening_time(entity.getOpening_time());
 		dto.setClosing_time(entity.getClosing_time());
-		dto.setIsdeleted(entity.Isdeleted());
 		dto.setCreated_at(entity.getCreated_at());
 		dto.setStatus_name(entity.getStatus_name());
+		dto.setBranch_finance(entity.getBranch_finance());
 		return dto;
 	}
 
@@ -98,6 +102,7 @@ public class BranchService {
 		dto.setLocation(entity.getLocation());
 		dto.setDescription(entity.getDescription());
 		dto.setBranch_status_id(entity.getBranch_status_id());
+		dto.setBranch_finance(entity.getBranch_finance());
 
 		if (entity.getOpening_time() != null) {
 			dto.setOpening_time(entity.getOpening_time().toLocalTime());
@@ -106,7 +111,6 @@ public class BranchService {
 			dto.setClosing_time(entity.getClosing_time().toLocalTime());
 		}
 
-		dto.setIsdeleted(entity.Isdeleted());
 		return dto;
 	}
 
@@ -116,6 +120,7 @@ public class BranchService {
 		entity.setLocation(dto.getLocation());
 		entity.setDescription(dto.getDescription());
 		entity.setBranch_status_id(dto.getBranch_status_id());
+		entity.setBranch_finance(dto.getBranch_finance());
 
 		if (dto.getOpening_time() != null) {
 			entity.setOpening_time(Time.valueOf(dto.getOpening_time()));

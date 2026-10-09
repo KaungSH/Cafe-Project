@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public class UnitDto{
 
     private String unit_id;
-    private String employee_id;
+    private String employee_name;
     private String name;
     private String abbreviation;
     private boolean is_active;
@@ -15,10 +15,10 @@ public class UnitDto{
 	
 	public UnitDto() {}
 	
-	public UnitDto(String unit_id,String employee_id,String name,String abbreviation,
+	public UnitDto(String unit_id,String employee_name,String name,String abbreviation,
 			boolean is_active,boolean isedited,boolean isdeleted,LocalDateTime created_at) {
 		this.unit_id=unit_id;
-		this.employee_id=employee_id;
+		this.employee_name=employee_name;
 		this.name=name;
 		this.abbreviation=abbreviation;
 		this.is_active=is_active;
@@ -35,12 +35,12 @@ public class UnitDto{
 		this.unit_id = unit_id;
 	}
 
-	public String getEmployee_id() {
-		return employee_id;
+	public String getEmployee_name() {
+		return employee_name;
 	}
 
-	public void setEmployee_id(String employee_id) {
-		this.employee_id = employee_id;
+	public void setEmployee_name(String employee_id) {
+		this.employee_name = employee_id;
 	}
 
 	public String getName() {

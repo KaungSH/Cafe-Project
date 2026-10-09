@@ -75,27 +75,24 @@ body {
 
 		
 
-			<form th:action="@{/manager-only/branches/status}"
+			<form th:action="@{/manager-only/branches/finance}"
 				th:object="${branchDto}" method="post">
 				
 			<h3 class="page-title mb-4">
-				<i class="fa-solid fa-pen-to-square me-2"></i>Change Status For Branch <span th:text = "${name}"></span>
+				<i class="fa-solid fa-pen-to-square me-2"></i>Update Finances For Branch <span th:text = "${name}"></span>
 			</h3>
 
 			<input type="hidden" th:field="*{branch_id}">
 
 				<div class="mb-3">
-					<label class="form-label fw-bold">Status <span
-						class="text-danger">*</span></label> <select
-						th:field="*{branch_status_id}" class="form-select"
-						th:classappend="${#fields.hasErrors('branch_status_id')} ? 'is-invalid'">
-						<option value="">-- Select Status --</option>
-						<option th:each="st : ${statuses}" th:value="${st.branch_status_id}" th:text="${st.name}" th:if="${st.name!='BANKRUPT'}">
-						</option>
-					</select>
+					<label for="branch_finance" class="form-label fw-bold">
+						Branch Finance<span class="text-danger">*</span>
+					</label> <input type="number" id="branch_finance" th:field="*{branch_finance}"
+						class="form-control" step="0.01" min="0" placeholder="0.000"
+						th:classappend="${#fields.hasErrors('branch_finance')} ? 'is-invalid' : ''">
 					<div class="invalid-feedback"
-						th:if="${#fields.hasErrors('branch_status_id')}"
-						th:errors="*{branch_status_id}"></div>
+						th:if="${#fields.hasErrors('branch_finance')}"
+						th:errors="*{branch_finance}"></div>
 				</div>
 
 

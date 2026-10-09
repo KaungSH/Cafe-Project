@@ -63,9 +63,9 @@ public class UnitRepository {
 	// UPDATE
 	public int edit(String id, Unit entity) {
 
-		String sql = "UPDATE units SET name = ?, abbreviation = ?, is_active = ?, isedited = 1 WHERE unit_id = ?";
+		String sql = "UPDATE units SET name = ?, abbreviation = ?, is_active = ?, isedited = 1, employee_id = ? WHERE unit_id = ?";
 
-		return jdbcTemplate.update(sql, entity.getName(), entity.getAbbreviation(), entity.getIs_active(), id);
+		return jdbcTemplate.update(sql, entity.getName(), entity.getAbbreviation(), entity.getIs_active(), entity.getEmployee_id(), id);
 	}
 
 	// SOFT DELETE

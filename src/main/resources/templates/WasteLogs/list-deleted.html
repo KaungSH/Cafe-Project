@@ -87,17 +87,15 @@
     <div layout:fragment="content">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="page-title m-0">Waste Logs Management</h2>
-            <a th:href="@{/manager-only/WasteLogs/today-expired}" class="btn btn-add-new">Generate Waste Logs for Today's Expired Batches</a>
-            <a th:href="@{/manager-only/WasteLogs/timedSoftDelete}" class="btn btn-add-new" onclick="return confirm('Are you sure? You can recover registers from the bin.');">Delete Old Logs</a>
-            <a th:href="@{/manager-only/WasteLogs/deleted}" class="btn btn-add-new">Deleted List</a>
-            <a th:href="@{/manager-only/WasteLogs/create}" class="btn btn-add-new">+ Add New Waste Log</a>
+            <a th:href="@{/manager-only/WasteLogs/timedHardDelete}" class="btn btn-add-new" onclick="return confirm('This Will Permenantly Delete A Number of Logs!');">Delete Old Logs</a>
+            <a th:href="@{/manager-only/WasteLogs}" class="btn btn-add-new">Go Back to Normal List</a>
         </div>
 
         <div class="table-responsive">
             <table class="table custom-table">
                 <thead>
                     <tr>
-                        <th>No.</th>
+                        <th>ID</th>
                         <th>Batch ID</th>
                         <th>Reason</th>
                         <th>Quantity Lost</th>
@@ -109,8 +107,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="log, state : ${wasteLogs}">
-                        <td th:text="${state.count}">1</td>
+                    <tr th:each="log : ${wasteLogs}">
+                        <td th:text="${log.waste_id}">1</td>
                         <td th:text="${log.batch_id}">BATCH001</td>
                         <td th:text="${log.reason_name}">Expired</td>
                         <td th:text="${log.quantity_lost}">2.500</td>
@@ -119,10 +117,8 @@
                         <td th:text="${#temporals.format(log.logged_at, 'yyyy-MM-dd HH:mm')}">2026-09-18 10:00</td>
                         <td th:text="${log.notes}">Damaged</td>
                         <td class="text-center" style="width: 100px;">
- 		<a th:href="@{/manager-only/WasteLogs/edit/{waste_id}(waste_id=${log.waste_id})}" class="btn-action-edit">Edit</a>
-                            <a th:href="@{/manager-only/WasteLogs/delete/{waste_id}(waste_id=${log.waste_id})}" 
-                               class="btn-action-delete" 
-                               onclick="return confirm('Are you sure you want to delete this record?');">Delete</a>
+ 							<a th:href="@{/manager-only/WasteLogs/recover/{waste_id}(waste_id=${log.waste_id})}" class="btn-action-edit" onclick="return confirm('This Will Recover this Log!');">Recover</a>
+                            <a th:href="@{/manager-only/WasteLogs/harddelete/{waste_id}(waste_id=${log.waste_id})}" class="btn-action-delete" onclick="return confirm('This Will Permenantly Delete this Log!');">Hard Delete</a>
                         </td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(wasteLogs)}">

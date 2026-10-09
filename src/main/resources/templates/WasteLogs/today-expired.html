@@ -148,7 +148,7 @@
         WASTE LOG LIST
     -->
     <form th:if="${wasteLogs != null and not #lists.isEmpty(wasteLogs)}"
-          th:action="@{/manager/WasteLogs/today-expired}"
+          th:action="@{/manager-only/WasteLogs/today-expired}"
           method="post">
 
         <div class="table-responsive">
@@ -254,7 +254,7 @@
 
         <div class="d-flex justify-content-end gap-2 mt-4">
 
-            <a th:href="@{/manager/WasteLogs}"
+            <a th:href="@{/manager-only/WasteLogs}"
                class="btn btn-cancel">
                 Cancel
             </a>

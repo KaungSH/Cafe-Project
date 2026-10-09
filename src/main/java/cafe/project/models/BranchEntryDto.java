@@ -1,8 +1,11 @@
 package cafe.project.models;
 
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
+import java.math.BigDecimal;
 import java.time.LocalTime;
 
 public class BranchEntryDto {
@@ -28,14 +31,16 @@ public class BranchEntryDto {
 
 	@NotNull(message = "Enter closing time")
 	private LocalTime closing_time;
+	
+	@NotNull(message = "Salary is required")
+	@DecimalMin(value = "0.0", inclusive = false, message = "Salary must be greater than 0")
+	private BigDecimal branch_finance;
 
-	private boolean isdeleted;
 
 	public BranchEntryDto() {
 	}
 
-	public BranchEntryDto(String branch_id, String name, String location, String description, String branch_status_id,
-			LocalTime opening_time, LocalTime closing_time, boolean isdeleted) {
+	public BranchEntryDto(String branch_id, String name, String location, String description, String branch_status_id, LocalTime opening_time, LocalTime closing_time, BigDecimal branch_finance) {
 		this.branch_id = branch_id;
 		this.name = name;
 		this.location = location;
@@ -43,7 +48,7 @@ public class BranchEntryDto {
 		this.branch_status_id = branch_status_id;
 		this.opening_time = opening_time;
 		this.closing_time = closing_time;
-		this.isdeleted = isdeleted;
+		this.branch_finance = branch_finance;
 	}
 
 	public String getBranch_id() {
@@ -70,24 +75,12 @@ public class BranchEntryDto {
 		return closing_time;
 	}
 
-	public boolean Isdeleted() {
-		return isdeleted;
-	}
-
 	public String getLocation() {
 		return location;
 	}
 
 	public void setLocation(String location) {
 		this.location = location;
-	}
-
-	public boolean isIsdeleted() {
-		return isdeleted;
-	}
-
-	public void setIsdeleted(boolean isdeleted) {
-		this.isdeleted = isdeleted;
 	}
 
 	public void setBranch_id(String branch_id) {
@@ -113,5 +106,15 @@ public class BranchEntryDto {
 	public void setClosing_time(LocalTime closing_time) {
 		this.closing_time = closing_time;
 	}
+
+	public BigDecimal getBranch_finance() {
+		return branch_finance;
+	}
+
+	public void setBranch_finance(BigDecimal branch_finance) {
+		this.branch_finance = branch_finance;
+	}
+	
+	
 
 }
