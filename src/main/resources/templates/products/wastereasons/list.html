@@ -27,8 +27,6 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--coffee-bg);
             color: #3b2c24;
-            margin: 0;
-            padding: 0;
         }
 
         .lux-card {
@@ -36,7 +34,6 @@
             border-radius: 18px;
             border: 1px solid var(--coffee-card-border);
             box-shadow: 0 12px 35px rgba(92, 61, 46, 0.06);
-            width: 100%;
         }
 
         .btn-coffee {
@@ -82,8 +79,6 @@
             border-radius: 8px;
             font-size: 0.82rem;
             border: 1px solid #e3d3c5;
-            display: inline-block;
-            word-break: break-all;
         }
 
         .action-circle-btn {
@@ -122,9 +117,8 @@
         }
     </style>
 </head>
-<body>
-    <!-- container-fluid သုံးပြီး ဘေးနှင့် အပေါ်ကို မျက်နှာပြင်ပြည့် ဖြန့်ထားပါသည် -->
-    <div layout:fragment="content" class="container-fluid px-4 py-4 w-100">
+<body class="py-5">
+    <div layout:fragment="content" style="max-width: 950px;">
         <!-- Header -->
         <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
             <div>
@@ -142,12 +136,12 @@
         <!-- Table Card -->
         <div class="lux-card overflow-hidden">
             <div class="table-responsive">
-                <table class="table table-coffee table-hover mb-0 w-100">
+                <table class="table table-coffee table-hover mb-0">
                     <thead>
                         <tr>
-                            <th style="width: 30%;">Reason ID</th>
+                            <th style="width: 25%;">Reason ID</th>
                             <th>Reason Name</th>
-                            <th class="text-end" style="width: 15%;">Action</th>
+                            <th class="text-end" style="width: 20%;">Action</th>
                         </tr>
                     </thead>
                     <tbody>
