@@ -22,7 +22,11 @@
                     <div class="row g-3 mb-4">
                         <div class="col-md-4">
                             <label class="form-label fw-bold">Imported At</label>
-                            <input type="datetime-local" th:field="*{imported_at}" class="form-control" required />
+                            <!-- Imported At Format ပြင်ထားသည် -->
+                            <input type="datetime-local" 
+                                   name="imported_at"
+                                   th:value="${stockImport.imported_at != null ? #temporals.format(stockImport.imported_at, 'yyyy-MM-dd''T''HH:mm') : ''}" 
+                                   class="form-control" required />
                         </div>
                         <div class="col-md-4">
                             <label class="form-label fw-bold">Supplier</label>
@@ -57,18 +61,28 @@
                                         <input type="hidden" th:field="*{items[__${stat.index}__].ingredientTypeId}" />
                                     </td>
                                     <td class="fw-bold" th:text="${item.ingredientTypeName}">Sugar</td>
-                                    <td class="text-center" th:text="${item.unit_name}">kg</td>
+                                    <td class="text-center" th:text="${item.Uname}">kg</td>
                                     <td>
                                         <input type="number" step="0.01" th:field="*{items[__${stat.index}__].quantity_ordered}" class="form-control" />
                                     </td>
                                     <td>
                                         <input type="number" step="0.01" th:field="*{items[__${stat.index}__].unit_cost}" class="form-control" />
                                     </td>
+                                    
+                                    <!-- Manufactured Date Format ပြင်ထားသည် -->
                                     <td>
-                                        <input type="date" th:field="*{items[__${stat.index}__].manufactured_date}" class="form-control" />
+                                        <input type="date" 
+                                               th:name="|items[${stat.index}].manufactured_date|"
+                                               th:value="${item.manufactured_date != null ? #temporals.format(item.manufactured_date, 'yyyy-MM-dd') : #temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}" 
+                                               class="form-control" />
                                     </td>
+                                    
+                                    <!-- Expire Date Format ပြင်ထားသည် -->
                                     <td>
-                                        <input type="date" th:field="*{items[__${stat.index}__].expire_date}" class="form-control" />
+                                        <input type="date" 
+                                               th:name="|items[${stat.index}].expire_date|"
+                                               th:value="${item.expire_date != null ? #temporals.format(item.expire_date, 'yyyy-MM-dd') : #temporals.format(#temporals.createNow().plusYears(1), 'yyyy-MM-dd')}" 
+                                               class="form-control" />
                                     </td>
                                 </tr>
                             </tbody>

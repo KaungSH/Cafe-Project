@@ -36,7 +36,7 @@ public class StockImportService {
     }
 
    
-    public void addStockImport(StockImportEntryDto dto, String loggedInEmployeeId, String loggedInBranchId) {
+   /* public void addStockImport(StockImportEntryDto dto, String loggedInEmployeeId, String loggedInBranchId) {
         String import_id = UUID.randomUUID().toString();
         dto.setImport_id(import_id);
         dto.setEmployee_id(loggedInEmployeeId);
@@ -62,6 +62,36 @@ public class StockImportService {
         for (IngredientBatchItemDto item : selectedItems) {
             String batch_id = "BATCH-" + UUID.randomUUID().toString().substring(0, 8);
             repository.saveIngredientBatch(batch_id, item, loggedInBranchId, import_id);
+        }
+    }*/
+   
+    public void addStockImport(StockImportEntryDto dto, String loggedInEmployeeId, String loggedInBranchId) {
+        String importId = UUID.randomUUID().toString();
+        dto.setImport_id(importId);
+        dto.setEmployee_id(loggedInEmployeeId);
+        dto.setBranch_id(loggedInBranchId);
+
+        List<IngredientBatchItemDto> selectedItems = dto.getItems().stream()
+                .filter(IngredientBatchItemDto::isSelected)
+                .collect(Collectors.toList());
+
+        BigDecimal totalCost = BigDecimal.ZERO;
+        for (IngredientBatchItemDto item : selectedItems) {
+            double qty = item.getQuantity_ordered() != null ? item.getQuantity_ordered() : 0.0;
+            double cost = item.getUnit_cost() != null ? item.getUnit_cost().doubleValue() : 0.0;
+            double totalBatchCost = qty * cost;
+
+            item.setTotal_import_cost(totalBatchCost);
+            totalCost = totalCost.add(BigDecimal.valueOf(totalBatchCost)); // Ingredient Cost များကို ပေါင်းစပ်ခြင်း
+        }
+        dto.setTotal_cost(totalCost); // Stock Import ၏ Total Cost ထဲ ထည့်ပေးခြင်း
+
+        StockImport entity = mapper.toEntity(dto);
+        repository.saveStockImport(entity);
+
+        for (IngredientBatchItemDto item : selectedItems) {
+            String batchId = "BATCH-" + UUID.randomUUID().toString().substring(0, 8);
+            repository.saveIngredientBatch(batchId, item, loggedInBranchId, importId);
         }
     }
 

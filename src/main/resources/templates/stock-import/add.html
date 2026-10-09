@@ -15,6 +15,8 @@
             <div class="card-body p-4">
                 <form th:action="@{/stock-imports/add}" th:object="${stockImport}" method="post">
                     
+                    <!-- Import ID အတွက် Input Field လုံးဝ မထည့်ပါ -->
+
                     <div class="row g-3 mb-4">
                         <div class="col-md-4">
                             <label class="form-label fw-bold">Imported At:</label>
@@ -54,7 +56,7 @@
                                         <input type="hidden" th:field="*{items[__${stat.index}__].ingredientTypeId}" />
                                     </td>
                                     <td class="fw-bold" th:text="${item.ingredientTypeName}">Sugar</td>
-                                    <td class="text-center" th:text="${item.unit_name}">kg</td>
+                                    <td class="text-center" th:text="${item.Uname}">kg</td>
                                     <td>
                                         <input type="number" step="0.01" th:field="*{items[__${stat.index}__].quantity_ordered}" class="form-control" placeholder="0.00" />
                                     </td>

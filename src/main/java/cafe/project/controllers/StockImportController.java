@@ -1,6 +1,7 @@
 package cafe.project.controllers;
 
 import cafe.project.employeemanagement.models.LoginDto;
+import cafe.project.models.IngredientBatchItemDto;
 import cafe.project.models.StockImportEntryDto;
 import cafe.project.services.StockImportService;
 import jakarta.servlet.http.HttpSession;
@@ -8,98 +9,128 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Controller
 @RequestMapping("/stock-imports")
 public class StockImportController {
 
-    private final StockImportService service;
+	private final StockImportService service;
 
-    public StockImportController(StockImportService service) {
-        this.service = service;
-    }
+	public StockImportController(StockImportService service) {
+		this.service = service;
+	}
 
-    @GetMapping
-    public String listActive(Model model) {
-        model.addAttribute("imports", service.getAllActiveImports());
-        return "stock-import/list";
-    }
+	@GetMapping
+	public String listActive(Model model) {
+		model.addAttribute("imports", service.getAllActiveImports());
+		return "stock-import/list";
+	}
 
-    @GetMapping("/deleted")
-    public String listDeleted(Model model) {
-        model.addAttribute("imports", service.getAllDeletedImports());
-        return "stock-import/deleted-list";
-    }
+	@GetMapping("/deleted")
+	public String listDeleted(Model model) {
+		model.addAttribute("imports", service.getAllDeletedImports());
+		return "stock-import/deleted-list";
+	}
 
-    @GetMapping("/add")
-    public String showAddForm(Model model) {
-        StockImportEntryDto dto = new StockImportEntryDto();
-        dto.setImported_at(LocalDateTime.now());
-        dto.setItems(service.getAllIngredientTypes());
+	@GetMapping("/add")
+	public String showAddForm(Model model) {
+		StockImportEntryDto dto = new StockImportEntryDto();
+		dto.setImported_at(LocalDateTime.now());
+		dto.setItems(service.getAllIngredientTypes());
 
-        model.addAttribute("stockImport", dto);
-        model.addAttribute("suppliers", service.getAllSuppliers());
-        return "stock-import/add";
-    }
+		model.addAttribute("stockImport", dto);
+		model.addAttribute("suppliers", service.getAllSuppliers());
+		return "stock-import/add";
+	}
 
-    @PostMapping("/add")
-    public String saveStockImport(@ModelAttribute("stockImport") StockImportEntryDto dto,HttpSession session) {
-    	LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-		if(ldto == null) {
+	@PostMapping("/add")
+	public String saveStockImport(@ModelAttribute("stockImport") StockImportEntryDto dto, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		if (ldto == null) {
 			return "redirect:/login";
-			}
-		String employee_id=ldto.getEmployee_id();
-		String branch_id=ldto.getBranch_id();
+		}
+		String employee_id = ldto.getEmployee_id();
+		String branch_id = ldto.getBranch_id();
 		service.addStockImport(dto, employee_id, branch_id);
-			return "redirect:/stock-imports";
-    }
+		return "redirect:/stock-imports";
+	}
 
-    @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable("id") String id, Model model) {
-        StockImportEntryDto dto = service.getImportById(id);
-        model.addAttribute("stockImport", dto);
-        model.addAttribute("suppliers", service.getAllSuppliers());
-        return "stock-import/edit";
-    }
+	/*
+	 * @GetMapping("/edit/{id}") public String showEditForm(@PathVariable("id")
+	 * String id, Model model) { StockImportEntryDto dto =
+	 * service.getImportById(id); model.addAttribute("stockImport", dto);
+	 * model.addAttribute("suppliers", service.getAllSuppliers()); return
+	 * "stock-import/edit"; }
+	 */
 
-    @PostMapping("/edit")
-    public String updateStockImport(@ModelAttribute("stockImport") StockImportEntryDto dto) {
-        service.editStockImport(dto);
-        return "redirect:/stock-imports";
-    }
+	@GetMapping("/edit/{id}")
+	public String showEditForm(@PathVariable("id") String id, Model model) {
+		StockImportEntryDto dto = service.getImportById(id);
 
-    @GetMapping("/soft-delete/{id}")
-    public String softDelete(@PathVariable("id") String id) {
-        service.softDelete(id);
-        return "redirect:/stock-imports";
-    }
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    @GetMapping("/recover/{id}")
-    public String recover(@PathVariable("id") String id) {
-        service.recover(id);
-        return "redirect:/stock-imports/deleted";
-    }
+		if (dto.getImported_at() == null) {
+			dto.setImported_at(LocalDateTime.now());
+		}
 
-    @GetMapping("/hard-delete/{id}")
-    public String showHardDeleteConfirmation(@PathVariable("id") String id, Model model) {
-        model.addAttribute("importId", id);
-        return "stock-import/hard-deleted";
-    }
+		if (dto.getItems() != null) {
+			for (IngredientBatchItemDto item : dto.getItems()) {
+				item.setSelected(true); // Auto Checkbox
 
-    @PostMapping("/hard-delete")
-    public String hardDelete(@RequestParam("importId") String importId) {
-        service.hardDelete(importId);
-        return "redirect:/stock-imports/deleted";
-    }
+				if (item.getManufactured_date() == null) {
+					item.setManufactured_date(LocalDate.now());
+				}
+				if (item.getExpire_date() == null) {
+					item.setExpire_date(LocalDate.now().plusYears(1));
+				}
+			}
+		}
 
-    @GetMapping("/detail-batches/{id}")
-    @ResponseBody
-    public Object getBatchesDetail(@PathVariable("id") String id) {
-        return service.getBatchesByImportId(id);
-    }
-    
+		model.addAttribute("stockImport", dto);
+		model.addAttribute("suppliers", service.getAllSuppliers());
+		return "stock-import/edit";
+	}
+
+	@PostMapping("/edit")
+	public String updateStockImport(@ModelAttribute("stockImport") StockImportEntryDto dto) {
+		service.editStockImport(dto);
+		return "redirect:/stock-imports";
+	}
+
+	@GetMapping("/soft-delete/{id}")
+	public String softDelete(@PathVariable("id") String id) {
+		service.softDelete(id);
+		return "redirect:/stock-imports";
+	}
+
+	@GetMapping("/recover/{id}")
+	public String recover(@PathVariable("id") String id) {
+		service.recover(id);
+		return "redirect:/stock-imports/deleted";
+	}
+
+	@GetMapping("/hard-delete/{id}")
+	public String showHardDeleteConfirmation(@PathVariable("id") String id, Model model) {
+		model.addAttribute("importId", id);
+		return "stock-import/hard-deleted";
+	}
+
+	@PostMapping("/hard-delete")
+	public String hardDelete(@RequestParam("import_id") String importId) {
+		service.hardDelete(importId);
+		return "redirect:/stock-imports/deleted";
+	}
+
+	@GetMapping("/detail-batches/{id}")
+	@ResponseBody
+	public Object getBatchesDetail(@PathVariable("id") String id) {
+		return service.getBatchesByImportId(id);
+	}
+
 //    //for ingradient batch
 //
 //    @GetMapping("/stock-imports/{id}/add-ingredient-batch")

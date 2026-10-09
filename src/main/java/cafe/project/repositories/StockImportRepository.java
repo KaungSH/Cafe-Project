@@ -56,7 +56,7 @@ public class StockImportRepository {
                             item.getTotal_import_cost(), import_id);
     }
 
-    public List<StockImportListDto> findAllActive() {
+    /*public List<StockImportListDto> findAllActive() {
         String sql = "SELECT si.import_id, si.imported_at, s.name AS supplier_name, e.name AS employee_name, b.name AS branch_name, si.total_cost, si.isedited, si.isdeleted " +
                      "FROM stock_imports si " +
                      "JOIN suppliers s ON si.supplier_id = s.supplier_id " +
@@ -75,8 +75,33 @@ public class StockImportRepository {
             dto.setIsdeleted(rs.getBoolean("isdeleted"));
             return dto;
         });
-    }
+    }*/
+    public List<StockImportListDto> findAllActive() {
+        String sql = "SELECT si.import_id, si.imported_at, s.name AS supplier_name, e.name AS employee_name, b.name AS branch_name, " +
+                     "COALESCE((SELECT SUM(ib.quantity_ordered * ib.unit_cost) FROM ingredient_batches ib WHERE ib.import_id = si.import_id), 0) AS total_cost, " +
+                     "si.isedited, si.isdeleted " +
+                     "FROM stock_imports si " +
+                     "JOIN suppliers s ON si.supplier_id = s.supplier_id " +
+                     "JOIN employees e ON si.employee_id = e.employee_id " +
+                     "JOIN branches b ON si.branch_id = b.branch_id " +
+                     "WHERE si.isdeleted = 0 ORDER BY si.created_at DESC";
 
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            StockImportListDto dto = new StockImportListDto();
+            dto.setImport_id(rs.getString("import_id"));
+            dto.setImported_at(rs.getTimestamp("imported_at").toLocalDateTime());
+            dto.setSupplier_name(rs.getString("supplier_name"));
+            dto.setEmployee_name(rs.getString("employee_name"));
+            dto.setBranch_name(rs.getString("branch_name"));
+            
+            // တွက်ချက်ပြီးသား Total Cost ကို ထည့်သွင်းခြင်း
+            dto.setTotal_cost(rs.getBigDecimal("total_cost"));
+
+            dto.setIsedited(rs.getBoolean("isedited"));
+            dto.setIsdeleted(rs.getBoolean("isdeleted"));
+            return dto;
+        });
+    }
     public List<StockImportListDto> findAllDeleted() {
         String sql = "SELECT si.import_id, si.imported_at, s.name AS supplier_name, e.name AS employee_name, b.name AS branch_name, si.total_cost, si.isedited, si.isdeleted " +
                      "FROM stock_imports si " +
@@ -104,7 +129,7 @@ public class StockImportRepository {
         return list.stream().findFirst();
     }
 
-    public List<IngredientBatchItemDto> findBatchesByImportId(String importId) {
+   /* public List<IngredientBatchItemDto> findBatchesByImportId(String importId) {
         String sql = "SELECT ib.ingredient_type_id, it.name AS ingredient_type_name, u.name AS unit_name, " +
                      "ib.quantity_ordered, ib.unit_cost, ib.total_import_cost, ib.manufactured_date, ib.expire_date " +
                      "FROM ingredient_batches ib " +
@@ -122,6 +147,37 @@ public class StockImportRepository {
             item.setTotal_import_cost(rs.getDouble("total_import_cost"));
             item.setManufactured_date(rs.getDate("manufactured_date").toLocalDate());
             item.setExpire_date(rs.getDate("expire_date").toLocalDate());
+            return item;
+        }, importId);
+    }*/
+    public List<IngredientBatchItemDto> findBatchesByImportId(String importId) {
+        String sql = "SELECT ib.ingredient_type_id, it.name AS ingredient_type_name, " +
+                     "u.name AS unit_name, ib.quantity_ordered, ib.unit_cost, " +
+                     "ib.total_import_cost, ib.manufactured_date, ib.expire_date " +
+                     "FROM ingredient_batches ib " +
+                     "JOIN ingredient_types it ON ib.ingredient_type_id = it.ingredient_type_id " +
+                     "JOIN units u ON it.unit_id = u.unit_id " +
+                     "WHERE ib.import_id = ?";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            IngredientBatchItemDto item = new IngredientBatchItemDto();
+            item.setIngredientTypeId(rs.getString("ingredient_type_id"));
+            item.setIngredientTypeName(rs.getString("ingredient_type_name"));
+            
+            // DTO ရဲ့ setUname ကို သုံးပြီး unit_name ထည့်ပေးခြင်း
+            item.setUname(rs.getString("unit_name")); 
+            
+            item.setQuantity_ordered(rs.getDouble("quantity_ordered"));
+            item.setUnit_cost(rs.getBigDecimal("unit_cost"));
+            item.setTotal_import_cost(rs.getDouble("total_import_cost"));
+
+            if (rs.getDate("manufactured_date") != null) {
+                item.setManufactured_date(rs.getDate("manufactured_date").toLocalDate());
+            }
+            if (rs.getDate("expire_date") != null) {
+                item.setExpire_date(rs.getDate("expire_date").toLocalDate());
+            }
+
             return item;
         }, importId);
     }
