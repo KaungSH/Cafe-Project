@@ -85,27 +85,32 @@ public class PaymentController {
 	}
 
 	@PostMapping("/add")
-	public String save(@ModelAttribute("payment") Payment payment, @RequestParam("order_id") String orderId,
-			HttpSession session) {
+	public String save(@ModelAttribute("payment") Payment payment, 
+	                   @RequestParam("order_id") String orderId,
+	                   @RequestParam(value = "discount", required = false) Double discount,
+	                   HttpSession session) {
 
-		LoginDto user = (LoginDto) session.getAttribute("loggedInUser");
+	    LoginDto user = (LoginDto) session.getAttribute("loggedInUser");
 
-		payment.setOrder_id(orderId);
-		payment.setPaid_time(LocalDateTime.now());
-		payment.setDate(LocalDate.now());
-		payment.setFilepath("");
+	    payment.setOrder_id(orderId);
+	    payment.setPaid_time(LocalDateTime.now());
+	    payment.setDate(LocalDate.now());
+	    payment.setFilepath("");
 
-		if (user != null) {
-			payment.setEmployee_id(user.getEmployee_id());
-		}
+	    // Form မှ discount ရိုက်ထည့်လိုက်ပါက payment ထဲသို့ သေချာထည့်သွင်းခြင်း
+	    if (discount != null) {
+	        payment.setDiscount(discount);
+	    } else if (payment.getDiscount() == null) {
+	        payment.setDiscount(0.0);
+	    }
 
-		//paymentService.save(payment);
-		//return "redirect:/order-with-details";
-		
-		paymentService.save(payment);
+	    if (user != null) {
+	        payment.setEmployee_id(user.getEmployee_id());
+	    }
 
-		return "redirect:/receipt/" + orderId;
-		
+	    paymentService.save(payment);
+
+	    return "redirect:/receipt/" + orderId;
 	}
 
 	@GetMapping("/edit/{id}")

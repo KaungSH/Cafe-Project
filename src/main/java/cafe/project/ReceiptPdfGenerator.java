@@ -14,9 +14,7 @@ import java.util.Map;
 
 public class ReceiptPdfGenerator {
 
-    private String orderTime;
-
-	// 1. Controller မှ byte[] အဖြစ် တိုက်ရိုက်ယူရန် method
+    // 1. Controller byte[] method
     public byte[] generateReceiptPdfBytes(String orderId, 
                                           Map<String, Object> orderData, 
                                           List<Map<String, Object>> items) throws Exception {
@@ -25,7 +23,7 @@ public class ReceiptPdfGenerator {
         return baos.toByteArray();
     }
 
-    // 2. File အဖြစ် သိမ်းဆည်းရန် method (ရှိပြီးသား)
+    // 2. File method 
     public void generateReceipt(String filePath, String orderId, 
                                 Map<String, Object> orderData, 
                                 List<Map<String, Object>> items) throws Exception {
@@ -40,7 +38,7 @@ public class ReceiptPdfGenerator {
                                       List<Map<String, Object>> items) throws Exception {
         
         // 80mm Thermal Printer size (width: 226 point, height: 650 point)
-        Rectangle receiptSize = new Rectangle(226, 360);
+        Rectangle receiptSize = new Rectangle(226, 650);
         
         Document document = new Document(receiptSize, 10, 10, 10, 10);
         PdfWriter.getInstance(document, outputStream);
@@ -63,7 +61,6 @@ public class ReceiptPdfGenerator {
         String branchName = "Cafe Luft";
         if (orderData != null && orderData.get("branch_name") != null) {
             String rawBranch = orderData.get("branch_name").toString();
-            // "- Original" သို့မဟုတ် တခြား suffix ပါနေပါက ဖြုတ်ပစ်ရန်
             if (rawBranch.contains("-")) {
                 branchName = rawBranch.split("-")[0].trim();
             } else {
@@ -84,28 +81,7 @@ public class ReceiptPdfGenerator {
 
         document.add(new Chunk(separator));
 
-//        // Order & Cashier Info
-//        String cashier = (orderData != null && orderData.get("employee_name") != null) 
-//                         ? orderData.get("employee_name").toString() 
-//                         : (orderData != null && orderData.get("employee_id") != null 
-//                             ? orderData.get("employee_id").toString() : "-");
-//
-//        String orderTime = "-";
-//        if (orderData != null) {
-//            if (orderData.get("created_time") != null) {
-//                orderTime = orderData.get("created_time").toString();
-//            } else if (orderData.get("received_time") != null) {
-//                orderTime = orderData.get("received_time").toString();
-//            }
-//        }
-//        
-//        document.add(new Paragraph("Order ID : " + orderId, normalFont));
-//        document.add(new Paragraph("Cashier  : " + cashier, normalFont));
-//        document.add(new Paragraph("Date/Time: " + orderTime, normalFont));
-//
-//        document.add(new Chunk(separator));
-        
-     // Cashier Info (ID နှင့် Name နှစ်ခုလုံး ပေါ်စေရန်)
+        // Cashier Info
         String empId = (orderData != null && orderData.get("employee_id") != null) 
                        ? orderData.get("employee_id").toString().trim() : "";
         String empName = (orderData != null && orderData.get("employee_name") != null) 
@@ -113,16 +89,27 @@ public class ReceiptPdfGenerator {
 
         String cashierDisplay = "-";
         if (!empId.isEmpty() && !empName.isEmpty()) {
-            cashierDisplay = empId + " (" + empName + ")"; // ဥပမာ - EMP-001 (ADMIN)
+            cashierDisplay = empId + " (" + empName + ")";
         } else if (!empName.isEmpty()) {
             cashierDisplay = empName;
         } else if (!empId.isEmpty()) {
             cashierDisplay = empId;
         }
-        
+
+        // Order Time
+        String orderTime = "-";
+        if (orderData != null) {
+            if (orderData.get("created_time") != null) {
+                orderTime = orderData.get("created_time").toString();
+            } else if (orderData.get("received_time") != null) {
+                orderTime = orderData.get("received_time").toString();
+            }
+        }
+
         document.add(new Paragraph("Order ID : " + orderId, boldFont));
         document.add(new Paragraph("Cashier  : " + cashierDisplay, boldFont));
         document.add(new Paragraph("Date/Time: " + orderTime, boldFont));
+        document.add(new Chunk(separator));
 
         // Items Table (4 Columns: Item, Qty, Price, Total)
         PdfPTable table = new PdfPTable(4);
@@ -152,7 +139,6 @@ public class ReceiptPdfGenerator {
                 addTableCell(table, currencyFormat.format(price), normalFont, Element.ALIGN_RIGHT);
                 addTableCell(table, currencyFormat.format(lineTotal), normalFont, Element.ALIGN_RIGHT);
 
-                // Remark (italic)
                 if (!remark.trim().isEmpty()) {
                     PdfPCell remarkCell = new PdfPCell(new Phrase(" * " + remark, italicFont));
                     remarkCell.setColspan(4);
@@ -167,26 +153,79 @@ public class ReceiptPdfGenerator {
         document.add(table);
         document.add(new Chunk(separator));
 
-        // Total Amount & Payment Info
-        Object totalObj = orderData != null ? orderData.get("total_amount") : null;
-        BigDecimal finalTotal = totalObj != null ? new BigDecimal(totalObj.toString()) : calculatedTotal;
-        
-//        String payMethod = (orderData != null && orderData.get("payment_method") != null) 
-//                           ? orderData.get("payment_method").toString() : "Cash";
+        // =====================================================
+        // Subtotal, Discount & Total Calculation
+        // =====================================================
+        BigDecimal subtotal = calculatedTotal;
+        if (orderData != null && orderData.get("subtotal") != null) {
+            try {
+                subtotal = new BigDecimal(orderData.get("subtotal").toString());
+            } catch (Exception ignored) {}
+        }
+
+        // discount_amount သို့မဟုတ် discount key နှစ်ခုလုံးကို စစ်ပေးထားပါသည်
+        BigDecimal discountAmount = BigDecimal.ZERO;
+        if (orderData != null) {
+            if (orderData.get("discount_amount") != null) {
+                try {
+                    discountAmount = new BigDecimal(orderData.get("discount_amount").toString());
+                } catch (Exception ignored) {}
+            } else if (orderData.get("discount") != null) {
+                try {
+                    discountAmount = new BigDecimal(orderData.get("discount").toString());
+                } catch (Exception ignored) {}
+            }
+        }
+
+        BigDecimal finalTotal = subtotal.subtract(discountAmount);
+        if (finalTotal.compareTo(BigDecimal.ZERO) < 0) {
+            finalTotal = BigDecimal.ZERO;
+        }
+
+        // Subtotal
+        Paragraph subtotalPara = new Paragraph(
+                "Subtotal : " + currencyFormat.format(subtotal) + " MMK",
+                normalFont
+        );
+        subtotalPara.setAlignment(Element.ALIGN_RIGHT);
+        document.add(subtotalPara);
+
+     // Discount : 1,000 MMK ပြသခြင်း
+        if (discountAmount.compareTo(BigDecimal.ZERO) > 0) {
+            Paragraph discountPara = new Paragraph(
+                    "Discount : " + currencyFormat.format(discountAmount) + " MMK",
+                    normalFont
+            );
+            discountPara.setAlignment(Element.ALIGN_RIGHT);
+            document.add(discountPara);
+        }
+
+        // Divider
+        document.add(new Chunk(separator));
+
+        // Final Total
+        Paragraph totalPara = new Paragraph(
+                "TOTAL : " + currencyFormat.format(finalTotal) + " MMK",
+                boldFont
+        );
+        totalPara.setAlignment(Element.ALIGN_RIGHT);
+        document.add(totalPara);
+
+        // Payment Method
         String payMethod = (orderData != null && orderData.get("payment_method") != null)
                 ? orderData.get("payment_method").toString()
                 : "N/A";
 
-        Paragraph totalPara = new Paragraph("TOTAL : " + currencyFormat.format(finalTotal) + " MMK", boldFont);
-        totalPara.setAlignment(Element.ALIGN_RIGHT);
-        document.add(totalPara);
-
-        Paragraph payPara = new Paragraph("Paymethod: " + payMethod, normalFont);
+        Paragraph payPara = new Paragraph(
+                "Paymethod: " + payMethod,
+                normalFont
+        );
         payPara.setAlignment(Element.ALIGN_RIGHT);
         document.add(payPara);
 
         // Payment Note
-        if (orderData != null && orderData.get("payment_note") != null && !orderData.get("payment_note").toString().trim().isEmpty()) {
+        if (orderData != null && orderData.get("payment_note") != null 
+                && !orderData.get("payment_note").toString().trim().isEmpty()) {
             Paragraph notePara = new Paragraph("Note: " + orderData.get("payment_note").toString(), italicFont);
             notePara.setAlignment(Element.ALIGN_RIGHT);
             document.add(notePara);
