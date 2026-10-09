@@ -18,14 +18,14 @@
                 </div>
                 <h5 class="mb-3">Are you sure you want to permanently delete this?</h5>
                 <p class="text-muted mb-4">
-                    Import ID: <strong class="text-dark" th:text="${import_id}">SI-001</strong><br>
-                    This action will permanently delete the stock import record and all related ingredient batches from the database. <strong class="text-danger">This process cannot be undone.</strong>
+                    Type ID: <strong class="text-dark" th:text="${typeId}">ING-001</strong><br>
+                    This action will permanently delete the ingredient type record from the database. <strong class="text-danger">This process cannot be undone.</strong>
                 </p>
 
-                <form th:action="@{/stock-imports/hard-delete}" method="post">
-                    <input type="hidden" name="import_id" th:value="${import_id}" />
+                <form th:action="@{/ingredient-types/hard-delete}" method="post">
+                    <input type="hidden" name="typeId" th:value="${typeId}" />
                     <div class="d-flex justify-content-center gap-3">
-                        <a th:href="@{/stock-imports/deleted}" class="btn btn-outline-secondary px-4">Cancel</a>
+                        <a th:href="@{/ingredient-types/deleted}" class="btn btn-outline-secondary px-4">Cancel</a>
                         <button type="submit" class="btn btn-danger px-4 fw-bold">Delete Permanently</button>
                     </div>
                 </form>

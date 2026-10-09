@@ -1,106 +1,135 @@
 package cafe.project.services;
 
-import org.springframework.stereotype.Service;
+import cafe.project.models.IngredientBatchEntryDto;
 import cafe.project.models.IngredientBatchItemDto;
 import cafe.project.models.StockImportEntryDto;
 import cafe.project.models.StockImportListDto;
 import cafe.project.repositories.StockImportRepository;
 import cafe.project.repositories.entities.StockImport;
 import cafe.project.repositories.mappers.StockImportMapper;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class StockImportService {
-	private final StockImportRepository repository;
-	private final StockImportMapper mapper;
 
-	public StockImportService(StockImportRepository repository, StockImportMapper mapper) {
-		this.repository = repository;
-		this.mapper = mapper;
-	}
+    private final StockImportRepository repository;
+    private final StockImportMapper mapper;
 
-	public String generateNextImportId() {
-		return repository.generateNextImportId();
-	}
+    public StockImportService(StockImportRepository repository, StockImportMapper mapper) {
+        this.repository = repository;
+        this.mapper = mapper;
+    }
 
-	public void addStockImport(StockImportEntryDto dto, String loggedInemployee_id, String loggedInbranch_id) {
-		dto.setEmployee_id(loggedInemployee_id);
-		dto.setBranch_id(loggedInbranch_id);
+    public List<Map<String, Object>> getAllSuppliers() {
+        return repository.findAllSuppliers();
+    }
 
-		List<IngredientBatchItemDto> selectedItems = dto.getItems().stream().filter(IngredientBatchItemDto::isSelected)
-				.collect(Collectors.toList());
+    public List<IngredientBatchItemDto> getAllIngredientTypes() {
+        return repository.findAllIngredientTypes();
+    }
 
-		BigDecimal totalCost = BigDecimal.ZERO;
-		for (IngredientBatchItemDto item : selectedItems) {
-			double total = item.getQuantity_ordered() * item.getUnit_cost().doubleValue();
-			item.setTotal_import_cost(total);
-			totalCost = totalCost.add(BigDecimal.valueOf(total));
-		}
-		dto.setTotal_cost(totalCost);
+   
+    public void addStockImport(StockImportEntryDto dto, String loggedInEmployeeId, String loggedInBranchId) {
+        String import_id = UUID.randomUUID().toString();
+        dto.setImport_id(import_id);
+        dto.setEmployee_id(loggedInEmployeeId);
+        dto.setBranch_id(loggedInBranchId);
 
-		StockImport entity = mapper.toEntity(dto);
-		repository.saveStockImport(entity);
+     
+        List<IngredientBatchItemDto> selectedItems = dto.getItems().stream()
+                .filter(IngredientBatchItemDto::isSelected)
+                .collect(Collectors.toList());
 
-		for (IngredientBatchItemDto item : selectedItems) {
-			String batchId = "BATCH-" + UUID.randomUUID().toString().substring(0, 8);
-			repository.saveIngredientBatch(batchId, item, loggedInbranch_id, dto.getImport_id());
-		}
-	}
+        BigDecimal totalCost = BigDecimal.ZERO;
+        for (IngredientBatchItemDto item : selectedItems) {
+            double total = (item.getQuantity_ordered() != null ? item.getQuantity_ordered() : 0.0) *
+                           (item.getUnit_cost() != null ? item.getUnit_cost().doubleValue() : 0.0);
+            item.setTotal_import_cost(total);
+            totalCost = totalCost.add(BigDecimal.valueOf(total));
+        }
+        dto.setTotal_cost(totalCost);
 
-	public List<StockImportListDto> getAllActiveImports() {
-		return repository.findAllActive();
-	}
+        StockImport entity = mapper.toEntity(dto);
+        repository.saveStockImport(entity);
 
-	public List<StockImportListDto> getAllDeletedImports() {
-		return repository.findAllDeleted();
-	}
+        for (IngredientBatchItemDto item : selectedItems) {
+            String batch_id = "BATCH-" + UUID.randomUUID().toString().substring(0, 8);
+            repository.saveIngredientBatch(batch_id, item, loggedInBranchId, import_id);
+        }
+    }
 
-	public StockImportEntryDto getImportById(String import_id) {
-		StockImport entity = repository.findById(import_id)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid Import ID: " + import_id));
-		StockImportEntryDto dto = mapper.toEntryDto(entity);
-		dto.setItems(repository.findBatchesByImportId(import_id));
-		return dto;
-	}
+    public List<StockImportListDto> getAllActiveImports() {
+        return repository.findAllActive();
+    }
 
-	public void editStockImport(StockImportEntryDto dto) {
-		List<IngredientBatchItemDto> selectedItems = dto.getItems().stream().filter(IngredientBatchItemDto::isSelected)
-				.collect(Collectors.toList());
+    public List<StockImportListDto> getAllDeletedImports() {
+        return repository.findAllDeleted();
+    }
 
-		BigDecimal totalCost = BigDecimal.ZERO;
-		for (IngredientBatchItemDto item : selectedItems) {
-			double total = item.getQuantity_ordered() * item.getUnit_cost().doubleValue();
-			item.setTotal_import_cost(total);
-			totalCost = totalCost.add(BigDecimal.valueOf(total));
-		}
-		dto.setTotal_cost(totalCost);
+    public StockImportEntryDto getImportById(String import_id) {
+        StockImport entity = repository.findById(import_id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Import ID: " + import_id));
+        StockImportEntryDto dto = mapper.toEntryDto(entity);
+        dto.setItems(repository.findBatchesByImportId(import_id));
+        return dto;
+    }
 
-		StockImport entity = mapper.toEntity(dto);
-		repository.updateStockImport(entity);
+  
+    public void editStockImport(StockImportEntryDto dto) {
+        List<IngredientBatchItemDto> selectedItems = dto.getItems().stream()
+                .filter(IngredientBatchItemDto::isSelected)
+                .collect(Collectors.toList());
 
-		repository.deleteBatchesByImportId(dto.getImport_id());
-		for (IngredientBatchItemDto item : selectedItems) {
-			String batchId = "BATCH-" + UUID.randomUUID().toString().substring(0, 8);
-			repository.saveIngredientBatch(batchId, item, dto.getBranch_id(), dto.getImport_id());
-		}
-	}
+        BigDecimal totalCost = BigDecimal.ZERO;
+        for (IngredientBatchItemDto item : selectedItems) {
+            double total = (item.getQuantity_ordered() != null ? item.getQuantity_ordered() : 0.0) *
+                           (item.getUnit_cost() != null ? item.getUnit_cost().doubleValue() : 0.0);
+            item.setTotal_import_cost(total);
+            totalCost = totalCost.add(BigDecimal.valueOf(total));
+        }
+        dto.setTotal_cost(totalCost);
 
-	public void softDelete(String import_id) {
-		repository.softDelete(import_id);
-	}
+        StockImport entity = mapper.toEntity(dto);
+        repository.updateStockImport(entity);
 
-	public void recover(String import_id) {
-		repository.recover(import_id);
-	}
+        repository.deleteBatchesByImportId(dto.getImport_id());
+        for (IngredientBatchItemDto item : selectedItems) {
+            String batchId = "BATCH-" + UUID.randomUUID().toString().substring(0, 8);
+            repository.saveIngredientBatch(batchId, item, dto.getBranch_id(), dto.getImport_id());
+        }
+        
+    }
+    
+    
 
-	public void hardDelete(String import_id) {
-		repository.hardDelete(import_id);
-	}
+    public void softDelete(String import_id) { repository.softDelete(import_id); }
+    public void recover(String import_id) { repository.recover(import_id); }
+    public void hardDelete(String import_id) { repository.hardDelete(import_id); }
+    public List<IngredientBatchItemDto> getBatchesByImportId(String import_id) { return repository.findBatchesByImportId(import_id); }
+    
+  //for ingredientBatch
+    public void addIngredientBatchesToImport(IngredientBatchEntryDto dto, String loggedInBranchId) {
+        List<IngredientBatchItemDto> selectedItems = dto.getItems().stream()
+                .filter(IngredientBatchItemDto::isSelected)
+                .collect(Collectors.toList());
 
-	public List<IngredientBatchItemDto> getBatchesByImportId(String import_id) {
-		return repository.findBatchesByImportId(import_id);
-	}
+        for (IngredientBatchItemDto item : selectedItems) {
+            double total = (item.getQuantity_ordered() != null ? item.getQuantity_ordered() : 0.0) *
+                           (item.getUnit_cost() != null ? item.getUnit_cost().doubleValue() : 0.0);
+            item.setTotal_import_cost(total);
+
+            String batchId = "BATCH-" + UUID.randomUUID().toString().substring(0, 8);
+            repository.saveIngredientBatch(batchId, item, loggedInBranchId, dto.getImport_id());
+        }
+
+        
+        repository.recalculateTotalCost(dto.getImport_id());
+    }
 }

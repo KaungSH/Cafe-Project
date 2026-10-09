@@ -2,109 +2,166 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Stock Imports | Coffee Shop</title>
+<title>Stock Import List</title>
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 </head>
-<body class="container py-4">
-	<h2>Stock Import List</h2>
-	<a th:href="@{/stock-imports/add}" class="btn btn-primary mb-3">Add
-		New Stock Import</a>
-	<a th:href="@{/stock-imports/deleted}"
-		class="btn btn-secondary mb-3 float-end">View Detail List</a>
-
-	<table class="table table-bordered table-striped">
-		<thead>
-			<tr>
-				<th>Import ID</th>
-				<th>Imported At</th>
-				<th>Supplier</th>
-				<th>Employee</th>
-				<th>Branch</th>
-				<th>Total Cost</th>
-				<th>Status</th>
-				<th>Actions</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr th:each="imp : ${imports}">
-				<td th:text="${imp.import_id}">SI-001</td>
-				<td
-					th:text="${#temporals.format(imp.imported_at, 'yyyy-MM-dd HH:mm')}">2026-10-01</td>
-				<td th:text="${imp.supplier_name}">Supplier A</td>
-				<td th:text="${imp.employee_name}">Employee A</td>
-				<td th:text="${imp.branch_name}">Branch A</td>
-				<td th:text="${imp.total_cost}">100.00</td>
-				<td><span th:if="${imp.isedited}" class="badge bg-warning">Edited</span>
-					<span th:unless="${imp.isedited}" class="badge bg-success">Original</span>
-				</td>
-				<td><a
-					th:href="@{/stock-imports/edit/{id}(id=${imp.import_id})}"
-					class="btn btn-sm btn-outline-primary">Edit</a> <a
-					th:href="@{/stock-imports/soft-delete/{id}(id=${imp.import_id})}"
-					class="btn btn-sm btn-outline-danger"
-					onclick="return confirm('Soft delete this record?');">Delete</a>
-					<button type="button" class="btn btn-sm btn-info text-white"
-    th:attr="data-import-id=${imp.import_id}"
-    onclick="loadBatchDetails(this)"
-    data-bs-toggle="modal" data-bs-target="#detailModal">
-    View Detail
-</button>
-</td>
-			</tr>
-		</tbody>
-	</table>
-
-
-	<div class="modal fade" id="detailModal" tabindex="-1"
-		aria-hidden="true">
-		<div class="modal-dialog modal-lg">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Ingredient Batches Detail</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
+<body class="bg-light">
+	<div class="container my-5">
+		<div class="card shadow-sm border-0">
+			<div
+				class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-3">
+				<h4 class="mb-0">
+					<i class="bi bi-box-seam me-2"></i>Stock Import List
+				</h4>
+				<div>
+					<a th:href="@{/stock-imports/add}"
+						class="btn btn-light btn-sm fw-bold me-2"> <i
+						class="bi bi-plus-circle me-1"></i> Add New Stock Import
+					</a> <a th:href="@{/stock-imports/deleted}"
+						class="btn btn-outline-light btn-sm"> <i
+						class="bi bi-trash me-1"></i> View Deleted List
+					</a>
 				</div>
-				<div class="modal-body">
-					<table class="table table-sm table-bordered">
-						<thead>
+			</div>
+			<div class="card-body p-4">
+				<div class="table-responsive">
+					<table class="table table-hover align-middle">
+						<thead class="table-light">
 							<tr>
-								<th>Ingredient</th>
-								<th>Unit</th>
-								<th>Quantity</th>
-								<th>Unit Cost</th>
+								<th>Import ID</th>
+								<th>Imported At</th>
+								<th>Supplier</th>
+								<th>Employee</th>
+								<th>Branch</th>
 								<th>Total Cost</th>
-								<th>Mfg Date</th>
-								<th>Exp Date</th>
+								<th>Status</th>
+								<th class="text-center">Actions</th>
 							</tr>
 						</thead>
-						<tbody id="batchDetailBody"></tbody>
+						<tbody>
+							<tr th:each="imp : ${imports}">
+								<td class="fw-bold" th:text="${imp.import_id}">SI-001</td>
+								<td
+									th:text="${#temporals.format(imp.imported_at, 'yyyy-MM-dd HH:mm')}">2026-10-01
+									14:50</td>
+								<td th:text="${imp.supplier_name}">Supplier Name</td>
+								<td th:text="${imp.employee_name}">Employee Name</td>
+								<td th:text="${imp.branch_name}">Main Branch</td>
+								<td class="fw-bold text-success"
+									th:text="${#numbers.formatDecimal(imp.total_cost, 1, 2)}">200.00</td>
+								<td><span th:if="${imp.isedited}"
+									class="badge bg-warning text-dark">Edited</span> <span
+									th:unless="${imp.isedited}" class="badge bg-success">Original</span>
+								</td>
+								<td class="text-center">
+									<div class="btn-group btn-group-sm">
+										<a th:href="@{/stock-imports/edit/{id}(id=${imp.import_id})}"
+											class="btn btn-outline-primary">Edit</a> <a
+											th:href="@{/stock-imports/soft-delete/{id}(id=${imp.import_id})}"
+											class="btn btn-outline-danger"
+											onclick="return confirm('Soft delete this record?');">Delete</a>
+										
+										
+										<button type="button" class="btn btn-info text-white"
+											th:attr="data-import-id=${imp.import_id}"
+											onclick="loadBatchDetails(this)"
+											data-bs-toggle="modal" data-bs-target="#detailModal">View
+											Detail</button>
+											
+										<a
+											th:href="@{/ingredient-batches/add(import_id=${imp.import_id})}"
+											class="btn btn-success"> <i class="bi bi-plus"></i> Add
+											Ingredient Batch
+										</a>
+									</div>
+								</td>
+							</tr>
+							<tr th:if="${#lists.isEmpty(imports)}">
+								<td colspan="8" class="text-center text-muted py-4">No
+									active stock imports found.</td>
+							</tr>
+						</tbody>
 					</table>
 				</div>
 			</div>
 		</div>
 	</div>
 
+	<!-- Modal -->
+	<div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
+	    <div class="modal-dialog modal-lg modal-dialog-centered">
+	        <div class="modal-content">
+	            <div class="modal-header bg-info text-white">
+	                <h5 class="modal-title"><i class="bi bi-list-ul me-2"></i>Ingredient Batch Details</h5>
+	                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+	            </div>
+	            <div class="modal-body p-4">
+	                <div class="table-responsive">
+	                    <table class="table table-bordered align-middle mb-0">
+	                        <thead class="table-light">
+	                            <tr>
+	                                <th>Ingredient</th>
+	                                <th>Unit</th>
+	                                <th>Quantity</th>
+	                                <th>Unit Cost</th>
+	                                <th>Total Cost</th>
+	                                <th>Manufactured</th>
+	                                <th>Expire</th>
+	                            </tr>
+	                        </thead>
+	                        <tbody id="batchDetailBody"></tbody>
+	                    </table>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 	<script>
-    function loadBatchDetails(import_id) {
+    function loadBatchDetails(btnElement) {
+      
+        const importId = btnElement.getAttribute('data-import-id');
+        const body = document.getElementById('batchDetailBody');
+        
+        body.innerHTML = '<tr><td colspan="7" class="text-center py-3">Loading details...</td></tr>';
+        
         fetch('/stock-imports/detail-batches/' + importId)
             .then(response => response.json())
             .then(data => {
                 let html = '';
-                data.forEach(item => {
-                    html += `<tr>
-                        <td>${item.ingredientTypeName}</td>
-                        <td>${item.unit_name}</td>
-                        <td>${item.quantity_ordered}</td>
-                        <td>${item.unit_cost}</td>
-                        <td>${item.total_import_cost}</td>
-                        <td>${item.manufactured_date}</td>
-                        <td>${item.expire_date}</td>
-                    </tr>`;
-                });
-                document.getElementById('batchDetailBody').innerHTML = html;
+                if (!data || data.length === 0) {
+                    html = '<tr><td colspan="7" class="text-center text-muted py-3">No ingredient batches found for this import.</td></tr>';
+                } else {
+                    data.forEach(item => {
+                        let name = item.ingredient_type_name || item.ingredientTypeName || '-';
+                        let unit = item.unit_name || item.unitName || '-';
+                        let qty = item.quantity_ordered !== undefined ? item.quantity_ordered : (item.quantityOrdered || 0);
+                        let cost = item.unit_cost !== undefined ? item.unit_cost : (item.unitCost || 0);
+                        let total = item.total_import_cost !== undefined ? item.total_import_cost : (item.totalImportCost || 0);
+                        let mfg = item.manufactured_date || item.manufacturedDate || '-';
+                        let exp = item.expire_date || item.expireDate || '-';
+
+                        html += `<tr>
+                            <td class="fw-bold">${name}</td>
+                            <td>${unit}</td>
+                            <td>${qty}</td>
+                            <td>${parseFloat(cost).toFixed(2)}</td>
+                            <td class="fw-bold text-success">${parseFloat(total).toFixed(2)}</td>
+                            <td>${mfg}</td>
+                            <td>${exp}</td>
+                        </tr>`;
+                    });
+                }
+                body.innerHTML = html;
+            })
+            .catch(err => {
+                console.error('Error fetching batch details:', err);
+                body.innerHTML = '<tr><td colspan="7" class="text-center text-danger py-3">Failed to load details.</td></tr>';
             });
     }
 </script>
