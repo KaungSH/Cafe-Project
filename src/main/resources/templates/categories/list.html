@@ -295,7 +295,7 @@ body {
 					<i class="fa-regular fa-bell"></i>
 				</div>
 				<div class="profile-card">
-					<!-- Product မှာသုံးထားတဲ့ Manager Thura ပုံအတိုင်း တိကျစွာ ချိတ်ဆက်ထားခြင်း -->
+					
 					<img th:src="@{/images/Manager_Thura.jpg}" 
 					     src="/images/Manager_Thura.jpg" 
 					     alt="Manager Thura" 
@@ -379,7 +379,7 @@ body {
 								<span class="text-muted text-truncate d-inline-block" style="max-width: 280px;" th:text="${category.description}">Coffee and hot beverages</span>
 							</td>
 							
-							<!-- Status: Active သို့မဟုတ် Inactive တစ်ခုတည်းသာ သီးသန့်ပြသခြင်း -->
+							
 							<td class="text-center">
 								<span th:if="${category.is_active == true}" class="badge-status badge-active">Active</span>
 								<span th:if="${category.is_active == false or category.is_active == null}" class="badge-status badge-inactive">Inactive</span>
@@ -397,7 +397,7 @@ body {
 							</td>
 						</tr>
 
-						<!-- Empty State: Data အမှန်တကယ်မရှိမှသာ ပြသမည် -->
+					
 						<tr th:if="${categories == null or #lists.isEmpty(categories)}">
 							<td colspan="7" class="text-center py-5 text-muted fst-italic">
 								<i class="fa-solid fa-box-open fs-2 mb-2 d-block text-secondary opacity-50"></i>

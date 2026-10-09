@@ -666,7 +666,7 @@ body {
 
 	</div>
 
-	<!-- Bootstrap Bundle JS (fragment အတွင်းတွင် ထည့်သွင်းထားပါသည်) -->
+	
 	<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 
 	<!-- Profile Instant Update & LocalStorage Persistence Script -->
@@ -675,13 +675,12 @@ body {
 			const profileInput = document.getElementById("profileFileInput");
 			const profileImg = document.getElementById("managerProfileImg");
 
-			// ၁။ ယခင်က သိမ်းဆည်းခဲ့ဖူးသော ပုံရှိပါက ချက်ချင်းပြန်ပြပေးမည်
+			
 			const savedProfileImage = localStorage.getItem("manager_profile_avatar");
 			if (savedProfileImage && profileImg) {
 				profileImg.src = savedProfileImage;
 			}
 
-			// ၂။ ပုံအသစ် ရွေးလိုက်တာနဲ့ ချက်ချင်း Preview ပြောင်းပြီး LocalStorage တွင် သိမ်းဆည်းမည်
 			if (profileInput && profileImg) {
 				profileInput.addEventListener("change", function (event) {
 					const file = event.target.files[0];

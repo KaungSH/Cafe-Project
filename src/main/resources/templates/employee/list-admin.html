@@ -2,69 +2,152 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Employee Management</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Directory | Café Luft</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-canvas: #fcf9f5;
+            --surface: #ffffff;
+            --espresso: #1f140e;
+            --caramel: #c49a6c;
+            --border-subtle: #f0e9df;
+            --text-dark: #2a1d17;
+            --active-bg: #eaf6ed;
+            --active-text: #2d7a46;
+            --leave-bg: #fdf5e6;
+            --leave-text: #b8860b;
+        }
+        body { background-color: var(--bg-canvas); font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-dark); }
+        .main-wrapper { max-width: 1400px; margin: 40px auto; padding: 0 20px; }
+        .cafe-header-banner {
+            background: linear-gradient(135deg, #1f140e 0%, #2e1c12 50%, #150d08 100%);
+            border-radius: 20px; padding: 24px 35px; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 14px 30px rgba(27, 17, 11, 0.18);
+        }
+        .brand-section { display: flex; align-items: center; gap: 16px; }
+        .brand-logo-circle {
+            width: 54px; height: 54px; border-radius: 50%; background: #ffffff;
+            display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(243, 203, 161, 0.35);
+        }
+        .brand-name { font-family: 'Playfair Display', serif; font-size: 1.65rem; color: #ffffff; font-weight: 700; margin: 0; }
+        .brand-subtitle { color: var(--caramel); font-size: 0.72rem; letter-spacing: 1.8px; text-transform: uppercase; font-weight: 600; }
+        .btn-recycle {
+            background: rgba(255, 255, 255, 0.08); color: #f3ece4; border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 12px; padding: 9px 20px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-size: 0.88rem;
+        }
+        .btn-add-primary {
+            background: linear-gradient(135deg, #c49a6c 0%, #aa7e4e 100%); color: #ffffff; border: none;
+            border-radius: 12px; padding: 10px 22px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-size: 0.88rem;
+        }
+        .table-card {
+            background: var(--surface); border-radius: 20px; border: 1px solid var(--border-subtle);
+            box-shadow: 0 10px 30px rgba(42, 29, 23, 0.04); padding: 20px 28px; margin-top: 24px;
+        }
+        .cafe-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        .cafe-table thead th {
+            font-size: 0.74rem; font-weight: 700; color: #5c4335; text-transform: uppercase;
+            letter-spacing: 1.2px; padding: 16px 14px; border-bottom: 1.5px solid var(--border-subtle);
+        }
+        .cafe-table tbody tr:not(:last-child) td { border-bottom: 1px solid var(--border-subtle); }
+        .cafe-table tbody tr:hover { background-color: #faf7f2; }
+        .cafe-table tbody td { padding: 15px 14px; vertical-align: middle; font-size: 0.9rem; }
+        .user-avatar { width: 42px; height: 42px; border-radius: 10px; object-fit: cover; border: 1.5px solid #ebdccb; }
+        .user-initials {
+            width: 42px; height: 42px; border-radius: 10px; background: #faf5ee; border: 1px solid #ebdccb;
+            display: inline-flex; align-items: center; justify-content: center; font-weight: 700; color: #6a4933;
+        }
+        .badge-status {
+            font-size: 0.75rem; font-weight: 600; padding: 5px 12px; border-radius: 30px;
+            display: inline-flex; align-items: center; gap: 5px;
+        }
+        .badge-status.normal { background: var(--active-bg); color: var(--active-text); }
+        .badge-status.onleave { background: var(--leave-bg); color: var(--leave-text); }
+        .btn-action-icon {
+            width: 32px; height: 32px; border-radius: 8px; border: 1px solid #ebdccb; background: #fff;
+            display: inline-flex; align-items: center; justify-content: center; color: #7a6556; text-decoration: none;
+        }
+        .btn-action-icon:hover { border-color: var(--caramel); color: var(--caramel); background: #faf6f0; }
+        .btn-action-icon.danger { border-color: #fad4d0; color: #cb5a4c; }
+        .btn-action-icon.danger:hover { background: #fdf2f0; color: #a72d1f; }
+    </style>
 </head>
-<body class="container mt-4">
-
-    <h2 class="mb-3">Employee List</h2>
-    
-    <div class="d-flex justify-content-between mb-3">
-        <a th:href="@{/admin/employee/add}" class="btn btn-primary">+ Add Employee</a>
-        <a th:href="@{/admin/employee/fired}" class="btn btn-secondary">See Fired Employees</a>
+<body>
+<div class="main-wrapper">
+    <div class="cafe-header-banner">
+        <div class="brand-section">
+            <div class="brand-logo-circle"><i class="bi bi-cup-hot-fill" style="font-size: 24px; color: #5c3a21;"></i></div>
+            <div>
+                <h1 class="brand-name">Café Luft</h1>
+                <div class="brand-subtitle"><i class="bi bi-people-fill"></i> EMPLOYEE ROSTER MANAGEMENT</div>
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <a th:href="@{/admin/employee/fired}" class="btn-recycle"><i class="bi bi-archive"></i> Fired Archives</a>
+            <a th:href="@{/admin/employee/add}" class="btn-add-primary">+ Add Employee</a>
+        </div>
     </div>
 
-    <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-            <tr>
-                <th>No.</th>
-                <th>Photo</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Address</th>
-                <th>DateofBirth</th>
-                <th>Gender</th>
-                <th>Role</th>
-                <th>Branch</th>
-                <th>Salary</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="emp,state : ${employees}">
-                <td th:text="${state.count}"></td>
-                <td><img th:if="${emp.photopath != null and emp.photopath  != ''}"
-							th:src="@{'/images/' + ${emp.photopath}}" alt="image error"
-							style="width: 40px; height: 40px; object-fit: contain; border-radius: 8px;" />
-
-							<span th:if="${emp.photopath == null or emp.photopath == ''}"
-							class="text-muted"> — </span></td>
-                <td th:text="${emp.name}"></td>
-                <td th:text="${emp.email}"></td>
-                <td th:text="${emp.phone}"></td>
-                <td th:text="${emp.address}"></td>
-                <td th:text="${emp.dob}"></td>
-                <td th:text="${emp.gender}"></td>
-                <td th:text="${emp.role_name}"></td>
-                <td th:text="${emp.branch_name}"></td>
-                <td th:text="${emp.salary}"></td>
-                <td th:text="${emp.status_name}"></td>
-                <td>
-                    <a th:href="@{/admin/employee/edit/{id}(id=${emp.employee_id})}" class="btn btn-warning btn-sm">Edit</a>
-                    <a th:href="@{/admin/employee/transfer/{id}(id=${emp.employee_id})}" class="btn btn-warning btn-sm">Transfer</a>
-                    <a th:if="${emp.status_name == 'NORMAL'}" th:href="@{/admin/employee/setonleave/{id}(id=${emp.employee_id})}"  
-                       class="btn btn-danger btn-sm">Set On Leave</a>
-                   	<a th:if="${emp.status_name == 'ONLEAVE'}" th:href="@{/admin/employee/setnormal/{id}(id=${emp.employee_id})}"  
-                       class="btn btn-danger btn-sm">Set Normal</a>
-                    <a th:href="@{/admin/employee/fire/{id}(id=${emp.employee_id})}" 
-                       onclick="return confirm('Do not Really want to fire this Employee?')" 
-                       class="btn btn-danger btn-sm">Fire</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
+    <div class="table-card">
+        <div class="table-responsive">
+            <table class="cafe-table">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Photo</th>
+                        <th>Name</th>
+                        <th>Contact</th>
+                        <th>Branch</th>
+                        <th>Role</th>
+                        <th>Salary</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="emp, state : ${employees}">
+                        <td class="text-muted fw-bold" th:text="${state.count < 10 ? '0' + state.count : state.count}">01</td>
+                        <td>
+                            <img th:if="${emp.photopath != null and emp.photopath != ''}" th:src="@{'/images/' + ${emp.photopath}}" alt="Photo" class="user-avatar" />
+                            <div th:unless="${emp.photopath != null and emp.photopath != ''}" class="user-initials" th:text="${#strings.substring(emp.name, 0, 1)}">U</div>
+                        </td>
+                        <td>
+                            <strong style="color: var(--espresso);" th:text="${emp.name}">Employee Name</strong>
+                            <div class="text-muted small" th:text="${emp.gender}">MALE</div>
+                        </td>
+                        <td>
+                            <div th:text="${emp.email}">email@cafeluft.com</div>
+                            <small class="text-muted" th:text="${emp.phone}">+95912345678</small>
+                        </td>
+                        <td><span class="badge" style="background: #f7f3ed; color: #6a4933; border: 1px solid #ebdccb;" th:text="${emp.branch_name}">Main</span></td>
+                        <td><span class="fw-semibold text-muted" th:text="${emp.role_name}">BARISTA</span></td>
+                        <td class="fw-bold" style="color: #4a2e1b;" th:text="${emp.salary}">$650.00</td>
+                        <td>
+                            <span th:if="${emp.status_name == 'NORMAL'}" class="badge-status normal"><i class="bi bi-check2"></i> Active</span>
+                            <span th:if="${emp.status_name == 'ONLEAVE'}" class="badge-status onleave"><i class="bi bi-clock-history"></i> On Leave</span>
+                            <span th:if="${emp.status_name != 'NORMAL' and emp.status_name != 'ONLEAVE'}" class="badge-status" style="background: #f1edeb; color: #8c827a;" th:text="${emp.status_name}">Status</span>
+                        </td>
+                        <td class="text-end">
+                            <div class="d-inline-flex gap-2">
+                                <a th:href="@{/admin/employee/edit/{id}(id=${emp.employee_id})}" class="btn-action-icon" title="Edit"><i class="bi bi-pencil-square"></i></a>
+                                <a th:href="@{/admin/employee/transfer/{id}(id=${emp.employee_id})}" class="btn-action-icon" title="Transfer"><i class="bi bi-arrow-left-right"></i></a>
+                                <a th:if="${emp.status_name == 'NORMAL'}" th:href="@{/admin/employee/setonleave/{id}(id=${emp.employee_id})}" class="btn-action-icon" title="Set On Leave"><i class="bi bi-pause-circle"></i></a>
+                                <a th:if="${emp.status_name == 'ONLEAVE'}" th:href="@{/admin/employee/setnormal/{id}(id=${emp.employee_id})}" class="btn-action-icon" title="Set Normal"><i class="bi bi-play-circle"></i></a>
+                                <a th:href="@{/admin/employee/fire/{id}(id=${emp.employee_id})}" onclick="return confirm('Do you really want to fire this employee?')" class="btn-action-icon danger" title="Fire"><i class="bi bi-person-x"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(employees)}">
+                        <td colspan="9" class="text-center py-5 text-muted">
+                            <i class="bi bi-inbox fs-2 d-block mb-2"></i> No employee records found.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 </body>
 </html>
