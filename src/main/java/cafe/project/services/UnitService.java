@@ -1,5 +1,7 @@
 package cafe.project.services;
 
+
+
 import java.util.List;
 import java.util.UUID;
 
@@ -9,15 +11,15 @@ import cafe.project.models.UnitDto;
 import cafe.project.repositories.UnitRepository;
 import cafe.project.repositories.entities.Unit;
 
+
+
 @Service
 public class UnitService {
 
     private final UnitRepository repo;
-    private final EmployeeService eservice;
 
-    public UnitService(UnitRepository repo, EmployeeService eservice) {
+    public UnitService(UnitRepository repo) {
         this.repo = repo;
-        this.eservice = eservice;
     }
 
     public List<UnitDto> findAll() {
@@ -36,13 +38,18 @@ public class UnitService {
         return toDto(entity);
     }
 
-    public int add(Unit unit) {
-        unit.setUnit_id(UUID.randomUUID().toString());
-        return repo.save(unit);
+    public int add(UnitDto dto) {
+
+        Unit entity = toEntity(dto);
+        entity.setUnit_id(UUID.randomUUID().toString());
+        return repo.save(entity);
     }
 
-    public int edit(String id, Unit unit) {
-        return repo.edit(id, unit);
+    public int edit(String id, UnitDto dto) {
+
+        Unit entity = toEntity(dto);
+
+        return repo.edit(id, entity);
     }
 
     public int delete(String id) {
@@ -67,11 +74,7 @@ public class UnitService {
         UnitDto dto = new UnitDto();
 
         dto.setUnit_id(entity.getUnit_id());
-        if(eservice.getEmployeeByIdAdmin(entity.getEmployee_id()) != null) {
-        dto.setEmployee_name(eservice.getEmployeeByIdAdmin(entity.getEmployee_id()).getName());
-        } else {
-        	dto.setEmployee_name(null);
-        }
+        dto.setEmployee_id(entity.getEmployee_id());
         dto.setName(entity.getName());
         dto.setAbbreviation(entity.getAbbreviation());
         dto.setIs_active(entity.getIs_active());
@@ -80,5 +83,21 @@ public class UnitService {
         dto.setCreated_at(entity.getCreated_at());
 
         return dto;
+    }
+
+    private Unit toEntity(UnitDto dto) {
+
+        Unit entity = new Unit();
+
+        entity.setUnit_id(dto.getUnit_id());
+        entity.setEmployee_id(dto.getEmployee_id());
+        entity.setName(dto.getName());
+        entity.setAbbreviation(dto.getAbbreviation());
+        entity.setIs_active(dto.isIs_active());
+        entity.setIsdeleted(dto.isIsedited());
+        entity.setIsdeleted(dto.isIsdeleted());
+        entity.setCreated_at(dto.getCreated_at());
+
+        return entity;
     }
 }

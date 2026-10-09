@@ -11,7 +11,7 @@ public class OrderDetails {
 	private String remark;
 	private String product_name;
 	private BigDecimal price;
-
+	
 	public OrderDetails() {
 	}
 

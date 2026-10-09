@@ -111,7 +111,9 @@ public class UnitRepository {
 		int i = 0;
 		for (String childId : getChildIds(unit_id)) {
 			DeleteRecord dr = new DeleteRecord();
-			dr.setParent_id(unit_id); dr.setParent_table_name("units"); dr.setChild_id(childId); dr.setChild_table_name("ingredient_types");
+			dr.setParent_id(unit_id); dr.setParent_table_name("units"); 
+			dr.setChild_id(childId); 
+			dr.setChild_table_name("ingredient_types");
 			deleteRecordRepo.recordDelete(dr);
 			i++;
 		}

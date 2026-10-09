@@ -59,7 +59,7 @@ public class UnitDto{
 		this.abbreviation = abbreviation;
 	}
 
-	public boolean getIs_active() {
+	public boolean isIs_active() {
 		return is_active;
 	}
 
@@ -67,7 +67,7 @@ public class UnitDto{
 		this.is_active = is_active;
 	}
 
-	public boolean getIsedited() {
+	public boolean isIsedited() {
 		return isedited;
 	}
 
@@ -75,7 +75,7 @@ public class UnitDto{
 		this.isedited = isedited;
 	}
 
-	public boolean getIsdeleted() {
+	public boolean isIsdeleted() {
 		return isdeleted;
 	}
 
@@ -91,5 +91,5 @@ public class UnitDto{
 		this.created_at = created_at;
 	}
 
-
+	
 }

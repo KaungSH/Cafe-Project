@@ -1,75 +1,101 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Edit Stock Import</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 </head>
-<body class="container py-4">
-    <div class="card p-4">
-        <h3>Edit Stock Import</h3>
-        <form th:action="@{/stock-imports/edit}" th:object="${stockImport}" method="post">
-            <input type="hidden" th:field="*{employee_id}" />
-            <input type="hidden" th:field="*{branch_id}" />
-
-            <div class="row mb-3">
-                <div class="col-md-3">
-                    <label>Import ID:</label>
-                    <input type="text" th:field="*{import_id}" class="form-control" readonly />
-                </div>
-                <div class="col-md-3">
-                    <label>Imported At:</label>
-                    <input type="datetime-local" th:field="*{imported_at}" class="form-control" required />
-                </div>
-                <div class="col-md-3">
-                    <label>Supplier:</label>
-                    <select th:field="*{supplier_id}" class="form-select" required>
-                        <option value="SUP-001">Supplier A</option>
-                        <option value="SUP-002">Supplier B</option>
-                    </select>
-                </div>
+<body class="bg-light">
+    <div class="container my-5">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-warning text-dark py-3">
+                <h4 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Edit Stock Import</h4>
             </div>
+            <div class="card-body p-4">
+                <form th:action="@{/stock-imports/edit}" th:object="${stockImport}" method="post">
+                    
+                    <input type="hidden" th:field="*{import_id}" />
+                    <input type="hidden" th:field="*{employee_id}" />
+                    <input type="hidden" th:field="*{branch_id}" />
 
-            <h5 class="mt-4">Ingredients</h5>
-            <table class="table table-bordered align-middle">
-                <thead>
-                    <tr>
-                        <th>Select</th>
-                        <th>Ingredient</th>
-                        <th>Unit</th>
-                        <th>Quantity</th>
-                        <th>Unit Cost</th>
-                        <th>Manufactured</th>
-                        <th>Expire</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="item, stat : *{items}">
-                        <td>
-                            <input type="checkbox" th:field="*{items[__${stat.index}__].selected}" />
-                            <input type="hidden" th:field="*{items[__${stat.index}__].ingredientTypeId}" />
-                        </td>
-                        <td th:text="${item.ingredientTypeName}">Sugar</td>
-                        <td th:text="${item.unit_name}">kg</td>
-                        <td>
-                            <input type="number" step="0.01" th:field="*{items[__${stat.index}__].quantity_ordered}" class="form-control" />
-                        </td>
-                        <td>
-                            <input type="number" step="0.01" th:field="*{items[__${stat.index}__].unit_cost}" class="form-control" />
-                        </td>
-                        <td>
-                            <input type="date" th:field="*{items[__${stat.index}__].manufactured_date}" class="form-control" />
-                        </td>
-                        <td>
-                            <input type="date" th:field="*{items[__${stat.index}__].expire_date}" class="form-control" />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Imported At</label>
+                            <!-- Imported At Format ပြင်ထားသည် -->
+                            <input type="datetime-local" 
+                                   name="imported_at"
+                                   th:value="${stockImport.imported_at != null ? #temporals.format(stockImport.imported_at, 'yyyy-MM-dd''T''HH:mm') : ''}" 
+                                   class="form-control" required />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Supplier</label>
+                            <select th:field="*{supplier_id}" class="form-select" required>
+                                <option th:each="sup : ${suppliers}" 
+                                        th:value="${sup.supplier_id}" 
+                                        th:text="${sup.name}">Supplier Name</option>
+                            </select>
+                        </div>
+                    </div>
 
-            <div class="text-end">
-                <button type="submit" class="btn btn-warning">[ Update Stock Import ]</button>
+                    <h5 class="border-bottom pb-2 mb-3"><i class="bi bi-card-checklist me-2"></i>Update Ingredient Batches</h5>
+                    
+                    <div class="table-responsive mb-4">
+                        <table class="table table-bordered align-middle">
+                            <thead class="table-light">
+                                <tr class="text-center">
+                                    <th style="width: 50px;">Select</th>
+                                    <th>Ingredient</th>
+                                    <th style="width: 100px;">Unit</th>
+                                    <th style="width: 130px;">Quantity</th>
+                                    <th style="width: 130px;">Unit Cost</th>
+                                    <th style="width: 160px;">Manufactured</th>
+                                    <th style="width: 160px;">Expire</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="item, stat : *{items}">
+                                    <td class="text-center">
+                                        <input type="checkbox" class="form-check-input" 
+                                               th:field="*{items[__${stat.index}__].selected}" />
+                                        <input type="hidden" th:field="*{items[__${stat.index}__].ingredientTypeId}" />
+                                    </td>
+                                    <td class="fw-bold" th:text="${item.ingredientTypeName}">Sugar</td>
+                                    <td class="text-center" th:text="${item.Uname}">kg</td>
+                                    <td>
+                                        <input type="number" step="0.01" th:field="*{items[__${stat.index}__].quantity_ordered}" class="form-control" />
+                                    </td>
+                                    <td>
+                                        <input type="number" step="0.01" th:field="*{items[__${stat.index}__].unit_cost}" class="form-control" />
+                                    </td>
+                                    
+                                    <!-- Manufactured Date Format ပြင်ထားသည် -->
+                                    <td>
+                                        <input type="date" 
+                                               th:name="|items[${stat.index}].manufactured_date|"
+                                               th:value="${item.manufactured_date != null ? #temporals.format(item.manufactured_date, 'yyyy-MM-dd') : #temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}" 
+                                               class="form-control" />
+                                    </td>
+                                    
+                                    <!-- Expire Date Format ပြင်ထားသည် -->
+                                    <td>
+                                        <input type="date" 
+                                               th:name="|items[${stat.index}].expire_date|"
+                                               th:value="${item.expire_date != null ? #temporals.format(item.expire_date, 'yyyy-MM-dd') : #temporals.format(#temporals.createNow().plusYears(1), 'yyyy-MM-dd')}" 
+                                               class="form-control" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a th:href="@{/stock-imports}" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-warning px-4 fw-bold">Update Stock Import</button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 </body>
 </html>

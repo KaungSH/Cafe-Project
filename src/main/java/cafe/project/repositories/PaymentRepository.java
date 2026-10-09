@@ -55,6 +55,20 @@ public class PaymentRepository {
 		return jdbcTemplate.queryForObject(sql, new PaymentMapper(), id);
 	}
 
+	public boolean existsByOrderId(String orderId) {
+
+		String sql = """
+				SELECT COUNT(*)
+				FROM payments
+				WHERE order_id = ?
+				AND isdeleted = false
+				""";
+
+		Integer count = jdbcTemplate.queryForObject(sql, Integer.class, orderId);
+
+		return count != null && count > 0;
+	}
+
 	public int save(Payment payment) {
 
 		String sql = "INSERT INTO payments " + "(payment_id, order_id, paid_time, method_id, note, "

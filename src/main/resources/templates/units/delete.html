@@ -4,7 +4,6 @@
 	layout:decorate="~{common/layout}">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Delete Unit - Café Luft</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -22,18 +21,6 @@
             --danger-tint: #c0392b;
         }
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--cream-bg);
-            color: var(--text-dark);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 30px 15px;
-            margin: 0;
-        }
-
         .confirm-card {
             background: #ffffff;
             border-radius: 28px;
@@ -43,6 +30,7 @@
             width: 100%;
             max-width: 440px;
             text-align: center;
+            margin: 40px auto;
         }
 
         .danger-icon-box {
@@ -131,25 +119,28 @@
 <body>
 
     <div layout:fragment="content">
-        <div class="danger-icon-box">
-            <i class="fa-solid fa-trash-can"></i>
-        </div>
-        <h2 class="confirm-title">Delete Unit</h2>
-        <p class="confirm-desc">Are you sure you want to move this unit to the deleted list? You can restore it later if needed.</p>
-
-        <form th:action="@{/units/delete}" th:object="${unit}" method="post">
-            <input type="hidden" th:field="*{unit_id}">
-
-            <div class="unit-preview-box">
-                <span class="unit-preview-name" th:text="${unit.name}">Kilogram</span>
-                <span class="badge bg-light text-dark border ms-2" th:text="${unit.abbreviation}">kg</span>
+        <div class="confirm-card">
+            <div class="danger-icon-box">
+                <i class="fa-solid fa-trash-can"></i>
             </div>
+            <h2 class="confirm-title">Delete Unit</h2>
+            <p class="confirm-desc">Are you sure you want to move this unit to the deleted list? You can restore it later if needed.</p>
 
-            <button type="submit" class="btn-danger-confirm">
-                <i class="fa-solid fa-trash-can me-2"></i>Yes, Delete
-            </button>
-            <a th:href="@{/units}" class="btn-cancel">Cancel</a>
-        </form>
+            <form th:action="@{/units/delete}" th:object="${unit}" method="post">
+                <!-- Ensure this matches your Java Entity property (e.g., unitId or id) -->
+                <input type="hidden" th:field="*{unit_id}">
+
+                <div class="unit-preview-box">
+                    <span class="unit-preview-name" th:text="${unit.name}">Kilogram</span>
+                    <span class="badge bg-light text-dark border ms-2" th:text="${unit.abbreviation}">kg</span>
+                </div>
+
+                <button type="submit" class="btn-danger-confirm">
+                    <i class="fa-solid fa-trash-can me-2"></i>Yes, Delete
+                </button>
+                <a th:href="@{/units}" class="btn-cancel">Cancel</a>
+            </form>
+        </div>
     </div>
 
 </body>

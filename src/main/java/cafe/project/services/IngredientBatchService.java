@@ -1,5 +1,6 @@
 package cafe.project.services;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
@@ -50,5 +51,27 @@ public class IngredientBatchService {
 
 	public void hardDeleteBatch(String id) {
 		repository.hardDelete(id);
+	}
+	
+	public BigDecimal getAvailableQuantity(
+	        String ingredientTypeId,
+	        String branchId) {
+
+	    return repository.getAvailableQuantity(
+	            ingredientTypeId,
+	            branchId
+	    );
+	}
+	
+	public void reduceStockFIFO(
+	        String ingredientTypeId,
+	        String branchId,
+	        BigDecimal quantity) {
+
+	    repository.reduceStockFIFO(
+	            ingredientTypeId,
+	            branchId,
+	            quantity
+	    );
 	}
 }

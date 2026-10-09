@@ -1,5 +1,6 @@
 package cafe.project.repositories;
 
+import java.math.BigDecimal;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -90,5 +91,85 @@ public class IngredientBatchRepository {
 	public void hardDelete(String batchId) {
 		String sql = "DELETE FROM ingredient_batches WHERE batch_id = ?";
 		jdbcTemplate.update(sql, batchId);
+	}
+
+	public BigDecimal getAvailableQuantity(String ingredientTypeId, String branchId) {
+
+		String sql = """
+				SELECT COALESCE(SUM(remaining_quantity), 0)
+				FROM ingredient_batches
+				WHERE ingredient_type_id = ?
+				AND branch_id = ?
+				AND isdeleted = 0
+				AND expire_date >= CURRENT_DATE
+				AND remaining_quantity > 0
+				""";
+
+		return jdbcTemplate.queryForObject(sql, BigDecimal.class, ingredientTypeId, branchId);
+	}
+
+	public void reduceStockFIFO(String ingredientTypeId, String branchId, BigDecimal quantity) {
+
+		String selectSql = """
+				SELECT ib.*,
+				       b.name AS branch_name,
+				       it.name AS ingredient_type_name
+				FROM ingredient_batches ib
+				LEFT JOIN branches b
+				    ON ib.branch_id = b.branch_id
+				LEFT JOIN ingredient_types it
+				    ON ib.ingredient_type_id = it.ingredient_type_id
+				WHERE ib.ingredient_type_id = ?
+				AND ib.branch_id = ?
+				AND ib.isdeleted = 0
+				AND ib.expire_date >= CURRENT_DATE
+				AND ib.remaining_quantity > 0
+				ORDER BY ib.expire_date ASC, ib.created_at ASC
+				""";
+
+		List<IngredientBatch> batches = jdbcTemplate.query(selectSql, new IngredientBatchMapper(), ingredientTypeId,
+				branchId);
+
+		BigDecimal remainingToUse = quantity;
+
+		for (IngredientBatch batch : batches) {
+
+			if (remainingToUse.compareTo(BigDecimal.ZERO) <= 0) {
+				break;
+			}
+
+			BigDecimal batchRemaining = batch.getRemaining_quantity();
+
+			if (batchRemaining.compareTo(remainingToUse) >= 0) {
+
+				BigDecimal newRemaining = batchRemaining.subtract(remainingToUse);
+
+				String updateSql = """
+						UPDATE ingredient_batches
+						SET remaining_quantity = ?
+						WHERE batch_id = ?
+						""";
+
+				jdbcTemplate.update(updateSql, newRemaining, batch.getBatch_id());
+
+				remainingToUse = BigDecimal.ZERO;
+
+			} else {
+
+				String updateSql = """
+						UPDATE ingredient_batches
+						SET remaining_quantity = 0
+						WHERE batch_id = ?
+						""";
+
+				jdbcTemplate.update(updateSql, batch.getBatch_id());
+
+				remainingToUse = remainingToUse.subtract(batchRemaining);
+			}
+		}
+
+		if (remainingToUse.compareTo(BigDecimal.ZERO) > 0) {
+			throw new IllegalArgumentException("Not enough ingredient stock.");
+		}
 	}
 }

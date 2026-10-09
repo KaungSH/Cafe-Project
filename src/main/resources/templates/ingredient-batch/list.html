@@ -94,8 +94,8 @@ body {
 				milk and beans — sorted by what runs out soonest.</p>
 		</div>
 		<div class="d-flex gap-2">
-			<a th:href="@{/ingredient-batches/add}" class="btn btn-primary">+
-				Add New Batch</a> <a th:href="@{/ingredient-batches/deleted-list}"
+		<!--  	<a th:href="@{/ingredient-batches/add}" class="btn btn-primary">+
+				Add New Batch</a>--> <a th:href="@{/ingredient-batches/deleted-list}"
 				class="btn btn-outline-danger">Trash / Deleted Batches</a>
 		</div>
 	</div>
@@ -117,7 +117,7 @@ body {
 			<div class="stat-card stat-card-warning">
 				<div class="stat-number"
 					th:text="${#lists.size(batches.?[expire_date != null and T(java.time.temporal.ChronoUnit).DAYS.between(#root.today, expire_date) >= 0 and T(java.time.temporal.ChronoUnit).DAYS.between(#root.today, expire_date) <= 7])}">0</div>
-				<div class="stat-label">Near expiry (≤7 days)</div>
+				<div class="stat-label">Near expiry</div>
 			</div>
 		</div>
 
@@ -126,7 +126,7 @@ body {
 			<div class="stat-card stat-card-danger">
 				<div class="stat-number"
 					th:text="${#lists.size(batches.?[expire_date != null and T(java.time.temporal.ChronoUnit).DAYS.between(#root.today, expire_date) < 0])}">0</div>
-				<div class="stat-label">Expired, not yet written off</div>
+				<div class="stat-label">Expired</div>
 			</div>
 		</div>
 	</div>
@@ -185,9 +185,9 @@ body {
 						<span th:if="${daysLeft >= 0}" th:text="${daysLeft + 'd left'}"></span>
 					</td>
 
-					<td class="text-end"><a
-						th:href="@{/ingredient-batches/edit/{id}(id=${batch.batch_id})}"
-						class="btn btn-sm btn-outline-warning me-1">Edit</a> <a
+					<td class="text-end"><!-- <a
+						 th:href="@{/ingredient-batches/edit/{id}(id=${batch.batch_id})}"
+						class="btn btn-sm btn-outline-warning me-1">Edit</a>--> <a
 						th:href="@{/ingredient-batches/delete/{id}(id=${batch.batch_id})}"
 						class="btn btn-sm btn-outline-danger"
 						onclick="return confirm('Are you sure you want to soft delete this batch?');">Delete</a>
@@ -196,8 +196,11 @@ body {
 
 			</tbody>
 		</table>
+		
 	</div>
-
+	<!--  <a th:href="@{/ingredient-batches/add(importId=${imp.import_id})}" class="btn btn-success btn-sm">
+    <i class="bi bi-plus"></i> Add Ingredient Batch
+</a>-->
 </div>
 </body>
 </html>
