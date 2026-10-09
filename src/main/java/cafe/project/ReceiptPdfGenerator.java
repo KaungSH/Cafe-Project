@@ -30,19 +30,48 @@ public class ReceiptPdfGenerator {
         try (FileOutputStream fos = new FileOutputStream(filePath)) {
             writeReceiptToStream(fos, orderId, orderData, items);
         }
-    }
-
-    // Common Receipt Drawing Method
+    }     
+ // Common Receipt Drawing Method
     private void writeReceiptToStream(OutputStream outputStream, String orderId, 
                                       Map<String, Object> orderData, 
                                       List<Map<String, Object>> items) throws Exception {
         
-        // 80mm Thermal Printer size (width: 226 point, height: 650 point)
-        Rectangle receiptSize = new Rectangle(226, 650);
+        // 1. Header, Totals, Footers နှင့် Spacing အတွက် အခြေခံအမြင့်
+        float baseHeight = 70f; 
+
+       
+        float itemsHeight = 0f;
+        if (items != null) {
+            for (Map<String, Object> item : items) {
+                String pName = item.get("product_name") != null ? item.get("product_name").toString() : "";
+                String sName = item.get("size_name") != null ? item.get("size_name").toString() : "";
+                String fullName = pName + " (" + sName + ")";
+
+                
+                if (fullName.length() > 20) {
+                    itemsHeight += 26f;
+                } else {
+                    itemsHeight += 16f;
+                }
+
+               
+                if (item.get("remark") != null && !item.get("remark").toString().trim().isEmpty()) {
+                    itemsHeight += 12f;
+                }
+            }
+        }
+
+        
+        float totalHeight = Math.max(200f, baseHeight + itemsHeight + 15f);
+
+        // 80mm Thermal Printer Width (226 pt) နှင့် Dynamic Height
+        Rectangle receiptSize = new Rectangle(226, totalHeight);
         
         Document document = new Document(receiptSize, 10, 10, 10, 10);
         PdfWriter.getInstance(document, outputStream);
         document.open();
+
+      
 
         // Fonts 
         Font titleFont = new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD);
