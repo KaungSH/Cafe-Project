@@ -407,21 +407,16 @@ body {
 											th:name="'orderDetails[' + ${stat.index} + '].product_id'"
 											class="form-select product-select" required>
 
-
 												<option value="">-- Select Product --</option>
-
 
 												<option th:each="product : ${products}"
 													th:value="${product.product_id}"
-													th:text="${product.type_name + ' - ' + product.price}"
-													th:attr="
-                                                    data-price=${product.price},
-                                                    data-product-name=${product.type_name},
-                                                    data-discount=${product.discount_values != null and !product.discount_values.isEmpty() ? product.discount_values[0] : 0}"
-													th:selected="${product.product_id == detail.product_id}">
-
+													th:text="${product.type_name + ' - ' + product.size_code + ' - ' + product.price}"
+													th:selected="${product.product_id == detail.product_id}"
+													th:disabled="${!product.available}"
+													th:attr=" data-price=${product.price},data-discount=${product.discount_values != null and !#lists.isEmpty(product.discount_values)
+                    									? product.discount_values[0]: 0}">
 												</option>
-
 
 										</select></td>
 

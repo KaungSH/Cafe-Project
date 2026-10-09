@@ -106,46 +106,63 @@ public class OrderDetailsController {
 
 		model.addAttribute("orderDetailsDto", dto);
 
-		model.addAttribute("products", productService.findAllForOrder());
+		model.addAttribute("products", productService.findAllForOrder(ldto.getBranch_id()));
 
 		return "orderwithdetails/add";
 	}
 
 	@PostMapping("/save")
 	public String save(@ModelAttribute("order") Orders order, @ModelAttribute("orderDetailsDto") OrderDetailsDto dto,
-			HttpSession session) {
+			Model model, HttpSession session) {
 
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 
 		order.setEmployee_id(ldto.getEmployee_id());
 		order.setBranch_id(ldto.getBranch_id());
-
 		order.setReceived_time(null);
 
-		ordersService.save(order);
+		try {
 
-		for (OrderDetails detail : dto.getOrderDetails()) {
+			orderDetailsService.checkStock(dto, order.getBranch_id());
 
-			if (detail.getProduct_id() == null || detail.getProduct_id().trim().isEmpty()) {
+			ordersService.save(order);
 
-				System.out.println("ERROR: Product ID is null!");
+			for (OrderDetails detail : dto.getOrderDetails()) {
 
-				return "redirect:/order-with-details/add";
+				if (detail.getProduct_id() == null || detail.getProduct_id().trim().isEmpty()) {
+
+					model.addAttribute("error", "Please select a product.");
+
+					model.addAttribute("products", productService.findAllForOrder(ldto.getBranch_id()));
+
+					return "orderwithdetails/add";
+				}
+
+				detail.setOrder_id(order.getOrder_id());
 			}
 
-			detail.setOrder_id(order.getOrder_id());
+			orderDetailsService.save(dto);
+
+			orderDetailsService.reduceStock(dto, order.getBranch_id());
+
+			BigDecimal subtotal = orderDetailsService.calculateTotalAmount(order.getOrder_id());
+
+			BigDecimal discount = orderDetailsService.calculateDiscountAmount(order.getOrder_id());
+
+			BigDecimal finalAmount = subtotal.subtract(discount);
+
+			ordersService.updateTotalAmount(order.getOrder_id(), finalAmount);
+
+			return "redirect:/order-with-details";
+
+		} catch (IllegalArgumentException e) {
+
+			model.addAttribute("error", e.getMessage());
+
+			model.addAttribute("products", productService.findAllForOrder(ldto.getBranch_id()));
+
+			return "orderwithdetails/add";
 		}
-
-		orderDetailsService.save(dto);
-
-		BigDecimal subtotal = orderDetailsService.calculateTotalAmount(order.getOrder_id());
-
-		BigDecimal discount = orderDetailsService.calculateDiscountAmount(order.getOrder_id());
-
-		BigDecimal finalAmount = subtotal.subtract(discount);
-
-		ordersService.updateTotalAmount(order.getOrder_id(), finalAmount);
-		return "redirect:/order-with-details";
 	}
 
 	@PostMapping("/received/{id}")
@@ -157,7 +174,9 @@ public class OrderDetailsController {
 	}
 
 	@GetMapping("/edit/{id}")
-	public String edit(@PathVariable("id") String id, Model model) {
+	public String edit(@PathVariable("id") String id, Model model, HttpSession session) {
+
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 
 		Orders order = ordersService.findById(id);
 
@@ -168,7 +187,7 @@ public class OrderDetailsController {
 		model.addAttribute("order", order);
 		model.addAttribute("orderDetailsDto", dto);
 
-		model.addAttribute("products", productService.findAllForOrder());
+		model.addAttribute("products", productService.findAllForOrder(ldto.getBranch_id()));
 
 		return "orderwithdetails/edit";
 	}

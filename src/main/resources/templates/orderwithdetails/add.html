@@ -340,6 +340,9 @@ body {
 			</a>
 
 		</div>
+		<div th:if="${error}" class="alert alert-danger">
+			<span th:text="${error}"></span>
+		</div>
 
 		<form th:action="@{/order-with-details/save}" method="post">
 
@@ -393,16 +396,13 @@ body {
 
 												<option value="">-- Select Product --</option>
 
-
 												<option th:each="product : ${products}"
 													th:value="${product.product_id}"
-													th:text="${product.type_name + ' - ' + product.price}"
-													th:attr="
-                                                    data-price=${product.price},
-                                                    data-product-name=${product.type_name},
-                                                    data-discount=${product.discount_values != null and !product.discount_values.isEmpty() ? product.discount_values[0] : 0}
-                                                ">
-
+													th:text="${product.available ? product.type_name + ' - ' + product.size_code + ' - ' + product.price
+            											: product.type_name + ' - ' + product.size_code + ' - OUT OF STOCK'}"
+													th:disabled="${!product.available}"
+													th:attr="data-price=${product.price},data-product-name=${product.type_name},
+            											data-discount=${product.discount_values != null and !product.discount_values.isEmpty()? product.discount_values[0]: 0}">
 												</option>
 
 										</select></td>

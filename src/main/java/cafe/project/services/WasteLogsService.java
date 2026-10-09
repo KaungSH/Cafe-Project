@@ -81,8 +81,6 @@ public class WasteLogsService {
     private IngredientBatchDto toDto(IngredientBatch entity) {
 
 		IngredientBatchDto dto = new IngredientBatchDto();
-
-
 		dto.setBatch_id(entity.getBatch_id());
 		dto.setRemaining_quantity(entity.getRemaining_quantity());
 		dto.setManufactured_date(entity.getManufactured_date());
@@ -105,6 +103,7 @@ public class WasteLogsService {
 //		dto.setIsExpired(entity.isIsExpired());
 //		dto.setIsDeleted(entity.getIsDeleted());
 //		dto.setCreatedAt(entity.getCreatedAt());
+
 
 		return dto;
 	}

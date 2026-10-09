@@ -22,9 +22,9 @@ public class OrderDetailsRepository {
 
 	public List<OrderDetails> findAll() {
 
-		String sql = "SELECT od.*, pt.name AS product_name\r\n" + "FROM order_details od\r\n"
-				+ "LEFT JOIN products p ON od.product_id = p.product_id\r\n"
-				+ "LEFT JOIN product_types pt ON p.item_id = pt.type_id";
+		String sql = "SELECT od.*,\r\n" + "pt.name AS product_name,\r\n" + "p.price AS price\r\n"
+				+ "FROM order_details od\r\n" + "LEFT JOIN products p\r\n" + "ON od.product_id = p.product_id\r\n"
+				+ "LEFT JOIN product_types pt\r\n" + "ON p.item_id = pt.type_id;";
 
 		return jdbcTemplate.query(sql, new OrderDetailsMapper());
 	}
@@ -40,22 +40,11 @@ public class OrderDetailsRepository {
 
 	public List<OrderDetails> findByOrderId(String orderId) {
 
-		String sql =
-		        "SELECT od.*, "
-		      + "pt.name AS product_name, "
-		      + "p.price AS price "
-		      + "FROM order_details od "
-		      + "LEFT JOIN products p "
-		      + "ON od.product_id = p.product_id "
-		      + "LEFT JOIN product_types pt "
-		      + "ON p.item_id = pt.type_id "
-		      + "WHERE od.order_id = ?";
+		String sql = "SELECT od.*, " + "pt.name AS product_name, " + "p.price AS price " + "FROM order_details od "
+				+ "LEFT JOIN products p " + "ON od.product_id = p.product_id " + "LEFT JOIN product_types pt "
+				+ "ON p.item_id = pt.type_id " + "WHERE od.order_id = ?";
 
-	    return jdbcTemplate.query(
-	            sql,
-	            new OrderDetailsMapper(),
-	            orderId
-	    );
+		return jdbcTemplate.query(sql, new OrderDetailsMapper(), orderId);
 	}
 
 	public List<String> findOrderIds() {
@@ -84,18 +73,21 @@ public class OrderDetailsRepository {
 
 	public BigDecimal calculateDiscountAmount(String orderId) {
 
-		String sql = "SELECT " + "od.product_id, " + "p.price, " + "od.quantity, " + "d.discount_value "
-				+ "FROM order_details od " + "JOIN products p " + "ON od.product_id = p.product_id "
-				+ "JOIN discounts_products dp " + "ON p.product_id = dp.product_id " + "JOIN discounts d "
-				+ "ON dp.discount_id = d.discount_id " + "WHERE od.order_id = ? " + "AND d.isdeleted = 0 "
-				+ "AND d.is_active = 1 " + "AND CURDATE() BETWEEN d.startdate AND d.enddate";
+		String sql = "SELECT od.product_id, p.price,od.quantity,\r\n" + "MAX(d.discount_value) AS discount_value\r\n"
+				+ "FROM order_details od\r\n" + "JOIN products p ON od.product_id = p.product_id\r\n"
+				+ "JOIN discounts_products dp ON p.product_id = dp.product_id\r\n"
+				+ "JOIN discounts d ON dp.discount_id = d.discount_id\r\n" + "WHERE od.order_id = ?\r\n"
+				+ "AND d.isdeleted = 0 AND d.is_active = 1\r\n" + "AND CURDATE() BETWEEN d.startdate AND d.enddate\r\n"
+				+ "GROUP BY od.product_id,p.price,od.quantity;";
 
 		List<DiscountCalculationDto> discounts = jdbcTemplate.query(sql, (rs, rowNum) -> {
 
 			DiscountCalculationDto dto = new DiscountCalculationDto();
 
 			dto.setPrice(rs.getBigDecimal("price"));
+
 			dto.setQuantity(rs.getInt("quantity"));
+
 			dto.setDiscountValue(rs.getBigDecimal("discount_value"));
 
 			return dto;

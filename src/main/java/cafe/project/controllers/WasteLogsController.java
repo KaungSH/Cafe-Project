@@ -74,7 +74,7 @@ public class WasteLogsController {
 		model.addAttribute("wasteLog", entryDto);
 		model.addAttribute("reasons", wasteReasonRepository.findReasonsAll());
 		//model.addAttribute("batches", ingredientBatchService.findAll());
-		model.addAttribute("employees", employeeService.getAllEmployeesAdmin()); //pyin
+		model.addAttribute("employees", employeeService.getAllEmployeesAdmin());
 
 		return "WasteLogs/create";
 	}
@@ -121,6 +121,7 @@ public class WasteLogsController {
 			model.addAttribute("reasons", wasteReasonRepository.findReasonsAll());
 
 			model.addAttribute("batches", ingredientBatchService.getAllBatches());
+//			model.addAttribute("employees", employeeService.getAllEmployeeListDto());
 
 			//model.addAttribute("batches", ingredientBatchService.findAll());
 			model.addAttribute("employees", employeeService.getAllEmployeesAdmin());
