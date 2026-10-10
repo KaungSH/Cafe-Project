@@ -74,7 +74,7 @@ public class UnitService {
         UnitDto dto = new UnitDto();
 
         dto.setUnit_id(entity.getUnit_id());
-        dto.setEmployee_id(entity.getEmployee_id());
+        dto.setEmployee_name(entity.getEmployee_id());
         dto.setName(entity.getName());
         dto.setAbbreviation(entity.getAbbreviation());
         dto.setIs_active(entity.getIs_active());
@@ -90,7 +90,7 @@ public class UnitService {
         Unit entity = new Unit();
 
         entity.setUnit_id(dto.getUnit_id());
-        entity.setEmployee_id(dto.getEmployee_id());
+        entity.setEmployee_id(dto.getEmployee_name());
         entity.setName(dto.getName());
         entity.setAbbreviation(dto.getAbbreviation());
         entity.setIs_active(dto.isIs_active());
