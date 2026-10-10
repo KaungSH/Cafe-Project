@@ -1,595 +1,276 @@
 <!DOCTYPE html>
-
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Received Orders - Café Луфт</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
-<meta charset="UTF-8">
+    <style>
+        :root {
+            --cafe-primary: #8C6239;
+            --cafe-primary-dark: #5C3D2E;
+            --cafe-gold: #C5A059;
+            --cafe-gold-light: #F7F3EB;
+            --cafe-dark: #1E1A17;
+            --cafe-bg: #FDFBF7;
+            --cafe-card-bg: #FFFFFF;
+            --cafe-border: #EFE9E1;
+            --cafe-muted: #827E7A;
+            --shadow-subtle: 0 4px 20px rgba(92, 61, 46, 0.05);
+        }
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        body {
+            background-color: var(--cafe-bg);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--cafe-dark);
+        }
 
-<title>Received Orders</title>
+        .container-fluid {
+            max-width: 1440px;
+        }
 
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-	rel="stylesheet">
+        .page-brand {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: var(--cafe-primary-dark);
+        }
 
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        .luxury-card {
+            background: var(--cafe-card-bg);
+            border: 1px solid var(--cafe-border);
+            border-radius: 18px;
+            box-shadow: var(--shadow-subtle);
+        }
 
+        .btn-luxury-outline {
+            background: #fff;
+            color: var(--cafe-primary-dark);
+            border: 1px solid var(--cafe-border);
+            border-radius: 10px;
+            padding: 8px 18px;
+            font-weight: 600;
+            transition: all 0.25s ease;
+        }
+        .btn-luxury-outline:hover {
+            background: var(--cafe-gold-light);
+            border-color: var(--cafe-gold);
+            color: var(--cafe-primary-dark);
+        }
 
-<style>
+        .search-box-wrap {
+            position: relative;
+        }
+        .search-box-wrap i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--cafe-muted);
+        }
+        .search-box-wrap input, .filter-date {
+            height: 44px;
+            border-radius: 10px;
+            border: 1px solid var(--cafe-border);
+            font-size: 0.9rem;
+        }
+        .search-box-wrap input {
+            padding-left: 42px;
+        }
+        .search-box-wrap input:focus, .filter-date:focus {
+            border-color: var(--cafe-gold);
+            box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.15);
+        }
 
-body {
-	background-color: #ffffff;
-	font-family: Arial, Helvetica, sans-serif;
-	color: #1f2937;
-}
+        .table-luxury {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        .table-luxury thead th {
+            background: #FAF8F5;
+            color: var(--cafe-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            font-weight: 700;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--cafe-border);
+            white-space: nowrap;
+        }
+        .table-luxury tbody td {
+            padding: 16px 18px;
+            border-bottom: 1px solid #F5EFEB;
+            vertical-align: middle;
+            font-size: 0.88rem;
+        }
+        .table-luxury tbody tr:hover td {
+            background-color: #FDFBF8;
+        }
 
-.container {
-	max-width: 1450px;
-	margin: 0 auto;
-}
+        .token-tag {
+            font-weight: 700;
+            color: var(--cafe-primary-dark);
+            background: var(--cafe-gold-light);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            display: inline-block;
+        }
 
-.page-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 20px;
-}
+        .badge-received {
+            background: #E8F5E9;
+            color: #2E7D32;
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
 
-.page-title {
-	font-size: 28px;
-	font-weight: 700;
-	margin: 0;
-	color: #111827;
-}
-
-.top-btn {
-	border-radius: 8px;
-	font-weight: 600;
-	padding: 9px 15px;
-}
-
-.order-toolbar {
-	background: #ffffff;
-	border: 1px solid #e5e7eb;
-	border-radius: 12px;
-	padding: 15px;
-	margin-bottom: 20px;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-.search-box {
-	position: relative;
-}
-
-.search-box input {
-	height: 42px;
-	border-radius: 8px;
-	border: 1px solid #d1d5db;
-	padding-left: 40px;
-}
-
-.search-icon {
-	position: absolute;
-	left: 14px;
-	top: 50%;
-	transform: translateY(-50%);
-	color: #6b7280;
-	z-index: 5;
-}
-
-.toolbar-btn {
-	height: 42px;
-	border-radius: 8px;
-	font-weight: 500;
-	padding: 0 16px;
-}
-
-.order-table-container {
-	background: #ffffff;
-	border: 1px solid #e5e7eb;
-	border-radius: 12px;
-	overflow: hidden;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-.order-main-table {
-	width: 100%;
-	border-collapse: collapse;
-}
-
-.order-main-table thead {
-	background: #f9fafb;
-}
-
-.order-main-table thead th {
-	padding: 14px 15px;
-	text-align: left;
-	color: #6b7280;
-	font-size: 13px;
-	font-weight: 600;
-	border-bottom: 1px solid #e5e7eb;
-	white-space: nowrap;
-}
-
-.order-main-table tbody td {
-	padding: 15px;
-	border-bottom: 1px solid #f0f0f0;
-	color: #374151;
-	font-size: 14px;
-	vertical-align: middle;
-}
-
-.order-main-table tbody tr {
-	transition: background-color 0.15s ease;
-}
-
-.order-main-table tbody tr:hover {
-	background: #f9fafb;
-}
-
-.order-main-table tbody tr:last-child td {
-	border-bottom: none;
-}
-
-.token-number {
-	font-weight: 700;
-	color: #111827;
-	white-space: nowrap;
-}
-
-.employee-name {
-	font-weight: 600;
-	color: #111827;
-}
-
-.branch-name {
-	color: #4b5563;
-}
-
-.created-date, .received-date {
-	color: #6b7280;
-	white-space: nowrap;
-	font-size: 13px;
-}
-
-.product-list {
-	min-width: 250px;
-}
-
-.product-item {
-	margin-bottom: 6px;
-	color: #111827;
-	font-weight: 600;
-}
-
-.product-item:last-child {
-	margin-bottom: 0;
-}
-
-.quantity {
-	color: #6b7280;
-	font-weight: 400;
-	margin-left: 4px;
-}
-
-
-.remark {
-	color: #6b7280;
-	font-size: 12px;
-	font-weight: 400;
-	margin-left: 5px;
-}
-
-.status-received {
-	display: inline-block;
-	background: #d1fae5;
-	color: #047857;
-	padding: 5px 10px;
-	border-radius: 20px;
-	font-size: 12px;
-	font-weight: 600;
-	white-space: nowrap;
-}
-
-.status-paid {
-	display: inline-block;
-	background: #d1fae5;
-	color: #047857;
-	padding: 5px 10px;
-	border-radius: 20px;
-	font-size: 12px;
-	font-weight: 600;
-	white-space: nowrap;
-}
-
-.status-unpaid {
-	display: inline-block;
-	background: #fef3c7;
-	color: #92400e;
-	padding: 5px 10px;
-	border-radius: 20px;
-	font-size: 12px;
-	font-weight: 600;
-	white-space: nowrap;
-}
-
-.total-price {
-	font-weight: 700;
-	color: #111827;
-	white-space: nowrap;
-}
-
-.no-orders {
-	border-radius: 10px;
-	padding: 25px;
-}
-
-@media ( max-width : 1200px) {
-	.order-main-table {
-		min-width: 1250px;
-	}
-	.order-table-container {
-		overflow-x: auto;
-	}
-}
-
-@media ( max-width : 768px) {
-	.page-header {
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 15px;
-	}
-	.page-title {
-		font-size: 24px;
-	}
-}
-</style>
-
+        .empty-state {
+            padding: 60px 20px;
+            text-align: center;
+        }
+        .empty-state i {
+            font-size: 3rem;
+            color: var(--cafe-muted);
+            opacity: 0.4;
+            margin-bottom: 14px;
+        }
+    </style>
 </head>
-
-
 <body>
 
-
-	<div class="container mt-4 mb-5">
-
-
-		<div class="page-header">
-
-			<h1 class="page-title">Received Orders</h1>
-
-			<div>
-
-				<a th:href="@{/order-with-details}" class="btn btn-primary top-btn">
-
-					<i class="bi bi-arrow-left"></i> Current Orders
-
-				</a>
-
-			</div>
-
-
-		</div>
-
-
-		<div class="order-toolbar">
-
-
-			<div class="row align-items-center g-2">
-
-				<div class="col-md-5">
-
-
-					<div class="search-box">
-
-
-						<i class="bi bi-search search-icon"></i> <input type="text"
-							id="searchOrder" class="form-control"
-							placeholder="Search token, employee, branch, product...">
-
-
-					</div>
-
-
-				</div>
-
-				<div class="col-md-3">
-
-
-					<input type="date" id="searchDate" class="form-control toolbar-btn">
-
-
-				</div>
-
-
-				<div class="col-md-auto">
-
-
-					<button type="button" class="btn btn-outline-secondary toolbar-btn"
-						onclick="clearSearch()">
-
-						<i class="bi bi-x-lg"></i> Clear
-
-					</button>
-
-
-				</div>
-
-
-			</div>
-
-
-		</div>
-
-
-		<div th:if="${#lists.isEmpty(orders)}"
-			class="alert alert-info text-center no-orders">
-
-			<i class="bi bi-info-circle"></i> No received orders.
-
-		</div>
-
-		<div th:unless="${#lists.isEmpty(orders)}"
-			class="order-table-container">
-
-
-			<div class="table-responsive">
-
-
-				<table class="order-main-table">
-
-
-					<thead>
-
-						<tr>
-
-							<th style="width: 8%;">Token No.</th>
-
-
-							<th style="width: 12%;">Employee</th>
-
-
-							<th style="width: 12%;">Branch</th>
-
-
-							<th style="width: 14%;">Created Time</th>
-
-
-							<th style="width: 14%;">Received Time</th>
-
-
-							<th style="width: 24%;">Products</th>
-
-
-							<th style="width: 10%;">Total</th>
-
-							<th style="width: 12%;">Status</th>
-
-
-						</tr>
-
-					</thead>
-
-					<tbody>
-
-						<tr th:each="order : ${orders}"
-							th:attr="data-created-date=${#temporals.format(order.created_time, 'yyyy-MM-dd')},
+<div class="container-fluid px-lg-5 py-4">
+
+    <!-- Top Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="page-brand mb-1">Received Orders</h2>
+            <p class="text-muted small mb-0">Completed and delivered coffee orders history</p>
+        </div>
+        <a th:href="@{/order-with-details}" class="btn btn-luxury-outline">
+            <i class="bi bi-arrow-left me-1"></i> Current Orders
+        </a>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="luxury-card p-3 mb-4">
+        <div class="row g-2 align-items-center">
+            <div class="col-md-5">
+                <div class="search-box-wrap">
+                    <i class="bi bi-search"></i>
+                    <input type="text" id="searchOrder" class="form-control" placeholder="Search token, employee, branch, product...">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <input type="date" id="searchDate" class="form-control filter-date">
+            </div>
+            <div class="col-md-auto ms-auto">
+                <button type="button" class="btn btn-luxury-outline px-3" onclick="clearSearch()">
+                    <i class="bi bi-x-lg me-1"></i> Clear Filter
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div th:if="${#lists.isEmpty(orders)}" class="luxury-card empty-state">
+        <i class="bi bi-check2-circle d-block"></i>
+        <h5 class="fw-bold mb-1" style="color: var(--cafe-primary-dark);">No Received Orders</h5>
+        <p class="text-muted small mb-0">No past orders found in this archive.</p>
+    </div>
+
+    <!-- Table -->
+    <div th:unless="${#lists.isEmpty(orders)}" class="luxury-card overflow-hidden">
+        <div class="table-responsive">
+            <table class="table-luxury">
+                <thead>
+                    <tr>
+                        <th style="width: 9%;">Token No.</th>
+                        <th style="width: 14%;">Staff & Branch</th>
+                        <th style="width: 14%;">Ordered Time</th>
+                        <th style="width: 14%;">Received Time</th>
+                        <th style="width: 25%;">Products</th>
+                        <th style="width: 12%;">Total Amount</th>
+                        <th style="width: 12%; text-align: right;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="order : ${orders}"
+                        th:attr="data-created-date=${#temporals.format(order.created_time, 'yyyy-MM-dd')},
                                  data-received-date=${order.received_time != null ? #temporals.format(order.received_time, 'yyyy-MM-dd') : ''}">
-
-							<td><span class="token-number"
-								th:text="${order.token_number}"> 001 </span></td>
-
-							<td><span class="employee-name"
-								th:text="${order.employee_name}"> Employee </span></td>
-
-							<td><span class="branch-name" th:text="${order.branch_name}">
-
-									Branch </span></td>
-
-							<td><span class="created-date"
-								th:text="${#temporals.format(order.created_time, 'dd-MM-yyyy HH:mm:ss')}">
-
-									03-10-2026 16:30:00 </span></td>
-
-							<td><span th:if="${order.received_time != null}"
-								class="received-date"
-								th:text="${#temporals.format(order.received_time, 'dd-MM-yyyy HH:mm:ss')}">
-
-									03-10-2026 17:00:00 </span> <span
-								th:unless="${order.received_time != null}" class="text-muted">
-
-									— </span></td>
-
-							<td>
-
-
-								<div class="product-list">
-
-
-									<th:block th:each="detail : ${orderDetails}">
-
-										<div class="product-item"
-											th:if="${detail.order_id == order.order_id}">
-
-											<span th:text="${detail.product_name}"> Product </span>
-
-											<span class="quantity"> × <span
-												th:text="${detail.quantity}"> 1 </span>
-
-											</span>
-
-											<span
-												th:if="${detail.remark != null and detail.remark != ''}"
-												class="remark"> - <span th:text="${detail.remark}">
-
-													Remark </span>
-
-											</span>
-
-
-										</div>
-
-
-									</th:block>
-
-
-								</div>
-
-
-							</td>
-
-							<td><span class="total-price"> <span
-									th:text="${order.total_amount}"> 0.00 </span> Ks
-
-
-							</span></td>
-
-							<td>
-								
-
-								<div>
-
-									<span class="status-received"> <i
-										class="bi bi-check-circle"></i> Received
-
-									</span>
-
-								</div> 
-
-								<div class="mt-2">
-
-									<span th:if="${order.paymentDone}" class="status-paid">
-
-										<i class="bi bi-check-circle"></i> Paid
-
-									</span>
-
-									<span th:unless="${order.paymentDone}" class="status-unpaid">
-
-										<i class="bi bi-clock"></i> Unpaid
-
-									</span>
-
-
-								</div>
-
-
-							</td>
-
-
-						</tr>
-
-
-					</tbody>
-
-
-				</table>
-
-
-			</div>
-
-
-		</div>
-
-
-	</div>
-
-	<script>
-
-		document.getElementById("searchOrder").addEventListener(
-				"input",
-				function() {
-
-					let searchValue = this.value.toLowerCase().trim();
-
-					let orders = document
-							.querySelectorAll(".order-main-table tbody tr");
-
-					orders.forEach(function(order) {
-
-						let text = order.innerText.toLowerCase();
-
-						if (text.includes(searchValue)) {
-
-							order.style.display = "";
-
-						} else {
-
-							order.style.display = "none";
-
-						}
-
-					});
-
-				});
-
-		document.getElementById("searchDate").addEventListener(
-				"change",
-				function() {
-
-					let selectedDate = this.value;
-
-					let orders = document
-							.querySelectorAll(".order-main-table tbody tr");
-
-
-					if (selectedDate === "") {
-
-						orders.forEach(function(order) {
-
-							order.style.display = "";
-
-						});
-
-						return;
-
-					}
-
-					orders.forEach(function(order) {
-
-						let createdDate = order
-								.getAttribute("data-created-date");
-
-						let receivedDate = order
-								.getAttribute("data-received-date");
-
-						if (createdDate === selectedDate
-								|| receivedDate === selectedDate) {
-
-							order.style.display = "";
-
-						} else {
-
-							order.style.display = "none";
-
-						}
-
-					});
-
-				});
-
-		function clearSearch() {
-
-			document.getElementById("searchOrder").value = "";
-
-			document.getElementById("searchDate").value = "";
-
-			let orders = document
-					.querySelectorAll(".order-main-table tbody tr");
-
-			orders.forEach(function(order) {
-
-				order.style.display = "";
-
-			});
-
-		}
-	</script>
-
-
+                        <td><span class="token-tag" th:text="${order.token_number}">#001</span></td>
+                        <td>
+                            <div class="fw-semibold" th:text="${order.employee_name}">Staff</div>
+                            <div class="text-muted small" th:text="${order.branch_name}">Main Branch</div>
+                        </td>
+                        <td>
+                            <span class="text-muted small" th:text="${#temporals.format(order.created_time, 'dd-MM-yyyy HH:mm:ss')}">03-10-2026 16:30</span>
+                        </td>
+                        <td>
+                            <span th:if="${order.received_time != null}" class="text-success small fw-medium"
+                                  th:text="${#temporals.format(order.received_time, 'dd-MM-yyyy HH:mm:ss')}">03-10-2026 17:00</span>
+                            <span th:unless="${order.received_time != null}" class="text-muted small">—</span>
+                        </td>
+                        <td>
+                            <div class="d-flex flex-column gap-1">
+                                <th:block th:each="detail : ${orderDetails}">
+                                    <div th:if="${detail.order_id == order.order_id}" class="d-flex align-items-center gap-1">
+                                        <span class="fw-semibold" th:text="${detail.product_name}">Latte</span>
+                                        <span class="text-muted small">× <span th:text="${detail.quantity}">1</span></span>
+                                        <span th:if="${detail.remark != null and detail.remark != ''}" class="badge bg-light text-muted border ms-1" style="font-size: 0.7rem;" th:text="${detail.remark}">No sugar</span>
+                                    </div>
+                                </th:block>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="fw-bold" style="color: var(--cafe-primary-dark);" th:text="${order.total_amount} + ' Ks'">0.00 Ks</span>
+                        </td>
+                        <td class="text-end">
+                            <span class="badge-received"><i class="bi bi-check-circle-fill"></i> Completed</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.getElementById("searchOrder").addEventListener("input", function() {
+        let searchValue = this.value.toLowerCase().trim();
+        let orders = document.querySelectorAll(".table-luxury tbody tr");
+        orders.forEach(function(order) {
+            order.style.display = order.innerText.toLowerCase().includes(searchValue) ? "" : "none";
+        });
+    });
+
+    document.getElementById("searchDate").addEventListener("change", function() {
+        let selectedDate = this.value;
+        let orders = document.querySelectorAll(".table-luxury tbody tr");
+        if (selectedDate === "") {
+            orders.forEach(o => o.style.display = "");
+            return;
+        }
+        orders.forEach(function(order) {
+            let createdDate = order.getAttribute("data-created-date");
+            let receivedDate = order.getAttribute("data-received-date");
+            order.style.display = (createdDate === selectedDate || receivedDate === selectedDate) ? "" : "none";
+        });
+    });
+
+    function clearSearch() {
+        document.getElementById("searchOrder").value = "";
+        document.getElementById("searchDate").value = "";
+        document.querySelectorAll(".table-luxury tbody tr").forEach(o => o.style.display = "");
+    }
+</script>
 </body>
-
 </html>

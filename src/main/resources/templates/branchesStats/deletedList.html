@@ -1,297 +1,260 @@
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layout}">eleaf.org">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout}">
 
 <head>
+    <meta charset="UTF-8">
+    <title>Deleted Branch Stats | Café Luft</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<meta charset="UTF-8">
+    <style>
+        body {
+            background-color: #F8F5F0;
+            color: #2D241E;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 14px;
+        }
 
-<title>Deleted Branch Stats</title>
+        .deleted-container {
+            width: 95%;
+            max-width: 1400px;
+            margin: 32px auto;
+        }
 
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-	rel="stylesheet">
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
 
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        .header-title-box {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
 
-<style>
-body {
-	margin: 0;
-	background-color: #faf7f1;
-	color: #241c16;
-	font-family: Arial, sans-serif;
-	font-size: 14px;
-}
+        .header-avatar-trash {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #A84232, #75281C);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFF2F0;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(168, 66, 50, 0.25);
+        }
 
-.branchesStats-container {
-	width: 95%;
-	max-width: 1450px;
-	margin: 25px auto;
-}
+        .header-title-box h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #261B14;
+            margin: 0;
+            letter-spacing: -0.2px;
+        }
 
-.branchesStats-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: flex-start;
-	margin-bottom: 28px;
-}
+        .header-title-box p {
+            font-size: 13px;
+            color: #8C7A68;
+            margin: 2px 0 0 0;
+        }
 
-.branchesStats-title h2 {
-	margin: 0 0 6px 0;
-	color: #241c16;
-	font-size: 27px;
-	font-weight: 700;
-	line-height: 1.2;
-}
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #FFFFFF;
+            color: #5C432D !important;
+            border: 1px solid #D8C8B5;
+            border-radius: 9px;
+            padding: 8px 16px;
+            font-size: 13.5px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
 
-.branchesStats-title h2 i {
-	color: #875522;
-	font-size: 22px;
-	margin-right: 7px;
-}
+        .btn-back:hover {
+            background-color: #F3EBDD;
+            border-color: #BFA78E;
+        }
 
-.branchesStats-title p {
-	margin: 0;
-	color: #806b56;
-	font-size: 14px;
-	line-height: 1.5;
-}
+        /* Table Card Container */
+        .table-container {
+            background: #FFFFFF;
+            border-radius: 16px;
+            border: 1px solid #EADBCC;
+            box-shadow: 0 8px 24px -6px rgba(58, 41, 26, 0.05);
+            overflow: hidden;
+        }
 
-.btn-back {
-	display: inline-flex;
-	align-items: center;
-	gap: 6px;
-	background-color: #eadbc7;
-	color: #624522;
-	border: none;
-	border-radius: 9px;
-	padding: 10px 18px;
-	font-size: 14px;
-	font-weight: 600;
-	text-decoration: none;
-	transition: 0.2s;
-}
+        .table-luxury {
+            width: 100%;
+            margin: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
 
-.btn-back:hover {
-	background-color: #ddc9ae;
-	color: #4f351c;
-}
+        .table-luxury thead th {
+            background: #FAF3ED;
+            color: #796450;
+            padding: 14px 18px;
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            border-bottom: 1px solid #EADBCC;
+        }
 
-/* Table */
-.branchesStats-container .table {
-	width: 100%;
-	margin: 0;
-	background-color: #fffaf4;
-	border: 1px solid #eadcca;
-	border-radius: 14px;
-	overflow: hidden;
-	border-collapse: separate;
-	border-spacing: 0;
-	box-shadow: 0 2px 8px rgba(80, 50, 20, 0.04);
-}
+        .table-luxury tbody td {
+            padding: 14px 18px;
+            color: #49382B;
+            font-size: 13.5px;
+            border-bottom: 1px solid #F3ECE2;
+            vertical-align: middle;
+        }
 
-.branchesStats-container .table thead th {
-	background-color: #f5ecdf;
-	color: #9a8067;
-	padding: 13px 20px;
-	font-size: 12px;
-	font-weight: 600;
-	text-transform: uppercase;
-	letter-spacing: 0.4px;
-	border: none;
-	border-bottom: 1px solid #eadcca;
-	white-space: nowrap;
-}
+        .table-luxury tbody tr:last-child td {
+            border-bottom: none;
+        }
 
-.branchesStats-container .table tbody td {
-	padding: 14px 20px;
-	color: #705a45;
-	font-size: 14px;
-	vertical-align: middle;
-	border: none;
-	border-bottom: 1px solid #eadcca;
-}
+        .table-luxury tbody tr:hover {
+            background-color: #FAF6EF;
+        }
 
-.branchesStats-container .table tbody tr:last-child td {
-	border-bottom: none;
-}
+        .badge-branch {
+            font-weight: 600;
+            color: #2D1D12;
+        }
 
-.branchesStats-container .table tbody tr:hover {
-	background-color: #fcf5eb;
-}
+        .badge-month {
+            background-color: #F1E7D9;
+            color: #6C4724;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
 
-.branchesStats-container .table tbody td:nth-child(2) {
-	color: #211a15;
-	font-weight: 500;
-}
+        /* Action Buttons */
+        .btn-restore {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: #4B6E45;
+            background-color: #F1F8F0;
+            border: 1px solid #C9E2C5;
+            border-radius: 7px;
+            padding: 6px 12px;
+            font-size: 12.5px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.2s;
+        }
 
-.branchesStats-container .table tbody td:nth-child(3) {
-	color: #745d47;
-}
+        .btn-restore:hover {
+            background-color: #E2F2E0;
+            color: #2F5229;
+        }
 
-.branchesStats-container .table tbody td:nth-child(4) {
-	color: #806b56;
-	white-space: nowrap;
-}
+        .btn-hard-delete {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: #A33A2D;
+            background-color: #FFF5F4;
+            border: 1px solid #F0C4BD;
+            border-radius: 7px;
+            padding: 6px 12px;
+            font-size: 12.5px;
+            font-weight: 600;
+            text-decoration: none;
+            margin-left: 6px;
+            transition: 0.2s;
+        }
 
-.btn-restore {
-	display: inline-block;
-	color: #5f401f;
-	background-color: #ffffff;
-	border: 1px solid #ddcbb4;
-	border-radius: 8px;
-	padding: 6px 13px;
-	font-size: 13px;
-	font-weight: 600;
-	text-decoration: none;
-	transition: 0.2s;
-}
-
-.btn-restore:hover {
-	background-color: #f1e4d1;
-	color: #5f401f;
-	border-color: #cdb391;
-}
-
-.btn-hard-delete {
-	display: inline-block;
-	color: #8f3e2e;
-	background-color: #ffffff;
-	border: 1px solid #e2c9bf;
-	border-radius: 8px;
-	padding: 6px 13px;
-	font-size: 13px;
-	font-weight: 600;
-	text-decoration: none;
-	margin-left: 5px;
-	transition: 0.2s;
-}
-
-.btn-hard-delete:hover {
-	background-color: #f2d8d0;
-	color: #8f3e2e;
-	border-color: #d6afa3;
-}
-</style>
-
+        .btn-hard-delete:hover {
+            background-color: #FCE1DF;
+            color: #7C2419;
+        }
+    </style>
 </head>
 
-
 <body>
+<div layout:fragment="content">
+    <div class="deleted-container">
+        <div class="dashboard-header">
+            <div class="header-title-box">
+                <div class="header-avatar-trash">
+                    <i class="bi bi-trash3-fill"></i>
+                </div>
+                <div>
+                    <h2>Deleted Branch Stats</h2>
+                    <p>Restore archived metrics or permanently remove records</p>
+                </div>
+            </div>
 
-	<div layout:fragment="content">
+            <div>
+                <a th:href="@{/manager-only/branchstats}" class="btn-back">
+                    <i class="bi bi-arrow-left"></i> Back to Stats List
+                </a>
+            </div>
+        </div>
 
-		<div class="branchesStats-header">
-
-			<div class="branchesStats-title">
-
-				<h2>
-					<i class="bi bi-trash"></i> Deleted Branch Stats
-				</h2>
-
-				<p>Manage your deleted branch stats</p>
-
-			</div>
-
-
-			<div>
-
-				<a th:href="@{/manager-only/branchstats}" class="btn-back"> <i
-					class="bi bi-arrow-left"></i> Back to List
-
-				</a>
-
-			</div>
-
-		</div>
-
-		<table class="table">
-
-			<thead>
-
-				<tr>
-
-					<th>No</th>
-
-					<th>Branch Name</th>
-
-					<th>Sale Count</th>
-
-					<th>Sale Amount</th>
-
-					<th>Month</th>
-
-					<th>Employee Cost</th>
-
-					<th>Employee Name</th>
-
-					<th class="text-end">Actions</th>
-
-				</tr>
-
-			</thead>
-
-
-			<tbody>
-
-				<tr th:each="branchesStats, state : ${branchseStats}">
-
-					<td th:text="${state.count}"></td>
-
-					<td th:text="${branchesStats.branch_name}"></td>
-
-					<td th:text="${branchesStats.salecount}"></td>
-
-					<td th:text="${branchesStats.saleamount}"></td>
-
-					<td th:text="${branchesStats.month}"></td>
-
-					<td th:text="${branchesStats.employee_cost}"></td>
-
-					<td th:text="${branchesStats.employee_name}"></td>
-
-
-					<td class="text-end">
-					<a
-						th:href="@{/manager-only/branchstats/restore(
-                        branch_stats_id=${branchesStats.branch_stats_id})}"
-						class="btn-restore"
-						onclick="return confirm('Are you sure you want to restore this record?')">
-
-							<i class="bi bi-arrow-counterclockwise"></i> Restore
-
-					</a>  <a
-						th:href="@{/manager-only/branchstats/real-delete(
-                        branch_stats_id=${branchesStats.branch_stats_id})}"
-						class="btn-hard-delete"
-						onclick="return confirm('This record will be permanently deleted. Are you sure?')">
-
-							<i class="bi bi-trash"></i> Hard Delete
-
-					</a>
-
-					</td>
-
-				</tr>
-
-				<tr th:if="${#lists.isEmpty(branchseStats)}">
-
-					<td colspan="8"
-						style="text-align: center; color: #806b56; padding: 30px;">
-
-						No deleted records found.</td>
-
-				</tr>
-
-			</tbody>
-
-		</table>
-
-	</div>
-
+        <div class="table-container">
+            <table class="table-luxury">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">No</th>
+                        <th>Branch Name</th>
+                        <th>Sale Count</th>
+                        <th>Sale Amount</th>
+                        <th>Month</th>
+                        <th>Employee Cost</th>
+                        <th>Created By</th>
+                        <th class="text-end" style="width: 230px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="branchesStats, state : ${branchseStats}">
+                        <td th:text="${state.count}" class="text-muted">1</td>
+                        <td><span class="badge-branch" th:text="${branchesStats.branch_name}">Branch Name</span></td>
+                        <td><strong th:text="${branchesStats.salecount}">0</strong></td>
+                        <td th:text="${#numbers.formatDecimal(branchesStats.saleamount, 1, 'COMMA', 2, 'POINT')} + ' MMK'">0.00 MMK</td>
+                        <td><span class="badge-month" th:text="${branchesStats.month}">October</span></td>
+                        <td th:text="${#numbers.formatDecimal(branchesStats.employee_cost, 1, 'COMMA', 2, 'POINT')} + ' MMK'">0.00 MMK</td>
+                        <td th:text="${branchesStats.employee_name}">Admin</td>
+                        <td class="text-end">
+                            <a th:href="@{/manager-only/branchstats/restore(branch_stats_id=${branchesStats.branch_stats_id})}"
+                               class="btn-restore"
+                               onclick="return confirm('Are you sure you want to restore this record?')">
+                                <i class="bi bi-arrow-counterclockwise"></i> Restore
+                            </a>
+                            <a th:href="@{/manager-only/branchstats/real-delete(branch_stats_id=${branchesStats.branch_stats_id})}"
+                               class="btn-hard-delete"
+                               onclick="return confirm('This record will be permanently deleted. Are you sure?')">
+                                <i class="bi bi-trash"></i> Delete Forever
+                            </a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(branchseStats)}">
+                        <td colspan="8" class="text-center py-5 text-muted">
+                            <i class="bi bi-check2-circle fs-2 d-block mb-2 text-success opacity-75"></i>
+                            No deleted records found in the recycle bin.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 </body>
-
 </html>

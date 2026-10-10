@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
-
 import cafe.project.RandomString;
 import cafe.project.employeemanagement.models.LoginDto;
 import cafe.project.models.IngredientTypesListModelFake;
@@ -57,14 +55,17 @@ public class ProductController {
 	}
 
 	@GetMapping("/manager/products")
-	public String productTypeList(Model model) {
+	public String productTypeList(Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		model.addAttribute("keywordmodel", new SearchKeyword());
 		model.addAttribute("product_types", ptservice.findAll());
 		return "products/list";
 	}
 
 	@PostMapping("/manager/products/search")
-	public String searchProductTypeList(@ModelAttribute("keywordmodel") SearchKeyword key, Model model) {
+	public String searchProductTypeList(@ModelAttribute("keywordmodel") SearchKeyword key, Model model,
+			HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		model.addAttribute("product_types", ptservice.searchByName(key.getKeyword()));
 		return "products/list";
 	}
@@ -178,20 +179,24 @@ public class ProductController {
 	}
 
 	@GetMapping("/manager/products/deleted")
-	public String productTypeDeleted(Model model) {
+	public String productTypeDeleted(Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		model.addAttribute("keywordmodel", new SearchKeyword());
 		model.addAttribute("product_types", ptservice.findDeletedAll());
 		return "products/list_deleted";
 	}
 
 	@PostMapping("/manager/products/deleted/search")
-	public String searchProductTypeDeleted(@ModelAttribute("keywordmodel") SearchKeyword key, Model model) {
+	public String searchProductTypeDeleted(@ModelAttribute("keywordmodel") SearchKeyword key, Model model,
+			HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		model.addAttribute("product_types", ptservice.searchDeletedByName(key.getKeyword()));
 		return "products/list_deleted";
 	}
 
 	@GetMapping("/manager/products/add")
-	public String productTypeAdd(Model model) {
+	public String productTypeAdd(Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		model.addAttribute("product_type", new ProductTypeEntryModel());
 		bindAvialableData(model);
 		return "products/add";
@@ -199,84 +204,115 @@ public class ProductController {
 
 	@PostMapping("/manager/products/add")
 	public String productTypeAdd(@ModelAttribute("product_type") ProductTypeEntryModel tentry,
-			@RequestParam(value = "coverImgPart", required = false) Part imgPart, Model model) {
+			@RequestParam(value = "coverImgPart", required = false) Part imgPart, Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		tentry.setCoverimgpath(saveImgFile(imgPart));
 		tentry.setType_id(UUID.randomUUID().toString());
-		// Fake Employee Id Saving later to be replaced with HttpSession Method
-		tentry.setEmployee_id("1");
+		tentry.setEmployee_id(ldto.getEmployee_id());
 
 		ptservice.add(tentry);
 		return "redirect:/manager/products";
 	}
 
 	@GetMapping("/manager/products/edit/{id}")
-	public String productTypeEdit(@PathVariable String id, Model model) {
-		if (ptservice.findById(id) != null) {
+	public String productTypeEdit(@PathVariable String id, Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		ProductTypeEntryModel existingProduct = ptservice.findById(id);
+
+		if (existingProduct != null) {
+			if (!existingProduct.getType_id().equals(ldto.getBranch_id())) {
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "NOT YOUR BRANCH!!!");
+			}
 			model.addAttribute("product_type", ptservice.findById2(id));
 			bindAvialableData(model);
 			return "products/edit";
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product_type");
 		}
-
 	}
 
 	@PostMapping("/manager/products/edit")
 	public String productTypeEdit(@ModelAttribute("product_type") ProductTypeEntryModel tentry,
-			@RequestParam(value = "coverImgPart", required = false) Part imgPart, Model model) {
+			@RequestParam(value = "coverImgPart", required = false) Part imgPart, Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		ProductTypeEntryModel existingProduct = ptservice.findById(tentry.getType_id());
+
+		if (existingProduct != null && !existingProduct.getType_id().equals(ldto.getBranch_id())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "NOT YOUR BRANCH!!!");
+		}
+
 		String file = saveImgFile(imgPart);
 		if (file == null || file.isEmpty()) {
 			ptservice.edit(tentry);
 			return "redirect:/manager/products";
 		}
 		tentry.setCoverimgpath(file);
-		System.out.println(tentry.getProduct().get(1).isIs_active());
 		ptservice.edit(tentry);
 		return "redirect:/manager/products";
 	}
 
 	@GetMapping("/manager/products/delete/type/{id}")
-	public String productTypeDelete(@PathVariable String id, Model model) {
-		if (ptservice.findById(id) != null) {
+	public String productTypeDelete(@PathVariable String id, Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		ProductTypeEntryModel existingProduct = ptservice.findById(id);
+
+		if (existingProduct != null) {
+			if (!existingProduct.getType_id().equals(ldto.getBranch_id())) {
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "NOT YOUR BRANCH!!!");
+			}
 			ptservice.delete(id);
 			return "redirect:/manager/products";
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product_type");
 		}
-
 	}
 
 	@GetMapping("/manager/products/delete_perm/type/{id}")
-	public String productTypeDeletePerm(@PathVariable String id, Model model) {
-		if (ptservice.findById3(id) != null) {
+	public String productTypeDeletePerm(@PathVariable String id, Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		ProductTypeEntryModel existingProduct = ptservice.findById3(id);
+
+		if (existingProduct != null) {
+			if (!existingProduct.getType_id().equals(ldto.getBranch_id())) {
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "NOT YOUR BRANCH!!!");
+			}
 			ptservice.deletePerm(id);
 			return "redirect:/manager/products/deleted";
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product_type");
 		}
-
 	}
 
 	@GetMapping("/manager/products/delete/{id}")
-	public String productTypeDeletePro(@PathVariable String id, Model model) {
-		if (pservice.findById(id) != null) {
+	public String productTypeDeletePro(@PathVariable String id, Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		var existingPro = pservice.findById(id);
+
+		if (existingPro != null) {
+			if (!existingPro.getType_id().equals(ldto.getBranch_id())) {
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "NOT YOUR BRANCH!!!");
+			}
 			pservice.delete(id);
 			return "redirect:/manager/products";
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product_type");
 		}
-
 	}
 
 	@GetMapping("/manager/products/recover/type/{id}")
-	public String productTypeRecover(@PathVariable String id, Model model) {
-		if (ptservice.findById3(id) != null) {
+	public String productTypeRecover(@PathVariable String id, Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		ProductTypeEntryModel existingProduct = ptservice.findById3(id);
+
+		if (existingProduct != null) {
+			if (!existingProduct.getType_id().equals(ldto.getBranch_id())) {
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "NOT YOUR BRANCH!!!");
+			}
 			ptservice.recover(id);
 			return "redirect:/manager/products/deleted";
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product_type");
 		}
-
 	}
 
 	private List<IngredientTypesListModelFake> ingredientgetAllFake() {
@@ -312,7 +348,6 @@ public class ProductController {
 
 				imgPart.write(fileToSave.getAbsolutePath());
 
-				// Return ONLY the file name so Thymeleaf can append it to /images/ correctly
 				return fileName;
 			}
 			return null;
