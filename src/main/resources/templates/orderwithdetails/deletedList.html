@@ -1,654 +1,278 @@
 <!DOCTYPE html>
-
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deleted Orders - Café Луфт</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
-<meta charset="UTF-8">
+    <style>
+        :root {
+            --cafe-primary: #8C6239;
+            --cafe-primary-dark: #5C3D2E;
+            --cafe-gold: #C5A059;
+            --cafe-gold-light: #F7F3EB;
+            --cafe-dark: #1E1A17;
+            --cafe-bg: #FDFBF7;
+            --cafe-card-bg: #FFFFFF;
+            --cafe-border: #EFE9E1;
+            --cafe-muted: #827E7A;
+            --shadow-subtle: 0 4px 20px rgba(92, 61, 46, 0.05);
+        }
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        body {
+            background-color: var(--cafe-bg);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--cafe-dark);
+        }
 
-<title>Deleted Orders</title>
+        .container-fluid {
+            max-width: 1440px;
+        }
 
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-	rel="stylesheet">
+        .page-brand {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: var(--cafe-primary-dark);
+        }
 
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        .luxury-card {
+            background: var(--cafe-card-bg);
+            border: 1px solid var(--cafe-border);
+            border-radius: 18px;
+            box-shadow: var(--shadow-subtle);
+        }
 
+        .btn-luxury-outline {
+            background: #fff;
+            color: var(--cafe-primary-dark);
+            border: 1px solid var(--cafe-border);
+            border-radius: 10px;
+            padding: 8px 18px;
+            font-weight: 600;
+            transition: all 0.25s ease;
+        }
+        .btn-luxury-outline:hover {
+            background: var(--cafe-gold-light);
+            border-color: var(--cafe-gold);
+            color: var(--cafe-primary-dark);
+        }
 
-<style>
+        .search-box-wrap {
+            position: relative;
+        }
+        .search-box-wrap i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--cafe-muted);
+        }
+        .search-box-wrap input, .filter-date {
+            height: 44px;
+            border-radius: 10px;
+            border: 1px solid var(--cafe-border);
+            font-size: 0.9rem;
+        }
+        .search-box-wrap input {
+            padding-left: 42px;
+        }
+        .search-box-wrap input:focus, .filter-date:focus {
+            border-color: var(--cafe-gold);
+            box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.15);
+        }
 
-body {
-	background-color: #ffffff;
-	font-family: Arial, Helvetica, sans-serif;
-	color: #111827;
-}
+        .table-luxury {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        .table-luxury thead th {
+            background: #FAF8F5;
+            color: var(--cafe-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            font-weight: 700;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--cafe-border);
+            white-space: nowrap;
+        }
+        .table-luxury tbody td {
+            padding: 16px 18px;
+            border-bottom: 1px solid #F5EFEB;
+            vertical-align: middle;
+            font-size: 0.88rem;
+        }
 
-.page-container {
-	max-width: 1500px;
-	margin: 0 auto;
-	padding: 25px 20px 50px;
-}
+        .token-tag {
+            font-weight: 700;
+            color: var(--cafe-primary-dark);
+            background: var(--cafe-gold-light);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            display: inline-block;
+        }
 
-.page-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 25px;
-}
+        .badge-cancelled {
+            background: #FEE2E2;
+            color: #DC2626;
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
 
-.page-title {
-	margin: 0;
-	font-size: 32px;
-	font-weight: 700;
-	color: #111827;
-}
-
-.header-buttons {
-	display: flex;
-	gap: 10px;
-}
-
-.header-btn {
-	border-radius: 9px;
-	padding: 10px 18px;
-	font-weight: 600;
-}
-
-.filter-box {
-	background: #ffffff;
-	border: 1px solid #e5e7eb;
-	border-radius: 14px;
-	padding: 20px;
-	margin-bottom: 28px;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-.search-wrapper {
-	position: relative;
-}
-
-.search-wrapper i {
-	position: absolute;
-	left: 17px;
-	top: 50%;
-	transform: translateY(-50%);
-	color: #64748b;
-	font-size: 20px;
-	z-index: 2;
-}
-
-.search-input {
-	height: 56px;
-	border: 1px solid #cbd5e1;
-	border-radius: 10px;
-	padding-left: 52px;
-	font-size: 18px;
-	color: #334155;
-}
-
-.search-input:focus {
-	border-color: #94a3b8;
-	box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.15);
-}
-
-.date-input {
-	height: 56px;
-	border: 1px solid #cbd5e1;
-	border-radius: 10px;
-	font-size: 17px;
-}
-
-.clear-btn {
-	height: 56px;
-	border: 1px solid #94a3b8;
-	border-radius: 10px;
-	padding: 0 20px;
-	color: #475569;
-	background: #ffffff;
-	font-size: 16px;
-}
-
-.clear-btn:hover {
-	background: #f8fafc;
-}
-
-.table-card {
-	background: #ffffff;
-	border: 1px solid #e2e8f0;
-	border-radius: 14px;
-	overflow: hidden;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-.table-responsive {
-	overflow-x: auto;
-}
-
-.orders-table {
-	width: 100%;
-	min-width: 1100px;
-	border-collapse: collapse;
-}
-
-.orders-table thead {
-	background-color: #f8fafc;
-}
-
-.orders-table thead th {
-	padding: 18px 22px;
-	color: #64748b;
-	font-size: 14px;
-	font-weight: 700;
-	text-align: left;
-	border-bottom: 1px solid #e2e8f0;
-	white-space: nowrap;
-}
-
-.orders-table tbody td {
-	padding: 20px 22px;
-	border-bottom: 1px solid #edf0f3;
-	font-size: 14px;
-	color: #475569;
-	vertical-align: middle;
-}
-
-.orders-table tbody tr {
-	transition: background-color 0.15s ease;
-}
-
-.orders-table tbody tr:hover {
-	background-color: #f8fafc;
-}
-
-.orders-table tbody tr:last-child td {
-	border-bottom: none;
-}
-
-.token-number {
-	font-size: 16px;
-	font-weight: 700;
-	color: #111827;
-}
-
-.employee-name {
-	font-weight: 600;
-	color: #111827;
-}
-
-.branch-name {
-	color: #475569;
-}
-
-.created-time {
-	color: #64748b;
-	white-space: nowrap;
-	font-size: 13px;
-}
-
-.product-list {
-	min-width: 280px;
-}
-
-.product-item {
-	margin-bottom: 7px;
-	color: #111827;
-	font-weight: 600;
-	line-height: 1.5;
-}
-
-.product-item:last-child {
-	margin-bottom: 0;
-}
-
-.product-quantity {
-	color: #64748b;
-	font-weight: 400;
-	margin-left: 5px;
-}
-
-.product-remark {
-	color: #94a3b8;
-	font-size: 12px;
-	font-weight: 400;
-	margin-left: 5px;
-}
-
-.total-amount {
-	color: #111827;
-	font-size: 15px;
-	font-weight: 700;
-	white-space: nowrap;
-}
-
-.deleted-badge {
-	display: inline-flex;
-	align-items: center;
-	gap: 5px;
-	background: #fee2e2;
-	color: #b91c1c;
-	border-radius: 20px;
-	padding: 6px 10px;
-	font-size: 12px;
-	font-weight: 700;
-	white-space: nowrap;
-}
-
-.action-buttons {
-	display: flex;
-	flex-direction: column;
-	gap: 7px;
-	min-width: 145px;
-}
-
-.restore-btn {
-	border: 1px solid #198754;
-	color: #198754;
-	background: #ffffff;
-	border-radius: 7px;
-	padding: 7px 12px;
-	font-size: 12px;
-	font-weight: 600;
-}
-
-.restore-btn:hover {
-	background: #198754;
-	color: #ffffff;
-}
-
-.delete-btn {
-	border: 1px solid #dc3545;
-	color: #dc3545;
-	background: #ffffff;
-	border-radius: 7px;
-	padding: 7px 12px;
-	font-size: 12px;
-	font-weight: 600;
-}
-
-.delete-btn:hover {
-	background: #dc3545;
-	color: #ffffff;
-}
-
-.empty-row {
-	text-align: center;
-	padding: 45px !important;
-	color: #94a3b8 !important;
-}
-
-.empty-icon {
-	font-size: 32px;
-	margin-bottom: 10px;
-}
-
-@media ( max-width : 768px) {
-	.page-container {
-		padding: 20px 12px 40px;
-	}
-	.page-header {
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 15px;
-	}
-	.page-title {
-		font-size: 27px;
-	}
-	.header-buttons {
-		width: 100%;
-	}
-	.header-btn {
-		flex: 1;
-	}
-	.filter-box {
-		padding: 14px;
-	}
-}
-</style>
-
+        .empty-state {
+            padding: 60px 20px;
+            text-align: center;
+        }
+        .empty-state i {
+            font-size: 3rem;
+            color: var(--cafe-muted);
+            opacity: 0.4;
+            margin-bottom: 14px;
+        }
+    </style>
 </head>
-
-
 <body>
 
-
-	<div class="page-container">
-
-		<div class="page-header">
-
-
-			<h1 class="page-title">Deleted Orders</h1>
-
-
-			<div class="header-buttons">
-
-
-				<a th:href="@{/order-with-details}"
-					class="btn btn-primary header-btn"> <i class="bi bi-arrow-left"></i>
-
-					Back to Orders
-
-				</a>
-
-
-			</div>
-
-
-		</div>
-
-		<div class="filter-box">
-
-
-			<div class="row g-2 align-items-center">
-
-				<div class="col-lg-6 col-md-6">
-
-
-					<div class="search-wrapper">
-
-
-						<i class="bi bi-search"></i> <input type="text" id="searchOrder"
-							class="form-control search-input"
-							placeholder="Search token, employee, branch, product...">
-
-
-					</div>
-
-
-				</div>
-
-				<div class="col-lg-4 col-md-4">
-
-
-					<input type="date" id="searchDate" class="form-control date-input">
-
-
-				</div>
-
-				<div class="col-lg-2 col-md-2">
-
-
-					<button type="button" class="btn clear-btn w-100"
-						onclick="clearSearch()">
-
-
-						<i class="bi bi-x-lg"></i> Clear
-
-
-					</button>
-
-
-				</div>
-
-
-			</div>
-
-
-		</div>
-
-		<div class="table-card">
-
-
-			<div class="table-responsive">
-
-
-				<table class="orders-table">
-
-					<thead>
-
-						<tr>
-
-
-							<th style="width: 9%;">Token No.</th>
-
-
-							<th style="width: 13%;">Employee</th>
-
-
-							<th style="width: 13%;">Branch</th>
-
-
-							<th style="width: 15%;">Created Date</th>
-
-
-							<th style="width: 28%;">Products</th>
-
-
-							<th style="width: 10%;">Total</th>
-
-
-							<th style="width: 7%;">Status</th>
-
-
-							<th style="width: 12%;">Actions</th>
-
-
-						</tr>
-
-					</thead>
-
-					<tbody>
-
-						<tr th:each="order : ${orders}"
-							th:attr="data-created-date=${order.created_time != null ? #temporals.format(order.created_time, 'yyyy-MM-dd') : ''}">
-
-							<td><span class="token-number"
-								th:text="${order.token_number}"> 001 </span></td>
-
-							<td><span class="employee-name"
-								th:text="${order.employee_name}"> Employee </span></td>
-
-							<td><span class="branch-name" th:text="${order.branch_name}">
-
-									Branch </span></td>
-
-							<td><span class="created-time"
-								th:text="${order.created_time != null ? #temporals.format(order.created_time, 'dd-MM-yyyy HH:mm:ss') : '—'}">
-
-									03-10-2026 17:00:00 </span></td>
-
-							<td>
-
-
-								<div class="product-list">
-
-
-									<th:block th:each="detail : ${orderDetails}">
-
-
-										<div th:if="${detail.order_id == order.order_id}"
-											class="product-item">
-
-											<span th:text="${detail.product_name}"> Product </span>
-
-											<span class="product-quantity"> × <span
-												th:text="${detail.quantity}"> 1 </span>
-
-
-											</span>
-
-											<span
-												th:if="${detail.remark != null and detail.remark != ''}"
-												class="product-remark"> - <span
-												th:text="${detail.remark}"> Remark </span>
-
-
-											</span>
-
-
-										</div>
-
-
-									</th:block>
-
-
-								</div>
-
-
-							</td>
-
-							<td><span class="total-amount"> <span
-									th:text="${order.total_amount}"> 0.00 </span> Ks
-
-
-							</span></td>
-
-							<td><span class="deleted-badge"> <i
-									class="bi bi-trash3"></i> Deleted
-
-
-							</span></td>
-
-
-							<td>
-
-
-								<div class="action-buttons">
-
-
-									<!-- RESTORE -->
-
-									<form
-										th:action="@{/order-with-details/restore/{id}(id=${order.order_id})}"
-										method="post"
-										onsubmit="return confirm('Restore this order?');">
-
-
-										<button type="submit" class="btn restore-btn w-100">
-
-
-											<i class="bi bi-arrow-counterclockwise"></i> Restore
-
-
-										</button>
-
-
-									</form>
-
-
-									<form
-										th:action="@{/order-with-details/permanent-delete/{id}(id=${order.order_id})}"
-										method="post"
-										onsubmit="return confirm('This will permanently delete the order and its details. Continue?');">
-
-
-										<button type="submit" class="btn delete-btn w-100">
-
-
-											<i class="bi bi-trash"></i> Permanent Delete
-
-
-										</button>
-
-
-									</form>
-
-
-								</div>
-
-
-							</td>
-
-
-						</tr>
-
-						<tr th:if="${#lists.isEmpty(orders)}">
-
-
-							<td colspan="8" class="empty-row">
-
-
-								<div class="empty-icon">
-
-									<i class="bi bi-trash3"></i>
-
-								</div> No deleted orders found.
-
-
-							</td>
-
-
-						</tr>
-
-
-					</tbody>
-
-
-				</table>
-
-
-			</div>
-
-
-		</div>
-
-
-	</div>
-
-	<script>
-		
-		document.getElementById("searchOrder").addEventListener("input",
-				filterOrders);
-
-		document.getElementById("searchDate").addEventListener("change",
-				filterOrders);
-
-		function filterOrders() {
-
-			let searchValue = document.getElementById("searchOrder").value
-					.toLowerCase().trim();
-
-			let selectedDate = document.getElementById("searchDate").value;
-
-			let rows = document
-					.querySelectorAll(".orders-table tbody tr[data-created-date]");
-
-			rows.forEach(function(row) {
-
-				let rowText = row.innerText.toLowerCase();
-
-				let createdDate = row.getAttribute("data-created-date");
-
-				let matchesSearch = rowText.includes(searchValue);
-
-				let matchesDate = selectedDate === ""
-						|| createdDate === selectedDate;
-
-				if (matchesSearch && matchesDate) {
-
-					row.style.display = "";
-
-				} else {
-
-					row.style.display = "none";
-
-				}
-
-			});
-
-		}
-
-		function clearSearch() {
-
-			document.getElementById("searchOrder").value = "";
-
-			document.getElementById("searchDate").value = "";
-
-			let rows = document
-					.querySelectorAll(".orders-table tbody tr[data-created-date]");
-
-			rows.forEach(function(row) {
-
-				row.style.display = "";
-
-			});
-
-		}
-	</script>
-
-
+<div class="container-fluid px-lg-5 py-4">
+
+    <!-- Top Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="page-brand mb-1">Deleted Orders</h2>
+            <p class="text-muted small mb-0">Review cancelled orders or restore to queue</p>
+        </div>
+        <a th:href="@{/order-with-details}" class="btn btn-luxury-outline">
+            <i class="bi bi-arrow-left me-1"></i> Back to Orders
+        </a>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="luxury-card p-3 mb-4">
+        <div class="row g-2 align-items-center">
+            <div class="col-md-5">
+                <div class="search-box-wrap">
+                    <i class="bi bi-search"></i>
+                    <input type="text" id="searchOrder" class="form-control" placeholder="Search token, employee, branch, product...">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <input type="date" id="searchDate" class="form-control filter-date">
+            </div>
+            <div class="col-md-auto ms-auto">
+                <button type="button" class="btn btn-luxury-outline px-3" onclick="clearSearch()">
+                    <i class="bi bi-x-lg me-1"></i> Clear Filter
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div th:if="${#lists.isEmpty(orders)}" class="luxury-card empty-state">
+        <i class="bi bi-trash3 d-block"></i>
+        <h5 class="fw-bold mb-1" style="color: var(--cafe-primary-dark);">No Deleted Orders</h5>
+        <p class="text-muted small mb-0">Trash is completely clean.</p>
+    </div>
+
+    <!-- Table -->
+    <div th:unless="${#lists.isEmpty(orders)}" class="luxury-card overflow-hidden">
+        <div class="table-responsive">
+            <table class="table-luxury">
+                <thead>
+                    <tr>
+                        <th style="width: 9%;">Token No.</th>
+                        <th style="width: 15%;">Employee & Branch</th>
+                        <th style="width: 15%;">Created Time</th>
+                        <th style="width: 25%;">Products</th>
+                        <th style="width: 12%;">Total Amount</th>
+                        <th style="width: 10%;">Status</th>
+                        <th style="width: 14%; text-align: right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="order : ${orders}"
+                        th:attr="data-created-date=${order.created_time != null ? #temporals.format(order.created_time, 'yyyy-MM-dd') : ''}">
+                        <td><span class="token-tag" th:text="${order.token_number}">#001</span></td>
+                        <td>
+                            <div class="fw-semibold" th:text="${order.employee_name}">Staff</div>
+                            <div class="text-muted small" th:text="${order.branch_name}">Branch</div>
+                        </td>
+                        <td>
+                            <span class="text-muted small" th:text="${order.created_time != null ? #temporals.format(order.created_time, 'dd-MM-yyyy HH:mm:ss') : '—'}">03-10-2026 17:00</span>
+                        </td>
+                        <td>
+                            <div class="d-flex flex-column gap-1">
+                                <th:block th:each="detail : ${orderDetails}">
+                                    <div th:if="${detail.order_id == order.order_id}" class="d-flex align-items-center gap-1">
+                                        <span class="fw-semibold" th:text="${detail.product_name}">Product</span>
+                                        <span class="text-muted small">× <span th:text="${detail.quantity}">1</span></span>
+                                        <span th:if="${detail.remark != null and detail.remark != ''}" class="badge bg-light text-muted border ms-1" style="font-size: 0.7rem;" th:text="${detail.remark}">Note</span>
+                                    </div>
+                                </th:block>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="fw-bold" style="color: var(--cafe-primary-dark);" th:text="${order.total_amount} + ' Ks'">0.00 Ks</span>
+                        </td>
+                        <td>
+                            <span class="badge-cancelled"><i class="bi bi-x-circle-fill"></i> Cancelled</span>
+                        </td>
+                        <td class="text-end">
+                            <div class="d-inline-flex gap-2">
+                                <form th:action="@{/order-with-details/restore/{id}(id=${order.order_id})}" method="post"
+                                      onsubmit="return confirm('Restore this order?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-success rounded-pill px-3">
+                                        <i class="bi bi-arrow-counterclockwise me-1"></i> Restore
+                                    </button>
+                                </form>
+                                <form th:action="@{/order-with-details/permanent-delete/{id}(id=${order.order_id})}" method="post"
+                                      onsubmit="return confirm('This will permanently delete this record. Continue?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.getElementById("searchOrder").addEventListener("input", filterOrders);
+    document.getElementById("searchDate").addEventListener("change", filterOrders);
+
+    function filterOrders() {
+        let searchValue = document.getElementById("searchOrder").value.toLowerCase().trim();
+        let selectedDate = document.getElementById("searchDate").value;
+        let rows = document.querySelectorAll(".table-luxury tbody tr[data-created-date]");
+
+        rows.forEach(function(row) {
+            let rowText = row.innerText.toLowerCase();
+            let createdDate = row.getAttribute("data-created-date");
+            let matchesSearch = rowText.includes(searchValue);
+            let matchesDate = selectedDate === "" || createdDate === selectedDate;
+            row.style.display = (matchesSearch && matchesDate) ? "" : "none";
+        });
+    }
+
+    function clearSearch() {
+        document.getElementById("searchOrder").value = "";
+        document.getElementById("searchDate").value = "";
+        document.querySelectorAll(".table-luxury tbody tr[data-created-date]").forEach(r => r.style.display = "");
+    }
+</script>
 </body>
-
 </html>

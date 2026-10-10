@@ -1,173 +1,271 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layout}">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout}">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Edit Branch - Luft Cafe</title>
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-:root {
-	--primary-color: #5C3D2E;
-	--accent-warm: #E0A96D;
-	--accent-hover: #C88E52;
-	--bg-main: #FAF7F2;
-	--card-bg: #FFFFFF;
-	--text-color: #2D2422;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Branch | Café Luft</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-body {
-	background-color: var(--bg-main);
-	color: var(--text-color);
-	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+    <style>
+        body {
+            background-color: #FAF7F2;
+            color: #2D2422;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 14px;
+        }
 
-.main-card {
-	background-color: var(--card-bg);
-	border: 1px solid #EAE3DC;
-	border-radius: 12px;
-	padding: 32px 40px;
-	box-shadow: 0 4px 15px rgba(92, 61, 46, 0.05);
-	margin-top: 30px;
-	margin-bottom: 30px;
-}
+        .branch-center-wrapper {
+            max-width: 760px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
 
-.page-title {
-	color: var(--primary-color);
-	font-weight: 700;
-	font-size: 1.6rem;
-}
+        .luxury-card {
+            background: #FFFFFF;
+            border-radius: 20px;
+            border: 1px solid rgba(214, 197, 178, 0.45);
+            box-shadow: 0 16px 36px -10px rgba(58, 41, 26, 0.08), 0 0 1px 1px rgba(214, 197, 178, 0.25);
+            padding: 34px 40px;
+        }
 
-.btn-submit {
-	background-color: var(--accent-warm);
-	color: #3E2723;
-	font-weight: 600;
-	border-radius: 8px;
-	padding: 9px 24px;
-	border: none;
-}
+        .luxury-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #F0E8DC;
+        }
 
-.btn-submit:hover {
-	background-color: var(--accent-hover);
-	color: #2C1A14;
-}
+        .icon-badge {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #7D5127, #533314);
+            color: #F4E8D8;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 6px 14px rgba(83, 51, 20, 0.22);
+            flex-shrink: 0;
+        }
 
-.btn-cancel {
-	background-color: #EFEBE9;
-	color: #5D4037;
-	border: 1px solid #D7CCC8;
-	border-radius: 8px;
-	padding: 9px 24px;
-	text-decoration: none;
-	font-weight: 600;
-}
-</style>
+        .luxury-header h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2B1D14;
+            margin: 0;
+            letter-spacing: -0.2px;
+        }
+
+        .luxury-subtitle {
+            font-size: 13px;
+            color: #8C7B6C;
+            margin-top: 3px;
+        }
+
+        .form-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #554133;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group-custom {
+            position: relative;
+        }
+
+        .input-group-custom .icon-addon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9C8976;
+            font-size: 14px;
+        }
+
+        .form-control-luxury, .form-select-luxury {
+            width: 100%;
+            background-color: #FAF8F5;
+            border: 1px solid #DFD5C6;
+            border-radius: 11px;
+            padding: 10px 14px 10px 38px;
+            color: #2D2422;
+            font-size: 13.5px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .form-control-luxury:focus, .form-select-luxury:focus {
+            background-color: #FFFFFF;
+            border-color: #8B572A;
+            box-shadow: 0 0 0 3px rgba(139, 87, 42, 0.12);
+            outline: none;
+        }
+
+        textarea.form-control-luxury {
+            padding-left: 14px;
+        }
+
+        .btn-luxury-primary {
+            background: linear-gradient(135deg, #7D5127 0%, #583718 100%);
+            color: #FFFFFF;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 6px 14px rgba(88, 55, 24, 0.2);
+        }
+
+        .btn-luxury-primary:hover {
+            background: linear-gradient(135deg, #6C441E 0%, #442911 100%);
+            transform: translateY(-1px);
+            color: #FFFFFF;
+        }
+
+        .btn-luxury-cancel {
+            background-color: #EFE8DD;
+            color: #5C4533;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-luxury-cancel:hover {
+            background-color: #E2D7C7;
+            color: #3C2B1D;
+        }
+    </style>
 </head>
 
 <body>
+<div layout:fragment="content">
+    <div class="branch-center-wrapper">
+        <div class="luxury-card">
 
-	<div layout:fragment="content" style="max-width: 650px;">
-		<div class="main-card">
+            <div class="luxury-header">
+                <div class="icon-badge">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </div>
+                <div>
+                    <h2>Edit Branch Information</h2>
+                    <p class="luxury-subtitle">Update store configurations, schedules and operational metrics</p>
+                </div>
+            </div>
 
-			<h3 class="page-title mb-4">
-				<i class="fa-solid fa-pen-to-square me-2"></i>Edit Branch
-			</h3>
+            <form th:action="@{/admin/branches/edit/{branch_id}(branch_id=${branch_id})}"
+                  th:object="${branchDto}" method="post">
+                
+                <div class="row g-3">
+                    
+                    <div class="col-md-6">
+                        <label class="form-label">Branch Name <span class="text-danger">*</span></label>
+                        <div class="input-group-custom">
+                            <i class="fa-solid fa-tag icon-addon"></i>
+                            <input type="text" th:field="*{name}"
+                                   class="form-control-luxury"
+                                   th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'">
+                        </div>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                    </div>
 
-			<form th:action="@{/admin/branches/edit/{branch_id}(branch_id=${branch_id})}"
-				th:object="${branchDto}" method="post">
+                    <div class="col-md-6">
+                        <label class="form-label">Location <span class="text-danger">*</span></label>
+                        <div class="input-group-custom">
+                            <i class="fa-solid fa-location-dot icon-addon"></i>
+                            <input type="text" th:field="*{location}"
+                                   class="form-control-luxury"
+                                   th:classappend="${#fields.hasErrors('location')} ? 'is-invalid'">
+                        </div>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('location')}" th:errors="*{location}"></div>
+                    </div>
 
+                    <div class="col-md-6">
+                        <label class="form-label">Status <span class="text-danger">*</span></label>
+                        <div class="input-group-custom">
+                            <i class="fa-solid fa-circle-check icon-addon"></i>
+                            <select th:field="*{branch_status_id}" class="form-select-luxury"
+                                    th:classappend="${#fields.hasErrors('branch_status_id')} ? 'is-invalid'">
+                                <option value="">-- Select Status --</option>
+                                <option th:each="st : ${statuses}"
+                                        th:value="${st.branch_status_id}" th:text="${st.name}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('branch_status_id')}" th:errors="*{branch_status_id}"></div>
+                    </div>
 
-				<div class="mb-3">
-					<label class="form-label fw-bold">Branch Name <span
-						class="text-danger">*</span></label> <input type="text" th:field="*{name}"
-						class="form-control"
-						th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'">
-					<div class="invalid-feedback" th:if="${#fields.hasErrors('name')}"
-						th:errors="*{name}"></div>
-				</div>
+                    <div class="col-md-6">
+                        <label for="branch_finance" class="form-label">Branch Finance (MMK) <span class="text-danger">*</span></label>
+                        <div class="input-group-custom">
+                            <i class="fa-solid fa-coins icon-addon"></i>
+                            <input type="number" id="branch_finance" th:field="*{branch_finance}"
+                                   class="form-control-luxury" step="0.01" min="0" placeholder="0.00"
+                                   th:classappend="${#fields.hasErrors('branch_finance')} ? 'is-invalid' : ''">
+                        </div>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('branch_finance')}" th:errors="*{branch_finance}"></div>
+                    </div>
 
+                    <div class="col-md-6">
+                        <label class="form-label">Opening Time <span class="text-danger">*</span></label>
+                        <div class="input-group-custom">
+                            <i class="fa-solid fa-clock icon-addon"></i>
+                            <input type="time" th:field="*{opening_time}" class="form-control-luxury"
+                                   th:classappend="${#fields.hasErrors('opening_time')} ? 'is-invalid'">
+                        </div>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('opening_time')}" th:errors="*{opening_time}"></div>
+                    </div>
 
-				<div class="mb-3">
-					<label class="form-label fw-bold">Location <span
-						class="text-danger">*</span></label> <input type="text"
-						th:field="*{location}" class="form-control"
-						th:classappend="${#fields.hasErrors('location')} ? 'is-invalid'">
-					<div class="invalid-feedback"
-						th:if="${#fields.hasErrors('location')}" th:errors="*{location}"></div>
-				</div>
+                    <div class="col-md-6">
+                        <label class="form-label">Closing Time <span class="text-danger">*</span></label>
+                        <div class="input-group-custom">
+                            <i class="fa-solid fa-clock-rotate-left icon-addon"></i>
+                            <input type="time" th:field="*{closing_time}" class="form-control-luxury"
+                                   th:classappend="${#fields.hasErrors('closing_time')} ? 'is-invalid'">
+                        </div>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('closing_time')}" th:errors="*{closing_time}"></div>
+                    </div>
 
+                    <div class="col-12">
+                        <label class="form-label">Description</label>
+                        <textarea th:field="*{description}" class="form-control-luxury" rows="2"
+                                  placeholder="Update branch description..."></textarea>
+                    </div>
 
-				<div class="mb-3">
-					<label class="form-label fw-bold">Description</label>
-					<textarea th:field="*{description}" class="form-control" rows="3"></textarea>
-				</div>
+                </div>
 
+                <div class="d-flex justify-content-end align-items-center gap-2 mt-4 pt-3 border-top border-light-subtle">
+                    <a th:href="@{/admin/branches}" class="btn-luxury-cancel">
+                        <i class="fa-solid fa-xmark"></i> Cancel
+                    </a>
+                    <button type="submit" class="btn-luxury-primary">
+                        <i class="fa-solid fa-check"></i> Update Branch
+                    </button>
+                </div>
+            </form>
 
-				<div class="mb-3">
-					<label class="form-label fw-bold">Status <span
-						class="text-danger">*</span></label> <select
-						th:field="*{branch_status_id}" class="form-select"
-						th:classappend="${#fields.hasErrors('branch_status_id')} ? 'is-invalid'">
-						<option value="">-- Select Status --</option>
-						<option th:each="st : ${statuses}"
-							th:value="${st.branch_status_id}" th:text="${st.name}">
-						</option>
-					</select>
-					<div class="invalid-feedback"
-						th:if="${#fields.hasErrors('branch_status_id')}"
-						th:errors="*{branch_status_id}"></div>
-				</div>
-				
-				<div class="mb-3">
-					<label for="branch_finance" class="form-label fw-bold">
-						Branch Finance<span class="text-danger">*</span>
-					</label> <input type="number" id="branch_finance" th:field="*{branch_finance}"
-						class="form-control" step="0.01" min="0" placeholder="0.000"
-						th:classappend="${#fields.hasErrors('branch_finance')} ? 'is-invalid' : ''">
-					<div class="invalid-feedback"
-						th:if="${#fields.hasErrors('branch_finance')}"
-						th:errors="*{branch_finance}"></div>
-				</div>
-
-
-				<div class="mb-3">
-					<label class="form-label fw-bold">Opening Time <span
-						class="text-danger">*</span></label> <input type="time"
-						th:field="*{opening_time}" class="form-control"
-						th:classappend="${#fields.hasErrors('opening_time')} ? 'is-invalid'">
-					<div class="invalid-feedback"
-						th:if="${#fields.hasErrors('opening_time')}"
-						th:errors="*{opening_time}"></div>
-				</div>
-
-
-				<div class="mb-3">
-					<label class="form-label fw-bold">Closing Time <span
-						class="text-danger">*</span></label> <input type="time"
-						th:field="*{closing_time}" class="form-control"
-						th:classappend="${#fields.hasErrors('closing_time')} ? 'is-invalid'">
-					<div class="invalid-feedback"
-						th:if="${#fields.hasErrors('closing_time')}"
-						th:errors="*{closing_time}"></div>
-				</div>
-
-
-				<div class="mt-4 d-flex gap-2 justify-content-end">
-					<a th:href="@{/admin/branches}" class="btn btn-cancel"><i
-						class="fa-solid fa-xmark me-1"></i>Cancel</a>
-					<button type="submit" class="btn btn-submit">
-						<i class="fa-solid fa-pen me-1"></i>Update Branch
-					</button>
-				</div>
-
-			</form>
-
-		</div>
-	</div>
-
+        </div>
+    </div>
+</div>
 </body>
 </html>

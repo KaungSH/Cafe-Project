@@ -1,230 +1,260 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layout}">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout}">
 <head>
-<meta charset="UTF-8">
-<title>Branches Stats List</title>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <meta charset="UTF-8">
+    <title>Branch Statistics Overview | Café Luft</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<style>
-body {
-	margin: 0;
-	background-color: #faf7f1;
-	color: #241c16;
-	font-family: Arial, sans-serif;
-	font-size: 14px;
-}
+    <style>
+        body {
+            background-color: #F8F5F0;
+            color: #2D241E;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 14px;
+        }
 
-.branchesStats-container {
-	width: 95%;
-	max-width: 1450px;
-	margin: 25px auto;
-}
+        .stats-dashboard {
+            width: 95%;
+            max-width: 1400px;
+            margin: 35px auto;
+        }
 
-.branchesStats-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: flex-start;
-	margin-bottom: 28px;
-}
+        /* Luxury Header */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
 
-.branchesStats-title h2 {
-	margin: 0 0 6px 0;
-	color: #241c16;
-	font-size: 27px;
-	font-weight: 700;
-	line-height: 1.2;
-}
+        .header-title-box {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
 
-.branchesStats-title h2 i {
-	color: #875522;
-	font-size: 22px;
-	margin-right: 7px;
-}
+        .header-avatar {
+            width: 46px;
+            height: 46px;
+            background: linear-gradient(135deg, #7D5127, #4E3013);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #F4E8D8;
+            font-size: 20px;
+            box-shadow: 0 6px 14px rgba(78, 48, 19, 0.2);
+            flex-shrink: 0;
+        }
 
-.branchesStats-title p {
-	margin: 0;
-	color: #806b56;
-	font-size: 14px;
-	line-height: 1.5;
-}
+        .header-title-box h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #261B14;
+            margin: 0;
+            letter-spacing: -0.2px;
+        }
 
-.btn-add {
-	display: inline-flex;
-	align-items: center;
-	gap: 6px;
-	background-color: #925d2b;
-	color: #ffffff;
-	border: none;
-	border-radius: 9px;
-	padding: 10px 18px;
-	font-size: 14px;
-	font-weight: 600;
-	text-decoration: none;
-	transition: 0.2s;
-}
+        .header-title-box p {
+            font-size: 13px;
+            color: #8C7A68;
+            margin: 2px 0 0 0;
+        }
 
-.btn-add:hover {
-	background-color: #75451f;
-	color: #ffffff;
-}
+        .admin-badge {
+            background: #EFE6D8;
+            color: #6C441E;
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            border: 1px solid #DFD2C0;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
 
-.btn-deleted {
-	display: inline-flex;
-	align-items: center;
-	gap: 6px;
-	background-color: #eadbc7;
-	color: #624522;
-	border: none;
-	border-radius: 9px;
-	padding: 10px 18px;
-	font-size: 14px;
-	font-weight: 600;
-	text-decoration: none;
-	margin-left: 7px;
-	transition: 0.2s;
-}
+        /* Glass / Card Table Design */
+        .table-container {
+            background: #FFFFFF;
+            border-radius: 18px;
+            border: 1px solid rgba(214, 197, 178, 0.45);
+            box-shadow: 0 12px 30px -8px rgba(58, 41, 26, 0.06), 0 0 1px 1px rgba(214, 197, 178, 0.2);
+            overflow: hidden;
+        }
 
-.btn-deleted:hover {
-	background-color: #ddc9ae;
-	color: #4f351c;
-}
+        .table-luxury {
+            width: 100%;
+            margin: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
 
-.branchesStats-container .table {
-	width: 100%;
-	margin: 0;
-	background-color: #fffaf4;
-	border: 1px solid #eadcca;
-	border-radius: 14px;
-	overflow: hidden;
-	border-collapse: separate;
-	border-spacing: 0;
-	box-shadow: 0 2px 8px rgba(80, 50, 20, 0.04);
-}
+        .table-luxury thead th {
+            background: #FAF5EE;
+            color: #796450;
+            padding: 15px 20px;
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            border-bottom: 1px solid #EADBCC;
+            white-space: nowrap;
+        }
 
-.branchesStats-container .table thead th {
-	background-color: #f5ecdf;
-	color: #9a8067;
-	padding: 13px 20px;
-	font-size: 12px;
-	font-weight: 600;
-	text-transform: uppercase;
-	letter-spacing: 0.4px;
-	border: none;
-	border-bottom: 1px solid #eadcca;
-	white-space: nowrap;
-}
+        .table-luxury tbody td {
+            padding: 15px 20px;
+            color: #49382B;
+            font-size: 13.5px;
+            border-bottom: 1px solid #F3ECE2;
+            vertical-align: middle;
+        }
 
-.branchesStats-container .table tbody td {
-	padding: 14px 20px;
-	color: #705a45;
-	font-size: 14px;
-	vertical-align: middle;
-	border: none;
-	border-bottom: 1px solid #eadcca;
-}
+        .table-luxury tbody tr:last-child td {
+            border-bottom: none;
+        }
 
-.branchesStats-container .table tbody tr:last-child td {
-	border-bottom: none;
-}
+        .table-luxury tbody tr:hover {
+            background-color: #FAF6EF;
+        }
 
-.branchesStats-container .table tbody tr:hover {
-	background-color: #fcf5eb;
-}
+        .badge-branch {
+            font-weight: 600;
+            color: #2D1D12;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
 
-.branchesStats-container .table tbody td:nth-child(2) {
-	color: #211a15;
-	font-weight: 500;
-}
+        .badge-month {
+            background-color: #F1E7D9;
+            color: #6C4724;
+            padding: 4px 11px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
 
-.branchesStats-container .table tbody td:nth-child(3) {
-	color: #745d47;
-}
+        .val-count {
+            background-color: #F8F5F0;
+            padding: 3px 10px;
+            border-radius: 8px;
+            font-weight: 700;
+            color: #5D3D1E;
+            border: 1px solid #EADBCC;
+            display: inline-block;
+        }
 
-.branchesStats-container .table tbody td:nth-child(4) {
-	color: #806b56;
-	white-space: nowrap;
-}
+        .val-amount {
+            font-weight: 700;
+            color: #2D1D12;
+        }
 
-.btn-edit {
-	display: inline-block;
-	color: #5f401f;
-	background-color: #ffffff;
-	border: 1px solid #ddcbb4;
-	border-radius: 8px;
-	padding: 6px 13px;
-	font-size: 13px;
-	font-weight: 600;
-	text-decoration: none;
-	transition: 0.2s;
-}
+        .user-creator {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            color: #6E5B4B;
+            font-weight: 500;
+        }
 
-.btn-edit:hover {
-	background-color: #f1e4d1;
-	color: #5f401f;
-	border-color: #cdb391;
-}
-
-.btn-delete {
-	display: inline-block;
-	color: #8f3e2e;
-	background-color: #ffffff;
-	border: 1px solid #e2c9bf;
-	border-radius: 8px;
-	padding: 6px 13px;
-	font-size: 13px;
-	font-weight: 600;
-	text-decoration: none;
-	margin-left: 5px;
-	transition: 0.2s;
-}
-
-.btn-delete:hover {
-	background-color: #f2d8d0;
-	color: #8f3e2e;
-	border-color: #d6afa3;
-}
-</style>
+        .user-avatar-circle {
+            width: 26px;
+            height: 26px;
+            background: #EFE6D8;
+            color: #6C441E;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+    </style>
 </head>
 <body>
-	<div layout:fragment="content">
-		<div class="branchesStats-header">
-			<div class="branchesStats-title">
-				<h2>
-					<i class="bi bi-bar-chart-line"></i> Branch Stats Management
-				</h2>
-				<p>Branch Stats List - Admin</p>
-			</div>
-		</div>
-		<table class="table">
-			<thead>
-				<tr>
-					<th>No</th>
-					<th>Branch Name</th>
-					<th>Sale Count</th>
-					<th>Sale amount</th>
-					<th>Month</th>
-					<th>Employee Salaries</th>
-					<th>Created By</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="branchesStats, state : ${branchesStatses}">
-					<td th:text="${state.count}"></td>
-					<td th:text="${branchesStats.branch_name}"></td>
-					<td th:text="${branchesStats.salecount}"></td>
-					<td th:text="${branchesStats.saleamount}"></td>
-					<td th:text="${branchesStats.month}"></td>
-					<td th:text="${branchesStats.employee_cost}"></td>
-					<td th:text="${branchesStats.employee_name}"></td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+<div layout:fragment="content">
+    <div class="stats-dashboard">
+        <!-- Header Section -->
+        <div class="dashboard-header">
+            <div class="header-title-box">
+                <div class="header-avatar">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+                <div>
+                    <h2>Branch Stats Management</h2>
+                    <p>Overview and read-only analytical performance records</p>
+                </div>
+            </div>
+
+            <div>
+                <span class="admin-badge">
+                    <i class="bi bi-lock-fill"></i> Admin Privilege (Read Only)
+                </span>
+            </div>
+        </div>
+
+        <!-- Table Container -->
+        <div class="table-container">
+            <table class="table-luxury">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">No</th>
+                        <th>Branch Name</th>
+                        <th>Sale Count</th>
+                        <th>Sale Amount</th>
+                        <th>Month</th>
+                        <th>Employee Salaries</th>
+                        <th>Created By</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="branchesStats, state : ${branchesStatses}">
+                        <td th:text="${state.count}" class="text-muted fw-semibold">1</td>
+                        <td>
+                            <div class="badge-branch">
+                                <i class="bi bi-geo-alt-fill text-muted" style="font-size: 12px;"></i>
+                                <span th:text="${branchesStats.branch_name}">Café Luft - Main</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="val-count" th:text="${branchesStats.salecount}">0</span>
+                        </td>
+                        <td class="val-amount" th:text="${#numbers.formatDecimal(branchesStats.saleamount, 1, 'COMMA', 2, 'POINT')} + ' MMK'">
+                            0.00 MMK
+                        </td>
+                        <td>
+                            <span class="badge-month" th:text="${branchesStats.month}">October</span>
+                        </td>
+                        <td th:text="${#numbers.formatDecimal(branchesStats.employee_cost, 1, 'COMMA', 2, 'POINT')} + ' MMK'">
+                            0.00 MMK
+                        </td>
+                        <td>
+                            <div class="user-creator">
+                                <span class="user-avatar-circle">
+                                    <i class="bi bi-person-fill"></i>
+                                </span>
+                                <span th:text="${branchesStats.employee_name}">Admin</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(branchesStatses)}">
+                        <td colspan="7" class="text-center py-5 text-muted">
+                            <i class="bi bi-inbox fs-2 d-block mb-2 text-secondary opacity-50"></i>
+                            No branch statistics recorded yet.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 </body>
 </html>
