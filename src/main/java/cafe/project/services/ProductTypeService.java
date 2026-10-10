@@ -3,7 +3,10 @@ package cafe.project.services;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import cafe.project.models.ProductListModel;
 import cafe.project.models.ProductTypeEntryModel;
@@ -44,6 +47,10 @@ public class ProductTypeService {
 
 	public List<ProductTypeListModel> findAllForOrder(String branchId) {
 
+		if (branchId == null || branchId.isBlank()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Branch ID is required");
+		}
+
 		List<ProductTypeListModel> list = new ArrayList<>();
 
 		for (ProductType item : pt.findAll()) {
@@ -66,6 +73,14 @@ public class ProductTypeService {
 	}
 
 	public List<ProductTypeListModel> searchByNameForOrder(String keyword, String branchId) {
+
+		if (keyword == null || keyword.isBlank()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Search keyword is required");
+		}
+
+		if (branchId == null || branchId.isBlank()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Branch ID is required");
+		}
 
 		List<ProductTypeListModel> list = new ArrayList<>();
 
@@ -104,6 +119,9 @@ public class ProductTypeService {
 	}
 
 	public List<ProductTypeListModel> searchByName(String keyword) {
+		if (keyword == null || keyword.isBlank()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Search keyword is required");
+		}
 		List<ProductTypeListModel> list = new ArrayList<>();
 
 		for (ProductType item : pt.searchByName(keyword)) {
@@ -117,6 +135,10 @@ public class ProductTypeService {
 	}
 
 	public List<ProductTypeListModel> searchDeletedByName(String keyword) {
+		if (keyword == null || keyword.isBlank()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Search keyword is required");
+		}
+
 		List<ProductTypeListModel> list = new ArrayList<>();
 
 		for (ProductType item : pt.searchDeletedByName(keyword)) {
@@ -142,45 +164,108 @@ public class ProductTypeService {
 		return list;
 	}
 
+//	public ProductTypeEntryModel findById(String id) {
+//		ProductType entity = pt.findById(id);
+//
+//		if (entity == null) {
+//			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product type not found");
+//		}
+//
+//		return toEntryModel(entity);
+//	}
+
 	public ProductTypeEntryModel findById(String id) {
-		return toEntryModel(pt.findById(id));
+		try {
+			ProductType entity = pt.findById(id);
+
+			if (entity == null) {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product type not found");
+			}
+
+			return toEntryModel(entity);
+
+		} catch (EmptyResultDataAccessException e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product type not found");
+		}
 	}
 
 	public ProductTypeEntryModel findById3(String id) {
-		return toEntryModel(pt.findById2(id));
+		ProductType entity = pt.findById2(id);
+
+		if (entity == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product type not found");
+		}
+
+		return toEntryModel(entity);
 	}
 
 	public ProductTypeEntryModel findById2(String id) {
-		return toEntryModel2(pt.findById(id));
+		ProductType entity = pt.findById2(id);
+
+		if (entity == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product type not found");
+		}
+
+		return toEntryModel(entity);
 	}
 
 	public ProductTypeListModel findDetailById(String id) {
-		return toListModel(pt.findById(id), cr.findById(pt.findById(id).getCategory_id()).getName(),
-				er.findById(pt.findById(id).getEmployee_id()).getName());
+		ProductType entity = pt.findById(id);
+		if (entity == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Type");
+		}
+		return toListModel(entity, cr.findById(entity.getCategory_id()).getName(),
+				er.findById(entity.getEmployee_id()).getName());
 	}
 
 	public ProductTypeListModel findDeletedById(String id) {
-		return toListModel(pt.findDeletedById(id), cr.findById(pt.findById(id).getCategory_id()).getName(),
-				er.findById(pt.findById(id).getEmployee_id()).getName());
+		ProductType entity = pt.findDeletedById(id);
+		if (entity == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Type");
+		}
+		return toListModel(entity, cr.findById(entity.getCategory_id()).getName(),
+				er.findById(entity.getEmployee_id()).getName());
 	}
 
 	public int add(ProductTypeEntryModel pe) {
+		if (pe == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product Type data is required");
+		}
 		return pt.add(toEntity1(pe));
 	}
 
 	public int edit(ProductTypeEntryModel pe) {
+		if (pe == null || pe.getType_id() == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product Type data is required");
+		}
+		ProductType entity = pt.findById(pe.getType_id());
+		if (entity == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Type");
+		}
 		return pt.edit(toEntity1(pe));
 	}
 
 	public int delete(String id) {
+		ProductType entity = pt.findById(id);
+		if (entity == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Type");
+		}
 		return pt.deleted(id);
 	}
 
 	public int deletePerm(String id) {
+		ProductType entity = pt.findDeletedById(id);
+		if (entity == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Type");
+		}
 		return pt.deletedPerm(id);
 	}
 
 	public int recover(String id) {
+		ProductType entity = pt.findDeletedById(id);
+		if (entity == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Type");
+		}
 		return pt.recover(id);
 	}
 
@@ -224,7 +309,7 @@ public class ProductTypeService {
 
 	private String getCoverImageFileName(String cover_img_path) {
 		if (cover_img_path == null || cover_img_path.isEmpty()) {
-			return null;
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cover image");
 		}
 		// Extracts just the file name from the full path string
 		return java.nio.file.Paths.get(cover_img_path).getFileName().toString();

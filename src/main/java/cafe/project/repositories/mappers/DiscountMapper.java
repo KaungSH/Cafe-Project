@@ -38,6 +38,8 @@ public class DiscountMapper implements RowMapper<Discount> {
 		discount.setPromo_type_id(rs.getString("promo_type_id"));
 		discount.setAudience_type_id(rs.getString("audience_type_id"));
 
+		discount.setBranches_branch_id(rs.getString("branches_branch_id"));
+
 		return discount;
 	}
 }

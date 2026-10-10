@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import cafe.project.models.ProductDiscountModel;
 import cafe.project.models.ProductEntryModel;
@@ -110,6 +112,10 @@ public class ProductService {
 
 	public List<ProductListModel> findListAllByTypeIdForOrder(String typeId, String branchId) {
 
+		if (typeId == null || typeId.isBlank() || branchId == null || branchId.isBlank()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product type ID and Branch ID are required");
+		}
+
 		List<Product> products = prepo.findListAllByTypeId(typeId);
 
 		List<ProductListModel> result = new ArrayList<>();
@@ -127,14 +133,23 @@ public class ProductService {
 	}
 
 	public List<ProductListModel> findListAllByTypeId(String type_id) {
+		if (type_id == null || type_id.isBlank()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product type ID is required");
+		}
 		return prepo.findListAllByTypeId(type_id).stream().map(this::toListModel2).toList();
 	}
 
 	public List<ProductListModel> findListAllByTypeId2(String type_id) {
+		if (type_id == null || type_id.isBlank()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product type ID is required");
+		}
 		return prepo.findListAllByTypeId3(type_id).stream().map(this::toListModel2).toList();
 	}
 
 	public List<ProductListModel> findListAllByDiscountId(String discountId) {
+		if (discountId == null || discountId.isBlank()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Discount ID is required");
+		}
 		return prepo.findListAllByDiscount(discountId).stream().map(this::toListModel2).toList();
 	}
 
@@ -156,10 +171,24 @@ public class ProductService {
 	}
 
 	public ProductEntryModel findById(String id) {
-		return toEntryModel(prepo.findDetailById(id));
+		if (id == null || id.isBlank()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product ID is required");
+		}
+
+		Product product = prepo.findDetailById(id);
+
+		if (product == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product");
+		}
+
+		return toEntryModel(product);
 	}
 
 	public List<ProductEntryModel> findByTypeId(String type_id) {
+		if (type_id == null || type_id.isBlank()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product type ID is required");
+		}
+
 		List<ProductEntryModel> list = new ArrayList<ProductEntryModel>();
 		for (Product product : prepo.findDetailByTypeId(type_id)) {
 			list.add(toEntryModel(product));
@@ -168,19 +197,51 @@ public class ProductService {
 	}
 
 	public ProductListModel findListById(String id) {
-		return toListModel(prepo.findListById(id));
+		if (id == null || id.isBlank()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product ID is required");
+		}
+
+		Product product = prepo.findListById(id);
+
+		if (product == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product");
+		}
+
+		return toListModel(product);
 	}
 
 	public ProductDiscountModel getDiscountById(String pid) {
-		return getDiscount(prepo.findDiscountById(pid));
+		if (pid == null || pid.isBlank()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product ID is required");
+		}
+
+		Product product = prepo.findDiscountById(pid);
+
+		if (product == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product");
+		}
+
+		return getDiscount(product);
 	}
 
 	public ProductQuantityRequiredModel getQuantityById(String pid) {
-		return getQuantity(prepo.findQuantityRequiredById(pid));
+		if (pid == null || pid.isBlank()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product ID is required");
+		}
+
+		Product product = prepo.findQuantityRequiredById(pid);
+
+		if (product == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product");
+		}
+
+		return getQuantity(product);
 	}
 
 	public int add(ProductEntryModel em, String id, String type_id) {
-		// to be replaced by http session
+		if (em == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product data is required");
+		}
 		em.setProduct_id(id);
 		em.setType_id(type_id);
 		em.setEmployee_id("1");
@@ -188,7 +249,9 @@ public class ProductService {
 	}
 
 	public int add2(ProductEntryModel em, String id, String type_id) {
-		// to be replaced by http session
+		if (em == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product data is required");
+		}
 		em.setProduct_id(id);
 		em.setType_id(type_id);
 		em.setEmployee_id("1");
@@ -196,18 +259,54 @@ public class ProductService {
 	}
 
 	public int edit(ProductEntryModel em) {
+		if (em == null || em.getProduct_id() == null || em.getProduct_id().isBlank()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product data and Product ID are required");
+		}
+
+		Product product = prepo.findDetailById(em.getProduct_id());
+		if (product == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product");
+		}
+
 		return prepo.edit(toEntity(em));
 	}
 
 	public int delete(String id) {
+		if (id == null || id.isBlank()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product ID is required");
+		}
+
+		Product product = prepo.findDetailById(id);
+		if (product == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product");
+		}
+
 		return prepo.delete(id);
 	}
 
 	public int recover(String id) {
+		if (id == null || id.isBlank()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product ID is required");
+		}
+
+		Product product = prepo.findDetailById(id);
+		if (product == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product");
+		}
+
 		return prepo.recover(id);
 	}
 
 	public int permDelete(String id) {
+		if (id == null || id.isBlank()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product ID is required");
+		}
+
+		Product product = prepo.findDetailById(id);
+		if (product == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product");
+		}
+
 		return prepo.permDelete(id);
 	}
 

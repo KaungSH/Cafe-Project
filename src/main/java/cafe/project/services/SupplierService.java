@@ -2,7 +2,9 @@ package cafe.project.services;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import cafe.project.models.SupplierDto;
 import cafe.project.repositories.SupplierRepository;
@@ -25,22 +27,37 @@ public class SupplierService {
 
 	public SupplierDto findById(String supplier_id) {
 		Supplier entity = this.repo.findById(supplier_id);
-		if (entity == null)
-			return null;
+		if (entity == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Supplier");
+		}
 		return toDto(entity);
 	}
 
 	public int add(SupplierDto dto) {
+		if (dto == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Supplier data is required");
+		}
 		Supplier entity = toEntity(dto);
 		return this.repo.save(entity);
 	}
 
 	public int edit(String supplier_id, SupplierDto dto) {
-		Supplier entity = toEntity(dto);
-		return this.repo.edit(supplier_id, entity);
+		if (dto == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Supplier data is required");
+		}
+		Supplier entity = this.repo.findById(supplier_id);
+		if (entity == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Supplier");
+		}
+		Supplier updatedEntity = toEntity(dto);
+		return this.repo.edit(supplier_id, updatedEntity);
 	}
 
 	public int delete(String supplier_id) {
+		Supplier entity = this.repo.findById(supplier_id);
+		if (entity == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Supplier");
+		}
 		return this.repo.delete(supplier_id);
 	}
 
@@ -49,6 +66,10 @@ public class SupplierService {
 	}
 
 	public int restore(String supplier_id) {
+		Supplier entity = this.repo.findById(supplier_id);
+		if (entity == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Supplier");
+		}
 		return this.repo.restore(supplier_id);
 	}
 
