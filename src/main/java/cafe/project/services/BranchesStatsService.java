@@ -2,7 +2,9 @@ package cafe.project.services;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import cafe.project.models.BranchesStatsDto;
 import cafe.project.repositories.BranchesStatsRepository;
@@ -32,14 +34,14 @@ public class BranchesStatsService {
 	public BranchesStatsDto findById(String branch_stats_id, String branch_id) {
 		BranchesStats entity = this.bsrepo.findById(branch_stats_id, branch_id);
 		if (entity == null)
-			return null;
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Branch Stats");
 		return toDto(entity);
 	}
 	
 	public BranchesStatsDto findByIdAdmin(String branch_stats_id) {
 		BranchesStats entity = this.bsrepo.findByIdAdmin(branch_stats_id);
 		if (entity == null)
-			return null;
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Branch Stats");
 		return toDto(entity);
 	}
 
