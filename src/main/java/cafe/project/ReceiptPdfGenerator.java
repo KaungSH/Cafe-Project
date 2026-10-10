@@ -36,33 +36,41 @@ public class ReceiptPdfGenerator {
                                       Map<String, Object> orderData, 
                                       List<Map<String, Object>> items) throws Exception {
         
-        // 1. Header, Totals, Footers နှင့် Spacing အတွက် အခြေခံအမြင့်
-        float baseHeight = 70f; 
+        // 1. Header, Order Details, Totals, Footers နှင့် Spacing အားလုံးအတွက် Base Height (190f ~ 200f ပေးရန် လိုအပ်ပါသည်)
+        float baseHeight = 190f; 
 
-       
+        // Discount ရှိပါက အမြင့်ထပ်တိုးရန်
+        if (orderData != null && (orderData.get("discount_amount") != null || orderData.get("discount") != null)) {
+            baseHeight += 14f;
+        }
+        // Note ရှိပါက အမြင့်ထပ်တိုးရန်
+        if (orderData != null && orderData.get("payment_note") != null 
+                && !orderData.get("payment_note").toString().trim().isEmpty()) {
+            baseHeight += 12f;
+        }
+
         float itemsHeight = 0f;
         if (items != null) {
             for (Map<String, Object> item : items) {
                 String pName = item.get("product_name") != null ? item.get("product_name").toString() : "";
-                String sName = item.get("size_name") != null ? item.get("size_name").toString() : "";
-                String fullName = pName + " (" + sName + ")";
+                String sName = (item.get("size_name") != null && !item.get("size_name").toString().trim().isEmpty()) 
+                               ? item.get("size_name").toString() : "";
+                String fullName = sName.isEmpty() ? pName : pName + " (" + sName + ")";
 
-                
                 if (fullName.length() > 20) {
                     itemsHeight += 26f;
                 } else {
                     itemsHeight += 16f;
                 }
 
-               
                 if (item.get("remark") != null && !item.get("remark").toString().trim().isEmpty()) {
                     itemsHeight += 12f;
                 }
             }
         }
 
-        
-        float totalHeight = Math.max(200f, baseHeight + itemsHeight + 15f);
+        // စာမျက်နှာ အမြင့်တွက်ချက်ခြင်း (Overflow မဖြစ်စေရန် padding 15f ထည့်ပေးထားသည်)
+        float totalHeight = Math.max(220f, baseHeight + itemsHeight + 15f);
 
         // 80mm Thermal Printer Width (226 pt) နှင့် Dynamic Height
         Rectangle receiptSize = new Rectangle(226, totalHeight);
@@ -70,9 +78,8 @@ public class ReceiptPdfGenerator {
         Document document = new Document(receiptSize, 10, 10, 10, 10);
         PdfWriter.getInstance(document, outputStream);
         document.open();
-
-      
-
+        
+        
         // Fonts 
         Font titleFont = new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD);
         Font tokenFont = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD);

@@ -42,9 +42,9 @@ public class UnitController {
 	}
 
 	@PostMapping("/units/add")
-	public String addUnit(@ModelAttribute("unit") Unit unit, Model model, HttpSession session) {
+	public String addUnit(@ModelAttribute("unit") UnitDto unit, Model model, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-		unit.setEmployee_id(ldto.getEmployee_id());
+		unit.setEmployee_name(ldto.getEmployee_id());
 		this.unitService.add(unit);
 		return "redirect:/units";
 	}
@@ -65,9 +65,9 @@ public class UnitController {
 	}
 
 	@PostMapping("/units/edit/{id}")
-	public String editUnit(@ModelAttribute("unit") Unit unit, Model model, HttpSession session) {
+	public String editUnit(@ModelAttribute("unit") UnitDto unit, Model model, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-		unit.setEmployee_id(ldto.getEmployee_id());
+		unit.setEmployee_name(ldto.getEmployee_id());
 		this.unitService.edit(unit.getUnit_id(), unit);
 		return "redirect:/units";
 	}

@@ -26,7 +26,7 @@ public class IngredientTypeRepository {
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             UnitDto u = new UnitDto();
             u.setUnit_id(rs.getString("unit_id"));
-            u.setEmployee_id(rs.getString("employee_id"));
+            u.setEmployee_name(rs.getString("employee_id"));
             u.setName(rs.getString("name"));
             u.setAbbreviation(rs.getString("abbreviation"));
             u.setIs_active(rs.getBoolean("is_active"));

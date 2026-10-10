@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,7 +33,7 @@
     </style>
 </head>
 <body>
-<div class="container py-4">
+<div layout:fragment="content">
     <div class="luxury-card">
         <div class="mb-4">
             <a th:href="@{/admin/employee}" class="text-decoration-none text-muted small fw-semibold">

@@ -108,70 +108,50 @@ body {
 
 <div layout:fragment="content">
 
+	<div class="form-container">
+
 		<div class="form-card">
 
 			<div class="form-title">
-
 				<h2>
 					<i class="bi bi-pencil-square"></i> Edit Branch Stats
 				</h2>
-
 				<p>Update branch statistics</p>
-
 			</div>
-
 
 			<form th:action="@{/manager-only/branchstats/edit}"
 				th:object="${branchesStats}" method="post">
 
-
 				<input type="hidden" th:field="*{branch_stats_id}">
 
-
 				<div class="mb-3">
-
-					<label class="form-label"> Sale Count </label> <input type="number"
-						class="form-control" th:field="*{salecount}" min="0" required>
-
-				</div>
-
-
-				<div class="mb-3">
-
-					<label class="form-label"> Sale Amount </label> <input
-						type="number" class="form-control" th:field="*{saleamount}"
-						min="0" step="0.01" required>
-
+					<label class="form-label"> Sale Count </label> 
+					<input type="number" class="form-control" th:field="*{salecount}" min="0" required>
 				</div>
 
 				<div class="mb-3">
+					<label class="form-label"> Sale Amount </label> 
+					<input type="number" class="form-control" th:field="*{saleamount}" min="0" step="0.01" required>
+				</div>
 
-					<label class="form-label"> Month </label> <input type="month"
-						class="form-control" th:field="*{month}" required>
-
+				<div class="mb-3">
+					<label class="form-label"> Month </label> 
+					<input type="month" class="form-control" th:field="*{month}" required>
 				</div>
 
 				<div class="mb-4">
-
-					<label class="form-label"> Employee Cost </label> <input
-						type="number" class="form-control" th:field="*{employee_cost}"
-						min="0" step="0.01" required>
-
+					<label class="form-label"> Employee Cost </label> 
+					<input type="number" class="form-control" th:field="*{employee_cost}" min="0" step="0.01" required>
 				</div>
 
 				<div class="d-flex gap-2">
-
 					<button type="submit" class="btn-update">
-
 						<i class="bi bi-check-lg"></i> Update
-
 					</button>
 
-
 					<a th:href="@{/manager-only/branchstats}" class="btn-cancel">
-
-						Cancel </a>
-
+						Cancel 
+					</a>
 				</div>
 
 			</form>
@@ -180,6 +160,7 @@ body {
 
 	</div>
 
+</div>
 </body>
 
 </html>

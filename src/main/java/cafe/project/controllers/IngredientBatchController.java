@@ -20,7 +20,7 @@ public class IngredientBatchController {
 		this.stockImportService = stockImportService;
 	}
 
-	@GetMapping("")
+	@GetMapping("/all")
 	public String listBatches(Model model) {
 		model.addAttribute("batches", service.getAllBatches());
 		return "ingredient-batch/list";

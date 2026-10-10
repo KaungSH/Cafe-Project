@@ -51,6 +51,11 @@ public class AdminController {
 		model.addAttribute("registers", dailyRegisterservice.getAllRegistersAdmin());
 		return "daily_registers/list-admin";
 	}
+	@GetMapping("/ingredient-batches")
+	public String ingredientbatches(Model model) {
+		model.addAttribute("registers", dailyRegisterservice.getAllRegistersAdmin());
+		return "ingredient-batches/list-admin";
+	}
 	
 	@GetMapping("/categories")
 	public String categoriesList(Model model) {

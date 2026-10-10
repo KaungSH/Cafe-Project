@@ -15,6 +15,13 @@ public class PaymentService {
 	public PaymentService(PaymentRepository paymentRepository) {
 		this.paymentRepository = paymentRepository;
 	}
+	
+	
+	// GET PAYMENT BY ORDER ID
+	public Payment findByOrderId(String orderId) {
+	    return paymentRepository.findByOrderId(orderId);
+	}
+	
 
 	// GET ALL
 	public List<Payment> findAll() {

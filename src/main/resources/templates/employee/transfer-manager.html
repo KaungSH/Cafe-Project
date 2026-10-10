@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,7 +31,8 @@
     </style>
 </head>
 <body>
-<div class="container">
+<!-- <div class="container"> -->
+<div layout:fragment="content">
     <div class="transfer-card">
         <div class="text-center mb-4">
             <div class="mx-auto mb-3 d-flex align-items-center justify-content-center"
