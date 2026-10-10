@@ -5,10 +5,11 @@ import cafe.project.models.IngredientBatchItemDto;
 import cafe.project.models.StockImportEntryDto;
 import cafe.project.services.StockImportService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -24,19 +25,22 @@ public class StockImportController {
 	}
 
 	@GetMapping
-	public String listActive(Model model) {
+	public String listActive(Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		model.addAttribute("imports", service.getAllActiveImports());
 		return "stock-import/list";
 	}
 
 	@GetMapping("/deleted")
-	public String listDeleted(Model model) {
+	public String listDeleted(Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		model.addAttribute("imports", service.getAllDeletedImports());
 		return "stock-import/deleted-list";
 	}
 
 	@GetMapping("/add")
-	public String showAddForm(Model model) {
+	public String showAddForm(Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		StockImportEntryDto dto = new StockImportEntryDto();
 		dto.setImported_at(LocalDateTime.now());
 		dto.setItems(service.getAllIngredientTypes());
@@ -57,7 +61,6 @@ public class StockImportController {
 		service.addStockImport(dto, employee_id, branch_id);
 		return "redirect:/stock-imports";
 	}
-
 	/*
 	 * @GetMapping("/edit/{id}") public String showEditForm(@PathVariable("id")
 	 * String id, Model model) { StockImportEntryDto dto =
@@ -67,8 +70,13 @@ public class StockImportController {
 	 */
 
 	@GetMapping("/edit/{id}")
-	public String showEditForm(@PathVariable("id") String id, Model model) {
+	public String showEditForm(@PathVariable("id") String id, Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		StockImportEntryDto dto = service.getImportById(id);
+
+		if (!dto.getBranch_id().equals(ldto.getBranch_id())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Not Your Branch's Data!!!");
+		}
 
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -96,38 +104,80 @@ public class StockImportController {
 	}
 
 	@PostMapping("/edit")
-	public String updateStockImport(@ModelAttribute("stockImport") StockImportEntryDto dto) {
+	public String updateStockImport(@ModelAttribute("stockImport") StockImportEntryDto dto, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		StockImportEntryDto existingDto = service.getImportById(dto.getImport_id());
+
+		if (!existingDto.getBranch_id().equals(ldto.getBranch_id())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not Your Branch's Data!!!");
+		}
+
 		service.editStockImport(dto);
 		return "redirect:/stock-imports";
 	}
 
 	@GetMapping("/soft-delete/{id}")
-	public String softDelete(@PathVariable("id") String id) {
+	public String softDelete(@PathVariable("id") String id, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		StockImportEntryDto dto = service.getImportById(id);
+
+		if (!dto.getBranch_id().equals(ldto.getBranch_id())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not Your Branch's Data!!!");
+		}
+
 		service.softDelete(id);
 		return "redirect:/stock-imports";
 	}
 
 	@GetMapping("/recover/{id}")
-	public String recover(@PathVariable("id") String id) {
+	public String recover(@PathVariable("id") String id, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		StockImportEntryDto dto = service.getImportById(id);
+
+		if (!dto.getBranch_id().equals(ldto.getBranch_id())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not Your Branch's Data!!!");
+		}
+
 		service.recover(id);
 		return "redirect:/stock-imports/deleted";
 	}
 
 	@GetMapping("/hard-delete/{id}")
-	public String showHardDeleteConfirmation(@PathVariable("id") String id, Model model) {
+	public String showHardDeleteConfirmation(@PathVariable("id") String id, Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		StockImportEntryDto dto = service.getImportById(id);
+
+		if (!dto.getBranch_id().equals(ldto.getBranch_id())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Not Your Branch's Data!!!");
+		}
+
 		model.addAttribute("importId", id);
 		return "stock-import/hard-deleted";
 	}
 
 	@PostMapping("/hard-delete")
-	public String hardDelete(@RequestParam("import_id") String importId) {
+	public String hardDelete(@RequestParam("import_id") String importId, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		StockImportEntryDto dto = service.getImportById(importId);
+
+		if (!dto.getBranch_id().equals(ldto.getBranch_id())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not Your Branch's Data!!!");
+		}
+
 		service.hardDelete(importId);
 		return "redirect:/stock-imports/deleted";
 	}
 
 	@GetMapping("/detail-batches/{id}")
 	@ResponseBody
-	public Object getBatchesDetail(@PathVariable("id") String id) {
+	public Object getBatchesDetail(@PathVariable("id") String id, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		StockImportEntryDto dto = service.getImportById(id);
+
+		if (!dto.getBranch_id().equals(ldto.getBranch_id())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not Your Branch's Data!!!");
+		}
+
 		return service.getBatchesByImportId(id);
 	}
 

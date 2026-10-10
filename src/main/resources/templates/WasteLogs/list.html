@@ -1,103 +1,283 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layout}">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout}">
+
 <head>
     <meta charset="UTF-8">
-    <title>Waste Logs - Luft Cafe</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waste Logs Management | Café Luft</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
-        body { 
-            background-color: #f6f1eb; 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            color: #5d534a;
+        body {
+            background-color: #FAF7F2;
+            color: #2D2422;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 14px;
         }
-        .container-box {
-            background-color: #efe8e0;
-            border-radius: 16px;
-            padding: 30px;
-            margin-top: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+
+        .waste-wrapper {
+            width: 95%;
+            max-width: 1400px;
+            margin: 32px auto;
         }
-        .page-title {
-            font-size: 1.8rem;
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .header-title-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #7D5127, #533314);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #F4E8D8;
+            font-size: 20px;
+            box-shadow: 0 6px 14px rgba(83, 51, 20, 0.22);
+            flex-shrink: 0;
+        }
+
+        .header-title-box h2 {
+            font-size: 22px;
             font-weight: 700;
-            color: #63584e;
+            color: #2B1D14;
+            margin: 0;
+            letter-spacing: -0.2px;
         }
-        .btn-add-new {
-            background-color: #736356;
-            color: #ffffff;
-            border-radius: 8px;
-            padding: 8px 18px;
-            font-weight: 500;
-            text-decoration: none;
+
+        .header-title-box p {
+            font-size: 13px;
+            color: #8C7B6C;
+            margin: 2px 0 0 0;
+        }
+
+        .action-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-luxury-primary {
+            background: linear-gradient(135deg, #7D5127 0%, #583718 100%);
+            color: #FFFFFF !important;
             border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 13px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 10px rgba(88, 55, 24, 0.15);
         }
-        .btn-add-new:hover {
-            background-color: #5c4e43;
-            color: #ffffff;
+
+        .btn-luxury-primary:hover {
+            background: linear-gradient(135deg, #6C441E 0%, #442911 100%);
+            transform: translateY(-1px);
         }
-        .custom-table {
+
+        .btn-luxury-outline {
+            background-color: #FFFFFF;
+            color: #6C4724 !important;
+            border: 1px solid #DFD2C0;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 13px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-luxury-outline:hover {
+            background-color: #F8F3EC;
+            border-color: #C8B6A2;
+        }
+
+        .btn-luxury-warning {
+            background-color: #FFF8F0;
+            color: #925316 !important;
+            border: 1px solid #F5DDC4;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 13px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-luxury-warning:hover {
+            background-color: #FEEEDD;
+        }
+
+        /* Luxury Table Card */
+        .luxury-table-card {
+            background: #FFFFFF;
+            border-radius: 20px;
+            border: 1px solid rgba(214, 197, 178, 0.45);
+            box-shadow: 0 16px 36px -10px rgba(58, 41, 26, 0.08), 0 0 1px 1px rgba(214, 197, 178, 0.25);
+            overflow: hidden;
+        }
+
+        .table-luxury {
+            width: 100%;
+            margin: 0;
             border-collapse: separate;
             border-spacing: 0;
-            width: 100%;
         }
-        .custom-table th {
-            color: #7a6e65;
-            font-weight: 600;
-            padding: 12px;
-            border-bottom: 1px solid #e0d6cc;
+
+        .table-luxury thead th {
+            background: #FAF5EE;
+            color: #796450;
+            padding: 15px 16px;
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            border-bottom: 1px solid #EADBCC;
+            white-space: nowrap;
         }
-        .custom-table td {
-            padding: 14px 12px;
+
+        .table-luxury tbody td {
+            padding: 15px 16px;
+            color: #49382B;
+            font-size: 13.5px;
+            border-bottom: 1px solid #F3ECE2;
             vertical-align: middle;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-bottom: 1px solid #e6ded5;
         }
-        .btn-action-edit {
-            background-color: #e5ded7;
-            color: #5d534a;
-            border: none;
+
+        .table-luxury tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table-luxury tbody tr:hover {
+            background-color: #FAF6EF;
+        }
+
+        .badge-batch {
+            background-color: #F8F4EE;
+            color: #7D5127;
+            font-weight: 700;
+            padding: 4px 9px;
             border-radius: 6px;
-            padding: 4px 14px;
-            font-size: 0.85rem;
+            font-size: 12px;
+            border: 1px solid #EADBCC;
+        }
+
+        .badge-reason {
+            background-color: #FFF2F0;
+            color: #A8382B;
+            border: 1px solid #FACDC7;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+
+        .loss-amount {
+            color: #B23B2A;
+            font-weight: 700;
+        }
+
+        .btn-edit-action {
+            color: #7D5127;
+            background-color: #FAF5EE;
+            border: 1px solid #DFCDBD;
+            padding: 4px 11px;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: 600;
             text-decoration: none;
-            display: inline-block;
-            margin-bottom: 4px;
+            transition: 0.2s;
         }
-        .btn-action-edit:hover {
-            background-color: #d8cec5;
-            color: #433b34;
+
+        .btn-edit-action:hover {
+            background-color: #EFE3D3;
+            color: #4E3013;
         }
-        .btn-action-delete {
-            background-color: transparent;
-            color: #8c7b70;
-            border: none;
-            padding: 2px 14px;
-            font-size: 0.85rem;
+
+        .btn-delete-action {
+            color: #A33A2D;
+            background-color: #FFF5F4;
+            border: 1px solid #F0C4BD;
+            padding: 4px 11px;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: 600;
             text-decoration: none;
-            display: inline-block;
+            transition: 0.2s;
+            margin-left: 4px;
         }
-        .btn-action-delete:hover {
-            color: #d9534f;
+
+        .btn-delete-action:hover {
+            background-color: #FCE1DF;
+            color: #7C2419;
         }
     </style>
 </head>
-<body class="p-4">
-    <div layout:fragment="content">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="page-title m-0">Waste Logs Management</h2>
-            <a th:href="@{/manager-only/WasteLogs/today-expired}" class="btn btn-add-new">Generate Waste Logs for Today's Expired Batches</a>
-            <a th:href="@{/manager-only/WasteLogs/timedSoftDelete}" class="btn btn-add-new" onclick="return confirm('Are you sure? You can recover registers from the bin.');">Delete Old Logs</a>
-            <a th:href="@{/manager-only/WasteLogs/deleted}" class="btn btn-add-new">Deleted List</a>
-            <a th:href="@{/manager-only/WasteLogs/create}" class="btn btn-add-new">+ Add New Waste Log</a>
+
+<body>
+<div layout:fragment="content">
+    <div class="waste-wrapper">
+        
+        <div class="dashboard-header">
+            <div class="header-title-box">
+                <div class="header-avatar">
+                    <i class="fa-solid fa-trash-can"></i>
+                </div>
+                <div>
+                    <h2>Waste Logs Management</h2>
+                    <p>Track ingredient batch spoilage, damage & financial loss</p>
+                </div>
+            </div>
+
+            <div class="action-group">
+                <a th:href="@{/manager-only/WasteLogs/today-expired}" class="btn-luxury-warning">
+                    <i class="fa-solid fa-clock-rotate-left"></i> Today's Expired Batches
+                </a>
+                <a th:href="@{/manager-only/WasteLogs/timedSoftDelete}" class="btn-luxury-outline"
+                   onclick="return confirm('Are you sure? You can recover registers from the bin.');">
+                    <i class="fa-solid fa-broom"></i> Delete Old Logs
+                </a>
+                <a th:href="@{/manager-only/WasteLogs/deleted}" class="btn-luxury-outline">
+                    <i class="fa-solid fa-box-archive"></i> Deleted List
+                </a>
+                <a th:href="@{/manager-only/WasteLogs/create}" class="btn-luxury-primary">
+                    <i class="fa-solid fa-plus"></i> Add New Log
+                </a>
+            </div>
         </div>
 
-        <div class="table-responsive">
-            <table class="table custom-table">
+        <div class="luxury-table-card">
+            <table class="table-luxury">
                 <thead>
                     <tr>
-                        <th>No.</th>
+                        <th style="width: 55px;">No.</th>
                         <th>Batch ID</th>
                         <th>Reason</th>
                         <th>Quantity Lost</th>
@@ -105,32 +285,41 @@
                         <th>Employee</th>
                         <th>Logged At</th>
                         <th>Notes</th>
-                        <th class="text-center">Action</th>
+                        <th class="text-end" style="width: 150px;">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="log, state : ${wasteLogs}">
-                        <td th:text="${state.count}">1</td>
-                        <td th:text="${log.batch_id}">BATCH001</td>
-                        <td th:text="${log.reason_name}">Expired</td>
-                        <td th:text="${log.quantity_lost}">2.500</td>
-                        <td th:text="${log.financial_loss}">15000.00</td>
+                        <td th:text="${state.count}" class="text-muted fw-semibold">1</td>
+                        <td><span class="badge-batch" th:text="${log.batch_id}">BATCH001</span></td>
+                        <td><span class="badge-reason" th:text="${log.reason_name}">Expired</span></td>
+                        <td><strong th:text="${log.quantity_lost}">2.500</strong></td>
+                        <td><span class="loss-amount" th:text="${#numbers.formatDecimal(log.financial_loss, 1, 'COMMA', 2, 'POINT')} + ' MMK'">15,000.00 MMK</span></td>
                         <td th:text="${log.name}">MaMa</td>
                         <td th:text="${#temporals.format(log.logged_at, 'yyyy-MM-dd HH:mm')}">2026-09-18 10:00</td>
                         <td th:text="${log.notes}">Damaged</td>
-                        <td class="text-center" style="width: 100px;">
- 		<a th:href="@{/manager-only/WasteLogs/edit/{waste_id}(waste_id=${log.waste_id})}" class="btn-action-edit">Edit</a>
+                        <td class="text-end">
+                            <a th:href="@{/manager-only/WasteLogs/edit/{waste_id}(waste_id=${log.waste_id})}" class="btn-edit-action">
+                                <i class="fa-solid fa-pen"></i> Edit
+                            </a>
                             <a th:href="@{/manager-only/WasteLogs/delete/{waste_id}(waste_id=${log.waste_id})}" 
-                               class="btn-action-delete" 
-                               onclick="return confirm('Are you sure you want to delete this record?');">Delete</a>
+                               class="btn-delete-action" 
+                               onclick="return confirm('Are you sure you want to delete this record?');">
+                                <i class="fa-solid fa-trash"></i> Delete
+                            </a>
                         </td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(wasteLogs)}">
-                        <td colspan="9" class="text-center text-muted py-4">No waste logs record found.</td>
+                        <td colspan="9" class="text-center py-5 text-muted">
+                            <i class="fa-solid fa-inbox fs-2 d-block mb-2 text-secondary opacity-50"></i>
+                            No waste logs record found.
+                        </td>
                     </tr>
                 </tbody>
             </table>
         </div>
+
     </div>
+</div>
 </body>
 </html>

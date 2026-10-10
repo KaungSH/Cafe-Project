@@ -80,7 +80,7 @@ public class ReceiptController {
             }
 
             // 5. Payment Information နှင့် Discount ရှာဖွေခြင်း
-            Payment payment = paymentService.findByOrderId(orderId);
+            Payment payment = paymentService.findById(orderId);
             BigDecimal discountAmount = BigDecimal.ZERO;
 
             if (payment != null) {

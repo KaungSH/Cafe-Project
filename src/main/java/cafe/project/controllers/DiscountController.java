@@ -1,6 +1,5 @@
 package cafe.project.controllers;
 
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,8 +21,6 @@ import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 
-
-
 @Controller
 @RequestMapping("/manager-only/discounts")
 public class DiscountController {
@@ -34,11 +31,12 @@ public class DiscountController {
 	private final BranchService branchService;
 	private final ProductService productService;
 
-	public DiscountController(DiscountService discountService, DiscountProductService dpService, AtypeAndPtypeRepository repo, BranchService branchService, ProductService productService) {
+	public DiscountController(DiscountService discountService, DiscountProductService dpService,
+			AtypeAndPtypeRepository repo, BranchService branchService, ProductService productService) {
 		this.discountService = discountService;
 		this.dpService = dpService;
 		this.repo = repo;
-		this.branchService=branchService;
+		this.branchService = branchService;
 		this.productService = productService;
 	}
 
@@ -58,7 +56,7 @@ public class DiscountController {
 		model.addAttribute("promoTypes", repo.findTypesAll(true));
 
 		model.addAttribute("audienceTypes", repo.findTypesAll(false));
-		
+
 		model.addAttribute("branch", branchService.findById(ldto.getBranch_id()).getName());
 
 		return "discount/create";
@@ -76,10 +74,11 @@ public class DiscountController {
 		}
 		return "redirect:/manager-only/discounts";
 	}
-	
+
 	@GetMapping("/discountProducts/add/{id}")
 	public String add(@PathVariable("id") String id, Model model) {
-		List<String> existingProductIds = discountService.getAllDiscountsById(id).getProducts().stream().map(ProductListModel::getProduct_id).toList();
+		List<String> existingProductIds = discountService.getAllDiscountsById(id).getProducts().stream()
+				.map(ProductListModel::getProduct_id).toList();
 
 		model.addAttribute("existingProductIds", existingProductIds);
 		model.addAttribute("discountProduct", new DiscountProductDto());
@@ -97,9 +96,10 @@ public class DiscountController {
 		this.dpService.add(discountProduct);
 		return "redirect:/manager-only/discounts";
 	}
-	
+
 	@GetMapping("/discountProducts/delete/{discount_id}/{product_id}")
-	public String delete(@PathVariable("discount_id") String discount_id, @PathVariable("product_id") String product_id) {
+	public String delete(@PathVariable("discount_id") String discount_id,
+			@PathVariable("product_id") String product_id) {
 
 		dpService.remove(discount_id, product_id);
 
@@ -110,9 +110,8 @@ public class DiscountController {
 	public String showEditForm(@PathVariable("id") String id, Model model, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		DiscountEntryModel discountModel = discountService.getDiscountById(id);
-		if(!discountModel.getBranches_branch_id().equals(ldto.getBranch_id())) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "NOT YOUR BRANCH!!!");
-			//error
+		if (!discountModel.getBranches_branch_id().equals(ldto.getBranch_id())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not Your Branch's Data!!!");
 		}
 		model.addAttribute("discountForm", discountModel);
 		model.addAttribute("branch", branchService.findById(ldto.getBranch_id()).getName());
@@ -123,26 +122,44 @@ public class DiscountController {
 	}
 
 	@GetMapping("/delete/{id}")
-	public String deleteDiscount(@PathVariable("id") String id) {
+	public String deleteDiscount(@PathVariable("id") String id, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		DiscountEntryModel discountModel = discountService.getDiscountById(id);
+		if (!discountModel.getBranches_branch_id().equals(ldto.getBranch_id())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not Your Branch's Data!!!");
+
+		}
 		discountService.deleteDiscount(id);
 		return "redirect:/manager-only/discounts";
 	}
-	
+
 	@GetMapping("deleted-list")
 	public String deleteDiscountList(Model model, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		model.addAttribute("discounts", this.discountService.DeletedList(ldto.getBranch_id()));
 		return "discount/deleted-list";
 	}
-	
+
 	@PostMapping("/restore")
-	public String restoreDiscount(@RequestParam String id) {
+	public String restoreDiscount(@RequestParam String id, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		DiscountEntryModel discountModel = discountService.getDiscountById(id);
+		if (!discountModel.getBranches_branch_id().equals(ldto.getBranch_id())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not Your Branch's Data!!!");
+
+		}
 		discountService.restore(id);
 		return "redirect:/manager-only/discounts/deleted-list";
 	}
-	
+
 	@PostMapping("/real-delete")
-	public String realDeleteDiscount(@RequestParam String id) {
+	public String realDeleteDiscount(@RequestParam String id, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		DiscountEntryModel discountModel = discountService.getDiscountById(id);
+		if (!discountModel.getBranches_branch_id().equals(ldto.getBranch_id())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not Your Branch's Data!!!");
+
+		}
 		discountService.hardDelete(id);
 		return "redirect:/manager-only/discounts/deleted-list";
 	}
