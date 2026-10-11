@@ -6,6 +6,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import cafe.project.common.interceptors.AdminInterceptor;
+import cafe.project.common.interceptors.DailyRegisterInterceptor;
 import cafe.project.common.interceptors.LoginInterceptor;
 import cafe.project.common.interceptors.ManagerInterceptor;
 import cafe.project.common.interceptors.ManagerOnlyInterceptor;
@@ -17,12 +18,14 @@ public class WebConfig implements WebMvcConfigurer {
 	private final AdminInterceptor admin;
 	private final ManagerInterceptor manager;
 	private final ManagerOnlyInterceptor onlyMan;
+	private final DailyRegisterInterceptor register;
 	
-	public WebConfig(LoginInterceptor login, AdminInterceptor admin, ManagerInterceptor superadmin, ManagerOnlyInterceptor onlyMan) {
+	public WebConfig(LoginInterceptor login, AdminInterceptor admin, ManagerInterceptor superadmin, ManagerOnlyInterceptor onlyMan, DailyRegisterInterceptor register) {
 		this.login = login;
 		this.admin = admin;
 		this.manager = superadmin;
 		this.onlyMan = onlyMan;
+		this.register = register;
 	}
 
 
@@ -41,6 +44,8 @@ public class WebConfig implements WebMvcConfigurer {
 	  @Override
 		public void addInterceptors(InterceptorRegistry registry) {
 			registry.addInterceptor(login).addPathPatterns("/**").excludePathPatterns("/login", "/signup", "/css/**", "/js/**", "/images/**", "/fonts/**", "/favicon.ico");
+			
+			registry.addInterceptor(register).addPathPatterns("/**").excludePathPatterns("/login", "/signup", "/css/**", "/js/**", "/images/**", "/fonts/**", "/favicon.ico", "/openshift", "/logout");
 			
 			registry.addInterceptor(manager).addPathPatterns("/manager/**");
 			

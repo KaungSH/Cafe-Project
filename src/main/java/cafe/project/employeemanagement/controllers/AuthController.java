@@ -2,6 +2,7 @@ package cafe.project.employeemanagement.controllers;
 
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,7 @@ import cafe.project.services.DailyRegisterService;
 import cafe.project.employeemanagement.models.LoginDto;
 import cafe.project.employeemanagement.services.EmployeeManagementService;
 import cafe.project.models.DailyRegisterEntryDto;
+import cafe.project.models.DailyRegisterListDto;
 import cafe.project.repositories.StatusRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -164,6 +166,17 @@ public class AuthController {
 
 	@PostMapping("/closeshift")
 	public String closeShift(@ModelAttribute("registerDto") DailyRegisterEntryDto dto, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		if(ldto.getEmployee_role().equals("ADMIN")) {
+			for(DailyRegisterListDto dto1 : registerService.getAllOpened(ldto.getBranch_id())) {
+				if(dto1.getDate().isBefore(LocalDate.now())) {
+					DailyRegisterEntryDto dto2 = registerService.getRegisterEntryDtoById(dto1.getRegister_id());
+					dto2.setClosed_at(Time.valueOf(LocalTime.of(23, 59)));
+					dto2.setRegister_status_id(statusRepository.findAll2("register").get(1).getStatus_id());
+					registerService.updateRegister(dto2);
+				}
+			}
+		}
 		registerService.updateRegister(dto);
 		return "redirect:/logout";
 	}

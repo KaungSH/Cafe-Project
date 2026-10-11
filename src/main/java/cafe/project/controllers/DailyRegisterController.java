@@ -1,6 +1,8 @@
 package cafe.project.controllers;
 
+import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -12,20 +14,31 @@ import cafe.project.services.DailyRegisterService;
 import cafe.project.employeemanagement.models.LoginDto;
 import cafe.project.models.DailyRegisterEntryDto;
 import cafe.project.models.DailyRegisterListDto;
+import cafe.project.repositories.StatusRepository;
 
 @Controller
 @RequestMapping("/manager-only/daily-registers")
 public class DailyRegisterController {
 
 	private final DailyRegisterService service;
+	private final StatusRepository statusRepository;
 
-	public DailyRegisterController(DailyRegisterService service) {
+	public DailyRegisterController(DailyRegisterService service, StatusRepository statusRepository) {
 		this.service = service;
+		this.statusRepository = statusRepository;
 	}
 
 	@GetMapping("/{sort}")
 	public String showListPageAll(@PathVariable("sort") String sort, Model model, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		for(DailyRegisterListDto dto : service.getAllOpened(ldto.getBranch_id())) {
+			if(dto.getDate().isBefore(LocalDate.now())) {
+				DailyRegisterEntryDto dto2 = service.getRegisterEntryDtoById(dto.getRegister_id());
+				dto2.setClosed_at(Time.valueOf(LocalTime.of(23, 59)));
+				dto2.setRegister_status_id(statusRepository.findAll2("register").get(1).getStatus_id());
+				service.updateRegister(dto2);
+			}
+		}
 		if (sort.equals("closed")) {
 			model.addAttribute("registers", service.getAllClosed(ldto.getBranch_id()));
 			model.addAttribute("sort", sort);
