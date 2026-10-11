@@ -2,81 +2,129 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Add Stock Import</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cafe Luft — Add Stock Import</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --cafe-dark: #1E130C;
+            --cafe-gold: #C5A880;
+            --cafe-gold-hover: #b08d5f;
+            --cafe-border: #ede4d8;
+        }
+        body { background: #f8f6f0; font-family: 'Plus Jakarta Sans', sans-serif; color: #2b2b2b; }
+        .cafe-card {
+            background: #fff; border-radius: 16px; border: 1px solid var(--cafe-border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        }
+        .cafe-card-header {
+            background: var(--cafe-dark); border-bottom: 2px solid var(--cafe-gold);
+            border-radius: 16px 16px 0 0; padding: 1.5rem 2rem;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--cafe-gold); box-shadow: 0 0 0 0.25rem rgba(197, 168, 128, 0.2);
+        }
+        .ingredient-table thead th {
+            background-color: #faf7f2; font-size: 0.8rem; text-transform: uppercase;
+            letter-spacing: 0.6px; border-bottom: 1px solid var(--cafe-border);
+        }
+        .btn-gold {
+            background: var(--cafe-gold); color: #1E130C; font-weight: 600; border-radius: 10px;
+        }
+        .btn-gold:hover { background: var(--cafe-gold-hover); color: #1E130C; }
+    </style>
 </head>
-<body class="bg-light">
+<body>
     <div class="container my-5">
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-primary text-white py-3">
-                <h4 class="mb-0"><i class="bi bi-cart-plus me-2"></i>Add Stock Import</h4>
+        <div class="card cafe-card">
+            <div class="cafe-card-header d-flex justify-content-between align-items-center">
+                <div>
+                    <h4 class="text-white mb-0" style="font-family: 'Playfair Display', serif;">
+                        <i class="bi bi-bag-plus me-2 text-warning"></i>Receive New Stock Import
+                    </h4>
+                    <small class="text-light text-opacity-75">Record batch supplies and calculate inventory costs</small>
+                </div>
+                <a th:href="@{/manager-only/stock-imports}" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                    <i class="bi bi-arrow-left me-1"></i> Back
+                </a>
             </div>
-            <div class="card-body p-4">
+
+            <div class="card-body p-4 p-md-5">
                 <form th:action="@{/manager-only/stock-imports/add}" th:object="${stockImport}" method="post">
                     
-                    <!-- Import ID အတွက် Input Field လုံးဝ မထည့်ပါ -->
-
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-4">
-                            <label class="form-label fw-bold">Imported At:</label>
-                            <input type="datetime-local" th:field="*{imported_at}" class="form-control" required />
+                    <!-- Basic Meta Information -->
+                    <div class="row g-4 mb-4 pb-4 border-bottom">
+                        <div class="col-md-5">
+                            <label class="form-label fw-bold text-dark small text-uppercase">Arrival Date & Time</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-calendar-event"></i></span>
+                                <input type="datetime-local" th:field="*{imported_at}" class="form-control border-start-0" required />
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label fw-bold">Supplier:</label>
-                            <select th:field="*{supplier_id}" class="form-select" required>
-                                <option value="" disabled selected>-- Select Supplier --</option>
-                                <option th:each="sup : ${suppliers}" 
-                                        th:value="${sup.supplier_id}" 
-                                        th:text="${sup.name}">Supplier Name</option>
-                            </select>
+                        <div class="col-md-5">
+                            <label class="form-label fw-bold text-dark small text-uppercase">Supplier Vendor</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-truck"></i></span>
+                                <select th:field="*{supplier_id}" class="form-select border-start-0" required>
+                                    <option value="" disabled selected>-- Choose Coffee / Material Supplier --</option>
+                                    <option th:each="sup : ${suppliers}" th:value="${sup.supplier_id}" th:text="${sup.name}">Supplier</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
 
-                    <h5 class="border-bottom pb-2 mb-3"><i class="bi bi-card-checklist me-2"></i>Ingredients</h5>
-                    
-                    <div class="table-responsive mb-4">
-                        <table class="table table-bordered align-middle">
-                            <thead class="table-light">
+                    <!-- Ingredients Selection Table -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-boxes me-2 text-secondary"></i>Itemised Batches</h5>
+                        <span class="text-muted small">Select the ingredients included in this shipment</span>
+                    </div>
+
+                    <div class="table-responsive rounded-3 border mb-4">
+                        <table class="table ingredient-table align-middle mb-0">
+                            <thead>
                                 <tr class="text-center">
-                                    <th style="width: 50px;">Select</th>
-                                    <th>Ingredient</th>
-                                    <th style="width: 100px;">Unit</th>
-                                    <th style="width: 130px;">Quantity</th>
-                                    <th style="width: 130px;">Unit Cost</th>
-                                    <th style="width: 160px;">Manufactured</th>
-                                    <th style="width: 160px;">Expire</th>
+                                    <th style="width: 60px;">Select</th>
+                                    <th class="text-start">Ingredient</th>
+                                    <th style="width: 90px;">Unit</th>
+                                    <th style="width: 140px;">Quantity</th>
+                                    <th style="width: 140px;">Unit Cost ($)</th>
+                                    <th style="width: 170px;">Manufactured</th>
+                                    <th style="width: 170px;">Expiration</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr th:each="item, stat : *{items}">
                                     <td class="text-center">
-                                        <input type="checkbox" class="form-check-input" 
-                                               th:field="*{items[__${stat.index}__].selected}" />
+                                        <input type="checkbox" class="form-check-input" th:field="*{items[__${stat.index}__].selected}" />
                                         <input type="hidden" th:field="*{items[__${stat.index}__].ingredientTypeId}" />
                                     </td>
-                                    <td class="fw-bold" th:text="${item.ingredientTypeName}">Sugar</td>
-                                    <td class="text-center" th:text="${item.Uname}">kg</td>
+                                    <td class="fw-bold text-dark" th:text="${item.ingredientTypeName}">Arabica Beans</td>
+                                    <td class="text-center"><span class="badge bg-light text-dark border" th:text="${item.Uname}">kg</span></td>
                                     <td>
-                                        <input type="number" step="0.01" th:field="*{items[__${stat.index}__].quantity_ordered}" class="form-control" placeholder="0.00" />
+                                        <input type="number" step="0.01" th:field="*{items[__${stat.index}__].quantity_ordered}" class="form-control text-end" placeholder="0.00" />
                                     </td>
                                     <td>
-                                        <input type="number" step="0.01" th:field="*{items[__${stat.index}__].unit_cost}" class="form-control" placeholder="0.00" />
+                                        <input type="number" step="0.01" th:field="*{items[__${stat.index}__].unit_cost}" class="form-control text-end" placeholder="0.00" />
                                     </td>
                                     <td>
-                                        <input type="date" th:field="*{items[__${stat.index}__].manufactured_date}" class="form-control" />
+                                        <input type="date" th:field="*{items[__${stat.index}__].manufactured_date}" class="form-control small" />
                                     </td>
                                     <td>
-                                        <input type="date" th:field="*{items[__${stat.index}__].expire_date}" class="form-control" />
+                                        <input type="date" th:field="*{items[__${stat.index}__].expire_date}" class="form-control small" />
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
 
-                    <div class="d-flex justify-content-between align-items-center">
-                        <a th:href="@{/manager-only/stock-imports}" class="btn btn-outline-secondary">Back to List</a>
-                        <button type="submit" class="btn btn-warning px-4 fw-bold">[ Save Stock Import ]</button>
+                    <!-- Footer Actions -->
+                    <div class="d-flex justify-content-between align-items-center pt-2">
+                        <a th:href="@{/manager-only/stock-imports}" class="btn btn-outline-secondary px-4 rounded-3">Cancel</a>
+                        <button type="submit" class="btn btn-gold px-5 py-2 shadow-sm">
+                            <i class="bi bi-check2-circle me-1"></i> Save Stock Record
+                        </button>
                     </div>
                 </form>
             </div>
