@@ -20,8 +20,8 @@ public class CategoryService {
 		this.repo = repo;
 	}
 
-	public List<CategoryDto> findAll() {
-		List<Category> entities = repo.findAll();
+	public List<CategoryDto> findAllActive() {
+		List<Category> entities = repo.findAllActive();
 		return entities.stream().map(this::toDto).toList();
 	}
 
