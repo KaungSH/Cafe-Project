@@ -155,7 +155,7 @@
 </head>
 
 <body>
-<div layout:fragment="content" class="w-100 py-5">
+<div layout:fragment="content" >
     <div class="card mx-auto shadow-sm p-4 p-md-5" 
          style="max-width: 480px; border-radius: 28px; border: 1px solid #ede0d4; background-color: #ffffff;">
         
@@ -165,7 +165,7 @@
         <h2 class="form-title text-center fw-bold" style="color: #1a0b05; font-size: 22px;">Add Measurement Unit</h2>
         <p class="form-subtitle text-center mb-4" style="color: #856e62; font-size: 13px;">Create a new unit for coffee ingredients and stocks</p>
 
-        <form th:action="@{/units/add}" th:object="${unit}" method="post">
+        <form th:action="@{/admin/units/add}" th:object="${unit}" method="post">
             <div class="mb-3">
                 <label class="form-label fw-bold" style="font-size: 13px; color: #1a0b05;">Unit Name</label>
                 <input type="text" class="form-control custom-input" th:field="*{name}" placeholder="Example: Kilogram" required>

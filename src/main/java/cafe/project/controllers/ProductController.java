@@ -327,7 +327,7 @@ public class ProductController {
 	}
 
 	private void bindAvialableData(Model model) {
-		model.addAttribute("categories", cservice.findAll());
+		model.addAttribute("categories", cservice.findAllActive());
 		model.addAttribute("sizes", sservice.getAllSizes());
 		model.addAttribute("ingredients", ingredientgetAllFake());
 	}
