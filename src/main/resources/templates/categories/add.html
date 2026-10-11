@@ -201,19 +201,19 @@ body {
 			<!-- Top Navigation -->
 			<div class="header-breadcrumb">
 				<div>
-					<a th:href="@{/manager-only/categories}" class="breadcrumb-tag mb-1">
+					<a th:href="@{/admin/categories}" class="breadcrumb-tag mb-1">
 						<i class="fa-solid fa-arrow-left"></i> Back to Categories
 					</a>
 					<h3 class="fw-bold text-dark mb-0">Add Product Category</h3>
 				</div>
-				<a th:href="@{/manager-only/categories}" class="btn-cancel-custom py-1 px-3 small">
+				<a th:href="@{/admin/categories}" class="btn-cancel-custom py-1 px-3 small">
 					<i class="fa-solid fa-xmark me-1"></i> Close
 				</a>
 			</div>
 
 			<!-- Form Card -->
 			<div class="dashboard-card">
-				<form th:action="@{/manager-only/categories/add}" th:object="${category}" method="post">
+				<form th:action="@{/admin/categories/add}" th:object="${category}" method="post">
 					<div class="p-4 p-lg-5">
 						<div class="row g-4">
 							
