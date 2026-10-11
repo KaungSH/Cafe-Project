@@ -1,18 +1,24 @@
 package cafe.project.repositories;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import cafe.project.common.repositories.DeleteRecordRepository;
+import cafe.project.common.repositories.entities.DeleteRecord;
 import cafe.project.repositories.entities.IngredientBatch;
 import cafe.project.repositories.mappers.IngredientBatchMapper;
 
 @Repository
 public class IngredientBatchRepository {
 	private final JdbcTemplate jdbcTemplate;
+	private final DeleteRecordRepository deleteRecordRepo;
 
-	public IngredientBatchRepository(JdbcTemplate jdbcTemplate) {
+	public IngredientBatchRepository(JdbcTemplate jdbcTemplate, DeleteRecordRepository deleteRecordRepo) {
 		this.jdbcTemplate = jdbcTemplate;
+		this.deleteRecordRepo = deleteRecordRepo;
 	}
 
 	public void add(IngredientBatch entity) {
@@ -28,7 +34,7 @@ public class IngredientBatchRepository {
 				entity.getQuantity_ordered(), entity.getTotal_import_cost(), entity.getImport_id());
 	}
 
-	public List<IngredientBatch> findAll() {
+	public List<IngredientBatch> findAllAdmin() {
 		String sql = """
 				    SELECT ib.*, b.name AS branch_name, it.name AS ingredient_type_name
 				    FROM ingredient_batches ib
@@ -38,6 +44,18 @@ public class IngredientBatchRepository {
 				    ORDER BY ib.created_at DESC
 				""";
 		return jdbcTemplate.query(sql, new IngredientBatchMapper());
+	}
+	
+	public List<IngredientBatch> findAll(String branch_id) {
+		String sql = """
+				    SELECT ib.*, b.name AS branch_name, it.name AS ingredient_type_name
+				    FROM ingredient_batches ib
+				    LEFT JOIN branches b ON ib.branch_id = b.branch_id
+				    LEFT JOIN ingredient_types it ON ib.ingredient_type_id = it.ingredient_type_id
+				    WHERE ib.isdeleted = 0 AND ib.branch_id = ?
+				    ORDER BY ib.created_at DESC
+				""";
+		return jdbcTemplate.query(sql, new IngredientBatchMapper(), branch_id);
 	}
 
 	public IngredientBatch findById(String batchId) {
@@ -66,31 +84,71 @@ public class IngredientBatchRepository {
 				entity.getBatch_id());
 	}
 
-	public void softDelete(String batchId) {
-		String sql = "UPDATE ingredient_batches SET isdeleted = 1 WHERE batch_id = ?";
-		jdbcTemplate.update(sql, batchId);
+	public void softDelete(String batch_id) {
+		if (!"deleted".equals(batch_id)) {
+			recordDelete(batch_id);
+			setWasteLogs(batch_id);
+			String sql = "UPDATE ingredient_batches SET isdeleted = 1 WHERE batch_id = ?";
+			jdbcTemplate.update(sql, batch_id);
+		}
 	}
 
-	public void recover(String batchId) {
+	public void recover(String batch_id) {
+		for (DeleteRecord dr : deleteRecordRepo.getByParentId(batch_id)) {
+			jdbcTemplate.update("UPDATE waste_logs SET batch_id = ? WHERE batch_id = 'deleted' AND waste_id = ?", dr.getParent_id(), dr.getChild_id());
+		}
+		deleteRecordRepo.deleteByParentId(batch_id);
 		String sql = "UPDATE ingredient_batches SET isdeleted = 0 WHERE batch_id = ?";
-		jdbcTemplate.update(sql, batchId);
+		jdbcTemplate.update(sql, batch_id);
 	}
 
-	public List<IngredientBatch> findDeletedAll() {
+	public List<IngredientBatch> findDeletedAll(String branch_id) {
 		String sql = """
 				    SELECT ib.*, b.name AS branch_name, it.name AS ingredient_type_name
 				    FROM ingredient_batches ib
 				    LEFT JOIN branches b ON ib.branch_id = b.branch_id
 				    LEFT JOIN ingredient_types it ON ib.ingredient_type_id = it.ingredient_type_id
-				    WHERE ib.isdeleted = 1
+				    WHERE ib.isdeleted = 1 AND ib.branch_id = ?
 				    ORDER BY ib.created_at DESC
 				""";
-		return jdbcTemplate.query(sql, new IngredientBatchMapper());
+		return jdbcTemplate.query(sql, new IngredientBatchMapper(), branch_id);
 	}
 
-	public void hardDelete(String batchId) {
-		String sql = "DELETE FROM ingredient_batches WHERE batch_id = ?";
-		jdbcTemplate.update(sql, batchId);
+	public void hardDelete(String batch_id) {
+		if (!"deleted".equals(batch_id)) {
+			deleteRecordRepo.deleteByParentId(batch_id);
+			String sql = "DELETE FROM ingredient_batches WHERE batch_id = ?";
+			jdbcTemplate.update(sql, batch_id);
+		}
+	}
+	
+	private int setWasteLogs(String batch_id) {
+		return jdbcTemplate.update("UPDATE waste_logs SET batch_id = 'deleted' WHERE batch_id = ?", batch_id);
+	}
+	
+	private int recordDelete(String batch_id) {
+		int i = 0;
+		for (String childId : getChildIds(batch_id)) {
+			DeleteRecord dr = new DeleteRecord();
+			dr.setParent_id(batch_id);
+			dr.setParent_table_name("ingredient_batches");
+			dr.setChild_id(childId);
+			dr.setChild_table_name("waste_logs");
+			deleteRecordRepo.recordDelete(dr);
+			i++;
+		}
+		return i;
+	}
+
+	private List<String> getChildIds(String batch_id) {
+		List<String> child_ids = new ArrayList<String>();
+		for (DeleteRecord dr : deleteRecordRepo.getChildIds(batch_id, "batch_id", "waste_logs", "waste_id")) {
+			for (String child_id : dr.getChild_ids()) {
+				child_ids.add(child_id);
+			}
+		}
+
+		return child_ids;
 	}
 
 	public BigDecimal getAvailableQuantity(String ingredientTypeId, String branchId) {

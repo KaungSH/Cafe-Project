@@ -1,11 +1,15 @@
 package cafe.project.repositories;
 
+import cafe.project.common.repositories.DeleteRecordRepository;
+import cafe.project.common.repositories.entities.DeleteRecord;
 import cafe.project.models.IngredientTypeDto;
 import cafe.project.models.UnitDto;
 import cafe.project.repositories.entities.IngredientType;
 import cafe.project.repositories.mappers.IngredientTypeMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,10 +18,12 @@ public class IngredientTypeRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final IngredientTypeMapper mapper;
+    private final DeleteRecordRepository deleteRecordRepo;
 
-    public IngredientTypeRepository(JdbcTemplate jdbcTemplate, IngredientTypeMapper mapper) {
+    public IngredientTypeRepository(JdbcTemplate jdbcTemplate, IngredientTypeMapper mapper, DeleteRecordRepository deleteRecordRepo) {
         this.jdbcTemplate = jdbcTemplate;
         this.mapper = mapper;
+        this.deleteRecordRepo = deleteRecordRepo;
     }
 
     public List<UnitDto> findAllUnits() {
@@ -26,7 +32,7 @@ public class IngredientTypeRepository {
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             UnitDto u = new UnitDto();
             u.setUnit_id(rs.getString("unit_id"));
-            u.setEmployee_name(rs.getString("employee_id"));
+            u.setEmployee_id(rs.getString("employee_id"));
             u.setName(rs.getString("name"));
             u.setAbbreviation(rs.getString("abbreviation"));
             u.setIs_active(rs.getBoolean("is_active"));
@@ -94,14 +100,85 @@ public class IngredientTypeRepository {
     }
 
     public void softDelete(String id) {
-        jdbcTemplate.update("UPDATE ingredient_types SET isdeleted = 1 WHERE ingredient_type_id = ?", id);
+    	if(!"deleted".equals(id)) {
+    		recordDelete(id);
+    		recordDelete2(id);
+    		setProducts_ingredients(id);
+    		setIngredient_batches(id);
+    		jdbcTemplate.update("UPDATE ingredient_types SET isdeleted = 1 WHERE ingredient_type_id = ?", id);
+    	}
     }
 
     public void recover(String id) {
+    	for (DeleteRecord dr : deleteRecordRepo.getByParentId(id)) {
+			jdbcTemplate.update("UPDATE products_ingredients SET ingredient_type_id = ? WHERE ingredient_id = 'deleted' AND product_id = ?", dr.getParent_id(), dr.getChild_id());
+			jdbcTemplate.update("UPDATE ingredient_batches SET ingredient_type_id = ? WHERE ingredient_id = 'deleted' AND batch_id = ?", dr.getParent_id(), dr.getChild_id());
+		}
+    	deleteRecordRepo.deleteByParentId(id);
         jdbcTemplate.update("UPDATE ingredient_types SET isdeleted = 0 WHERE ingredient_type_id = ?", id);
     }
 
     public void hardDelete(String id) {
-        jdbcTemplate.update("DELETE FROM ingredient_types WHERE ingredient_type_id = ?", id);
+    	if(!"deleted".equals(id)) {
+    		deleteRecordRepo.deleteByParentId(id);
+    		jdbcTemplate.update("DELETE FROM ingredient_types WHERE ingredient_type_id = ?", id);
+    	}
     }
+    
+    private int setProducts_ingredients(String type_id) {
+    	return jdbcTemplate.update("UPDATE products_ingredients SET ingredient_type_id = 'deleted' WHERE ingredient_type_id = ?", type_id);
+    }
+    
+    private int setIngredient_batches(String type_id) {
+    	return jdbcTemplate.update("UPDATE ingredient_batches SET ingredient_type_id = 'deleted' WHERE ingredient_type_id = ?", type_id);
+    }
+    
+    private int recordDelete(String type_id) {
+		int i = 0;
+		for (String childId : getChildIds(type_id)) {
+			DeleteRecord dr = new DeleteRecord();
+			dr.setParent_id(type_id);
+			dr.setParent_table_name("ingredient_types");
+			dr.setChild_id(childId);
+			dr.setChild_table_name("ingredient_batches");
+			deleteRecordRepo.recordDelete(dr);
+			i++;
+		}
+		return i;
+	}
+    
+    private int recordDelete2(String type_id) {
+		int i = 0;
+		for (String childId : getChildIds2(type_id)) {
+			DeleteRecord dr = new DeleteRecord();
+			dr.setParent_id(type_id);
+			dr.setParent_table_name("ingredient_types");
+			dr.setChild_id(childId);
+			dr.setChild_table_name("products_ingredients");
+			deleteRecordRepo.recordDelete(dr);
+			i++;
+		}
+		return i;
+	}
+    
+    private List<String> getChildIds(String type_id) {
+		List<String> child_ids = new ArrayList<String>();
+		for (DeleteRecord dr : deleteRecordRepo.getChildIds(type_id, "ingredient_type_id", "ingredient_batches", "batch_id")) {
+			for (String child_id : dr.getChild_ids()) {
+				child_ids.add(child_id);
+			}
+		}
+		return child_ids;
+	}
+    
+    private List<String> getChildIds2(String type_id) {
+		List<String> child_ids = new ArrayList<String>();
+		for (DeleteRecord dr : deleteRecordRepo.getChildIds(type_id, "ingredient_type_id", "products_ingredients", "product_id")) {
+			for (String child_id : dr.getChild_ids()) {
+				child_ids.add(child_id);
+			}
+		}
+		return child_ids;
+	}
+    
 }

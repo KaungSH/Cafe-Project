@@ -132,11 +132,11 @@
                
             </p>
 
-            <form th:action="@{/ingredient-types/hard-delete}" method="post">
+            <form th:action="@{/admin/ingredient-types/hard-delete}" method="post">
                 <input type="hidden" name="typeId" th:value="${typeId}" />
 
                 <div class="d-flex justify-content-center align-items-center gap-2">
-                    <a th:href="@{/ingredient-types/deleted}" class="btn-luxury-cancel">
+                    <a th:href="@{/admin/ingredient-types/deleted}" class="btn-luxury-cancel">
                         <i class="fa-solid fa-xmark"></i> Cancel
                     </a>
                     <button type="submit" class="btn-luxury-danger">

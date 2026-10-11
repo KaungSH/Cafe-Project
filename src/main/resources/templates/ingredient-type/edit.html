@@ -173,7 +173,7 @@
                 </div>
             </div>
 
-            <form th:action="@{/ingredient-types/edit}" th:object="${ingredientType}" method="post">
+            <form th:action="@{/admin/ingredient-types/edit}" th:object="${ingredientType}" method="post">
                 <input type="hidden" th:field="*{ingredient_type_id}" />
 
                 <div class="mb-3">
@@ -201,7 +201,7 @@
                 </div>
 
                 <div class="d-flex justify-content-end align-items-center gap-2 pt-3 border-top border-light-subtle">
-                    <a th:href="@{/ingredient-types}" class="btn-luxury-cancel">
+                    <a th:href="@{/admin/ingredient-types}" class="btn-luxury-cancel">
                         <i class="fa-solid fa-xmark"></i> Cancel
                     </a>
                     <button type="submit" class="btn-luxury-primary">

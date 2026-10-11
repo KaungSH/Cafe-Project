@@ -17,7 +17,7 @@ import cafe.project.services.SupplierService;
 import jakarta.validation.Valid;
 
 @Controller
-@RequestMapping("/manager")
+@RequestMapping("/admin")
 public class SupplierController {
 	private final SupplierService supplierService;
 
@@ -44,7 +44,7 @@ public class SupplierController {
 		}
 		supplier.setCreated_at(LocalDateTime.now());
 		this.supplierService.add(supplier);
-		return "redirect:/manager/suppliers";
+		return "redirect:/admin/suppliers";
 	}
 
 	@GetMapping("/suppliers/edit/{supplier_id}")
@@ -54,7 +54,7 @@ public class SupplierController {
 			model.addAttribute("supplier", existingSup);
 			return "supplier/edit";
 		}
-		return "redirect:/manager/suppliers";
+		return "redirect:/admin/suppliers";
 	}
 
 	@PostMapping("/suppliers/edit")
@@ -65,7 +65,7 @@ public class SupplierController {
 		}
 		supplier.setCreated_at(LocalDateTime.now());
 		this.supplierService.edit(supplier.getSupplier_id(), supplier);
-		return "redirect:/manager/suppliers";
+		return "redirect:/admin/suppliers";
 	}
 
 	@GetMapping("/suppliers/delete/{supplier_id}")
@@ -75,13 +75,13 @@ public class SupplierController {
 			model.addAttribute("supplier", existingSup);
 			return "supplier/delete";
 		}
-		return "redirect:/manager/suppliers";
+		return "redirect:/admin/suppliers";
 	}
 
 	@PostMapping("/suppliers/delete")
 	public String deletedSupplier(@ModelAttribute("supplier") SupplierDto supplier) {
 		this.supplierService.delete(supplier.getSupplier_id());
-		return "redirect:/manager/suppliers";
+		return "redirect:/admin/suppliers";
 	}
 
 	@GetMapping("/suppliers/deleted")
@@ -93,7 +93,7 @@ public class SupplierController {
 	@PostMapping("/suppliers/restore")
 	public String restoreSupplier(@RequestParam String supplier_id) {
 		supplierService.restore(supplier_id);
-		return "redirect:/manager/suppliers/deleted";
+		return "redirect:/admin/suppliers/deleted";
 	}
 
 }

@@ -1,67 +1,42 @@
 package cafe.project.controllers;
 
+import java.math.BigDecimal;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import cafe.project.employeemanagement.models.LoginDto;
-import cafe.project.models.IngredientBatchEntryDto;
-import cafe.project.models.StockImportEntryDto;
+import cafe.project.repositories.entities.IngredientBatch;
 import cafe.project.services.IngredientBatchService;
-import cafe.project.services.StockImportService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/ingredient-batches")
+@RequestMapping("/manager-only/ingredient-batches")
 public class IngredientBatchController {
 	private final IngredientBatchService service;
-	private final StockImportService stockImportService;
 
-	public IngredientBatchController(IngredientBatchService service, StockImportService stockImportService) {
+	public IngredientBatchController(IngredientBatchService service) {
 		this.service = service;
-		this.stockImportService = stockImportService;
 	}
 
 	@GetMapping("")
 	public String listBatches(Model model, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-		model.addAttribute("batches", service.getAllBatches());
+		model.addAttribute("batches", service.getAllBatches(ldto.getBranch_id()));
 		return "ingredient-batch/list";
 	}
-
-	@GetMapping("/add")
-	public String showAddBatchForm(@RequestParam("import_id") String import_id, Model model, HttpSession session) {
+	
+	@GetMapping("/clear")
+	public String clear(HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-		IngredientBatchEntryDto dto = new IngredientBatchEntryDto();
-		dto.setImport_id(import_id);
-		dto.setItems(stockImportService.getAllIngredientTypes());
-
-		model.addAttribute("batchEntry", dto);
-		return "ingredient-batch/add";
-	}
-
-	@PostMapping("/add")
-	public String saveIngredientBatches(@ModelAttribute("batchEntry") IngredientBatchEntryDto dto,
-			HttpSession session) {
-		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-
-		stockImportService.addIngredientBatchesToImport(dto, ldto.getBranch_id());
-		return "redirect:/stock-imports";
-	}
-
-	@GetMapping("/edit/{import_id}")
-	public String editIngredientBatches(@PathVariable("import_id") String import_id, Model model, HttpSession session) {
-		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-		StockImportEntryDto dto = stockImportService.getImportById(import_id);
-
-		if (!dto.getBranch_id().equals(ldto.getBranch_id())) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not Your Branch's Data!!!");
+		for(IngredientBatch ing : service.getAllBatches(ldto.getBranch_id())) {
+			if(ing.getRemaining_quantity().compareTo(BigDecimal.ZERO) <= 0) {
+				service.softDeleteBatch(ing.getBatch_id());
+			}
 		}
-
-		model.addAttribute("stockImport", dto);
-		model.addAttribute("suppliers", stockImportService.getAllSuppliers());
-		return "stock-import/edit";
+		return "redirect:/manager-onlyingredient-batches";
 	}
 
 	@GetMapping("/delete/{id}")
@@ -73,13 +48,13 @@ public class IngredientBatchController {
 		}
 
 		service.softDeleteBatch(id);
-		return "redirect:/ingredient-batches";
+		return "redirect:/manager-onlyingredient-batches";
 	}
 
 	@GetMapping("/deleted-list")
 	public String showDeletedList(Model model, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-		model.addAttribute("deletedBatches", service.getDeletedBatches());
+		model.addAttribute("deletedBatches", service.getDeletedBatches(ldto.getBranch_id()));
 		return "ingredient-batch/deleted-list";
 	}
 
@@ -93,7 +68,7 @@ public class IngredientBatchController {
 		}
 
 		service.recoverBatch(id);
-		return "redirect:/ingredient-batches/deleted-list";
+		return "redirect:/manager-onlyingredient-batches/deleted-list";
 	}
 
 	@GetMapping("/hard-delete/{id}")
@@ -106,6 +81,6 @@ public class IngredientBatchController {
 		}
 
 		service.hardDeleteBatch(id);
-		return "redirect:/ingredient-batches/deleted-list";
+		return "redirect:/manager-onlyingredient-batches/deleted-list";
 	}
 }

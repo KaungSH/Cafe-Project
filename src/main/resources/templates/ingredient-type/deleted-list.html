@@ -210,7 +210,7 @@
                 </div>
             </div>
 
-            <a th:href="@{/ingredient-types}" class="btn-luxury-outline">
+            <a th:href="@{/admin/ingredient-types}" class="btn-luxury-outline">
                 <i class="fa-solid fa-arrow-left"></i> Back to Active List
             </a>
         </div>
@@ -233,10 +233,10 @@
                         <td><span class="unit-badge" th:text="${item.name}">Kg</span></td>
                         <td class="text-muted" th:text="${item.description}">Arabica Dark Roast</td>
                         <td class="text-end">
-                            <a th:href="@{/ingredient-types/recover/{id}(id=${item.ingredient_type_id})}" class="btn-recover-action">
+                            <a th:href="@{/admin/ingredient-types/recover/{id}(id=${item.ingredient_type_id})}" class="btn-recover-action">
                                 <i class="fa-solid fa-rotate-left"></i> Recover
                             </a>
-                            <a th:href="@{/ingredient-types/hard-delete/{id}(id=${item.ingredient_type_id})}" class="btn-hard-delete-action">
+                            <a th:href="@{/admin/ingredient-types/hard-delete/{id}(id=${item.ingredient_type_id})}" class="btn-hard-delete-action">
                                 <i class="fa-solid fa-trash-can"></i> Hard Delete[
                             </a>
                         </td>
