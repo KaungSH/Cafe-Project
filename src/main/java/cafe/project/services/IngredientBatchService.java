@@ -83,26 +83,14 @@ public class IngredientBatchService {
 		}
 		repository.hardDelete(id);
 	}
-	
-	public BigDecimal getAvailableQuantity(
-	        String ingredientTypeId,
-	        String branchId) {
 
-	    return repository.getAvailableQuantity(
-	            ingredientTypeId,
-	            branchId
-	    );
+	public BigDecimal getAvailableQuantity(String ingredientTypeId, String branchId) {
+
+		return repository.getAvailableQuantity(ingredientTypeId, branchId);
 	}
-	
-	public void reduceStockFIFO(
-	        String ingredientTypeId,
-	        String branchId,
-	        BigDecimal quantity) {
 
-	    repository.reduceStockFIFO(
-	            ingredientTypeId,
-	            branchId,
-	            quantity
-	    );
+	public void reduceStockFIFO(String ingredientTypeId, String branchId, BigDecimal quantity) {
+
+		repository.reduceStockFIFO(ingredientTypeId, branchId, quantity);
 	}
 }

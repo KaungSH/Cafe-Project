@@ -2,7 +2,9 @@ package cafe.project.services;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import cafe.project.models.DiscountProductDto;
 import cafe.project.repositories.DiscountProductRepository;
@@ -26,9 +28,10 @@ public class DiscountProductService {
 	}
 
 	public void add(DiscountProductDto dto) {
-		if (dto.getProduct_ids() == null) {
-			return;
+		if (dto == null || dto.getProduct_ids() == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Discount Product data is required");
 		}
+
 		for (String product_id : dto.getProduct_ids()) {
 			boolean exists = repo.exists(dto.getDiscount_id(), product_id);
 			if (!exists) {
@@ -41,7 +44,12 @@ public class DiscountProductService {
 	}
 
 	public int remove(String discount_id, String product_id) {
-
+		if (discount_id == null || discount_id.isBlank()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Discount ID is required");
+		}
+		if (product_id == null || product_id.isBlank()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product ID is required");
+		}
 		return repo.remove(discount_id, product_id);
 	}
 
