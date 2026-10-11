@@ -22,78 +22,137 @@
     </div>
 
     <!-- ================= MENU ================= -->
-    <div class="cafe-menu" >
+    <div class="cafe-menu">
         <!-- HOME -->
         <a style="color:Orange" th:href="@{/}" class="cafe-menu-item">
             <i class="bi bi-house"></i>
-       
-            <span >Home</span>
+            <span>Home</span>
         </a>
 
-        <!-- DAILY REGISTERS -->
-        <a style="color:Orange" th:href="@{/manager-only/daily-registers/all}" class="cafe-menu-item">
-            <i class="bi bi-calendar-check"></i>
-            <span>Daily Registers</span>
+        <!-- AUDIENCE / CUSTOMERS -->
+        <a style="color:Orange" th:href="@{/manager-only/types/audience}" class="cafe-menu-item">
+            <i class="bi bi-people"></i>
+            <span>Audience</span>
         </a>
 
-        <!-- INGREDIENT BATCH -->
-        <a style="color:Orange" th:href="@{/manager-only/ingredientBatch}" class="cafe-menu-item">
-            <i class="bi bi-box-seam"></i>
-            <span>Ingredient Batch</span>
+        <!-- PROMOTIONS -->
+        <a style="color:Orange" th:href="@{/manager-only/types/promo}" class="cafe-menu-item">
+            <i class="bi bi-megaphone"></i>
+            <span>Promo</span>
         </a>
 
-        <!-- PRODUCTS (For Viewing only) -->
-        <a style="color:Orange" th:href="@{/manager-only/products}" class="cafe-menu-item">
-            <i class="bi bi-cup-hot"></i>
-            <span>Products List</span>
+        <!-- EXPENSE CATEGORIES -->
+        <a style="color:Orange" th:href="@{/manager-only/expensecategory}" class="cafe-menu-item">
+            <i class="bi bi-tags"></i>
+            <span>Expense Categories</span>
         </a>
 
-        <!-- SUPPLIERS -->
-        <a style="color:Orange" th:href="@{/manager-only/supplier}" class="cafe-menu-item">
+        <!-- SIZES (CUP / PORTION SIZES) -->
+        <a style="color:Orange" th:href="@{/manager-only/sizes}" class="cafe-menu-item">
+            <i class="bi bi-aspect-ratio"></i>
+            <span>Sizes</span>
+        </a>
+
+        <!-- PAYMENT METHOD -->
+        <a style="color:Orange" th:href="@{/manager-only/paymethod}" class="cafe-menu-item">
+            <i class="bi bi-credit-card-2-front"></i>
+            <span>Pay Method</span>
+        </a>
+
+        <!-- UNITS (KG, G, ML, PIECES) -->
+        <a style="color:Orange" th:href="@{/manager-only/units}" class="cafe-menu-item">
+            <i class="bi bi-speedometer2"></i>
+            <span>Units</span>
+        </a>
+
+        <!-- INGREDIENT TYPES -->
+        <a style="color:Orange" th:href="@{/manager-only/ingredient-types}" class="cafe-menu-item">
+            <i class="bi bi-basket3"></i>
+            <span>Ingredient Types</span>
+        </a>
+
+        <!-- SUPPLIERS / VENDORS -->
+        <a style="color:Orange" th:href="@{/manager-only/suppliers}" class="cafe-menu-item">
             <i class="bi bi-truck"></i>
             <span>Suppliers</span>
         </a>
 
-        <!-- WASTE LOGS -->
-        <a style="color:Orange" th:href="@{/manager-only/WasteLogs}" class="cafe-menu-item">
-            <i class="bi bi-trash"></i>
-            <span>Waste Logs</span>
+        <!-- BRANCHES STATS / ANALYTICS -->
+        <a style="color:Orange" th:href="@{/manager-only/branches-stats}" class="cafe-menu-item">
+            <i class="bi bi-bar-chart-line"></i>
+            <span>Branches Stats</span>
         </a>
 
-        <!-- WASTE REASONS -->
-        <a style="color:Orange" th:href="@{/manager-only/wastereasons}" class="cafe-menu-item">
-            <i class="bi bi-exclamation-circle"></i>
-            <span>Waste Reasons</span>
+        <!-- PRODUCT CATEGORIES -->
+        <a style="color:Orange" th:href="@{/manager-only/categories}" class="cafe-menu-item">
+            <i class="bi bi-grid"></i>
+            <span>Categories</span>
         </a>
 
-        <!-- STOCK IMPORTS -->
-        <a style="color:Orange" th:href="@{/manager-only/stock_imports}" class="cafe-menu-item">
-            <i class="bi bi-box-arrow-in-down"></i>
-            <span>Stock Imports</span>
+        <!-- DAILY REGISTER / CASH REGISTER -->
+        <a style="color:Orange" th:href="@{/manager-only/daily-register/all}" class="cafe-menu-item">
+            <i class="bi bi-journal-bookmark"></i>
+            <span>Daily Register</span>
         </a>
 
-        <!-- ORDERS -->
-        <a style="color:Orange" th:href="@{/orders}" class="cafe-menu-item">
-            <i class="bi bi-bag"></i>
-            <span>Orders</span>
+        <!-- DISCOUNT -->
+        <a style="color:Orange" th:href="@{/manager-only/discount}" class="cafe-menu-item">
+            <i class="bi bi-percent"></i>
+            <span>Discount</span>
         </a>
 
-        <!-- PAYMENTS -->
+        <!-- EMPLOYEE / STAFF -->
+        <a style="color:Orange" th:href="@{/manager-only/employee}" class="cafe-menu-item">
+            <i class="bi bi-person-badge"></i>
+            <span>Employee</span>
+        </a>
+
+        <!-- EXPENSE / COSTS -->
+        <a style="color:Orange" th:href="@{/manager-only/expense}" class="cafe-menu-item">
+            <i class="bi bi-cash-coin"></i>
+            <span>Expense</span>
+        </a>
+
+        <!-- INGREDIENT BATCHES / INVENTORY LOTS -->
+        <a style="color:Orange" th:href="@{/manager-only/ingredient-Batches}" class="cafe-menu-item">
+            <i class="bi bi-boxes"></i>
+            <span>IngredientBatches</span>
+        </a>
+
+        <!-- ORDER WITH DETAILS -->
+        <a style="color:Orange" th:href="@{/order-with-details}" class="cafe-menu-item">
+            <i class="bi bi-receipt-cutoff"></i>
+            <span>Order With Details</span>
+        </a>
+
+        <!-- PAYMENTS / TRANSACTIONS -->
         <a style="color:Orange" th:href="@{/payments}" class="cafe-menu-item">
-            <i class="bi bi-cash-stack"></i>
+            <i class="bi bi-wallet2"></i>
             <span>Payments</span>
         </a>
 
-        <!-- DISCOUNTS -->
-        <a style="color:Orange" th:href="@{/manager-only/discounts}" class="cafe-menu-item">
-            <i class="bi bi-percent"></i>
-            <span>Discounts</span>
+        <!-- PRODUCTS / MENU ITEMS -->
+        <a style="color:Orange" th:href="@{/manager-only/products}" class="cafe-menu-item">
+            <i class="bi bi-cup-straw"></i>
+            <span>Products</span>
         </a>
 
-        <!-- EXPENSES -->
-        <a style="color:Orange" th:href="@{/manager-only/expense}" class="cafe-menu-item">
-            <i class="bi bi-wallet2"></i>
-            <span>Expenses</span>
+        <!-- STOP IMPORT / CANCELLED SHIPMENTS -->
+        <a style="color:Orange" th:href="@{/manager-only/stopimport}" class="cafe-menu-item">
+            <i class="bi bi-slash-circle"></i>
+            <span>StopImport</span>
+        </a>
+
+        <!-- WASTE LOGS -->
+        <a style="color:Orange" th:href="@{/manager-only/wasteLogs}" class="cafe-menu-item">
+            <i class="bi bi-trash3"></i>
+            <span>WasteLogs</span>
+        </a>
+
+        <!-- WASTE REASONS -->
+        <a style="color:Orange" th:href="@{/manager-only/waste-reasons}" class="cafe-menu-item">
+            <i class="bi bi-question-circle"></i>
+            <span>WasteReasons</span>
         </a>
     </div>
 
