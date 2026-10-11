@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 
 <head>
     <meta charset="UTF-8">
@@ -97,7 +99,7 @@
 
 <body>
 
-    <div class="edit-container">
+    <div layout:fragment="content">
 
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
