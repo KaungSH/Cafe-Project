@@ -128,12 +128,17 @@ public class PaymentController {
 				payment.setEmployee_id(user.getEmployee_id());
 			}
 
-			// Save payment and reduce stock in one transaction.
-			paymentStockService.completePayment(payment, dto, order.getBranch_id());
+			// Save payment to database
+			paymentService.save(payment);
 
-			redirect.addFlashAttribute("success", "Payment completed successfully.");
+			// Reduce stock here using your existing stock service
 
-			return "redirect:/order-with-details";
+			redirect.addFlashAttribute(
+			    "success",
+			    "Payment completed successfully."
+			);
+
+			return "redirect:/receipt/" + orderId;
 
 		} catch (IllegalArgumentException e) {
 			redirect.addFlashAttribute("error", e.getMessage());

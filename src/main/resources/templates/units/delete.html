@@ -126,7 +126,7 @@
             <h2 class="confirm-title">Delete Unit</h2>
             <p class="confirm-desc">Are you sure you want to move this unit to the deleted list? You can restore it later if needed.</p>
 
-            <form th:action="@{/units/delete}" th:object="${unit}" method="post">
+            <form th:action="@{/admin/units/delete}" th:object="${unit}" method="post">
                 <!-- Ensure this matches your Java Entity property (e.g., unitId or id) -->
                 <input type="hidden" th:field="*{unit_id}">
 
