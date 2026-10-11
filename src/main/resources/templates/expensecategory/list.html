@@ -234,7 +234,6 @@ body {
         <thead>
           <tr>
             <th style="width: 80px;">No</th>
-            <th style="width: 160px;">Category ID</th>
             <th>Category Name</th>
             <th style="width: 140px;" class="text-end">Actions</th>
           </tr>
@@ -248,7 +247,6 @@ body {
           </tr>
           <tr th:each="category, stat : ${expense}">
             <td th:text="${stat.count}">1</td>
-            <td><span class="badge-id" th:text="${category.expense_category_id}">#001</span></td>
             <td><span class="category-name-text" th:text="${category.category_name}">Consumables</span></td>
             <td class="text-end">
               <a th:href="@{/admin/expensecategory/edit/{id}(id=${category.expense_category_id})}" 

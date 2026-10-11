@@ -81,6 +81,7 @@ public class AuthController {
 		oldsession.invalidate();
 		HttpSession session = request.getSession(true);
 		ldto2.setBranch_id(ldto.getBranch_id());
+		ldto2.setBranch_name(branchService.findById(ldto.getBranch_id()).getName());
 		session.setAttribute("loggedInUser", ldto2);
 		System.out.println(ldto2.getEmployee_name());
 		System.out.println(ldto2.getBranch_id());

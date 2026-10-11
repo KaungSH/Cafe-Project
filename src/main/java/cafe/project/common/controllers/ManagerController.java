@@ -5,21 +5,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import cafe.project.employeemanagement.models.LoginDto;
 import cafe.project.repositories.AtypeAndPtypeRepository;
-import cafe.project.repositories.StatusRepository;
-import cafe.project.services.BranchService;
-import cafe.project.services.CategoryService;
-import cafe.project.services.DailyRegisterService;
-import cafe.project.services.DiscountService;
-import cafe.project.services.EmployeeService;
 import cafe.project.services.ExpenseCategoryService;
 import cafe.project.services.IngredientTypeService;
 import cafe.project.services.PayMethodService;
 import cafe.project.services.SizeService;
 import cafe.project.services.SupplierService;
 import cafe.project.services.UnitService;
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/manager-only")

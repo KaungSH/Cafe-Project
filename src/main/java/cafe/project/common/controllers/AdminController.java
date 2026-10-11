@@ -11,12 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cafe.project.employeemanagement.models.LoginDto;
 import cafe.project.models.BranchEntryDto;
-import cafe.project.repositories.StatusRepository;
 import cafe.project.services.BranchService;
 import cafe.project.services.CategoryService;
 import cafe.project.services.DailyRegisterService;
 import cafe.project.services.DiscountService;
-import cafe.project.services.EmployeeService;
 import cafe.project.services.ExpenseService;
 import cafe.project.services.IngredientBatchService;
 import cafe.project.services.WasteLogsService;
@@ -31,19 +29,15 @@ public class AdminController {
 	private final CategoryService categoryService;
 	private final DiscountService discountService;
 	private final BranchService branchService;
-	private final EmployeeService employeeService;
-	private final StatusRepository statusRepository;
 	private final ExpenseService expenseService;
 	private final WasteLogsService wasteLogsService;
 	private final IngredientBatchService ingredientBatchService;
 
-	public AdminController(DailyRegisterService dailyRegisterservice, BranchService branchService, EmployeeService employeeService, StatusRepository statusRepository, CategoryService categoryService, DiscountService discountService, ExpenseService expenseService, WasteLogsService wasteLogsService, IngredientBatchService ingredientBatchService) {
+	public AdminController(DailyRegisterService dailyRegisterservice, BranchService branchService, CategoryService categoryService, DiscountService discountService, ExpenseService expenseService, WasteLogsService wasteLogsService, IngredientBatchService ingredientBatchService) {
 		this.expenseService = expenseService;
 		this.dailyRegisterservice = dailyRegisterservice;
 		this.categoryService = categoryService;
 		this.branchService = branchService;
-		this.employeeService = employeeService;
-		this.statusRepository = statusRepository;
 		this.discountService = discountService;
 		this.wasteLogsService = wasteLogsService;
 		this.ingredientBatchService = ingredientBatchService;

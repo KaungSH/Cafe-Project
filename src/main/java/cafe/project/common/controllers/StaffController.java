@@ -6,12 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cafe.project.employeemanagement.models.LoginDto;
-import cafe.project.repositories.StatusRepository;
-import cafe.project.services.BranchService;
-import cafe.project.services.CategoryService;
-import cafe.project.services.DailyRegisterService;
 import cafe.project.services.DiscountService;
-import cafe.project.services.EmployeeService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
