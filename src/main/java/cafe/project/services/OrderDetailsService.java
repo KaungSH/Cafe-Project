@@ -3,7 +3,9 @@ package cafe.project.services;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import cafe.project.models.OrderDetailsDto;
 import cafe.project.models.ProductEntryModel;
@@ -13,168 +15,184 @@ import cafe.project.repositories.entities.OrderDetails;
 @Service
 public class OrderDetailsService {
 
-	private final OrderDetailsRepository orderDetailsRepository;
-	private final IngredientBatchService ingredientBatchService;
-	private final ProductService productService;
+    private final OrderDetailsRepository orderDetailsRepository;
+    private final IngredientBatchService ingredientBatchService;
+    private final ProductService productService;
 
-	public OrderDetailsService(OrderDetailsRepository orderDetailsRepository,
-			IngredientBatchService ingredientBatchService, ProductService productService) {
+    public OrderDetailsService(OrderDetailsRepository orderDetailsRepository,
+            IngredientBatchService ingredientBatchService, ProductService productService) {
 
-		this.orderDetailsRepository = orderDetailsRepository;
-		this.ingredientBatchService = ingredientBatchService;
-		this.productService = productService;
-	}
+        this.orderDetailsRepository = orderDetailsRepository;
+        this.ingredientBatchService = ingredientBatchService;
+        this.productService = productService;
+    }
 
-	// Get all order details
-	public List<OrderDetails> findAll() {
-		return orderDetailsRepository.findAll();
-	}
+    // Get all order details
+    public List<OrderDetails> findAll() {
+        return orderDetailsRepository.findAll();
+    }
 
-	// Get order detail by ID
-	public OrderDetails findById(String id) {
-		return orderDetailsRepository.findById(id);
-	}
+    // Get order detail by ID
+    public OrderDetails findById(String id) {
+        OrderDetails entity = orderDetailsRepository.findById(id);
+        if (entity == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order Detail");
+        }
+        return entity;
+    }
 
-	// Get details by Order ID
-	public List<OrderDetails> findByOrderId(String orderId) {
-		return orderDetailsRepository.findByOrderId(orderId);
-	}
+    // Get details by Order ID
+    public List<OrderDetails> findByOrderId(String orderId) {
+        return orderDetailsRepository.findByOrderId(orderId);
+    }
 
-	// Get Order IDs
-	public List<String> findOrderIds() {
-		return orderDetailsRepository.findOrderIds();
-	}
+    // Get Order IDs
+    public List<String> findOrderIds() {
+        return orderDetailsRepository.findOrderIds();
+    }
 
-	// Add order detail
-	public void save(OrderDetailsDto dto) {
+    // Add order detail
+    public void save(OrderDetailsDto dto) {
+        if (dto == null || dto.getOrderDetails() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Order Details data is required");
+        }
 
-		for (OrderDetails orderDetail : dto.getOrderDetails()) {
+        for (OrderDetails orderDetail : dto.getOrderDetails()) {
+            orderDetailsRepository.save(orderDetail);
+        }
+    }
 
-			orderDetailsRepository.save(orderDetail);
-		}
-	}
+    public BigDecimal calculateTotalAmount(String orderId) {
+        return orderDetailsRepository.calculateTotalAmount(orderId);
+    }
 
-	public BigDecimal calculateTotalAmount(String orderId) {
-		return orderDetailsRepository.calculateTotalAmount(orderId);
-	}
+    public BigDecimal calculateDiscountAmount(String orderId) {
+        return orderDetailsRepository.calculateDiscountAmount(orderId);
+    }
 
-	public BigDecimal calculateDiscountAmount(String orderId) {
+    // Update order detail
+    public void edit(OrderDetailsDto dto, String orderId) {
+        if (dto == null || dto.getOrderDetails() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Order Details data is required");
+        }
 
-		return orderDetailsRepository.calculateDiscountAmount(orderId);
-	}
+        // Get existing details from database
+        List<OrderDetails> oldDetails = orderDetailsRepository.findByOrderId(orderId);
 
-	// Update order detail
-	public void edit(OrderDetailsDto dto, String orderId) {
+        // Update or Insert
+        for (OrderDetails detail : dto.getOrderDetails()) {
 
-		// Get existing details from database
-		List<OrderDetails> oldDetails = orderDetailsRepository.findByOrderId(orderId);
+            detail.setOrder_id(orderId);
 
-		// Update or Insert
-		for (OrderDetails detail : dto.getOrderDetails()) {
+            if (detail.getOrder_detail_id() == null || detail.getOrder_detail_id().isEmpty()) {
 
-			detail.setOrder_id(orderId);
+                // NEW DETAIL
+                orderDetailsRepository.save(detail);
 
-			if (detail.getOrder_detail_id() == null || detail.getOrder_detail_id().isEmpty()) {
+            } else {
 
-				// NEW DETAIL
-				orderDetailsRepository.save(detail);
+                // EXISTING DETAIL
+                orderDetailsRepository.edit(detail.getOrder_detail_id(), detail);
+            }
+        }
 
-			} else {
+        // Delete removed details
+        for (OrderDetails oldDetail : oldDetails) {
 
-				// EXISTING DETAIL
-				orderDetailsRepository.edit(detail.getOrder_detail_id(), detail);
-			}
-		}
+            boolean found = false;
 
-		// Delete removed details
-		for (OrderDetails oldDetail : oldDetails) {
+            for (OrderDetails detail : dto.getOrderDetails()) {
 
-			boolean found = false;
+                if (oldDetail.getOrder_detail_id().equals(detail.getOrder_detail_id())) {
 
-			for (OrderDetails detail : dto.getOrderDetails()) {
+                    found = true;
+                    break;
+                }
+            }
 
-				if (oldDetail.getOrder_detail_id().equals(detail.getOrder_detail_id())) {
+            if (!found) {
 
-					found = true;
-					break;
-				}
-			}
+                orderDetailsRepository.delete(oldDetail.getOrder_detail_id());
 
-			if (!found) {
+            }
+        }
+    }
 
-				orderDetailsRepository.delete(oldDetail.getOrder_detail_id());
+    // Delete order detail
+    public void delete(OrderDetailsDto dto) {
+        if (dto == null || dto.getOrderDetails() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Order Details data is required");
+        }
 
-			}
-		}
-	}
+        for (OrderDetails orderDetail : dto.getOrderDetails()) {
+            orderDetailsRepository.delete(orderDetail.getOrder_detail_id());
+        }
+    }
 
-	// Delete order detail
-	public void delete(OrderDetailsDto dto) {
+    public void checkStock(OrderDetailsDto dto, String branchId) {
+        if (dto == null || dto.getOrderDetails() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Order Details data is required");
+        }
 
-		for (OrderDetails orderDetail : dto.getOrderDetails()) {
+        for (OrderDetails orderDetail : dto.getOrderDetails()) {
 
-			orderDetailsRepository.delete(orderDetail.getOrder_detail_id());
-		}
-	}
+            ProductEntryModel product = productService.findById(orderDetail.getProduct_id());
 
-	public void checkStock(OrderDetailsDto dto, String branchId) {
+            if (product == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product");
+            }
 
-		for (OrderDetails orderDetail : dto.getOrderDetails()) {
+            List<String> ingredientIds = product.getIngredient_ids();
 
-			ProductEntryModel product = productService.findById(orderDetail.getProduct_id());
+            List<Double> quantities = product.getQuantity_required();
 
-			if (product == null) {
-				throw new IllegalArgumentException("Product not found.");
-			}
+            int orderQuantity = orderDetail.getQuantity();
 
-			List<String> ingredientIds = product.getIngredient_ids();
+            for (int i = 0; i < ingredientIds.size(); i++) {
 
-			List<Double> quantities = product.getQuantity_required();
+                String ingredientId = ingredientIds.get(i);
 
-			int orderQuantity = orderDetail.getQuantity();
+                BigDecimal requiredPerProduct = BigDecimal.valueOf(quantities.get(i));
 
-			for (int i = 0; i < ingredientIds.size(); i++) {
+                BigDecimal requiredQuantity = requiredPerProduct.multiply(BigDecimal.valueOf(orderQuantity));
 
-				String ingredientId = ingredientIds.get(i);
+                BigDecimal availableQuantity = ingredientBatchService.getAvailableQuantity(ingredientId, branchId);
 
-				BigDecimal requiredPerProduct = BigDecimal.valueOf(quantities.get(i));
+                if (availableQuantity.compareTo(requiredQuantity) < 0) {
 
-				BigDecimal requiredQuantity = requiredPerProduct.multiply(BigDecimal.valueOf(orderQuantity));
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, 
+                        "Not enough ingredient stock. Required: " + requiredQuantity + ", Available: " + availableQuantity);
+                }
+            }
+        }
+    }
 
-				BigDecimal availableQuantity = ingredientBatchService.getAvailableQuantity(ingredientId, branchId);
+    public void reduceStock(OrderDetailsDto dto, String branchId) {
+        if (dto == null || dto.getOrderDetails() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Order Details data is required");
+        }
 
-				if (availableQuantity.compareTo(requiredQuantity) < 0) {
+        for (OrderDetails orderDetail : dto.getOrderDetails()) {
 
-					throw new IllegalArgumentException("Not enough ingredient stock. " + "Required: " + requiredQuantity
-							+ ", Available: " + availableQuantity);
-				}
-			}
-		}
-	}
+            ProductEntryModel product = productService.findById(orderDetail.getProduct_id());
 
-	public void reduceStock(OrderDetailsDto dto, String branchId) {
+            List<String> ingredientIds = product.getIngredient_ids();
 
-		for (OrderDetails orderDetail : dto.getOrderDetails()) {
+            List<Double> quantities = product.getQuantity_required();
 
-			ProductEntryModel product = productService.findById(orderDetail.getProduct_id());
+            int orderQuantity = orderDetail.getQuantity();
 
-			List<String> ingredientIds = product.getIngredient_ids();
+            for (int i = 0; i < ingredientIds.size(); i++) {
 
-			List<Double> quantities = product.getQuantity_required();
+                String ingredientId = ingredientIds.get(i);
 
-			int orderQuantity = orderDetail.getQuantity();
+                BigDecimal requiredPerProduct = BigDecimal.valueOf(quantities.get(i));
 
-			for (int i = 0; i < ingredientIds.size(); i++) {
+                BigDecimal requiredQuantity = requiredPerProduct.multiply(BigDecimal.valueOf(orderQuantity));
 
-				String ingredientId = ingredientIds.get(i);
+                ingredientBatchService.reduceStockFIFO(ingredientId, branchId, requiredQuantity);
 
-				BigDecimal requiredPerProduct = BigDecimal.valueOf(quantities.get(i));
-
-				BigDecimal requiredQuantity = requiredPerProduct.multiply(BigDecimal.valueOf(orderQuantity));
-
-				ingredientBatchService.reduceStockFIFO(ingredientId, branchId, requiredQuantity);
-
-			}
-		}
-	}
+            }
+        }
+    }
 }

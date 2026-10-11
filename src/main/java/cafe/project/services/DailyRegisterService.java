@@ -1,7 +1,9 @@
 package cafe.project.services;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import cafe.project.repositories.entities.DailyRegister;
 import cafe.project.models.DailyRegisterEntryDto;
@@ -25,25 +27,26 @@ public class DailyRegisterService {
 	public List<DailyRegisterListDto> getAllRegisters(String branch_id) {
 		return repository.findAllDto(branch_id);
 	}
-	
+
 	public List<DailyRegisterListDto> getAllRegistersAdmin() {
 		return repository.findAllDtoAdmin();
 	}
-	
+
 	public List<DailyRegisterListDto> getAllOpened(String branch_id) {
 		return repository.findAllOpened(branch_id);
 	}
-	
+
 	public List<DailyRegisterListDto> getAllClosed(String branch_id) {
 		return repository.findAllClosed(branch_id);
 	}
-	
+
 	public List<DailyRegisterListDto> getAllDeleted(String branch_id) {
 		return repository.findAllDeleted(branch_id);
 	}
 
 	public DailyRegisterEntryDto getRegisterEntryDtoById(String register_id) {
-		DailyRegister entity = repository.findById(register_id).orElseThrow(() -> new IllegalArgumentException("Register not found."));
+		DailyRegister entity = repository.findById(register_id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Daily Register"));
 
 		DailyRegisterEntryDto dto = new DailyRegisterEntryDto();
 		dto.setRegister_id(entity.getRegister_id());
@@ -56,11 +59,11 @@ public class DailyRegisterService {
 
 		return dto;
 	}
-	
+
 	public DailyRegisterEntryDto getRegisterEntryDtoByDate(LocalDate date, String employee_id) {
 		DailyRegister entity = repository.findByDate(date, employee_id);
-		
-		if(entity == null) {
+
+		if (entity == null) {
 			return null;
 		}
 
@@ -75,11 +78,11 @@ public class DailyRegisterService {
 
 		return dto;
 	}
-	
+
 	public DailyRegisterEntryDto getRegisterEntryDtoByDateOpened(LocalDate date, String employee_id) {
 		DailyRegister entity = repository.findByDateOpened(date, employee_id);
-		
-		if(entity == null) {
+
+		if (entity == null) {
 			return null;
 		}
 
@@ -94,11 +97,11 @@ public class DailyRegisterService {
 
 		return dto;
 	}
-	
+
 	public DailyRegisterEntryDto getRegisterEntryDtoByDateClosed(LocalDate date, String employee_id) {
 		DailyRegister entity = repository.findByDateClosed(date, employee_id);
-		
-		if(entity == null) {
+
+		if (entity == null) {
 			return null;
 		}
 
@@ -115,8 +118,11 @@ public class DailyRegisterService {
 	}
 
 	public void saveRegister(DailyRegisterEntryDto dto) {
-		DailyRegister entity = new DailyRegister();
+		if (dto == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Daily Register data is required");
+		}
 
+		DailyRegister entity = new DailyRegister();
 		entity.setRegister_id(UUID.randomUUID().toString());
 		entity.setBranch_id(dto.getBranch_id());
 		entity.setEmployee_id(dto.getEmployee_id());
@@ -131,7 +137,12 @@ public class DailyRegisterService {
 	}
 
 	public void updateRegister(DailyRegisterEntryDto dto) {
-		DailyRegister entity = repository.findById(dto.getRegister_id()).orElseThrow(() -> new IllegalArgumentException("Register not found."));
+		if (dto == null || dto.getRegister_id() == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Daily Register data is required");
+		}
+
+		DailyRegister entity = repository.findById(dto.getRegister_id())
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Daily Register"));
 
 		entity.setBranch_id(dto.getBranch_id());
 		entity.setEmployee_id(dto.getEmployee_id());
@@ -145,14 +156,20 @@ public class DailyRegisterService {
 	}
 
 	public void deleteRegister(String register_id) {
+		DailyRegister entity = repository.findById(register_id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Daily Register"));
 		repository.delete(register_id);
 	}
-	
+
 	public void recoverRegister(String register_id) {
+		DailyRegister entity = repository.findById(register_id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Daily Register"));
 		repository.recover(register_id);
 	}
-	
+
 	public void hardDeleteRegister(String register_id) {
+		DailyRegister entity = repository.findById(register_id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Daily Register"));
 		repository.hardDelete(register_id);
 	}
 }

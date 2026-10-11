@@ -17,7 +17,7 @@
 
 	<div class="d-flex justify-content-between align-items-center mb-3">
 		<h2 class="text-danger">Deleted Ingredient Batches (Trash)</h2>
-		<a th:href="@{/ingredient-batches}" class="btn btn-secondary">Back
+		<a th:href="@{/manager-only/ingredient-batches}" class="btn btn-secondary">Back
 			to Active List</a>
 	</div>
 
@@ -43,9 +43,9 @@
 				<td th:text="${batch.remaining_quantity}"></td>
 				<td th:text="${batch.expire_date}"></td>
 				<td><a
-					th:href="@{/ingredient-batches/recover/{id}(id=${batch.batch_id})}"
+					th:href="@{/manager-only/ingredient-batches/recover/{id}(id=${batch.batch_id})}"
 					class="btn btn-sm btn-success me-1">Recover</a> <a
-					th:href="@{/ingredient-batches/hard-delete/{id}(id=${batch.batch_id})}"
+					th:href="@{/manager-only/ingredient-batches/hard-delete/{id}(id=${batch.batch_id})}"
 					class="btn btn-sm btn-danger">Hard Delete</a></td>
 			</tr>
 		</tbody>

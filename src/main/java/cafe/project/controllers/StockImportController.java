@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+//import java.time.format.DateTimeFormatter;
 
 @Controller
-@RequestMapping("/stock-imports")
+@RequestMapping("/manager-only/stock-imports")
 public class StockImportController {
 
 	private final StockImportService service;
@@ -27,20 +27,19 @@ public class StockImportController {
 	@GetMapping
 	public String listActive(Model model, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-		model.addAttribute("imports", service.getAllActiveImports());
+		model.addAttribute("imports", service.getAllActiveImports(ldto.getBranch_id()));
 		return "stock-import/list";
 	}
 
 	@GetMapping("/deleted")
 	public String listDeleted(Model model, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-		model.addAttribute("imports", service.getAllDeletedImports());
+		model.addAttribute("imports", service.getAllDeletedImports(ldto.getBranch_id()));
 		return "stock-import/deleted-list";
 	}
 
 	@GetMapping("/add")
-	public String showAddForm(Model model, HttpSession session) {
-		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+	public String showAddForm(Model model) {
 		StockImportEntryDto dto = new StockImportEntryDto();
 		dto.setImported_at(LocalDateTime.now());
 		dto.setItems(service.getAllIngredientTypes());
@@ -54,20 +53,13 @@ public class StockImportController {
 	public String saveStockImport(@ModelAttribute("stockImport") StockImportEntryDto dto, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		if (ldto == null) {
-			return "redirect:/login";
+			return "redirect:/manager-only/login";
 		}
 		String employee_id = ldto.getEmployee_id();
 		String branch_id = ldto.getBranch_id();
 		service.addStockImport(dto, employee_id, branch_id);
-		return "redirect:/stock-imports";
+		return "redirect:/manager-only/stock-imports";
 	}
-	/*
-	 * @GetMapping("/edit/{id}") public String showEditForm(@PathVariable("id")
-	 * String id, Model model) { StockImportEntryDto dto =
-	 * service.getImportById(id); model.addAttribute("stockImport", dto);
-	 * model.addAttribute("suppliers", service.getAllSuppliers()); return
-	 * "stock-import/edit"; }
-	 */
 
 	@GetMapping("/edit/{id}")
 	public String showEditForm(@PathVariable("id") String id, Model model, HttpSession session) {
@@ -78,8 +70,8 @@ public class StockImportController {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Not Your Branch's Data!!!");
 		}
 
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+//		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 		if (dto.getImported_at() == null) {
 			dto.setImported_at(LocalDateTime.now());
@@ -113,7 +105,7 @@ public class StockImportController {
 		}
 
 		service.editStockImport(dto);
-		return "redirect:/stock-imports";
+		return "redirect:/manager-only/stock-imports";
 	}
 
 	@GetMapping("/soft-delete/{id}")
@@ -126,7 +118,7 @@ public class StockImportController {
 		}
 
 		service.softDelete(id);
-		return "redirect:/stock-imports";
+		return "redirect:/manager-only/stock-imports";
 	}
 
 	@GetMapping("/recover/{id}")
@@ -139,7 +131,7 @@ public class StockImportController {
 		}
 
 		service.recover(id);
-		return "redirect:/stock-imports/deleted";
+		return "redirect:/manager-only/stock-imports/deleted";
 	}
 
 	@GetMapping("/hard-delete/{id}")
@@ -156,8 +148,9 @@ public class StockImportController {
 	}
 
 	@PostMapping("/hard-delete")
-	public String hardDelete(@RequestParam("import_id") String importId, HttpSession session) {
+	public String hardDelete(@ModelAttribute("import_id") String importId, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		System.out.println("Import Id = " + importId);
 		StockImportEntryDto dto = service.getImportById(importId);
 
 		if (!dto.getBranch_id().equals(ldto.getBranch_id())) {
@@ -165,7 +158,7 @@ public class StockImportController {
 		}
 
 		service.hardDelete(importId);
-		return "redirect:/stock-imports/deleted";
+		return "redirect:/manager-only/stock-imports/deleted";
 	}
 
 	@GetMapping("/detail-batches/{id}")
@@ -180,34 +173,4 @@ public class StockImportController {
 
 		return service.getBatchesByImportId(id);
 	}
-
-//    //for ingradient batch
-//
-//    @GetMapping("/stock-imports/{id}/add-ingredient-batch")
-//    public String showAddBatchForm(@PathVariable("id") Long id, Model model) {
-//        
-//        StockImport stockImport = StockImportService.findById(id);
-//        
-//   
-//        if (stockImport.getIngredientBatches() == null || stockImport.getIngredientBatches().isEmpty()) {
-//            stockImport.getIngredientBatches().add(new IngredientBatch());
-//        }
-//        
-//        model.addAttribute("stockImport", stockImport);
-//        return "stock-import-batch-form"; // Form စာမျက်နှာ
-//    }
-//
-//   
-//    @PostMapping("/stock-imports/save-batch")
-//    public String saveIngredientBatch(@ModelAttribute("stockImport") StockImport stockImport, 
-//                                      RedirectAttributes redirectAttributes) {
-//        
-//       
-//        stockImport.setStatus("Edited");
-//        
-//        stockImportService.save(stockImport);
-//        
-//        redirectAttributes.addFlashAttribute("successMessage", "Stock Import Batch saved successfully!");
-//        return "redirect:/stock-imports";
-//    }
 }

@@ -8,20 +8,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import cafe.project.repositories.UnitRepository;
 import cafe.project.services.IngredientTypeService;
 import cafe.project.models.IngredientTypeDto;
 
 @Controller
-@RequestMapping("/ingredient-types")
+@RequestMapping("/admin/ingredient-types")
 public class IngredientTypeController {
 
 	private final IngredientTypeService service;
-	private final UnitRepository repo;
 
-	public IngredientTypeController(IngredientTypeService service, UnitRepository repo) {
+	public IngredientTypeController(IngredientTypeService service) {
 		this.service = service;
-		this.repo = repo;
 	}
 
 	@GetMapping

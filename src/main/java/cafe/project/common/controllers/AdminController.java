@@ -18,6 +18,7 @@ import cafe.project.services.DailyRegisterService;
 import cafe.project.services.DiscountService;
 import cafe.project.services.EmployeeService;
 import cafe.project.services.ExpenseService;
+import cafe.project.services.IngredientBatchService;
 import cafe.project.services.WasteLogsService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -34,8 +35,9 @@ public class AdminController {
 	private final StatusRepository statusRepository;
 	private final ExpenseService expenseService;
 	private final WasteLogsService wasteLogsService;
+	private final IngredientBatchService ingredientBatchService;
 
-	public AdminController(DailyRegisterService dailyRegisterservice, BranchService branchService, EmployeeService employeeService, StatusRepository statusRepository, CategoryService categoryService, DiscountService discountService, ExpenseService expenseService, WasteLogsService wasteLogsService) {
+	public AdminController(DailyRegisterService dailyRegisterservice, BranchService branchService, EmployeeService employeeService, StatusRepository statusRepository, CategoryService categoryService, DiscountService discountService, ExpenseService expenseService, WasteLogsService wasteLogsService, IngredientBatchService ingredientBatchService) {
 		this.expenseService = expenseService;
 		this.dailyRegisterservice = dailyRegisterservice;
 		this.categoryService = categoryService;
@@ -44,6 +46,7 @@ public class AdminController {
 		this.statusRepository = statusRepository;
 		this.discountService = discountService;
 		this.wasteLogsService = wasteLogsService;
+		this.ingredientBatchService = ingredientBatchService;
 	}
 	
 	@GetMapping("/daily-registers")
@@ -136,6 +139,13 @@ public class AdminController {
 		}
 		branchService.edit(branch_id, dto);
 		return "redirect:/admin/branches";
+	}
+	
+	@GetMapping("/ingredientbatches")
+	public String listBatches(Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		model.addAttribute("batches", ingredientBatchService.getAllBatches(ldto.getBranch_id()));
+		return "ingredient-batch/list-admin";
 	}
 
 }

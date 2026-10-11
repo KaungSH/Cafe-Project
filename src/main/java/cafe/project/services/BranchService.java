@@ -6,7 +6,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import cafe.project.models.BranchEntryDto;
 import cafe.project.models.BranchListDto;
@@ -19,116 +21,128 @@ import cafe.project.repositories.entities.BranchStatus;
 @Service
 public class BranchService {
 
-	private final BranchRepository branchRepository;
-	private final BranchStatusRepository branchStatusRepository;
+    private final BranchRepository branchRepository;
+    private final BranchStatusRepository branchStatusRepository;
 
-	public BranchService(BranchRepository branchRepository, BranchStatusRepository branchStatusRepository) {
-		this.branchRepository = branchRepository;
-		this.branchStatusRepository = branchStatusRepository;
-	}
+    public BranchService(BranchRepository branchRepository, BranchStatusRepository branchStatusRepository) {
+        this.branchRepository = branchRepository;
+        this.branchStatusRepository = branchStatusRepository;
+    }
 
-	public List<BranchListDto> findAll() {
-		List<Branch> entities = this.branchRepository.findAllWithRelation();
-		return entities.stream().map(this::toListDto).toList();
-	}
+    public List<BranchListDto> findAll() {
+        List<Branch> entities = this.branchRepository.findAllWithRelation();
+        return entities.stream().map(this::toListDto).toList();
+    }
 
-	public BranchEntryDto findById(String branch_id) {
-		Branch entity = this.branchRepository.findByIdWithRelation(branch_id);
-		if (entity == null) {
-			return null;
-		}
-		return toEntryDto(entity);
-	}
+    public BranchEntryDto findById(String branch_id) {
+        Branch entity = this.branchRepository.findByIdWithRelation(branch_id);
+        if (entity == null)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Branch");
+        return toEntryDto(entity);
+    }
 
-	public List<BranchStatusListDto> findAllStatuses() {
-		List<BranchStatus> list = this.branchStatusRepository.findAll();
-		return list.stream().map(s -> {
-			BranchStatusListDto dto = new BranchStatusListDto();
-			dto.setBranch_status_id(s.getBranch_status_id());
-			dto.setName(s.getName());
-			return dto;
-		}).toList();
-	}
+    public List<BranchStatusListDto> findAllStatuses() {
+        List<BranchStatus> list = this.branchStatusRepository.findAll();
+        return list.stream().map(s -> {
+            BranchStatusListDto dto = new BranchStatusListDto();
+            dto.setBranch_status_id(s.getBranch_status_id());
+            dto.setName(s.getName());
+            return dto;
+        }).toList();
+    }
 
-	public boolean add(BranchEntryDto dto) {
-		Branch entity = toEntity(dto);
-		entity.setBranch_id(UUID.randomUUID().toString());
-		entity.setCreated_at(LocalDateTime.now());
+    public boolean add(BranchEntryDto dto) {
+        if (dto == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Branch data is required");
+        }
+        Branch entity = toEntity(dto);
+        entity.setBranch_id(UUID.randomUUID().toString());
+        entity.setCreated_at(LocalDateTime.now());
 
-		return this.branchRepository.save(entity) > 0;
-	}
+        return this.branchRepository.save(entity) > 0;
+    }
 
-	public boolean edit(String branch_id, BranchEntryDto dto) {
-		Branch existingBranch = this.branchRepository.findById(branch_id);
-		if (existingBranch == null) {
-			return false;
-		}
+    public boolean edit(String branch_id, BranchEntryDto dto) {
+        if (dto == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Branch data is required");
+        }
+        Branch existingBranch = this.branchRepository.findById(branch_id);
+        if (existingBranch == null)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Branch");
 
-		Branch entity = toEntity(dto);
-		return this.branchRepository.edit(branch_id, entity) > 0;
-	}
-	
-	public boolean changeStatus(String branch_id, String status_id) {
-		Branch existingBranch = this.branchRepository.findById(branch_id);
-		if (existingBranch == null) {
-			return false;
-		}
+        Branch entity = toEntity(dto);
+        return this.branchRepository.edit(branch_id, entity) > 0;
+    }
 
-		return this.branchRepository.changeStatus(branch_id, status_id) > 0;
-	}
-	
-	public int updateFinance(String branch_id, BigDecimal finance) {
-		return this.branchRepository.updateFinance(branch_id, finance);
-	}
+    public boolean changeStatus(String branch_id, String status_id) {
+        if (status_id == null || status_id.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Status ID is required");
+        }
+        Branch existingBranch = this.branchRepository.findById(branch_id);
+        if (existingBranch == null)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Branch");
 
-	private BranchListDto toListDto(Branch entity) {
-		BranchListDto dto = new BranchListDto();
-		dto.setBranch_id(entity.getBranch_id());
-		dto.setName(entity.getName());
-		dto.setLocation(entity.getLocation());
-		dto.setDescription(entity.getDescription());
-		dto.setOpening_time(entity.getOpening_time());
-		dto.setClosing_time(entity.getClosing_time());
-		dto.setCreated_at(entity.getCreated_at());
-		dto.setStatus_name(entity.getStatus_name());
-		dto.setBranch_finance(entity.getBranch_finance());
-		return dto;
-	}
+        return this.branchRepository.changeStatus(branch_id, status_id) > 0;
+    }
 
-	private BranchEntryDto toEntryDto(Branch entity) {
-		BranchEntryDto dto = new BranchEntryDto();
-		dto.setBranch_id(entity.getBranch_id());
-		dto.setName(entity.getName());
-		dto.setLocation(entity.getLocation());
-		dto.setDescription(entity.getDescription());
-		dto.setBranch_status_id(entity.getBranch_status_id());
-		dto.setBranch_finance(entity.getBranch_finance());
+    public int updateFinance(String branch_id, BigDecimal finance) {
+        if (finance == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Finance amount is required");
+        }
+        Branch existingBranch = this.branchRepository.findById(branch_id);
+        if (existingBranch == null)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Branch");
+        return this.branchRepository.updateFinance(branch_id, finance);
+    }
 
-		if (entity.getOpening_time() != null) {
-			dto.setOpening_time(entity.getOpening_time().toLocalTime());
-		}
-		if (entity.getClosing_time() != null) {
-			dto.setClosing_time(entity.getClosing_time().toLocalTime());
-		}
+    private BranchListDto toListDto(Branch entity) {
+        BranchListDto dto = new BranchListDto();
+        dto.setBranch_id(entity.getBranch_id());
+        dto.setName(entity.getName());
+        dto.setLocation(entity.getLocation());
+        dto.setDescription(entity.getDescription());
+        dto.setOpening_time(entity.getOpening_time());
+        dto.setClosing_time(entity.getClosing_time());
+        dto.setCreated_at(entity.getCreated_at());
+        dto.setStatus_name(entity.getStatus_name());
+        dto.setBranch_finance(entity.getBranch_finance());
+        return dto;
+    }
 
-		return dto;
-	}
+    private BranchEntryDto toEntryDto(Branch entity) {
+        BranchEntryDto dto = new BranchEntryDto();
+        dto.setBranch_id(entity.getBranch_id());
+        dto.setName(entity.getName());
+        dto.setLocation(entity.getLocation());
+        dto.setDescription(entity.getDescription());
+        dto.setBranch_status_id(entity.getBranch_status_id());
+        dto.setBranch_finance(entity.getBranch_finance());
 
-	private Branch toEntity(BranchEntryDto dto) {
-		Branch entity = new Branch();
-		entity.setName(dto.getName());
-		entity.setLocation(dto.getLocation());
-		entity.setDescription(dto.getDescription());
-		entity.setBranch_status_id(dto.getBranch_status_id());
-		entity.setBranch_finance(dto.getBranch_finance());
+        if (entity.getOpening_time() != null) {
+            dto.setOpening_time(entity.getOpening_time().toLocalTime());
+        }
+        if (entity.getClosing_time() != null) {
+            dto.setClosing_time(entity.getClosing_time().toLocalTime());
+        }
 
-		if (dto.getOpening_time() != null) {
-			entity.setOpening_time(Time.valueOf(dto.getOpening_time()));
-		}
-		if (dto.getClosing_time() != null) {
-			entity.setClosing_time(Time.valueOf(dto.getClosing_time()));
-		}
+        return dto;
+    }
 
-		return entity;
-	}
+    private Branch toEntity(BranchEntryDto dto) {
+        Branch entity = new Branch();
+        entity.setName(dto.getName());
+        entity.setLocation(dto.getLocation());
+        entity.setDescription(dto.getDescription());
+        entity.setBranch_status_id(dto.getBranch_status_id());
+        entity.setBranch_finance(dto.getBranch_finance());
+
+        if (dto.getOpening_time() != null) {
+            entity.setOpening_time(Time.valueOf(dto.getOpening_time()));
+        }
+        if (dto.getClosing_time() != null) {
+            entity.setClosing_time(Time.valueOf(dto.getClosing_time()));
+        }
+
+        return entity;
+    }
 }

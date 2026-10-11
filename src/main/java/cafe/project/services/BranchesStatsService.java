@@ -24,7 +24,7 @@ public class BranchesStatsService {
 		List<BranchesStatsDto> branchesStats = entities.stream().map(this::toDto).toList();
 		return branchesStats;
 	}
-	
+
 	public List<BranchesStatsDto> findAllAdmin() {
 		List<BranchesStats> entities = this.bsrepo.findAllAdmin();
 		List<BranchesStatsDto> branchesStats = entities.stream().map(this::toDto).toList();
@@ -37,7 +37,7 @@ public class BranchesStatsService {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Branch Stats");
 		return toDto(entity);
 	}
-	
+
 	public BranchesStatsDto findByIdAdmin(String branch_stats_id) {
 		BranchesStats entity = this.bsrepo.findByIdAdmin(branch_stats_id);
 		if (entity == null)
@@ -48,7 +48,7 @@ public class BranchesStatsService {
 	public BranchesStatsDto findByMonth(String month) {
 		BranchesStats entity = this.bsrepo.findByMonth(month);
 		if (entity == null)
-			return null;
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Branch Stats");
 		return toDto(entity);
 	}
 
@@ -58,11 +58,19 @@ public class BranchesStatsService {
 	}
 
 	public int edit(String branch_stats_id, BranchesStatsDto dto) {
+		if (dto == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Branch Stats data is required");
+		}
 		BranchesStats entity = toEntity(dto);
+		if (entity == null)
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Branch Stats");
 		return this.bsrepo.edit(branch_stats_id, entity);
 	}
 
 	public int delete(String branch_stats_id) {
+		BranchesStats entity = this.bsrepo.findByIdAdmin(branch_stats_id);
+		if (entity == null)
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Branch Stats");
 		return this.bsrepo.delete(branch_stats_id);
 	}
 
@@ -71,10 +79,16 @@ public class BranchesStatsService {
 	}
 
 	public int restore(String branch_stats_id) {
+		BranchesStats entity = this.bsrepo.findByIdAdmin(branch_stats_id);
+		if (entity == null)
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Branch Stats");
 		return this.bsrepo.restore(branch_stats_id);
 	}
 
 	public int hardDelete(String branch_stats_id) {
+		BranchesStats entity = this.bsrepo.findByIdAdmin(branch_stats_id);
+		if (entity == null)
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Branch Stats");
 		return this.bsrepo.hardDelte(branch_stats_id);
 	}
 
