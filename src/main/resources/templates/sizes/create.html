@@ -17,188 +17,174 @@
 
 <style>
 :root {
-  --espresso: #1a0f09;
-  --accent-gold: #c59b63;
-  --border-tone: #e8d9cb;
+  --bg-canvas: #f8f5f0;
+  --surface: #ffffff;
+  --espresso-dark: #1a110a;
+  --roast-caramel: #b8864e;
+  --champagne-gold: #cbb493;
+  --border-subtle: #ede4d8;
 }
 
 body {
   font-family: 'Plus Jakarta Sans', sans-serif;
-  background-color: #f7f3ee;
-  color: var(--espresso);
-  min-height: 100vh;
-  display: flex;
+  background-color: var(--bg-canvas);
+  color: #2b1d14;
+}
+
+.compact-luxury-card {
+  background: var(--surface);
+  border-radius: 24px;
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 16px 40px -10px rgba(43, 29, 20, 0.08);
+  overflow: hidden;
+  max-width: 580px;
+  width: 100%;
+  margin: 40px auto;
+}
+
+.card-header-banner {
+  background: linear-gradient(180deg, rgba(26, 17, 10, 0.70) 0%, rgba(26, 17, 10, 0.95) 100%),
+              url('https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+  padding: 28px 30px 20px;
+  text-align: center;
+  position: relative;
+}
+
+.logo-glow {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #fff;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 30px 15px;
-}
-
-.luxury-card {
-  max-width: 840px;
-  width: 100%;
-  background: #ffffff;
-  border-radius: 24px;
-  border: 1px solid var(--border-tone);
-  box-shadow: 0 20px 45px rgba(26, 15, 9, 0.08);
+  border: 2px solid var(--champagne-gold);
+  box-shadow: 0 0 16px rgba(203, 180, 147, 0.45);
+  margin-bottom: 8px;
   overflow: hidden;
-  display: flex;
 }
 
-.visual-side {
-  width: 40%;
-  background: linear-gradient(to bottom, rgba(26, 15, 9, 0.45), rgba(26, 15, 9, 0.85)),
-              url('https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=800&q=80') center/cover;
-  padding: 40px 30px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  color: #ffffff;
-}
-
-.logo-circle {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: #ffffff;
-  padding: 2px;
-  border: 2px solid var(--accent-gold);
-  margin-bottom: 20px;
-}
-
-.logo-circle img {
+.logo-glow img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 50%;
 }
 
-.visual-side h3 {
+.brand-title {
   font-family: 'Playfair Display', serif;
-  font-size: 1.85rem;
-}
-
-.form-side {
-  width: 60%;
-  padding: 45px 40px;
-  background: #ffffff;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  color: var(--espresso-dark);
+  font-weight: 700;
 }
 
 .form-label {
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.75rem;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.8px;
-  color: #6d5b4e;
-  margin-bottom: 7px;
+  color: #7f7267;
+  margin-bottom: 5px;
 }
 
 .form-control {
-  height: 48px;
+  height: 46px;
   border-radius: 12px;
-  border: 1px solid #dfd1c3;
+  border: 1.5px solid var(--border-subtle);
   background-color: #fcfbfa;
+  font-size: 0.92rem;
 }
 
 .form-control:focus {
-  border-color: var(--accent-gold);
+  border-color: var(--roast-caramel);
   background-color: #ffffff;
-  box-shadow: 0 0 0 4px rgba(197, 155, 99, 0.15);
+  box-shadow: 0 0 0 3px rgba(184, 134, 78, 0.15);
 }
 
 .form-check-input:checked {
-  background-color: var(--accent-gold);
-  border-color: var(--accent-gold);
+  background-color: var(--roast-caramel);
+  border-color: var(--roast-caramel);
 }
 
-.btn-save {
-  background: linear-gradient(135deg, #c59b63 0%, #a4763f 100%);
-  color: #fff;
+.btn-luxury {
+  background: linear-gradient(135deg, var(--roast-caramel) 0%, #9c6c39 100%);
+  color: #ffffff;
   border: none;
   font-weight: 600;
   border-radius: 12px;
-  padding: 12px 26px;
+  padding: 10px 24px;
+  font-size: 0.9rem;
   transition: 0.25s;
 }
 
-.btn-save:hover {
-  box-shadow: 0 5px 20px rgba(197, 155, 99, 0.35);
+.btn-luxury:hover {
+  box-shadow: 0 8px 18px rgba(61, 38, 24, 0.25);
   color: #fff;
-}
-
-.btn-cancel {
-  border: 1px solid #dfd1c3;
-  background: transparent;
-  color: #7d6b5e;
-  font-weight: 500;
-  border-radius: 12px;
-  padding: 12px 24px;
-  text-decoration: none;
-  transition: 0.2s;
-}
-
-.btn-cancel:hover {
-  background: #f7efe7;
-  color: var(--espresso);
+  transform: translateY(-2px);
 }
 
 .error {
   color: #b03a2e;
-  font-size: 0.82rem;
-  margin-top: 5px;
-}
-
-@media(max-width: 768px) {
-  .luxury-card { flex-direction: column; }
-  .visual-side { width: 100%; min-height: 160px; padding: 25px; }
-  .form-side { width: 100%; padding: 30px 20px; }
+  font-size: 0.78rem;
+  margin-top: 4px;
 }
 </style>
 </head>
 
 <body>
 <div layout:fragment="content">
-  <!-- Side Banner -->
-  <div class="visual-side">
-    <div>
-      <div class="logo-circle">
-        <img th:src="@{/images/luft-logo.png}" alt="Logo">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 d-flex justify-content-center">
+        
+        <div class="compact-luxury-card">
+          <!-- Top Coffee Banner -->
+          <div class="card-header-banner">
+            <div class="logo-glow">
+              <img th:src="@{/images/luft-logo.png}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/924/924514.png'" alt="Logo">
+            </div>
+            <h2 class="brand-title text-white mb-1" style="font-size: 1.6rem;">Café Luft</h2>
+            <span class="badge" style="background: rgba(255,255,255,0.12); color: var(--champagne-gold); border: 1px solid rgba(255,255,255,0.2); font-size: 0.72rem;">
+              <i class="fa-solid fa-mug-hot me-1"></i> Serving Configurations
+            </span>
+          </div>
+
+          <!-- Form Body -->
+          <div class="p-4 p-md-4">
+            <div class="mb-3">
+              <a th:href="@{/admin/sizes}" class="text-decoration-none text-muted small fw-semibold">
+                <i class="fa-solid fa-arrow-left"></i> Back to Size List
+              </a>
+              <h4 class="brand-title mt-2 mb-1" style="font-size: 1.4rem;">Add New Size</h4>
+              <p class="text-muted small mb-3">Standardize cup volumes and serving portions for consistent barista quality.</p>
+            </div>
+
+            <form th:action="@{/admin/sizes/create}" th:object="${sizeDto}" method="post">
+              <div class="mb-3">
+                <label class="form-label">Size Name</label>
+                <input type="text" th:field="*{name}" class="form-control" placeholder="e.g. Regular, Large" required autofocus />
+                <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Size Code</label>
+                <input type="text" th:field="*{size_code}" class="form-control" placeholder="e.g. R, L, XL" required />
+                <div class="error" th:if="${#fields.hasErrors('size_code')}" th:errors="*{size_code}"></div>
+              </div>
+
+              <div class="mb-4 form-check">
+                <input type="checkbox" th:field="*{is_active}" class="form-check-input" id="isActive" checked />
+                <label class="form-check-label fw-medium text-secondary small" for="isActive">Set as Active Size</label>
+              </div>
+
+              <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                <a th:href="@{/admin/sizes}" class="btn btn-light px-3" style="border-radius: 12px; font-weight: 600;">Cancel</a>
+                <button type="submit" class="btn btn-luxury"><i class="fa-solid fa-check me-1"></i> Save Size</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
       </div>
-      <h3>Café Luft</h3>
-      <p class="text-white-50 small">Standardize cup volumes and serving portions for consistent barista quality.</p>
     </div>
-    <div class="small text-white-50"><i class="fa-solid fa-mug-hot me-1"></i> Serving Configurations</div>
-  </div>
-
-  <!-- Form Side -->
-  <div class="form-side">
-    <h4 style="font-family: 'Playfair Display', serif; font-weight: 700; margin-bottom: 25px;">Add New Size</h4>
-
-    <form th:action="@{/admin/sizes/create}" th:object="${sizeDto}" method="post">
-      <div class="mb-3">
-        <label class="form-label">Size Name</label>
-        <input type="text" th:field="*{name}" class="form-control" placeholder="e.g. Regular, Large" />
-        <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Size Code</label>
-        <input type="text" th:field="*{size_code}" class="form-control" placeholder="e.g. R, L, XL" />
-        <div class="error" th:if="${#fields.hasErrors('size_code')}" th:errors="*{size_code}"></div>
-      </div>
-
-      <div class="mb-4 form-check">
-        <input type="checkbox" th:field="*{is_active}" class="form-check-input" id="isActive" checked />
-        <label class="form-check-label fw-medium text-secondary" for="isActive">Set as Active Size</label>
-      </div>
-
-      <div class="d-flex justify-content-end gap-2">
-        <a th:href="@{/admin/sizes}" class="btn-cancel">Cancel</a>
-        <button type="submit" class="btn-save"><i class="fa-solid fa-check me-1"></i> Save Size</button>
-      </div>
-    </form>
   </div>
 </div>
 </body>
