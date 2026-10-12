@@ -1,133 +1,187 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cafe Luft — Add Stock Import</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
         :root {
-            --cafe-dark: #1E130C;
-            --cafe-gold: #C5A880;
-            --cafe-gold-hover: #b08d5f;
-            --cafe-border: #ede4d8;
+            --coffee-main: #5c3d2e;
+            --coffee-hover: #452b1f;
+            --coffee-accent: #b88654;
+            --coffee-bg: #f9f6f0;
+            --coffee-card-border: #ebdcd0;
+            --coffee-subtle: #f3ece4;
         }
-        body { background: #f8f6f0; font-family: 'Plus Jakarta Sans', sans-serif; color: #2b2b2b; }
-        .cafe-card {
-            background: #fff; border-radius: 16px; border: 1px solid var(--cafe-border);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--coffee-bg);
+            color: #3b2c24;
         }
-        .cafe-card-header {
-            background: var(--cafe-dark); border-bottom: 2px solid var(--cafe-gold);
-            border-radius: 16px 16px 0 0; padding: 1.5rem 2rem;
+
+        .lux-card {
+            background: #ffffff;
+            border-radius: 18px;
+            border: 1px solid var(--coffee-card-border);
+            box-shadow: 0 12px 35px rgba(92, 61, 46, 0.06);
         }
+
         .form-control:focus, .form-select:focus {
-            border-color: var(--cafe-gold); box-shadow: 0 0 0 0.25rem rgba(197, 168, 128, 0.2);
+            border-color: var(--coffee-accent);
+            box-shadow: 0 0 0 0.25rem rgba(184, 134, 84, 0.2);
         }
-        .ingredient-table thead th {
-            background-color: #faf7f2; font-size: 0.8rem; text-transform: uppercase;
-            letter-spacing: 0.6px; border-bottom: 1px solid var(--cafe-border);
+
+        .form-check-input:checked {
+            background-color: var(--coffee-main);
+            border-color: var(--coffee-main);
         }
-        .btn-gold {
-            background: var(--cafe-gold); color: #1E130C; font-weight: 600; border-radius: 10px;
+
+        .table-coffee thead th {
+            font-size: 0.76rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #8c6f5d;
+            font-weight: 700;
+            padding: 1rem;
+            background: #faf7f2;
+            border-bottom: 1px solid var(--coffee-card-border);
         }
-        .btn-gold:hover { background: var(--cafe-gold-hover); color: #1E130C; }
+
+        .table-coffee tbody td {
+            padding: 0.95rem 1rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #f2ece4;
+        }
+
+        .badge-id {
+            background-color: var(--coffee-subtle);
+            color: var(--coffee-main);
+            font-weight: 700;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            border: 1px solid #e3d3c5;
+        }
+
+        .btn-coffee {
+            background-color: var(--coffee-main);
+            color: #ffffff;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            padding: 9px 24px;
+        }
+        .btn-coffee:hover {
+            background-color: var(--coffee-hover);
+            color: #ffffff;
+        }
     </style>
 </head>
-<body>
-    <div class="container my-5">
-        <div class="card cafe-card">
-            <div class="cafe-card-header d-flex justify-content-between align-items-center">
-                <div>
-                    <h4 class="text-white mb-0" style="font-family: 'Playfair Display', serif;">
-                        <i class="bi bi-bag-plus me-2 text-warning"></i>Receive New Stock Import
-                    </h4>
-                    <small class="text-light text-opacity-75">Record batch supplies and calculate inventory costs</small>
+<body class="py-5">
+    <div layout:fragment="content" class="container">
+        <div class="card lux-card p-4 p-md-5 mx-auto" style="max-width: 1100px;">
+            
+            <!-- Header matching Waste Reason Add/Edit UI -->
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="p-2 rounded-3 text-white" style="background-color: var(--coffee-main);">
+                        <i class="bi bi-bag-plus fs-5"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-0" style="color: var(--coffee-main);">Receive New Stock Import</h5>
+                        <p class="text-muted small mb-0">Record batch supplies and calculate inventory costs</p>
+                    </div>
                 </div>
-                <a th:href="@{/manager-only/stock-imports}" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                <a th:href="@{/manager-only/stock-imports}" class="btn btn-outline-secondary btn-sm px-3">
                     <i class="bi bi-arrow-left me-1"></i> Back
                 </a>
             </div>
 
-            <div class="card-body p-4 p-md-5">
-                <form th:action="@{/manager-only/stock-imports/add}" th:object="${stockImport}" method="post">
-                    
-                    <!-- Basic Meta Information -->
-                    <div class="row g-4 mb-4 pb-4 border-bottom">
-                        <div class="col-md-5">
-                            <label class="form-label fw-bold text-dark small text-uppercase">Arrival Date & Time</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-calendar-event"></i></span>
-                                <input type="datetime-local" th:field="*{imported_at}" class="form-control border-start-0" required />
-                            </div>
-                        </div>
-                        <div class="col-md-5">
-                            <label class="form-label fw-bold text-dark small text-uppercase">Supplier Vendor</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-truck"></i></span>
-                                <select th:field="*{supplier_id}" class="form-select border-start-0" required>
-                                    <option value="" disabled selected>-- Choose Coffee / Material Supplier --</option>
-                                    <option th:each="sup : ${suppliers}" th:value="${sup.supplier_id}" th:text="${sup.name}">Supplier</option>
-                                </select>
-                            </div>
+            <form th:action="@{/manager-only/stock-imports/add}" th:object="${stockImport}" method="post">
+                
+                <!-- Basic Meta Information -->
+                <div class="row g-4 mb-4 pb-4 border-bottom">
+                    <div class="col-md-5">
+                        <label class="form-label fw-bold small text-secondary">ARRIVAL DATE & TIME</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-calendar-event text-muted"></i></span>
+                            <input type="datetime-local" th:field="*{imported_at}" class="form-control border-start-0 py-2" required />
                         </div>
                     </div>
-
-                    <!-- Ingredients Selection Table -->
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-boxes me-2 text-secondary"></i>Itemised Batches</h5>
-                        <span class="text-muted small">Select the ingredients included in this shipment</span>
+                    <div class="col-md-5">
+                        <label class="form-label fw-bold small text-secondary">SUPPLIER VENDOR</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-truck text-muted"></i></span>
+                            <select th:field="*{supplier_id}" class="form-select border-start-0 py-2" required>
+                                <option value="" disabled selected>-- Choose Coffee / Material Supplier --</option>
+                                <option th:each="sup : ${suppliers}" th:value="${sup.supplier_id}" th:text="${sup.name}">Supplier</option>
+                            </select>
+                        </div>
                     </div>
+                </div>
 
-                    <div class="table-responsive rounded-3 border mb-4">
-                        <table class="table ingredient-table align-middle mb-0">
-                            <thead>
-                                <tr class="text-center">
-                                    <th style="width: 60px;">Select</th>
-                                    <th class="text-start">Ingredient</th>
-                                    <th style="width: 90px;">Unit</th>
-                                    <th style="width: 140px;">Quantity</th>
-                                    <th style="width: 140px;">Unit Cost ($)</th>
-                                    <th style="width: 170px;">Manufactured</th>
-                                    <th style="width: 170px;">Expiration</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr th:each="item, stat : *{items}">
-                                    <td class="text-center">
-                                        <input type="checkbox" class="form-check-input" th:field="*{items[__${stat.index}__].selected}" />
-                                        <input type="hidden" th:field="*{items[__${stat.index}__].ingredientTypeId}" />
-                                    </td>
-                                    <td class="fw-bold text-dark" th:text="${item.ingredientTypeName}">Arabica Beans</td>
-                                    <td class="text-center"><span class="badge bg-light text-dark border" th:text="${item.Uname}">kg</span></td>
-                                    <td>
-                                        <input type="number" step="0.01" th:field="*{items[__${stat.index}__].quantity_ordered}" class="form-control text-end" placeholder="0.00" />
-                                    </td>
-                                    <td>
-                                        <input type="number" step="0.01" th:field="*{items[__${stat.index}__].unit_cost}" class="form-control text-end" placeholder="0.00" />
-                                    </td>
-                                    <td>
-                                        <input type="date" th:field="*{items[__${stat.index}__].manufactured_date}" class="form-control small" />
-                                    </td>
-                                    <td>
-                                        <input type="date" th:field="*{items[__${stat.index}__].expire_date}" class="form-control small" />
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <!-- Ingredients Selection Table -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold mb-0" style="color: var(--coffee-main);"><i class="bi bi-boxes me-2" style="color: var(--coffee-accent);"></i>Itemised Batches</h6>
+                    <span class="text-muted small">Select the ingredients included in this shipment</span>
+                </div>
 
-                    <!-- Footer Actions -->
-                    <div class="d-flex justify-content-between align-items-center pt-2">
-                        <a th:href="@{/manager-only/stock-imports}" class="btn btn-outline-secondary px-4 rounded-3">Cancel</a>
-                        <button type="submit" class="btn btn-gold px-5 py-2 shadow-sm">
-                            <i class="bi bi-check2-circle me-1"></i> Save Stock Record
-                        </button>
-                    </div>
-                </form>
-            </div>
+                <div class="table-responsive rounded-3 border mb-4">
+                    <table class="table table-coffee align-middle mb-0">
+                        <thead>
+                            <tr class="text-center">
+                                <th style="width: 60px;">Select</th>
+                                <th class="text-start">Ingredient</th>
+                                <th style="width: 90px;">Unit</th>
+                                <th style="width: 140px;">Quantity</th>
+                                <th style="width: 140px;">Unit Cost ($)</th>
+                                <th style="width: 170px;">Manufactured</th>
+                                <th style="width: 170px;">Expiration</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="item, stat : *{items}">
+                                <td class="text-center">
+                                    <input type="checkbox" class="form-check-input" th:field="*{items[__${stat.index}__].selected}" />
+                                    <input type="hidden" th:field="*{items[__${stat.index}__].ingredientTypeId}" />
+                                </td>
+                                <td class="fw-bold text-dark" th:text="${item.ingredientTypeName}">Arabica Beans</td>
+                                <td class="text-center"><span class="badge-id" th:text="${item.Uname}">kg</span></td>
+                                <td>
+                                    <input type="number" step="0.01" th:field="*{items[__${stat.index}__].quantity_ordered}" class="form-control text-end" placeholder="0.00" />
+                                </td>
+                                <td>
+                                    <input type="number" step="0.01" th:field="*{items[__${stat.index}__].unit_cost}" class="form-control text-end" placeholder="0.00" />
+                                </td>
+                                <td>
+                                    <input type="date" th:field="*{items[__${stat.index}__].manufactured_date}" class="form-control small" />
+                                </td>
+                                <td>
+                                    <input type="date" th:field="*{items[__${stat.index}__].expire_date}" class="form-control small" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Footer Actions -->
+                <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                    <a th:href="@{/manager-only/stock-imports}" class="btn btn-outline-secondary px-3">
+                        <i class="bi bi-arrow-left me-1"></i> Cancel
+                    </a>
+                    <button type="submit" class="btn btn-coffee">
+                        <i class="bi bi-check2-circle me-1"></i> Save Stock Record
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </body>

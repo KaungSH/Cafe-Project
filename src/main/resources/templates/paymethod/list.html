@@ -9,7 +9,12 @@
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -42,7 +47,6 @@
             padding: 0 24px;
         }
 
-        /* Expense Category ပုံစံ ကော်ဖီနောက်ခံ Hero Banner */
         .cafe-header-banner {
             background: linear-gradient(135deg, rgba(26, 17, 10, 0.90) 0%, rgba(46, 29, 19, 0.85) 100%),
                         url('https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
@@ -102,6 +106,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         .btn-recycle {
@@ -118,6 +123,7 @@
             text-decoration: none;
             backdrop-filter: blur(8px);
             transition: all 0.25s ease;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
         .btn-recycle:hover {
             background: rgba(255, 255, 255, 0.16);
@@ -139,6 +145,7 @@
             text-decoration: none;
             box-shadow: 0 6px 20px rgba(184, 134, 78, 0.35);
             transition: all 0.25s ease;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
         .btn-add-primary:hover {
             color: #ffffff;
@@ -164,6 +171,10 @@
             flex-wrap: wrap;
         }
 
+        .table-controls h4 {
+            font-family: 'Playfair Display', serif;
+        }
+
         .search-box {
             position: relative;
             min-width: 280px;
@@ -184,6 +195,7 @@
             font-size: 0.88rem;
             width: 100%;
             transition: all 0.2s ease;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
         .search-box input:focus {
             outline: none;
@@ -196,6 +208,7 @@
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
         .cafe-table thead th {
             font-size: 0.72rem;
@@ -243,6 +256,7 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
         .badge-status.active {
             background: var(--active-bg);
@@ -253,10 +267,55 @@
             color: #887a71;
         }
 
-        .btn-action-icon {
-            width: 35px;
-            height: 35px;
-            border-radius: 10px;
+        /* Action Buttons: Size List Style Stacked Pills */
+        .action-pill-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: flex-end;
+        }
+
+        .btn-pill-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 78px;
+            padding: 5px 10px;
+            border-radius: 9px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .btn-pill-edit {
+            background-color: #FBF6EE;
+            color: #8C5332 !important;
+            border: 1px solid #E8D9C8;
+        }
+        .btn-pill-edit:hover {
+            background-color: #F2E7D5;
+            color: #5C3218 !important;
+            border-color: #D9C3A8;
+        }
+
+        .btn-pill-delete {
+            background-color: #FFF5F4;
+            color: #A3281D !important;
+            border: 1px solid transparent;
+        }
+        .btn-pill-delete:hover {
+            background-color: #FFE6E4;
+            color: #7A1910 !important;
+        }
+
+        .btn-toggle-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
             border: 1px solid var(--border-subtle);
             background: #ffffff;
             display: inline-flex;
@@ -265,17 +324,11 @@
             color: var(--text-main);
             text-decoration: none;
             transition: all 0.2s ease;
+            font-size: 0.85rem;
         }
-        .btn-action-icon:hover {
-            background: var(--espresso-dark);
-            color: #ffffff;
-            border-color: var(--espresso-dark);
-            transform: translateY(-2px);
-        }
-        .btn-action-icon.delete:hover {
-            background: var(--danger-color);
-            color: #ffffff;
-            border-color: var(--danger-color);
+        .btn-toggle-icon:hover {
+            background: #f4ecdf;
+            border-color: #cbb493;
         }
     </style>
 </head>
@@ -283,7 +336,6 @@
 
 <div layout:fragment="content">
     <div class="main-wrapper">
-        <!-- Top Banner with Coffee Background -->
         <div class="cafe-header-banner">
             <div class="brand-section">
                 <div class="brand-logo-circle">
@@ -307,7 +359,6 @@
             </div>
         </div>
 
-        <!-- Management Table Card -->
         <div class="table-card">
             <div class="table-controls">
                 <div>
@@ -327,10 +378,10 @@
                             <th style="width: 8%;">No.</th>
                             <th style="width: 10%;">Logo</th>
                             <th style="width: 25%;">Method Name</th>
-                            <th style="width: 25%;">Description</th>
+                            <th style="width: 23%;">Description</th>
                             <th style="width: 12%;">Status</th>
                             <th style="width: 10%;">Created</th>
-                            <th class="text-end" style="width: 10%;">Actions</th>
+                            <th class="text-end" style="width: 12%;">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -364,21 +415,24 @@
                                 <small class="text-muted" th:text="${pm.createdAt}">2026-10-07</small>
                             </td>
                             <td class="text-end">
-                                <div class="d-flex align-items-center justify-content-end gap-1">
+                                <div class="d-inline-flex align-items-center gap-2">
                                     <a th:href="@{/admin/paymethod/isActive/{id}(id=${pm.methodId})}" 
-                                       class="btn-action-icon" title="Toggle Status"
+                                       class="btn-toggle-icon" title="Toggle Active / Inactive"
                                        onclick="return confirm('Toggle status for this method?');">
-                                        <i class="bi bi-arrow-repeat"></i>
+                                        <i class="fa-solid fa-arrows-rotate"></i>
                                     </a>
-                                    <a th:href="@{/admin/paymethod/edit/{id}(id=${pm.methodId})}" 
-                                       class="btn-action-icon" title="Edit Configuration">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                    <button type="button" class="btn-action-icon delete" 
-                                            th:attr="data-id=${pm.methodId},data-name=${pm.name}"
-                                            onclick="showDeleteModal(this)" title="Move to Archive">
-                                        <i class="bi bi-trash3"></i>
-                                    </button>
+
+                                    <div class="action-pill-group">
+                                        <a th:href="@{/admin/paymethod/edit/{id}(id=${pm.methodId})}" 
+                                           class="btn-pill-action btn-pill-edit" title="Edit Method">
+                                            <i class="fa-solid fa-pen-to-square"></i> Edit
+                                        </a>
+                                        <button type="button" class="btn-pill-action btn-pill-delete border-0" 
+                                                th:attr="data-id=${pm.methodId},data-name=${pm.name}"
+                                                onclick="showDeleteModal(this)" title="Delete Method">
+                                            <i class="fa-solid fa-trash-can"></i> Delete
+                                        </button>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -398,13 +452,13 @@
 
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="border-radius: 24px; border: 1px solid var(--border-subtle); overflow: hidden;">
+        <div class="modal-content" style="border-radius: 24px; border: 1px solid var(--border-subtle); overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif;">
             <div class="modal-body p-4 text-center">
                 <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" 
                      style="width: 60px; height: 60px; border-radius: 50%; background: var(--danger-bg); color: var(--danger-color);">
                     <i class="bi bi-trash3 fs-3"></i>
                 </div>
-                <h4 class="brand-name mb-2" style="color: var(--espresso-dark); font-size: 1.5rem;">Move to Recycle Bin?</h4>
+                <h4 class="brand-name mb-2" style="color: var(--espresso-dark); font-size: 1.5rem; font-family: 'Playfair Display', serif;">Move to Recycle Bin?</h4>
                 <p class="text-muted small mb-4">Are you certain you want to disable <strong id="deleteMethodName"></strong>?</p>
                 <div class="d-flex justify-content-center gap-2">
                     <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal" style="border-radius: 12px; font-weight: 600;">Cancel</button>

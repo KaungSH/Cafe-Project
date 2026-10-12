@@ -207,46 +207,55 @@ body {
   gap: 5px;
 }
 
-/* Actions */
-.btn-action-edit {
-  width: 36px;
-  height: 36px;
+/* ================= Edit & Delete Buttons Style (From Categories) ================= */
+.action-pill-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-end;
+}
+
+.btn-pill-action {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
-  border: 1px solid #ebdcd0;
-  color: #5a4536;
-  background: white;
-  transition: 0.2s;
+  gap: 6px;
+  width: 78px;
+  padding: 5px 10px;
+  border-radius: 9px;
+  font-size: 0.82rem;
+  font-weight: 600;
   text-decoration: none;
-  margin-right: 6px;
+  transition: all 0.2s ease;
 }
 
-.btn-action-edit:hover {
-  background: var(--accent-gold);
-  border-color: var(--accent-gold);
-  color: #fff;
+/* Edit Pill Button */
+.btn-pill-edit {
+  background-color: #FBF6EE;
+  color: #8C5332 !important;
+  border: 1px solid #E8D9C8;
 }
 
-.btn-action-del {
-  width: 36px;
-  height: 36px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  border: 1px solid #f2d8d8;
-  color: #b04848;
-  background: white;
-  transition: 0.2s;
-  text-decoration: none;
+.btn-pill-edit:hover {
+  background-color: #F2E7D5;
+  color: #5C3218 !important;
+  border-color: #D9C3A8;
 }
 
-.btn-action-del:hover {
-  background: #b04848;
-  border-color: #b04848;
-  color: #fff;
+/* Delete Pill Button */
+.btn-pill-delete {
+  background-color: #FFF5F4;
+  color: #A3281D !important;
+  border: 1px solid transparent;
+}
+
+.btn-pill-delete:hover {
+  background-color: #FFE6E4;
+  color: #7A1910 !important;
+}
+
+.btn-pill-action i {
+  font-size: 0.8rem;
 }
 </style>
 </head>
@@ -284,7 +293,7 @@ body {
             <th>Size Name</th>
             <th style="width: 160px;">Status</th>
             <th>Created By</th>
-            <th style="width: 130px;" class="text-end">Action</th>
+            <th style="width: 120px;" class="text-end">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -309,13 +318,16 @@ body {
               <span class="text-secondary" th:text="${s.employee_name != null ? s.employee_name : '-'}">Admin</span>
             </td>
             <td class="text-end">
-              <a th:href="@{/admin/sizes/edit/{id}(id=${s.size_id})}" class="btn-action-edit" title="Edit Size">
-                <i class="fa-regular fa-pen-to-square"></i>
-              </a>
-              <a th:href="@{/admin/sizes/delete/{id}(id=${s.size_id})}" class="btn-action-del" title="Move to Recycle Bin"
-                 onclick="return confirm('Are you sure you want to move this size to recycle bin?');">
-                <i class="fa-regular fa-trash-can"></i>
-              </a>
+              <!-- Stacked Pill Action Buttons matching Category List design -->
+              <div class="action-pill-group">
+                <a th:href="@{/admin/sizes/edit/{id}(id=${s.size_id})}" class="btn-pill-action btn-pill-edit" title="Edit Size">
+                  <i class="fa-solid fa-pen-to-square"></i> Edit
+                </a>
+                <a th:href="@{/admin/sizes/delete/{id}(id=${s.size_id})}" class="btn-pill-action btn-pill-delete" title="Move to Recycle Bin"
+                   onclick="return confirm('Are you sure you want to move this size to recycle bin?');">
+                  <i class="fa-solid fa-trash-can"></i> Delete
+                </a>
+              </div>
             </td>
           </tr>
         </tbody>

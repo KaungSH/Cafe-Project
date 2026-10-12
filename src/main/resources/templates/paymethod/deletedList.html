@@ -5,10 +5,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Archived Payment Methods | Cafe Luft</title>
+    <title>Archived Payment Methods | Café Luft</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -91,6 +95,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         .main-card {
@@ -106,6 +111,7 @@
             border-collapse: separate;
             border-spacing: 0 8px;
             width: 100%;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
         .luxury-table thead th {
             color: #827265;
@@ -148,6 +154,7 @@
             align-items: center;
             gap: 6px;
             transition: all 0.2s ease;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
         .btn-restore:hover {
             background-color: #2f533e;
@@ -160,7 +167,6 @@
 
 <div layout:fragment="content">
     <div class="main-wrapper">
-        <!-- Top Banner with Coffee Background -->
         <div class="cafe-header-banner">
             <div class="brand-section">
                 <div class="brand-logo-circle">
@@ -174,12 +180,11 @@
                 </div>
             </div>
 
-            <a th:href="@{/admin/paymethod}" class="btn btn-light px-3 py-2 fw-semibold" style="border-radius: 12px; border: 1.5px solid var(--border-subtle);">
+            <a th:href="@{/admin/paymethod}" class="btn btn-light px-3 py-2 fw-semibold" style="border-radius: 12px; border: 1.5px solid var(--border-subtle); font-family: 'Plus Jakarta Sans', sans-serif;">
                 <i class="bi bi-arrow-left"></i> Back to Active
             </a>
         </div>
 
-        <!-- Archive Table Card -->
         <div class="main-card">
             <div class="table-responsive">
                 <table class="luxury-table align-middle">
@@ -206,7 +211,7 @@
                             <td class="fw-bold" style="color: var(--espresso-dark);" th:text="${pm.name}"></td>
                             <td class="text-muted small" th:text="${pm.description}"></td>
                             <td>
-                                <span class="badge" style="background-color: #faeae8; color: #b04638; border-radius: 20px; padding: 6px 12px;">Archived</span>
+                                <span class="badge" style="background-color: #faeae8; color: #b04638; border-radius: 20px; padding: 6px 12px; font-family: 'Plus Jakarta Sans', sans-serif;">Archived</span>
                             </td>
                             <td th:text="${employeeName != null ? employeeName : 'Admin'}"></td>
                             <td class="text-end">

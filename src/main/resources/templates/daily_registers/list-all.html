@@ -96,6 +96,57 @@
       font-size: 0.950rem;
       margin-bottom: 15px;
     }
+
+    /* ================= Edit & Delete Buttons Style (From Categories) ================= */
+    .action-pill-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-end;
+    }
+
+    .btn-pill-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 78px;
+      padding: 5px 10px;
+      border-radius: 9px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    /* Edit Pill Button */
+    .btn-pill-edit {
+      background-color: #FBF6EE;
+      color: #8C5332 !important;
+      border: 1px solid #E8D9C8;
+    }
+
+    .btn-pill-edit:hover {
+      background-color: #F2E7D5;
+      color: #5C3218 !important;
+      border-color: #D9C3A8;
+    }
+
+    /* Delete Pill Button */
+    .btn-pill-delete {
+      background-color: #FFF5F4;
+      color: #A3281D !important;
+      border: 1px solid transparent;
+    }
+
+    .btn-pill-delete:hover {
+      background-color: #FFE6E4;
+      color: #7A1910 !important;
+    }
+
+    .btn-pill-action i {
+      font-size: 0.8rem;
+    }
   </style>
 </head>
 
@@ -158,7 +209,7 @@
             <th>Status</th>
             <th>Open Time</th>
             <th>Closed Time</th>
-            <th class="text-center">Action</th>
+            <th class="text-end" style="width: 110px;">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -173,12 +224,24 @@
             <td th:text="${reg.opened_at}">08:00:00</td>
             <td th:text="${reg.status_name == 'CLOSED' ? reg.closed_at : 'Not Closed Yet'}" 
                 th:class="${reg.status_name == 'CLOSED' ? '' : 'text-muted fst-italic'}">17:00:00</td>
-            <td class="text-center">
-              <a th:href="@{/manager-only/daily-registers/delete/{register_id}(register_id=${reg.register_id})}" 
-                 class="btn btn-sm btn-light border text-danger"
-                 onclick="return confirm('Are you sure you want to delete this record?');" title="Delete">
-                <i class="fa-solid fa-trash"></i>
-              </a>
+            <td class="text-end">
+              <!-- Stacked Pill Action Buttons matching Category List design -->
+              <div class="action-pill-group">
+                <!-- Edit ခလုတ်ပါ ထည့်သုံးလိုပါက အောက်ပါ comment ကို ဖြုတ်ပေးနိုင်ပါသည် -->
+                <!-- 
+                <a class="btn-pill-action btn-pill-edit" 
+                   th:href="@{/manager-only/daily-registers/edit/{register_id}(register_id=${reg.register_id})}" 
+                   title="Edit Register">
+                  <i class="fa-solid fa-pen-to-square"></i> Edit
+                </a> 
+                -->
+                <a class="btn-pill-action btn-pill-delete" 
+                   th:href="@{/manager-only/daily-registers/delete/{register_id}(register_id=${reg.register_id})}" 
+                   onclick="return confirm('Are you sure you want to delete this record?');" 
+                   title="Delete Register">
+                  <i class="fa-solid fa-trash-can"></i> Delete
+                </a>
+              </div>
             </td>
           </tr>
           <tr th:if="${#lists.isEmpty(registers)}">

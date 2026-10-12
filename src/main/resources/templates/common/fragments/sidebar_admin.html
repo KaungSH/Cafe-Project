@@ -3,22 +3,50 @@
 <body>
 <div th:fragment="sidebar_admin" class="cafe-sidebar admin-sidebar">
 
-    <!-- ================= BRAND ================= -->
-    <div class="cafe-brand">
-        <div class="cafe-brand-icon admin-icon">
-            <i class="bi bi-cup-hot-fill"></i>
-        </div>
-        <div>
-            <!-- Café Shop နေရာတွင် Café Luft သို့ ပြောင်းထားသည် -->
-            <div class="cafe-brand-name">
-                Café <span>Luft</span>
-            </div>
-            <div class="cafe-role">
-                <i class="bi bi-shield-lock-fill"></i>
-                <span th:text="${session.employeeRole != null ? session.employeeRole : 'ADMIN'}">ADMIN</span>
-            </div>
-        </div>
+<!-- ================= BRAND / LOGO ================= -->
+<div class="cafe-brand text-center pt-3 pb-2 px-2 d-flex flex-column align-items-center justify-content-center">
+    <div class="cafe-brand-name fw-bold fs-4 text-warning text-nowrap d-flex align-items-center justify-content-center">
+        <i class="bi bi-cup-hot-fill me-2 fs-5"></i>
+        <span>Café Luft</span>
     </div>
+
+    <div class="cafe-role mt-1">
+        <span class="badge rounded-pill bg-dark bg-opacity-75 text-warning border border-warning-subtle px-2 py-1" 
+              style="font-size: 11px; letter-spacing: 1px;">
+            <i class="bi bi-shield-lock-fill me-1"></i>
+            <span th:text="${session.employeeRole != null ? session.employeeRole : 'ADMIN'}">ADMIN</span>
+        </span>
+    </div>
+</div>
+
+<!-- ================= USER PROFILE CARD ================= -->
+<div class="cafe-profile-card px-3 py-2 mb-2">
+    <!-- Manager အတွက် /manager/profile သို့ ညွှန်းပါ -->
+    <a th:href="@{/admin/profile}" 
+       class="d-flex align-items-center text-decoration-none p-2 rounded-3"
+       style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.08); transition: all 0.2s ease;">
+        
+        <div class="position-relative me-2 flex-shrink-0">
+            <img th:src="${session.employeeImage != null ? session.employeeImage : '/images/profile.jpg'}" 
+                 src="/images/profile.jpg" 
+                 alt="Profile Photo"
+                 class="rounded-circle border border-warning"
+                 style="width: 40px; height: 40px; object-fit: cover;">
+            <span class="position-absolute bottom-0 end-0 bg-success border border-dark rounded-circle" 
+                  style="width: 10px; height: 10px;"></span>
+        </div>
+
+        <div class="overflow-hidden flex-grow-1">
+            <div class="fw-semibold text-truncate text-white" style="font-size: 14px;"
+                 th:text="${session.employeeName != null ? session.employeeName : 'Admin'}">
+                Admin
+            </div>
+            <small class="text-white-50 d-flex align-items-center" style="font-size: 11px;">
+                Edit Profile <i class="bi bi-chevron-right ms-1" style="font-size: 9px;"></i>
+            </small>
+        </div>
+    </a>
+</div>
 
     <!-- ================= MENU ================= -->
     <div class="cafe-menu">
@@ -26,6 +54,7 @@
         <a th:href="@{/}" class="cafe-menu-item">
             <i class="bi bi-house"></i>
             <span>Home</span>
+            
         </a>
 
         <!-- EMPLOYEES -->
@@ -143,7 +172,7 @@
         </a>
 
         <!-- WASTE LOGS -->
-        <a th:href="@{/admin/WasteLogs}" class="cafe-menu-item">
+        <a th:href="@{/admin/wastelogs}" class="cafe-menu-item">
             <i class="bi bi-trash3"></i>
             <span>Waste Logs</span>
         </a>
