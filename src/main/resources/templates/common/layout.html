@@ -31,7 +31,7 @@
         }
 
         /* MANAGER SIDEBAR */
-        .manager-sidebar { background: #fffaf5; border-right: 1px solid #ead8c8; }
+        .manager-sidebar { background: rgb(94, 47, 47); border-right: 1px solid #ead8c8; }
         .manager-sidebar .cafe-brand-icon { background: #f6dfca; color: #c77b3b; }
         .manager-sidebar .cafe-brand-name span { color: #d88945; }
         .manager-sidebar .cafe-menu-item:hover { background: #f8e5d3; color: #bd7137; }
@@ -71,10 +71,14 @@
         .manager-badge { background: #f5dfca; color: #9c5727; }
         .admin-badge { background: #3b2922; color: #efb06f; }
 
-        @media (max-width: 768px) {
+      @media (max-width: 768px) {
             .cafe-sidebar { width: 200px; min-width: 200px; padding-left: 10px; padding-right: 10px; }
             .cafe-content { padding: 20px; }
         }
+        
+
+
+
     </style>
 </head>
 
@@ -98,5 +102,25 @@
     </main>
 
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const sidebar = document.querySelector(".cafe-sidebar");
+
+        if (sidebar) {
+            // ၁။ အရင်သိမ်းထားခဲ့တဲ့ scroll နေရာကို ပြန်သွားမယ်
+            const scrollPos = sessionStorage.getItem("sidebarScroll");
+            if (scrollPos) {
+                sidebar.scrollTop = scrollPos;
+            }
+
+            // ၂။ Scroll ဆွဲတိုင်း လက်ရှိနေရာကို sessionStorage ထဲ မှတ်ထားမယ်
+            sidebar.addEventListener("scroll", function () {
+                sessionStorage.setItem("sidebarScroll", sidebar.scrollTop);
+            });
+        }
+    });
+</script>
+</body>
+</html>
 </body>
 </html>
