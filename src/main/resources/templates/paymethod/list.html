@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layout}">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Gateway Management | Café Luft</title>
     
-    <!-- Bootstrap 5 CSS & Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    
-    <!-- Google Fonts: Luxury Serif & Modern Sans -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
@@ -21,7 +18,6 @@
             --espresso-dark: #1a110a;
             --espresso-medium: #2e1d13;
             --roast-caramel: #b8864e;
-            --caramel-hover: #a3723d;
             --champagne-gold: #cbb493;
             --cream-soft: #faf6f0;
             --border-subtle: #ede3d5;
@@ -46,18 +42,20 @@
             padding: 0 24px;
         }
 
-        /* --- 1. Top Executive Banner --- */
+        /* Expense Category ပုံစံ ကော်ဖီနောက်ခံ Hero Banner */
         .cafe-header-banner {
-            background: radial-gradient(circle at 85% 20%, rgba(184, 134, 78, 0.22) 0%, transparent 50%),
-                        linear-gradient(135deg, var(--espresso-dark) 0%, var(--espresso-medium) 65%, #150d08 100%);
+            background: linear-gradient(135deg, rgba(26, 17, 10, 0.90) 0%, rgba(46, 29, 19, 0.85) 100%),
+                        url('https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
             border-radius: 24px;
             padding: 28px 40px;
             box-shadow: 0 18px 45px -10px rgba(26, 17, 10, 0.25);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(203, 180, 147, 0.35);
             position: relative;
+            flex-wrap: wrap;
+            gap: 20px;
         }
 
         .brand-section {
@@ -76,20 +74,27 @@
             justify-content: center;
             box-shadow: 0 0 20px rgba(203, 180, 147, 0.45);
             border: 2.5px solid var(--champagne-gold);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .brand-logo-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .brand-name {
             font-family: 'Playfair Display', serif;
-            font-size: 1.85rem;
+            font-size: 1.95rem;
             color: #ffffff;
             font-weight: 700;
             margin: 0;
-            letter-spacing: 0.5px;
         }
 
         .brand-subtitle {
             color: var(--champagne-gold);
-            font-size: 0.72rem;
+            font-size: 0.76rem;
             letter-spacing: 2px;
             text-transform: uppercase;
             font-weight: 600;
@@ -99,13 +104,12 @@
             gap: 8px;
         }
 
-        /* Header Buttons */
         .btn-recycle {
             background: rgba(255, 255, 255, 0.08);
             color: #f7ede2;
             border: 1.5px solid rgba(255, 255, 255, 0.18);
             border-radius: 14px;
-            padding: 10px 22px;
+            padding: 11px 22px;
             font-size: 0.9rem;
             font-weight: 600;
             display: inline-flex;
@@ -113,12 +117,11 @@
             gap: 8px;
             text-decoration: none;
             backdrop-filter: blur(8px);
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.25s ease;
         }
         .btn-recycle:hover {
             background: rgba(255, 255, 255, 0.16);
             color: #ffffff;
-            border-color: rgba(255, 255, 255, 0.3);
             transform: translateY(-2px);
         }
 
@@ -127,71 +130,22 @@
             color: #ffffff;
             border: none;
             border-radius: 14px;
-            padding: 11px 26px;
-            font-size: 0.9rem;
+            padding: 12px 26px;
+            font-size: 0.92rem;
             font-weight: 600;
             display: inline-flex;
             align-items: center;
             gap: 8px;
             text-decoration: none;
             box-shadow: 0 6px 20px rgba(184, 134, 78, 0.35);
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.25s ease;
         }
         .btn-add-primary:hover {
-            background: linear-gradient(135deg, #c79459 0%, #aa763f 100%);
             color: #ffffff;
             transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(184, 134, 78, 0.5);
         }
 
-        /* --- 2. Quick Stat Metric Badges --- */
-        .stat-bar {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 18px;
-            margin-top: 24px;
-        }
-
-        .stat-card {
-            background: var(--surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: 18px;
-            padding: 18px 24px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            box-shadow: 0 4px 18px rgba(43, 29, 20, 0.03);
-        }
-
-        .stat-icon {
-            width: 46px;
-            height: 46px;
-            border-radius: 12px;
-            background: var(--cream-soft);
-            color: var(--roast-caramel);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            border: 1px solid var(--border-subtle);
-        }
-
-        .stat-value {
-            font-size: 1.35rem;
-            font-weight: 700;
-            color: var(--espresso-dark);
-            line-height: 1.1;
-        }
-
-        .stat-label {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* --- 3. Table Card & Filters --- */
         .table-card {
             background: var(--surface);
             border-radius: 24px;
@@ -238,13 +192,11 @@
             box-shadow: 0 0 0 3px rgba(184, 134, 78, 0.12);
         }
 
-        /* Custom Table */
         .cafe-table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
         }
-
         .cafe-table thead th {
             font-size: 0.72rem;
             font-weight: 700;
@@ -254,26 +206,17 @@
             padding: 16px 14px;
             border-bottom: 1.5px solid var(--border-subtle);
         }
-
-        .cafe-table tbody tr {
-            transition: all 0.2s ease;
-        }
-
         .cafe-table tbody tr:not(:last-child) td {
             border-bottom: 1px solid var(--border-subtle);
         }
-
         .cafe-table tbody tr:hover {
             background-color: var(--cream-soft);
         }
-
         .cafe-table tbody td {
             padding: 16px 14px;
             vertical-align: middle;
-            font-size: 0.92rem;
         }
 
-        /* Logo / Icon Frame */
         .logo-box {
             width: 44px;
             height: 44px;
@@ -283,10 +226,8 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
             padding: 3px;
         }
-
         .logo-box img {
             width: 100%;
             height: 100%;
@@ -303,23 +244,13 @@
             align-items: center;
             gap: 6px;
         }
-
         .badge-status.active {
             background: var(--active-bg);
             color: var(--active-color);
         }
-
         .badge-status.inactive {
             background: #f0ebe5;
             color: #887a71;
-        }
-
-        /* Action Buttons */
-        .action-group {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 8px;
         }
 
         .btn-action-icon {
@@ -333,16 +264,14 @@
             justify-content: center;
             color: var(--text-main);
             text-decoration: none;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.2s ease;
         }
-
         .btn-action-icon:hover {
             background: var(--espresso-dark);
             color: #ffffff;
             border-color: var(--espresso-dark);
             transform: translateY(-2px);
         }
-
         .btn-action-icon.delete:hover {
             background: var(--danger-color);
             color: #ffffff;
@@ -352,166 +281,131 @@
 </head>
 <body>
 
-   <div layout:fragment="content">
-
-    <!-- 1. Executive Banner -->
-    <div class="cafe-header-banner">
-        <div class="brand-section">
-            <div class="brand-logo-circle">
-                <i class="bi bi-cup-hot-fill" style="font-size: 28px; color: var(--espresso-medium);"></i>
-            </div>
-            <div>
-                <h1 class="brand-name">Café Luft</h1>
-                <div class="brand-subtitle">
-                    <i class="bi bi-credit-card-2-front"></i> PAYMENT CHANNELS &amp; GATEWAYS
+<div layout:fragment="content">
+    <div class="main-wrapper">
+        <!-- Top Banner with Coffee Background -->
+        <div class="cafe-header-banner">
+            <div class="brand-section">
+                <div class="brand-logo-circle">
+                    <img th:src="@{/images/luft-logo.png}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/924/924514.png'" alt="Café Luft Logo">
+                </div>
+                <div>
+                    <h1 class="brand-name">Café Luft</h1>
+                    <div class="brand-subtitle">
+                        <i class="bi bi-credit-card-2-front"></i> PAYMENT CHANNELS &amp; GATEWAYS
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="d-flex align-items-center gap-3">
-            <a th:href="@{/admin/paymethod/deleted}" class="btn-recycle">
-                <i class="bi bi-archive"></i> Recycle Bin
-            </a>
-            <a th:href="@{/admin/paymethod/add}" class="btn-add-primary">
-                <i class="bi bi-plus-lg"></i> Add New Method
-            </a>
-        </div>
-    </div>
-
-    <!-- 2. Performance Stats -->
-    <div class="stat-bar">
-        <div class="stat-card">
-            <div class="stat-icon"><i class="bi bi-wallet2"></i></div>
-            <div>
-                <div class="stat-value" th:text="${payMethods != null ? payMethods.size() : '0'}">0</div>
-                <div class="stat-label">Total Methods</div>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon" style="color: var(--active-color); background: var(--active-bg);"><i class="bi bi-shield-check"></i></div>
-            <div>
-                <div class="stat-value" style="color: var(--active-color);">Active</div>
-                <div class="stat-label">Production Ready</div>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon" style="color: #6a4933;"><i class="bi bi-clock-history"></i></div>
-            <div>
-                <div class="stat-value">Live</div>
-                <div class="stat-label">Terminal Status</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 3. Management Table Card -->
-    <div class="table-card">
-        
-        <!-- Search & Control Header -->
-        <div class="table-controls">
-            <div>
-                <span class="text-uppercase fw-bold" style="font-size: 0.72rem; letter-spacing: 1.5px; color: var(--roast-caramel);">Roster Overview</span>
-                <h4 class="fw-bold mb-0" style="color: var(--espresso-dark);">Active Gateways</h4>
-            </div>
-            <div class="search-box">
-                <i class="bi bi-search"></i>
-                <input type="text" id="methodSearchInput" placeholder="Quick search payment method..." onkeyup="filterPaymentMethods()">
+            <div class="d-flex align-items-center gap-3">
+                <a th:href="@{/admin/paymethod/deleted}" class="btn-recycle">
+                    <i class="bi bi-archive"></i> Recycle Bin
+                </a>
+                <a th:href="@{/admin/paymethod/add}" class="btn-add-primary">
+                    <i class="bi bi-plus-circle"></i> Add New Method
+                </a>
             </div>
         </div>
 
-        <!-- Table View -->
-        <div class="table-responsive">
-            <table class="cafe-table" id="paymentMethodTable">
-                <thead>
-                    <tr>
-                        <th style="width: 8%;">No.</th>
-                        <th style="width: 10%;">Logo</th>
-                        <th style="width: 22%;">Method Name</th>
-                        <th style="width: 25%;">Description</th>
-                        <th style="width: 15%;">Status</th>
-                        <th style="width: 10%;">Created</th>
-                        <th class="text-end" style="width: 10%;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="pm, state : ${payMethods}">
-                        <td class="text-muted fw-bold" th:text="${state.count < 10 ? '0' + state.count : state.count}">01</td>
-                        <td>
-                            <div class="logo-box">
-                                <img th:if="${pm.logoPath != null and pm.logoPath != ''}"
-                                     th:src="@{'/images/' + ${pm.logoPath}}" alt="Logo" />
-                                <span th:unless="${pm.logoPath != null and pm.logoPath != ''}" 
-                                      class="fw-bold text-muted" 
-                                      th:text="${#strings.substring(pm.name,0,1)}">P</span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="fw-bold" style="color: var(--espresso-dark);" th:text="${pm.name}">KBZPay</div>
-                            <small class="text-muted" th:text="'ID: #' + ${pm.methodId}">#01</small>
-                        </td>
-                        <td>
-                            <span class="text-muted small" th:text="${pm.description != null ? pm.description : '—'}">Mobile Banking &amp; QR Scan</span>
-                        </td>
-                        <td>
-                            <span th:if="${pm.active}" class="badge-status active">
-                                <i class="bi bi-check2-circle"></i> Active
-                            </span>
-                            <span th:unless="${pm.active}" class="badge-status inactive">
-                                <i class="bi bi-slash-circle"></i> Inactive
-                            </span>
-                        </td>
-                        <td>
-                            <small class="text-muted" th:text="${pm.createdAt}">2026-10-07</small>
-                        </td>
-                        <td class="text-end">
-                            <div class="action-group">
-                                <!-- Status Toggle -->
-                                <a th:href="@{/admin/paymethod/isActive/{id}(id=${pm.methodId})}" 
-                                   class="btn-action-icon" title="Toggle Status"
-                                   onclick="return confirm('Toggle status for this method?');">
-                                    <i class="bi bi-arrow-repeat"></i>
-                                </a>
+        <!-- Management Table Card -->
+        <div class="table-card">
+            <div class="table-controls">
+                <div>
+                    <span class="text-uppercase fw-bold" style="font-size: 0.72rem; letter-spacing: 1.5px; color: var(--roast-caramel);">Roster Overview</span>
+                    <h4 class="fw-bold mb-0" style="color: var(--espresso-dark);">Active Gateways</h4>
+                </div>
+                <div class="search-box">
+                    <i class="bi bi-search"></i>
+                    <input type="text" id="methodSearchInput" placeholder="Quick search payment method..." onkeyup="filterPaymentMethods()">
+                </div>
+            </div>
 
-                                <!-- Edit -->
-                                <a th:href="@{/admin/paymethod/edit/{id}(id=${pm.methodId})}" 
-                                   class="btn-action-icon" title="Edit Configuration">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
+            <div class="table-responsive">
+                <table class="cafe-table" id="paymentMethodTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 8%;">No.</th>
+                            <th style="width: 10%;">Logo</th>
+                            <th style="width: 25%;">Method Name</th>
+                            <th style="width: 25%;">Description</th>
+                            <th style="width: 12%;">Status</th>
+                            <th style="width: 10%;">Created</th>
+                            <th class="text-end" style="width: 10%;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="pm, state : ${payMethods}">
+                            <td class="text-muted fw-bold" th:text="${state.count < 10 ? '0' + state.count : state.count}">01</td>
+                            <td>
+                                <div class="logo-box">
+                                    <img th:if="${pm.logoPath != null and pm.logoPath != ''}"
+                                         th:src="@{'/images/' + ${pm.logoPath}}" alt="Logo" />
+                                    <span th:unless="${pm.logoPath != null and pm.logoPath != ''}" 
+                                          class="fw-bold text-muted" 
+                                          th:text="${#strings.substring(pm.name,0,1)}">P</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="fw-bold" style="color: var(--espresso-dark);" th:text="${pm.name}">KBZPay</div>
+                                <small class="text-muted" th:text="'ID: #' + ${pm.methodId}">#01</small>
+                            </td>
+                            <td>
+                                <span class="text-muted small" th:text="${pm.description != null ? pm.description : '—'}">Mobile Banking &amp; QR Scan</span>
+                            </td>
+                            <td>
+                                <span th:if="${pm.active}" class="badge-status active">
+                                    <i class="bi bi-check2-circle"></i> Active
+                                </span>
+                                <span th:unless="${pm.active}" class="badge-status inactive">
+                                    <i class="bi bi-slash-circle"></i> Inactive
+                                </span>
+                            </td>
+                            <td>
+                                <small class="text-muted" th:text="${pm.createdAt}">2026-10-07</small>
+                            </td>
+                            <td class="text-end">
+                                <div class="d-flex align-items-center justify-content-end gap-1">
+                                    <a th:href="@{/admin/paymethod/isActive/{id}(id=${pm.methodId})}" 
+                                       class="btn-action-icon" title="Toggle Status"
+                                       onclick="return confirm('Toggle status for this method?');">
+                                        <i class="bi bi-arrow-repeat"></i>
+                                    </a>
+                                    <a th:href="@{/admin/paymethod/edit/{id}(id=${pm.methodId})}" 
+                                       class="btn-action-icon" title="Edit Configuration">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <button type="button" class="btn-action-icon delete" 
+                                            th:attr="data-id=${pm.methodId},data-name=${pm.name}"
+                                            onclick="showDeleteModal(this)" title="Move to Archive">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
 
-                                <!-- Move to Recycle Bin -->
-                                <button type="button" class="btn-action-icon delete" 
-                                        th:attr="data-id=${pm.methodId},data-name=${pm.name}"
-                                        onclick="showDeleteModal(this)" title="Move to Archive">
-                                    <i class="bi bi-trash3"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Empty Data State -->
-                    <tr th:if="${#lists.isEmpty(payMethods)}">
-                        <td colspan="7" class="text-center py-5">
-                            <i class="bi bi-inbox fs-1 text-muted d-block mb-2"></i>
-                            <div class="fw-semibold text-muted">No payment methods found.</div>
-                            <small class="text-muted">Click "+ Add New Method" to initialize payment channels.</small>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                        <tr th:if="${#lists.isEmpty(payMethods)}">
+                            <td colspan="7" class="text-center py-5">
+                                <i class="bi bi-inbox fs-1 text-muted d-block mb-2"></i>
+                                <div class="fw-semibold text-muted">No payment methods found.</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Luxury Confirmation Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="border-radius: 24px; border: 1px solid var(--border-subtle); overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.15);">
+        <div class="modal-content" style="border-radius: 24px; border: 1px solid var(--border-subtle); overflow: hidden;">
             <div class="modal-body p-4 text-center">
                 <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" 
                      style="width: 60px; height: 60px; border-radius: 50%; background: var(--danger-bg); color: var(--danger-color);">
                     <i class="bi bi-trash3 fs-3"></i>
                 </div>
                 <h4 class="brand-name mb-2" style="color: var(--espresso-dark); font-size: 1.5rem;">Move to Recycle Bin?</h4>
-                <p class="text-muted small mb-4">Are you certain you want to disable <strong id="deleteMethodName" style="color: var(--espresso-dark);"></strong>? This can be restored anytime from archives.</p>
+                <p class="text-muted small mb-4">Are you certain you want to disable <strong id="deleteMethodName"></strong>?</p>
                 <div class="d-flex justify-content-center gap-2">
                     <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal" style="border-radius: 12px; font-weight: 600;">Cancel</button>
                     <a id="confirmDeleteBtn" href="#" class="btn btn-danger px-4" style="border-radius: 12px; font-weight: 600; background: var(--danger-color); border: none;">Confirm Delete</a>
@@ -521,10 +415,8 @@
     </div>
 </div>
 
-<!-- Bootstrap 5 Bundle JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Delete Confirmation Binder
     function showDeleteModal(button) {
         const id = button.getAttribute('data-id');
         const name = button.getAttribute('data-name');
@@ -533,7 +425,6 @@
         new bootstrap.Modal(document.getElementById('deleteModal')).show();
     }
 
-    // Fast Client-Side Search
     function filterPaymentMethods() {
         const input = document.getElementById("methodSearchInput");
         const filter = input.value.toLowerCase();
@@ -542,11 +433,7 @@
 
         for (let i = 0; i < trs.length; i++) {
             const rowText = trs[i].textContent || trs[i].innerText;
-            if (rowText.toLowerCase().indexOf(filter) > -1) {
-                trs[i].style.display = "";
-            } else {
-                trs[i].style.display = "none";
-            }
+            trs[i].style.display = rowText.toLowerCase().indexOf(filter) > -1 ? "" : "none";
         }
     }
 </script>
