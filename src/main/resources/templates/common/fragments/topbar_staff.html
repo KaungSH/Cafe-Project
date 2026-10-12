@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"> <!-- သင့်ရဲ့ layout ဖိုင်လမ်းကြောင်းအတိုင်း ပြင်ရန် -->
+
+<head>
+    <meta charset="UTF-8">
+    <title>Staff Dashboard - Café Shop</title>
+</head>
+
+<body>
+
+<div th:fragment="topbar_staff" class="staff-topbar">
+    <!-- Left Side Navigation Links -->
+    <div class="d-flex align-items-center gap-2">
+        <a th:href="@{/staff/discount}" class="staff-nav-item">
+            <i class="bi bi-percent"></i> <span>Discount</span>
+        </a>
+        <a th:href="@{/order-with-details}" class="staff-nav-item">
+            <i class="bi bi-receipt"></i> <span>Order Details</span>
+        </a>
+        <a th:href="@{/payments}" class="staff-nav-item">
+            <i class="bi bi-credit-card"></i> <span>Payments</span>
+        </a>
+        <a th:href="@{/staff/product}" class="staff-nav-item">
+            <i class="bi bi-box-seam"></i> <span>Products</span>
+        </a>
+    </div>
+
+    <!-- Right Side Profile, Employee Name & Branch Name -->
+    <div class="d-flex align-items-center gap-3">
+        <!-- Branch Name Badge -->
+        <div class="branch-badge">
+            <i class="bi bi-shop"></i>
+            <span th:text="${session.loggedInUser.branch_name != null ? session.loggedInUser.branch_name: 'Main Branch'}">Branch Name</span>
+        </div>
+
+        <!-- Employee Profile & Name -->
+         <img th:if="${session.loggedInUser != null}" 
+			 th:src="@{'/images/' + ${session.loggedInUser.photopath}}"
+			 alt="Thumbnail Error" 
+			 style="height: 30px; width: 30px; object-fit: cover; border-radius: 100%;" class = "shadow-lg">
+        <div class="dropdown">
+            <a href="#" class="staff-profile-dropdown dropdown-toggle text-decoration-none d-flex align-items-center gap-2" id="staffUserDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+               
+         <span class="staff-name" th:text="${session.loggedInUser != null ? session.loggedInUser.employee_name : 'Staff Name'}">Employee Name</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="staffUserDropdown" style="background: #fffaf5;">
+                <li><a class="dropdown-item py-2 px-3 text-dark fw-medium" th:href="@{/changeprofile}"><i class="bi bi-person me-2 text-warning"></i> Change Profile</a></li>
+                <li><a class="dropdown-item py-2 px-3 text-dark fw-medium" th:href="@{/changepassword}"><i class="bi bi-person me-2 text-warning"></i> Change Password</a></li>
+                <li><hr class="dropdown-divider bg-light"></li>
+                <li><a class="dropdown-item py-2 px-3 text-danger fw-medium" th:href="@{/logout}"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>
