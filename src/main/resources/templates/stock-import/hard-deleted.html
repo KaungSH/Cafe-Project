@@ -1,45 +1,192 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirm Permanent Delete — Cafe Luft</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
-        body { background: #fbf9f5; font-family: 'Plus Jakarta Sans', sans-serif; }
-        .danger-card {
-            border: 1px solid #fed7d7; border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(229, 62, 62, 0.08); background: #ffffff;
+        :root {
+            --coffee-main: #5c3d2e;
+            --coffee-bg: #f9f6f0;
+            --coffee-card-border: #ebdcd0;
+            --coffee-subtle: #f3ece4;
         }
-        .warning-icon-wrapper {
-            width: 80px; height: 80px; border-radius: 50%;
-            background-color: #fff5f5; display: inline-flex;
-            align-items: center; justify-content: center;
+
+        body {
+            background-color: var(--coffee-bg);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #3b2c24;
+            margin: 0;
+        }
+
+        .delete-wrapper {
+            padding: 60px 20px;
+        }
+
+        .lux-delete-card {
+            background: #ffffff;
+            border-radius: 22px;
+            border: 1px solid var(--coffee-card-border);
+            box-shadow: 0 18px 40px rgba(92, 61, 46, 0.08);
+            max-width: 460px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 36px 32px;
+            height: fit-content;
+            text-align: center;
+        }
+
+        .warning-icon-ring {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            background-color: #FFF5F4;
+            border: 6px solid #FFECEB;
+            color: #C82333;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.65rem;
+            margin-bottom: 18px;
+        }
+
+        .delete-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--coffee-main);
+            margin-bottom: 8px;
+        }
+
+        .delete-desc {
+            font-size: 0.88rem;
+            color: #796659;
+            line-height: 1.55;
+            margin-bottom: 18px;
+        }
+
+        /* Import ID သီးသန့်ပြသည့် Box */
+        .id-highlight-box {
+            background-color: #FAF6F1;
+            border: 1px dashed #DFCDBD;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 24px;
+        }
+
+        .id-label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #8C6F5D;
+            margin-bottom: 4px;
+        }
+
+        .id-value {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--coffee-main);
+            word-break: break-all;
+        }
+
+        .action-btn-row {
+            display: flex;
+            gap: 12px;
+            padding-top: 20px;
+            border-top: 1px solid #F2ECE4;
+        }
+
+        .btn-cancel-clean {
+            flex: 1;
+            background-color: #FFFFFF;
+            color: #5C4B40;
+            border: 1px solid #DFCDBD;
+            border-radius: 11px;
+            padding: 10px 16px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-cancel-clean:hover {
+            background-color: #FAF6F1;
+            color: #3B2C24;
+            border-color: #C9B5A3;
+        }
+
+        .btn-delete-forever {
+            flex: 1;
+            background-color: #C82333;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 11px;
+            padding: 10px 16px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(200, 35, 51, 0.22);
+            transition: all 0.2s ease;
+        }
+
+        .btn-delete-forever:hover {
+            background-color: #A71D2A;
+            color: #FFFFFF;
+            transform: translateY(-1px);
         }
     </style>
 </head>
-<body class="d-flex align-items-center min-vh-100">
-    <div class="container d-flex justify-content-center">
-        <div class="card danger-card p-4 text-center" style="max-width: 480px; width: 100%;">
-            <div class="mb-3">
-                <div class="warning-icon-wrapper text-danger fs-1">
+<body>
+    <div layout:fragment="content">
+        <div class="delete-wrapper">
+            <div class="lux-delete-card">
+                
+                <!-- Warning Icon -->
+                <div class="warning-icon-ring">
                     <i class="bi bi-trash3-fill"></i>
                 </div>
-            </div>
-            
-            <h4 class="fw-bold text-dark mb-2">Permanent Deletion</h4>
-            <p class="text-muted small mb-4">
-                Are you sure you want to permanently delete import <strong class="text-dark" th:text="${importId}">SI-001</strong>? All related batches and historical cost data will be unrecoverable[cite: 2].
-            </p>
+                
+                <!-- Title & Description -->
+                <h4 class="delete-title">Permanent Deletion</h4>
+                <p class="delete-desc">
+                    Are you sure you want to permanently delete this import record? 
+                </p>
 
-            <form th:action="@{/manager-only/stock-imports/hard-delete}" method="post">
-                <input type="hidden" name="import_id" th:value="${importId}" />
-                <div class="d-flex justify-content-center gap-2">
-                    <a th:href="@{/manager-only/stock-imports/deleted}" class="btn btn-light px-4 border rounded-3">Cancel</a>
-                    <button type="submit" class="btn btn-danger px-4 fw-semibold rounded-3 shadow-sm">Delete Forever</button>
+                <!-- Highlighted Import ID Box -->
+                <div class="id-highlight-box">
+                    <span class="id-label">Target Import ID</span>
+                   
                 </div>
-            </form>
+
+                <!-- Form Actions -->
+                <form th:action="@{/manager-only/stock-imports/hard-delete}" method="post" class="m-0">
+                    <input type="hidden" name="import_id" th:value="${importId}" />
+                    <div class="action-btn-row">
+                        <a th:href="@{/manager-only/stock-imports/deleted}" class="btn-cancel-clean">
+                            <i class="bi bi-x-lg"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn-delete-forever">
+                            <i class="bi bi-trash3"></i> Delete Forever
+                        </button>
+                    </div>
+                </form>
+
+            </div>
         </div>
     </div>
 </body>

@@ -22,7 +22,6 @@
   --border-tone: #e8d9cb;
 }
 
-/* Card ကို စခရင်အလယ်သို့ နေရာချထားခြင်း */
 .center-wrapper {
   min-height: calc(100vh - 120px);
   display: flex;
@@ -101,13 +100,7 @@
   font-size: 0.95rem;
 }
 
-.form-control[readonly] {
-  background-color: #f4ede6;
-  color: #8c7362;
-  cursor: not-allowed;
-}
-
-.form-control:focus:not([readonly]) {
+.form-control:focus {
   border-color: var(--accent-gold);
   background-color: #ffffff;
   box-shadow: 0 0 0 4px rgba(197, 155, 99, 0.15);
@@ -161,7 +154,6 @@
 <body>
 
 <div layout:fragment="content">
-  <!-- Layout ဗဟိုသို့ ပို့ပေးမည့် wrapper -->
   <div class="center-wrapper">
     <div class="luxury-card">
       <!-- Side Banner -->
@@ -181,11 +173,8 @@
         <h4 style="font-family: 'Playfair Display', serif; font-weight: 700; margin-bottom: 25px;">Edit Expense Category</h4>
 
         <form th:action="@{/admin/expensecategory/edit}" th:object="${expensecategory}" method="post">
-          <!-- Category ID (Readonly) -->
-          <div class="mb-3">
-            <label class="form-label">Category ID</label>
-            <input type="text" class="form-control" th:field="*{expense_category_id}" readonly>
-          </div>
+          <!-- Category ID (Hidden from UI) -->
+          <input type="hidden" th:field="*{expense_category_id}">
 
           <!-- Category Name -->
           <div class="mb-4">

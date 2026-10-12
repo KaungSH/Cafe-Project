@@ -1,311 +1,324 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layout}"><head>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+      layout:decorate="~{common/layout}">
+<head>
     <meta charset="UTF-8">
-    <title>Café Luft | Supplier Management</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Café Luft | Types Directory</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        :root {
-            --luft-primary: #855325;
-            --luft-primary-hover: #6a3e17;
-            --luft-gold: #c5a059;
-            --luft-espresso: #1c1612;
-            --luft-cream: #fbf8f5;
-            --luft-surface: #ffffff;
-            --luft-border: #ede4d8;
-            --luft-muted: #82746b;
-        }
-
         body {
+            background-color: #F8F5F0;
+            color: #2D241E;
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--luft-cream);
-            color: var(--luft-espresso);
-            margin: 0;
-            padding-bottom: 50px;
+            font-size: 14px;
         }
 
-        .serif-font {
-            font-family: 'Cormorant Garamond', Georgia, serif;
-            letter-spacing: -0.02em;
+        .stats-dashboard {
+            width: 95%;
+            max-width: 1100px;
+            margin: 32px auto;
         }
 
-        .supplier-container {
-            width: 94%;
-            max-width: 1400px;
-            margin: 30px auto;
+        /* ================= Header matching Branch Stats Management ================= */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
         }
 
-        /* Hero Header with Coffee Beans Logistics Image */
-        .supplier-hero-card {
-            background: linear-gradient(135deg, rgba(28, 22, 18, 0.88) 0%, rgba(55, 38, 27, 0.78) 100%), 
-                        url('https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1500&q=80') center/cover no-repeat;
-            border-radius: 20px;
-            padding: 35px 40px;
-            color: #ffffff;
-            box-shadow: 0 12px 35px rgba(28, 22, 18, 0.12);
-            border: 1px solid rgba(197, 160, 89, 0.3);
-            margin-bottom: 30px;
-        }
-
-        .hero-tag {
-            background: rgba(197, 160, 89, 0.22);
-            border: 1px solid var(--luft-gold);
-            color: #f7e7c4;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            padding: 4px 12px;
-            border-radius: 20px;
-            display: inline-block;
-            margin-bottom: 10px;
-        }
-
-        /* KPI Cards */
-        .metric-card {
-            background: #ffffff;
-            border: 1px solid var(--luft-border);
-            border-radius: 16px;
-            padding: 20px 24px;
-            box-shadow: 0 4px 20px rgba(28, 22, 18, 0.03);
+        .header-title-box {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            transition: transform 0.2s;
+            gap: 14px;
         }
-        .metric-card:hover {
-            transform: translateY(-2px);
-        }
-        .metric-label {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--luft-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-        }
-        .metric-val {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--luft-espresso);
-            margin-top: 4px;
-        }
-        .metric-icon {
-            width: 48px;
-            height: 48px;
+
+        .header-avatar {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #7D5127, #4E3013);
             border-radius: 12px;
-            background: rgba(197, 160, 89, 0.15);
-            color: var(--luft-primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.3rem;
+            color: #F4E8D8;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(78, 48, 19, 0.2);
+            flex-shrink: 0;
         }
 
-        /* Luxury Table Card */
-        .luxury-card {
-            background: #ffffff;
-            border: 1px solid var(--luft-border);
-            border-radius: 18px;
-            box-shadow: 0 8px 30px rgba(28, 22, 18, 0.04);
+        .header-title-box h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #261B14;
+            margin: 0;
+            letter-spacing: -0.2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .header-title-box p {
+            font-size: 13px;
+            color: #8C7A68;
+            margin: 2px 0 0 0;
+        }
+
+        .ref-badge {
+            background-color: #F1E7D9;
+            color: #6C4724;
+            border: 1px solid #E2D2BE;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .action-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-action-primary {
+            background: linear-gradient(135deg, #7D5127 0%, #583718 100%);
+            color: #FFFFFF !important;
+            border: none;
+            border-radius: 9px;
+            padding: 8px 16px;
+            font-size: 13.5px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(88, 55, 24, 0.15);
+        }
+
+        .btn-action-primary:hover {
+            transform: translateY(-1px);
+            background: linear-gradient(135deg, #6C441E 0%, #432810 100%);
+        }
+
+        .btn-action-outline {
+            background: #FFFFFF;
+            color: #6A4421 !important;
+            border: 1px solid #D8C8B5;
+            border-radius: 9px;
+            padding: 8px 15px;
+            font-size: 13.5px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            transition: all 0.2s;
+        }
+
+        .btn-action-outline:hover {
+            background: #F3EBDD;
+            border-color: #BFA78E;
+        }
+
+        /* ================= Glass / Card Table Design ================= */
+        .table-container {
+            background: #FFFFFF;
+            border-radius: 16px;
+            border: 1px solid #EADBCC;
+            box-shadow: 0 8px 24px -6px rgba(58, 41, 26, 0.05);
             overflow: hidden;
         }
 
-        .luxury-table {
-            margin-bottom: 0;
+        .table-luxury {
+            width: 100%;
+            margin: 0;
             border-collapse: separate;
             border-spacing: 0;
         }
-        .luxury-table thead th {
-            background-color: #f7f3ed;
-            color: #6a584c;
-            font-size: 0.75rem;
+
+        .table-luxury thead th {
+            background: #F8F3EC;
+            color: #796450;
+            padding: 14px 22px;
+            font-size: 11.5px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.09em;
-            padding: 16px 24px;
-            border-bottom: 1px solid var(--luft-border);
-            border-top: none;
+            letter-spacing: 0.6px;
+            border-bottom: 1px solid #EADBCC;
+            white-space: nowrap;
         }
-        .luxury-table tbody td {
-            padding: 18px 24px;
+
+        .table-luxury tbody td {
+            padding: 15px 22px;
+            color: #49382B;
+            font-size: 13.5px;
+            border-bottom: 1px solid #F3ECE2;
             vertical-align: middle;
-            border-top: 1px solid #f6eee5;
-            color: var(--luft-espresso);
-            font-size: 0.92rem;
-        }
-        .luxury-table tbody tr:hover td {
-            background-color: #fdfaf6;
         }
 
-        /* Supplier Thumbnail & ID Badge */
-        .supplier-avatar {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            object-fit: cover;
-            border: 1.5px solid var(--luft-border);
+        .table-luxury tbody tr:last-child td {
+            border-bottom: none;
         }
-        .supplier-id-code {
+
+        .table-luxury tbody tr:hover {
+            background-color: #FAF6EF;
+        }
+
+        .index-badge {
             font-family: monospace;
-            background: #f4ede4;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            color: #694a32;
-            border: 1px solid #e5d7c8;
+            background-color: #F1E7D9;
+            color: #6C4724;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-block;
         }
 
-        /* Action Buttons */
-        .btn-luxury-primary {
-            background: linear-gradient(135deg, var(--luft-primary) 0%, #683d16 100%);
-            color: #ffffff !important;
-            border-radius: 10px;
+        .designation-name {
             font-weight: 600;
-            font-size: 0.88rem;
-            padding: 10px 22px;
-            text-decoration: none;
-            box-shadow: 0 4px 14px rgba(104, 61, 22, 0.22);
-            transition: all 0.2s;
-            border: none;
-        }
-        .btn-luxury-primary:hover {
-            transform: translateY(-1px);
-        }
-        .btn-luxury-ghost {
-            background: #ffffff;
-            color: var(--luft-espresso);
-            border: 1px solid var(--luft-border);
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 0.88rem;
-            padding: 10px 20px;
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-        .btn-luxury-ghost:hover {
-            background: #f7eee3;
-            color: var(--luft-espresso);
+            color: #2D1D12;
+            font-size: 14px;
         }
 
-        .btn-act {
-            width: 34px;
-            height: 34px;
-            border-radius: 8px;
+        /* ================= Edit & Delete Buttons Style (From Categories) ================= */
+        .action-pill-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: flex-end;
+        }
+
+        .btn-pill-action {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid var(--luft-border);
-            background: #ffffff;
-            color: #55443a;
-            font-size: 0.88rem;
-            transition: all 0.2s;
+            gap: 6px;
+            width: 78px;
+            padding: 5px 10px;
+            border-radius: 9px;
+            font-size: 0.82rem;
+            font-weight: 600;
             text-decoration: none;
+            transition: all 0.2s ease;
         }
-        .btn-act:hover {
-            background: #f7eee3;
-            color: var(--luft-primary);
+
+        /* Edit Pill Button */
+        .btn-pill-edit {
+            background-color: #FBF6EE;
+            color: #8C5332 !important;
+            border: 1px solid #E8D9C8;
         }
-        .btn-act-del:hover {
-            background: #fdf2f2;
-            color: #bd2b2b;
-            border-color: #f1bfbf;
+
+        .btn-pill-edit:hover {
+            background-color: #F2E7D5;
+            color: #5C3218 !important;
+            border-color: #D9C3A8;
+        }
+
+        /* Delete Pill Button */
+        .btn-pill-delete {
+            background-color: #FFF5F4;
+            color: #A3281D !important;
+            border: 1px solid transparent;
+        }
+
+        .btn-pill-delete:hover {
+            background-color: #FFE6E4;
+            color: #7A1910 !important;
+        }
+
+        .btn-pill-action i {
+            font-size: 0.8rem;
         }
     </style>
 </head>
+
 <body>
+<div layout:fragment="content">
+    <div class="stats-dashboard">
 
-   <div layout:fragment="content">
-        
-        <!-- Header Banner -->
-        <div class="supplier-hero-card d-flex justify-content-between align-items-center flex-wrap">
-            <div>
-                <span class="hero-tag"><i class="bi bi-box-seam me-1"></i> Supply Chain & Logistics</span>
-                <h1 class="serif-font mb-1" style="font-size: 2.2rem; font-weight: 700;">Café Luft Supplier Registry</h1>
-                <p class="text-white-50 mb-0">Manage roastery partnerships, farm bean origins, and wholesale vendors</p>
+        <!-- Header matching Branch Stats Management -->
+        <div class="dashboard-header">
+            <div class="header-title-box">
+                <div class="header-avatar">
+                    <i class="bi bi-cup-hot-fill"></i>
+                </div>
+                <div>
+                    <h2>
+                        <span><span th:text="${dname}">Audience</span> Types Directory</span>
+                        <span class="ref-badge">Manager Reference</span>
+                    </h2>
+                    <p>Active taxonomy classifications for Café Luft operations</p>
+                </div>
             </div>
+
+            <!-- အကယ်၍ Header ညာဘက်တွင် ခလုတ်များ ထည့်သုံးလိုပါက အောက်ပါ comment ကို ဖြုတ်ပေးနိုင်ပါသည် -->
+            <!--
+            <div class="action-group">
+                <a th:href="@{/manager-only/types/deleted}" class="btn-action-outline">
+                    <i class="bi bi-archive"></i> Deleted List
+                </a>
+                <a th:href="@{/manager-only/types/add}" class="btn-action-primary">
+                    <i class="bi bi-plus-lg"></i> Add New Type
+                </a>
+            </div>
+            -->
         </div>
 
-        <!-- Metric KPI Summary -->
-        <div class="row g-3 mb-4">
-            <div class="col-md-4">
-                <div class="metric-card">
-                    <div>
-                        <div class="metric-label">Direct Coffee Origin</div>
-                        <div class="metric-val">Single Estate</div>
-                    </div>
-                    <div class="metric-icon"><i class="bi bi-geo-alt-fill"></i></div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="metric-card">
-                    <div>
-                        <div class="metric-label">Supply Category</div>
-                        <div class="metric-val">Roasts & Dairy</div>
-                    </div>
-                    <div class="metric-icon"><i class="bi bi-cup-hot-fill"></i></div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="metric-card">
-                    <div>
-                        <div class="metric-label">Partner Integrity</div>
-                        <div class="metric-val">Verified Tier-1</div>
-                    </div>
-                    <div class="metric-icon"><i class="bi bi-shield-check"></i></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Table Card -->
-        <div class="luxury-card">
+        <!-- Luxury Table Card -->
+        <div class="table-container">
             <div class="table-responsive">
-                <table class="table luxury-table align-middle">
+                <table class="table-luxury">
                     <thead>
                         <tr>
-                            <th style="width: 25%;">Supplier / Vendor</th>
-                            <th style="width: 25%;">Internal Reference ID</th>
-                            <th style="width: 25%;">Contact & Logistics</th>
-                            <th style="width: 15%;">Registered Date</th>
+                            <th style="width: 160px;">Index</th>
+                            <th>Designation Name</th>
+                            <!-- Action ကော်လံ ထည့်သုံးလိုပါက အောက်ပါ comment ကို ဖြုတ်ပေးပါ -->
+                            <!-- <th class="text-end" style="width: 120px;">Action</th> -->
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:if="${#lists.isEmpty(suppliers)}">
-                            <td colspan="5" class="text-center py-5 text-muted">
-                                <i class="bi bi-truck fs-2 d-block mb-2 opacity-50"></i>
-                                No active suppliers found in system.
+                        <tr th:if="${#lists.isEmpty(types)}">
+                            <td colspan="2" class="text-center py-5 text-muted">
+                                <i class="bi bi-inbox fs-2 d-block mb-2 text-secondary opacity-50"></i>
+                                No classifications registered in system.
                             </td>
                         </tr>
-                        <tr th:each="supplier : ${suppliers}">
+                        <tr th:each="t, state : ${types}">
                             <td>
-                                <div class="d-flex align-items-center gap-3">
-                                    <img src="https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=120&q=80" 
-                                         class="supplier-avatar" alt="Vendor">
-                                    <div>
-                                        <div class="fw-bold text-dark" th:text="${supplier.name}">Yami Artisanal Roasters</div>
-                                        <small class="text-muted"><i class="bi bi-patch-check-fill text-warning me-1"></i>Exclusive Partner</small>
-                                    </div>
+                                <span class="index-badge" th:text="${'#' + state.count}">#1</span>
+                            </td>
+                            <td>
+                                <span class="designation-name" th:if="${t.audience_type_name != null}" th:text="${t.audience_type_name}">All Customers</span>
+                                <span class="designation-name" th:if="${t.promo_type_name != null}" th:text="${t.promo_type_name}">Seasonal</span>
+                            </td>
+
+                            <!-- Edit / Delete ခလုတ်များ ထည့်သုံးလိုပါက အောက်ပါ comment ကို ဖြုတ်ပေးပါ -->
+                            <!--
+                            <td class="text-end">
+                                <div class="action-pill-group">
+                                    <a href="#" class="btn-pill-action btn-pill-edit" title="Edit">
+                                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                                    </a>
+                                    <a href="#" class="btn-pill-action btn-pill-delete" onclick="return confirm('Are you sure you want to delete this record?');" title="Delete">
+                                        <i class="fa-solid fa-trash-can"></i> Delete
+                                    </a>
                                 </div>
                             </td>
-                            <td>
-                                <span class="supplier-id-code" th:text="${supplier.supplier_id}">83a01982-34ca-4367-8f2f</span>
-                            </td>
-                            <td>
-                                <div class="fw-medium text-dark"><i class="bi bi-telephone me-1 text-muted"></i><span th:text="${supplier.contact_info}">Coffee / 09455678894</span></div>
-                            </td>
-                            <td>
-                                <span class="small text-muted" 
-                                      th:text="${supplier.created_at != null ? #temporals.format(supplier.created_at, 'yyyy-MM-dd HH:mm') : '-'}">
-                                    2026-10-01 15:22
-                                </span>
-                            </td>
+                            -->
                         </tr>
                     </tbody>
                 </table>
@@ -313,6 +326,6 @@
         </div>
 
     </div>
-
+</div>
 </body>
 </html>

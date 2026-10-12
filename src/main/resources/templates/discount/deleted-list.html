@@ -1,165 +1,142 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layout}">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout}">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Café Luft | Archived Discounts</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --luft-primary: #8b5a2b;
-            --luft-espresso: #261e1a;
-            --luft-cream: #faf7f2;
-            --luft-border: #ede4d8;
+            --bg-canvas: #fcf9f5;
+            --surface: #ffffff;
+            --espresso: #1f140e;
+            --caramel: #c49a6c;
+            --border-subtle: #f0e9df;
+            --text-dark: #2a1d17;
+            --inactive-bg: #fdf2f2;
+            --inactive-text: #a3281d;
         }
+        body { background-color: var(--bg-canvas); font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-dark); }
+        .main-wrapper { max-width: 1400px; margin: 40px auto; padding: 0 20px; }
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--luft-cream);
-            color: var(--luft-espresso);
+        .cafe-header-banner {
+            background: linear-gradient(135deg, #1f140e 0%, #2e1c12 50%, #150d08 100%);
+            border-radius: 20px; padding: 24px 35px; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 14px 30px rgba(27, 17, 11, 0.18);
         }
+        .brand-section { display: flex; align-items: center; gap: 16px; }
+        .brand-logo-circle {
+            width: 54px; height: 54px; border-radius: 50%; background: #ffffff;
+            display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(243, 203, 161, 0.35);
+        }
+        .brand-name { font-family: 'Playfair Display', serif; font-size: 1.65rem; color: #ffffff; font-weight: 700; margin: 0; }
+        .brand-subtitle { color: var(--caramel); font-size: 0.72rem; letter-spacing: 1.8px; text-transform: uppercase; font-weight: 600; }
 
-        .serif-font {
-            font-family: 'Cormorant Garamond', Georgia, serif;
+        .btn-cancel {
+            background: rgba(255, 255, 255, 0.08); color: #f3ece4; border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 12px; padding: 9px 20px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-size: 0.88rem;
         }
+        .btn-cancel:hover { background: rgba(255, 255, 255, 0.16); color: #fff; }
 
-        .luxury-card {
-            background: #ffffff;
-            border: 1px solid var(--luft-border);
-            border-radius: 18px;
-            box-shadow: 0 10px 30px rgba(50, 30, 20, 0.04);
-            overflow: hidden;
+        .table-card {
+            background: var(--surface); border-radius: 20px; border: 1px solid var(--border-subtle);
+            box-shadow: 0 10px 30px rgba(42, 29, 23, 0.04); padding: 20px 28px; margin-top: 24px;
         }
+        .cafe-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        .cafe-table thead th {
+            font-size: 0.74rem; font-weight: 700; color: #5c4335; text-transform: uppercase;
+            letter-spacing: 1.2px; padding: 16px 14px; border-bottom: 1.5px solid var(--border-subtle);
+        }
+        .cafe-table tbody tr:not(:last-child) td { border-bottom: 1px solid var(--border-subtle); }
+        .cafe-table tbody tr:hover { background-color: #faf7f2; }
+        .cafe-table tbody td { padding: 15px 14px; vertical-align: middle; font-size: 0.9rem; }
 
-        .luxury-table thead th {
-            background-color: #2b211a;
-            color: #d8c8ba;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            padding: 16px 20px;
-            border: none;
+        .action-pill-group { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
+        .btn-pill-action {
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: 84px;
+            padding: 5px 10px; border-radius: 9px; font-size: 0.82rem; font-weight: 600; text-decoration: none; border: none; cursor: pointer;
         }
-
-        .luxury-table tbody td {
-            padding: 18px 20px;
-            vertical-align: middle;
-            border-top: 1px solid #f5ede4;
-            font-size: 0.9rem;
-        }
-
-        .btn-restore {
-            background-color: #f7f1e8;
-            border: 1px solid #dfcbb8;
-            color: #7b4f24;
-            font-size: 0.8rem;
-            font-weight: 600;
-            border-radius: 8px;
-            padding: 6px 14px;
-            transition: all 0.2s;
-        }
-        .btn-restore:hover {
-            background-color: #7b4f24;
-            color: #fff;
-        }
-
-        .btn-permanent-delete {
-            width: 33px;
-            height: 33px;
-            border-radius: 8px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #f3c7c7;
-            background: #fff;
-            color: #c0392b;
-            transition: all 0.2s;
-        }
-        .btn-permanent-delete:hover {
-            background: #c0392b;
-            color: #fff;
-        }
+        .btn-pill-restore { background-color: #FBF6EE; color: #8C5332 !important; border: 1px solid #E8D9C8; }
+        .btn-pill-restore:hover { background-color: #F2E7D5; color: #5C3218 !important; }
+        .btn-pill-delete { background-color: #FFF5F4; color: #A3281D !important; }
+        .btn-pill-delete:hover { background-color: #FFE6E4; color: #7A1910 !important; }
     </style>
 </head>
-
 <body>
 <div layout:fragment="content">
-        <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-light-subtle">
-            <div>
-                <h2 class="serif-font mb-1 fw-bold" style="font-size: 1.85rem;">Promotion Archive</h2>
-                <p class="text-muted small mb-0">Deactivated and deleted records ready for safe restoration or permanent purging</p>
+    <div class="main-wrapper">
+        <div class="cafe-header-banner">
+            <div class="brand-section">
+                <div class="brand-logo-circle"><i class="bi bi-archive-fill" style="font-size: 24px; color: #5c3a21;"></i></div>
+                <div>
+                    <h1 class="brand-name">Café Luft</h1>
+                    <div class="brand-subtitle"><i class="bi bi-clock-history"></i> PROMOTION ARCHIVE</div>
+                </div>
             </div>
-            <a th:href="@{/manager-only/discounts}" class="btn btn-outline-secondary rounded-pill px-4">
-                <i class="bi bi-arrow-left me-1"></i> Return to Promotions
-            </a>
+            <a th:href="@{/manager-only/discounts}" class="btn-cancel"><i class="bi bi-arrow-left"></i> Active Promotions</a>
         </div>
 
-        <div class="luxury-card">
+        <div class="table-card">
             <div class="table-responsive">
-                <table class="table luxury-table mb-0 align-middle">
+                <table class="cafe-table">
                     <thead>
                         <tr>
-                            <th>Promotion Title</th>
+                            <th>No.</th>
+                            <th>Campaign</th>
                             <th>Branch</th>
-                            <th>Type</th>
+                            <th>Promo Type</th>
                             <th>Audience</th>
-                            <th>Value</th>
-                            <th>Validity</th>
+                            <th>Discount</th>
+                            <th>Duration</th>
                             <th>Status</th>
                             <th>Author</th>
-                            <th class="text-end pe-4">Actions</th>
+                            <th class="text-end">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:if="${#lists.isEmpty(discounts)}">
-                            <td colspan="9" class="text-center py-5 text-muted">
-                                <i class="bi bi-archive-fill fs-2 d-block mb-2 opacity-25"></i>
-                                No archived promotions found.
-                            </td>
-                        </tr>
-                        <tr th:each="discount : ${discounts}">
+                        <tr th:each="discount, state : ${discounts}">
+                            <td class="text-muted fw-bold" th:text="${state.count < 10 ? '0' + state.count : state.count}">01</td>
                             <td>
-                                <strong class="text-dark" th:text="${discount.name}">Autumn Harvest Special</strong>
-                                <br th:if="${discount.description != null}">
-                                <small class="text-muted" th:text="${discount.description}">Expired promo</small>
+                                <strong style="color: var(--espresso);" th:text="${discount.name}">Promotion</strong>
+                                <div class="text-muted small" th:text="${discount.description}">Archived</div>
                             </td>
-                            <td><span class="badge bg-light text-dark border" th:text="${discount.branch_name}">Branch</span></td>
-                            <td><span class="badge bg-light text-dark border" th:text="${discount.promo_type_name}">Promo</span></td>
-                            <td><span class="badge bg-light text-secondary border" th:text="${discount.audience_type_name}">Audience</span></td>
-                            <td><span class="fw-bold" style="color: var(--luft-primary);" th:text="${discount.discount_value}">10.00</span></td>
+                            <td><span class="badge" style="background: #f7f3ed; color: #6a4933; border: 1px solid #ebdccb;" th:text="${discount.branch_name}">Branch</span></td>
+                            <td><span class="fw-semibold text-muted" th:text="${discount.promo_type_name}">Type</span></td>
+                            <td><span class="badge" style="background: #faf6ee; color: #8c5332; border: 1px solid #e8d9c8;" th:text="${discount.audience_type_name}">Audience</span></td>
+                            <td class="fw-bold" style="color: #4a2e1b;" th:text="${discount.discount_value + '%'}">10%</td>
                             <td>
-                                <small class="text-muted">
-                                    <span th:text="${discount.startdate}">2026-09-01</span> ~ <span th:text="${discount.enddate}">2026-09-30</span>
-                                </small>
+                                <small class="text-muted" th:text="${discount.startdate + ' ~ ' + discount.enddate}">2026-09-01 ~ 2026-09-30</small>
                             </td>
                             <td>
-                                <span th:if="${discount.is_active == 1 or discount.is_active == true}" class="badge bg-success-subtle text-success border border-success-subtle">Active</span>
-                                <span th:if="${discount.is_active == 0 or discount.is_active == false}" class="badge bg-danger-subtle text-danger border border-danger-subtle">Archived</span>
+                                <span class="badge-status" style="background: var(--inactive-bg); color: var(--inactive-text);"><i class="bi bi-archive"></i> Archived</span>
                             </td>
-                            <td><small class="text-secondary" th:text="${discount.ename != null ? discount.ename : 'Manager'}">Admin</small></td>
-                            <td class="text-end pe-4">
-                                <div class="d-inline-flex gap-2">
-                                    <form th:action="@{/manager-only/discounts/restore}" method="post">
+                            <td><small class="text-muted fw-semibold" th:text="${discount.ename != null ? discount.ename : 'Admin'}">Admin</small></td>
+                            <td class="text-end">
+                                <div class="action-pill-group">
+                                    <form th:action="@{/manager-only/discounts/restore}" method="post" class="m-0">
                                         <input type="hidden" name="id" th:value="${discount.discount_id}">
-                                        <button type="submit" class="btn btn-restore">
-                                            <i class="bi bi-arrow-counterclockwise me-1"></i> Restore
+                                        <button type="submit" class="btn-pill-action btn-pill-restore" title="Restore Campaign">
+                                            <i class="fa-solid fa-rotate-left"></i> Restore
                                         </button>
                                     </form>
-                                    <form th:action="@{/manager-only/discounts/real-delete}" method="post"
-                                          onsubmit="return confirm('Permanently remove this discount record? This cannot be undone.');">
+                                    <form th:action="@{/manager-only/discounts/real-delete}" method="post" class="m-0"
+                                          onsubmit="return confirm('Permanently purge this promotion? This cannot be undone.');">
                                         <input type="hidden" name="id" th:value="${discount.discount_id}">
-                                        <button type="submit" class="btn-permanent-delete" title="Purge Permanently">
-                                            <i class="bi bi-trash3"></i>
+                                        <button type="submit" class="btn-pill-action btn-pill-delete" title="Purge Permanently">
+                                            <i class="fa-solid fa-trash-can"></i> Purge
                                         </button>
                                     </form>
                                 </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(discounts)}">
+                            <td colspan="10" class="text-center py-5 text-muted">
+                                <i class="bi bi-inbox fs-2 d-block mb-2"></i> No archived promotions found.
                             </td>
                         </tr>
                     </tbody>
@@ -167,5 +144,6 @@
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>
