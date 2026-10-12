@@ -20,8 +20,16 @@ public class OrdersService {
 		this.ordersRepository = ordersRepository;
 	}
 
-	public List<Orders> findDeletedAll() {
-		return ordersRepository.findDeletedAll();
+	public List<Orders> findDeletedAll(String branch_id) {
+		return ordersRepository.findDeletedAll(branch_id);
+	}
+	
+	public List<Orders> findNotReceivedAllAdmin() {
+		return ordersRepository.findNotReceivedAllAdmin();
+	}
+
+	public List<Orders> findReceivedAllAdmin() {
+		return ordersRepository.findReceivedAllAdmin();
 	}
 
 //	public Orders findById(String id) {
@@ -81,12 +89,12 @@ public class OrdersService {
 		return ordersRepository.setReceivedTime(orderId);
 	}
 
-	public List<Orders> findNotReceivedAll() {
-		return ordersRepository.findNotReceivedAll();
+	public List<Orders> findNotReceivedAll(String branch_id) {
+		return ordersRepository.findNotReceivedAll(branch_id);
 	}
 
-	public List<Orders> findReceivedAll() {
-		return ordersRepository.findReceivedAll();
+	public List<Orders> findReceivedAll(String branch_id) {
+		return ordersRepository.findReceivedAll(branch_id);
 	}
 
 	public int edit(String id, Orders order) {

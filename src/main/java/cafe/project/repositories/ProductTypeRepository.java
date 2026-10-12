@@ -24,21 +24,32 @@ public class ProductTypeRepository {
 		this.pservice = pservice;
 	}
 	
-	public List<ProductType> findAll() {
+	public List<ProductType> findAll(String branch_id) {
+		String sql = "SELECT * FROM product_types WHERE isdeleted = false AND branches_branch_id = ? ORDER BY created_at DESC";
+		return jdbcTemplate.query(sql, new ProductTypeMapper(), branch_id);
+	}
+	
+	public List<ProductType> findAllAdmin() {
 		String sql = "SELECT * FROM product_types WHERE isdeleted = false ORDER BY created_at DESC";
 		return jdbcTemplate.query(sql, new ProductTypeMapper());
 	}
 	
-	public List<ProductType> searchByName(String keyword) {
+	public List<ProductType> searchByName(String keyword, String branch_id) {
+	    String searchKeyword = "%" + keyword + "%";
+	    String sql = "SELECT * FROM product_types WHERE name LIKE ? AND isdeleted = false AND branches_branch_id = ?";
+	    return jdbcTemplate.query(sql, new ProductTypeMapper(), searchKeyword, branch_id);
+	}
+	
+	public List<ProductType> searchByNameAdmin(String keyword) {
 	    String searchKeyword = "%" + keyword + "%";
 	    String sql = "SELECT * FROM product_types WHERE name LIKE ? AND isdeleted = false";
 	    return jdbcTemplate.query(sql, new ProductTypeMapper(), searchKeyword);
 	}
 	
-	public List<ProductType> searchDeletedByName(String keyword) {
+	public List<ProductType> searchDeletedByName(String keyword, String branch_id) {
 	    String searchKeyword = "%" + keyword + "%";
-		String sql = "SELECT * FROM product_types WHERE name LIKE ? AND isdeleted = true";
-		return jdbcTemplate.query(sql, new ProductTypeMapper(), searchKeyword);
+		String sql = "SELECT * FROM product_types WHERE name LIKE ? AND isdeleted = true AND branches_branch_id = ?";
+		return jdbcTemplate.query(sql, new ProductTypeMapper(), searchKeyword, branch_id);
 	}
 	
 	public ProductType findById(String id) {
@@ -51,9 +62,9 @@ public class ProductTypeRepository {
 		return jdbcTemplate.queryForObject(sql, new ProductTypeMapper(), id);
 	}
 	
-	public List<ProductType> findDeletedAll() {
-		String sql = "SELECT * FROM product_types WHERE isdeleted = true";
-		return jdbcTemplate.query(sql, new ProductTypeMapper());
+	public List<ProductType> findDeletedAll(String branch_id) {
+		String sql = "SELECT * FROM product_types WHERE isdeleted = true AND branches_branch_id = ?";
+		return jdbcTemplate.query(sql, new ProductTypeMapper(), branch_id);
 	}
 	
 	public ProductType findDeletedById(String id) {
@@ -64,8 +75,9 @@ public class ProductTypeRepository {
 	public int add(ProductType pt) {
 		String sql = "INSERT INTO product_types(type_id, name, description, coverimgpath, price, created_at, category_id, isdeleted, isedited, employee_id, branches_branch_id) VALUES(?, ?, ?, ?, ?, ?, ?, false, false, ?, ?)";
 		//"1" is to replaced with an actual branch validated branch id.
-		int i =  jdbcTemplate.update(sql, pt.getType_id(), pt.getName(), pt.getDescription(), pt.getCoverimgpath(), pt.getPrice(), LocalDateTime.now(), pt.getCategory_id(), pt.getEmployee_id(), "1");
+		int i =  jdbcTemplate.update(sql, pt.getType_id(), pt.getName(), pt.getDescription(), pt.getCoverimgpath(), pt.getPrice(), LocalDateTime.now(), pt.getCategory_id(), pt.getEmployee_id(), pt.getBranch_id());
 		for(ProductEntryModel product : pt.getProducts()) {
+			product.setEmployee_id(pt.getEmployee_id());
 			pservice.add(product, UUID.randomUUID().toString(), pt.getType_id());
 			i++;
 		}

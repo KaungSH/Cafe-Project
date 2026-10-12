@@ -52,7 +52,16 @@ public class BranchesStatsRepository {
 		return entities.isEmpty() ? null : entities.get(0);
 	}
 
-	public BranchesStats findByMonth(String month) {
+	public BranchesStats findByMonth(String month, String branch_id) {
+		String sql = "SELECT bs.*, \r\n" + "b.name AS branch_name, \r\n" + "e.name AS employee_name \r\n"
+				+ "FROM branches_stats bs \r\n" + "LEFT JOIN branches b ON bs.branch_id = b.branch_id \r\n"
+				+ "LEFT JOIN employees e ON bs.employee_id = e.employee_id \r\n" + "WHERE bs.month = ? \r\n"
+				+ "AND bs.isdeleted = 0";
+		List<BranchesStats> entities = this.jdbcTemplate.query(sql, new BranchesStatsMapper(), month);
+		return entities.isEmpty() ? null : entities.get(0);
+	}
+	
+	public BranchesStats findByMonthAdmin(String month) {
 		String sql = "SELECT bs.*, \r\n" + "b.name AS branch_name, \r\n" + "e.name AS employee_name \r\n"
 				+ "FROM branches_stats bs \r\n" + "LEFT JOIN branches b ON bs.branch_id = b.branch_id \r\n"
 				+ "LEFT JOIN employees e ON bs.employee_id = e.employee_id \r\n" + "WHERE bs.month = ? \r\n"
@@ -81,11 +90,11 @@ public class BranchesStatsRepository {
 		return this.jdbcTemplate.update(sql, branch_stats_id);
 	}
 
-	public List<BranchesStats> findDeleted() {
+	public List<BranchesStats> findDeleted(String branch_id) {
 		String sql = "SELECT bs.*,\r\n" + "b.name AS branch_name, \r\n" + "e.name AS employee_name\r\n"
 				+ "FROM branches_stats bs \r\n" + "LEFT JOIN branches b ON bs.branch_id = b.branch_id\r\n"
-				+ "LEFT JOIN employees e ON bs.employee_id = e.employee_id \r\n" + "WHERE bs.isdeleted = 1";
-		return jdbcTemplate.query(sql, new BranchesStatsMapper());
+				+ "LEFT JOIN employees e ON bs.employee_id = e.employee_id \r\n" + "WHERE bs.isdeleted = 1 AND bs.branch_id = ?";
+		return jdbcTemplate.query(sql, new BranchesStatsMapper(), branch_id);
 	}
 
 	public int restore(String branch_stats_id) {

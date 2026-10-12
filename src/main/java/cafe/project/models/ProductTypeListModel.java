@@ -9,12 +9,12 @@ public class ProductTypeListModel {
 	private double price;
 	private LocalDateTime created_at;
 	private boolean isdeleted, isedited;
-	private String category_name, employee_name;
+	private String category_name, employee_name, branch_name;
 	private List<ProductListModel> products;
 	
 	public ProductTypeListModel () {}
 	
-	public ProductTypeListModel(String type_id, String name, String description, String coverimgpath, double price, LocalDateTime created_at, boolean isdeleted, boolean isedited, String category_name, String employee_name) {
+	public ProductTypeListModel(String type_id, String name, String description, String coverimgpath, double price, LocalDateTime created_at, boolean isdeleted, boolean isedited, String category_name, String employee_name, String branch_name) {
 		this.type_id = type_id;
 		this.name = name;
 		this.description = description;
@@ -25,9 +25,10 @@ public class ProductTypeListModel {
 		this.isedited = isedited;
 		this.category_name = category_name;
 		this.employee_name = employee_name;
+		this.branch_name = branch_name;
 	}
 	
-	public ProductTypeListModel(String type_id, String name, String description, String coverimgpath, double price, LocalDateTime created_at, boolean isdeleted, boolean isedited, String category_name, String employee_name, List<ProductListModel> products) {
+	public ProductTypeListModel(String type_id, String name, String description, String coverimgpath, double price, LocalDateTime created_at, boolean isdeleted, boolean isedited, String category_name, String employee_name, List<ProductListModel> products, String branch_name) {
 		this.type_id = type_id;
 		this.name = name;
 		this.description = description;
@@ -39,6 +40,7 @@ public class ProductTypeListModel {
 		this.category_name = category_name;
 		this.employee_name = employee_name;
 		this.products = products;
+		this.branch_name = branch_name;
 	}
 
 	public String getType_id() {
@@ -127,6 +129,14 @@ public class ProductTypeListModel {
 
 	public void setProducts(List<ProductListModel> products) {
 		this.products = products;
+	}
+
+	public String getBranch_name() {
+		return branch_name;
+	}
+
+	public void setBranch_name(String branch_name) {
+		this.branch_name = branch_name;
 	}
 	
 	

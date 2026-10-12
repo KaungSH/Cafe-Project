@@ -10,7 +10,6 @@ import cafe.project.repositories.DiscountRepository;
 import cafe.project.repositories.entities.Discount;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 

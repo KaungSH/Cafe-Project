@@ -299,7 +299,7 @@
                         </tr>
                         <tr th:each="t, state : ${types}">
                             <td>
-                                <span class="index-badge" th:text="${'#' + state.count}">#1</span>
+                                <span class="index-badge" th:text="${state.count}">#1</span>
                             </td>
                             <td>
                                 <span class="designation-name" th:if="${t.audience_type_name != null}" th:text="${t.audience_type_name}">All Customers</span>

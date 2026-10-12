@@ -285,12 +285,12 @@ body {
 			<!-- Header & Back Navigation -->
 			<div class="header-breadcrumb">
 				<div>
-					<a th:href="@{/manager/products}" class="breadcrumb-tag mb-1">
+					<a th:href="@{/manager-only/products}" class="breadcrumb-tag mb-1">
 						<i class="fa-solid fa-arrow-left"></i> Back to Products
 					</a>
 					<h3 class="fw-bold text-dark mb-0">Edit Product Type</h3>
 				</div>
-				<a th:href="@{/manager/products}" class="btn-cancel-custom py-1 px-3 small">
+				<a th:href="@{/manager-only/products}" class="btn-cancel-custom py-1 px-3 small">
 					<i class="fa-solid fa-xmark me-1"></i> Close
 				</a>
 			</div>
@@ -298,7 +298,7 @@ body {
 			<!-- Main Form Card -->
 			<div class="edit-dashboard-card">
 				
-				<form method="post" th:action="@{/manager/products/edit}"
+				<form method="post" th:action="@{/manager-only/products/edit}"
 					th:object="${product_type}" enctype="multipart/form-data"
 					id="productTypeForm">
 
@@ -445,7 +445,7 @@ body {
 
 					<!-- Bottom Action Controls -->
 					<div class="footer-action-bar">
-						<a th:href="@{/manager/products}" class="btn-cancel-custom">Cancel</a>
+						<a th:href="@{/manager-only/products}" class="btn-cancel-custom">Cancel</a>
 						<button type="submit" class="btn-save-custom">
 							<i class="fa-solid fa-check me-1"></i> Save Product Type
 						</button>

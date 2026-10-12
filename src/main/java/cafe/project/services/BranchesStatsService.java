@@ -45,8 +45,15 @@ public class BranchesStatsService {
 		return toDto(entity);
 	}
 
-	public BranchesStatsDto findByMonth(String month) {
-		BranchesStats entity = this.bsrepo.findByMonth(month);
+	public BranchesStatsDto findByMonth(String month, String branch_id) {
+		BranchesStats entity = this.bsrepo.findByMonth(month, branch_id);
+		if (entity == null)
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Branch Stats");
+		return toDto(entity);
+	}
+	
+	public BranchesStatsDto findByMonthdmin(String month) {
+		BranchesStats entity = this.bsrepo.findByMonthAdmin(month);
 		if (entity == null)
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Branch Stats");
 		return toDto(entity);
@@ -74,8 +81,8 @@ public class BranchesStatsService {
 		return this.bsrepo.delete(branch_stats_id);
 	}
 
-	public List<BranchesStatsDto> findDeleted() {
-		return this.bsrepo.findDeleted().stream().map(this::toDto).toList();
+	public List<BranchesStatsDto> findDeleted(String branch_id) {
+		return this.bsrepo.findDeleted(branch_id).stream().map(this::toDto).toList();
 	}
 
 	public int restore(String branch_stats_id) {

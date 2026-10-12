@@ -61,8 +61,8 @@ public class BranchesStatsController {
 		model.addAttribute("branch_name", branchService.findById(ldto.getBranch_id()).getName());
 		model.addAttribute("month_name", LocalDate.now().format(DateTimeFormatter.ofPattern("MMMM", Locale.ENGLISH)));
 
-		branchesStats.setSalecount(getTotalSaleCount());
-		branchesStats.setSaleamount(getTotalSaleAmount().doubleValue());
+		branchesStats.setSalecount(getTotalSaleCount(ldto.getBranch_id()));
+		branchesStats.setSaleamount(getTotalSaleAmount(ldto.getBranch_id()).doubleValue());
 		branchesStats.setEmployee_cost(getTotalSalary(ldto.getBranch_id()));
 
 		model.addAttribute("branchesStats", branchesStats);
@@ -154,7 +154,7 @@ public class BranchesStatsController {
 	@GetMapping("/deleted")
 	public String deletedBranchesStatsList(Model model, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-		model.addAttribute("branchseStats", bsService.findDeleted());
+		model.addAttribute("branchseStats", bsService.findDeleted(ldto.getBranch_id()));
 		return "branchesStats/deletedList";
 	}
 
@@ -184,15 +184,15 @@ public class BranchesStatsController {
 		return "redirect:/manager-only/branchstats/deleted";
 	}
 
-	private int getTotalSaleCount() {
+	private int getTotalSaleCount(String branch_id) {
 		int i = 0;
-		for (Orders order : orderService.findReceivedAll()) {
+		for (Orders order : orderService.findReceivedAll(branch_id)) {
 			if ((YearMonth.from(LocalDateTime.now()).minusMonths(1)).equals(YearMonth.from(order.getCreated_time()))) {
 				i++;
 			}
 		}
 
-		for (Orders order : orderService.findNotReceivedAll()) {
+		for (Orders order : orderService.findNotReceivedAll(branch_id)) {
 			if ((YearMonth.from(LocalDateTime.now()).minusMonths(1)).equals(YearMonth.from(order.getCreated_time()))) {
 				i++;
 			}
@@ -200,15 +200,15 @@ public class BranchesStatsController {
 		return i;
 	}
 
-	private BigDecimal getTotalSaleAmount() {
+	private BigDecimal getTotalSaleAmount(String branch_id) {
 		BigDecimal bd = new BigDecimal("0.00");
-		for (Orders order : orderService.findReceivedAll()) {
+		for (Orders order : orderService.findReceivedAll(branch_id)) {
 			if ((YearMonth.from(LocalDateTime.now()).minusMonths(1)).equals(YearMonth.from(order.getCreated_time()))) {
 				bd = bd.add((order.getTotal_amount() != null) ? order.getTotal_amount() : BigDecimal.ZERO);
 			}
 		}
 
-		for (Orders order : orderService.findNotReceivedAll()) {
+		for (Orders order : orderService.findNotReceivedAll(branch_id)) {
 			if ((YearMonth.from(LocalDateTime.now()).minusMonths(1)).equals(YearMonth.from(order.getCreated_time()))) {
 				bd = bd.add((order.getTotal_amount() != null) ? order.getTotal_amount() : BigDecimal.ZERO);
 			}

@@ -19,7 +19,7 @@ public class OrdersRepository {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	public List<Orders> findNotReceivedAll() {
+	public List<Orders> findNotReceivedAllAdmin() {
 
 		String sql = "SELECT o.*, e.name AS employee_name, b.name AS branch_name FROM orders o \r\n"
 				+ "LEFT JOIN employees e ON o.employee_id = e.employee_id LEFT JOIN branches b \r\n"
@@ -29,7 +29,7 @@ public class OrdersRepository {
 		return jdbcTemplate.query(sql, new OrdersMapper());
 	}
 
-	public List<Orders> findReceivedAll() {
+	public List<Orders> findReceivedAllAdmin() {
 
 		String sql = "SELECT o.*, " + "e.name AS employee_name, " + "b.name AS branch_name " + "FROM orders o "
 				+ "LEFT JOIN employees e " + "ON o.employee_id = e.employee_id " + "LEFT JOIN branches b "
@@ -38,15 +38,35 @@ public class OrdersRepository {
 
 		return jdbcTemplate.query(sql, new OrdersMapper());
 	}
+	
+	public List<Orders> findNotReceivedAll(String branch_id) {
 
-	public List<Orders> findDeletedAll() {
+		String sql = "SELECT o.*, e.name AS employee_name, b.name AS branch_name FROM orders o \r\n"
+				+ "LEFT JOIN employees e ON o.employee_id = e.employee_id LEFT JOIN branches b \r\n"
+				+ "ON o.branch_id = b.branch_id WHERE o.isdeleted = false AND o.received_time IS NULL AND o.branch_id = ? \r\n"
+				+ "ORDER BY DATE(o.created_time) DESC, o.token_number ASC;";
+
+		return jdbcTemplate.query(sql, new OrdersMapper(), branch_id);
+	}
+
+	public List<Orders> findReceivedAll(String branch_id) {
 
 		String sql = "SELECT o.*, " + "e.name AS employee_name, " + "b.name AS branch_name " + "FROM orders o "
 				+ "LEFT JOIN employees e " + "ON o.employee_id = e.employee_id " + "LEFT JOIN branches b "
-				+ "ON o.branch_id = b.branch_id " + "WHERE o.isdeleted = true "
+				+ "ON o.branch_id = b.branch_id " + "WHERE o.isdeleted = false " + "AND o.received_time IS NOT NULL AND o.branch_id = ?"
 				+ "ORDER BY DATE(o.created_time) DESC, o.token_number ASC";
 
-		return jdbcTemplate.query(sql, new OrdersMapper());
+		return jdbcTemplate.query(sql, new OrdersMapper(), branch_id);
+	}
+
+	public List<Orders> findDeletedAll(String branch_id) {
+
+		String sql = "SELECT o.*, " + "e.name AS employee_name, " + "b.name AS branch_name " + "FROM orders o "
+				+ "LEFT JOIN employees e " + "ON o.employee_id = e.employee_id " + "LEFT JOIN branches b "
+				+ "ON o.branch_id = b.branch_id " + "WHERE o.isdeleted = true AND o.branch_id = ? "
+				+ "ORDER BY DATE(o.created_time) DESC, o.token_number ASC";
+
+		return jdbcTemplate.query(sql, new OrdersMapper(), branch_id);
 	}
 
 	public Orders findById(String id) {

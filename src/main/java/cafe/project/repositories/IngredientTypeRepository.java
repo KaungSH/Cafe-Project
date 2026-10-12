@@ -67,7 +67,7 @@ public class IngredientTypeRepository {
 	public List<IngredientTypeDto> findAllActive() {
 		String sql = "SELECT it.ingredient_type_id, it.name, it.description, it.unit_id, u.name AS unit_name, it.isdeleted "
 				+ "FROM ingredient_types it " + "JOIN units u ON it.unit_id = u.unit_id "
-				+ "WHERE it.isdeleted = 0 ORDER BY it.created_at DESC";
+				+ "WHERE it.isdeleted = 0 AND it.ingredient_type_id != 'deleted' ORDER BY it.created_at DESC";
 		return jdbcTemplate.query(sql, (rs, rowNum) -> {
 			IngredientTypeDto dto = new IngredientTypeDto();
 			dto.setIngredient_type_id(rs.getString("ingredient_type_id"));
