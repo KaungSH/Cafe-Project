@@ -134,7 +134,7 @@ public class PaymentController {
 			    "Payment completed successfully."
 			);
 
-			return "redirect:/receipt/" + orderId;
+			return "redirect:/receipt/preview/" + orderId;
 
 		} catch (IllegalArgumentException e) {
 			redirect.addFlashAttribute("error", e.getMessage());

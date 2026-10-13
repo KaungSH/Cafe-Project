@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Registers - Luft Cafe</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #5C3D2E;
+      --accent-warm: #E0A96D;
+      --bg-main: #FAF7F2;
+      --card-bg: #FFFFFF;
+      --text-color: #2D2422;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-color);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .main-card {
+      background-color: var(--card-bg);
+      border: 1px solid #EAE3DC;
+      border-radius: 16px;
+      padding: 32px 40px;
+      box-shadow: 0 4px 15px rgba(92, 61, 46, 0.05);
+      margin-top: 30px;
+    }
+
+    .btn-create {
+      background-color: var(--primary-color);
+      color: #FFF;
+      font-weight: 600;
+      border-radius: 8px;
+      padding: 8px 18px;
+      text-decoration: none;
+    }
+
+    .btn-create:hover {
+      background-color: #4A3024;
+      color: #FFF;
+    }
+
+    .table th {
+      font-weight: 600;
+      color: #5C3D2E;
+      background-color: #F4EBE1 !important;
+    }
+
+    .table td {
+      vertical-align: middle;
+    }
+    
+    .error {
+      color: red;
+      font-size: 0.950rem;
+    }
+
+    /* ================= Edit & Delete Buttons Style (From Categories) ================= */
+    .action-pill-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-end;
+    }
+
+    .btn-pill-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 78px;
+      padding: 5px 10px;
+      border-radius: 9px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    /* Edit Pill Button */
+    .btn-pill-edit {
+      background-color: #FBF6EE;
+      color: #8C5332 !important;
+      border: 1px solid #E8D9C8;
+    }
+
+    .btn-pill-edit:hover {
+      background-color: #F2E7D5;
+      color: #5C3218 !important;
+      border-color: #D9C3A8;
+    }
+
+    /* Delete Pill Button */
+    .btn-pill-delete {
+      background-color: #FFF5F4;
+      color: #A3281D !important;
+      border: 1px solid transparent;
+    }
+
+    .btn-pill-delete:hover {
+      background-color: #FFE6E4;
+      color: #7A1910 !important;
+    }
+
+    .btn-pill-action i {
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+  <div class="main-card">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h3 class="fw-bold" style="color: var(--primary-color);">
+        <i class="fa-solid fa-list me-2"></i>Daily Register List - Admin
+      </h3>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-hover align-middle border rounded overflow-hidden">
+        <thead class="table-light">
+          <tr>
+            <th>Date</th>
+            <th>Branch</th>
+            <th>Employee</th>
+            <th>Status</th>
+            <th>Open Time</th>
+            <th>Closed Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="reg : ${registers}">
+            <td th:text="${reg.date}">2026-09-16</td>
+            <td th:text="${reg.branch_name}" class="fw-medium">Main Branch</td>
+            <td th:text="${reg.employee_name}">John Doe</td>
+            <td>
+              <span class="badge bg-success" th:if="${reg.status_name == 'OPENED'}" th:text="${reg.status_name}">OPENED</span>
+              <span class="badge bg-secondary" th:unless="${reg.status_name == 'OPENED'}" th:text="${reg.status_name}">CLOSED</span>
+            </td>
+            <td th:text="${reg.opened_at}">08:00:00</td>
+            <td th:text="${reg.status_name == 'CLOSED' ? reg.closed_at : 'Not Closed Yet'}"
+                th:class="${reg.status_name == 'CLOSED' ? '' : 'text-muted fst-italic'}">17:00:00</td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(registers)}">
+            <td colspan="7" class="text-center text-muted py-5">
+              <i class="fa-solid fa-box-open fa-2x mb-2 d-block text-secondary"></i>
+              No daily register records found.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
