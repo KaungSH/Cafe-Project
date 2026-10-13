@@ -1,0 +1,123 @@
+package cafe.project.services;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import cafe.project.models.UnitDto;
+import cafe.project.repositories.UnitRepository;
+import cafe.project.repositories.entities.Unit;
+
+@Service
+public class UnitService {
+
+	private final UnitRepository repo;
+	private final EmployeeService employeeService;
+
+	public UnitService(UnitRepository repo, EmployeeService employeeService) {
+		this.repo = repo;
+		this.employeeService = employeeService;
+	}
+
+	public List<UnitDto> findAll() {
+
+		List<Unit> entities = repo.findAll();
+
+		return entities.stream().map(this::toDto).toList();
+	}
+
+	public UnitDto findById(String id) {
+
+		Unit entity = repo.findById(id);
+		if (entity == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unit");
+		}
+		return toDto(entity);
+	}
+
+	public int add(UnitDto dto) {
+		if (dto == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unit data is required");
+		}
+		Unit entity = toEntity(dto);
+		entity.setUnit_id(UUID.randomUUID().toString());
+		return repo.save(entity);
+	}
+
+	public int edit(String id, UnitDto dto) {
+		if (dto == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unit data is required");
+		}
+		Unit entity = repo.findById(id);
+		if (entity == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unit");
+		}
+		Unit updatedEntity = toEntity(dto);
+
+		return repo.edit(id, updatedEntity);
+	}
+
+	public int delete(String id) {
+		Unit entity = repo.findById(id);
+		if (entity == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unit");
+		}
+		return repo.delete(id);
+	}
+
+	public List<UnitDto> deletedList() {
+		return this.repo.findDeletedAll().stream().map(this::toDto).toList();
+	}
+
+	public int restore(String id) {
+		Unit entity = repo.findById(id);
+		if (entity == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unit");
+		}
+		return this.repo.restore(id);
+	}
+
+	public int hardDelete(String id) {
+		Unit entity = repo.findById(id);
+		if (entity == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unit");
+		}
+		return this.repo.hardDelete(id);
+	}
+
+	private UnitDto toDto(Unit entity) {
+
+		UnitDto dto = new UnitDto();
+
+		dto.setUnit_id(entity.getUnit_id());
+		dto.setEmployee_id(entity.getEmployee_id());
+		dto.setName(entity.getName());
+		dto.setAbbreviation(entity.getAbbreviation());
+		dto.setIs_active(entity.getIs_active());
+		dto.setIsdeleted(entity.getIsedited());
+		dto.setIsdeleted(entity.getIsdeleted());
+		dto.setCreated_at(entity.getCreated_at());
+		dto.setEmployee_name(employeeService.getEmployeeByIdAdmin(entity.getEmployee_id()).getName());
+
+		return dto;
+	}
+
+	private Unit toEntity(UnitDto dto) {
+
+		Unit entity = new Unit();
+
+		entity.setUnit_id(dto.getUnit_id());
+		entity.setEmployee_id(dto.getEmployee_id());
+		entity.setName(dto.getName());
+		entity.setAbbreviation(dto.getAbbreviation());
+		entity.setIs_active(dto.isIs_active());
+		entity.setIsdeleted(dto.isIsedited());
+		entity.setIsdeleted(dto.isIsdeleted());
+		entity.setCreated_at(dto.getCreated_at());
+
+		return entity;
+	}
+}

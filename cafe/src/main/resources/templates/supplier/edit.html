@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Café Luft | Edit Supplier</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        :root {
+            --luft-primary: #855325;
+            --luft-gold: #c5a059;
+            --luft-espresso: #1c1612;
+            --luft-cream: #fbf8f5;
+            --luft-border: #ede4d8;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--luft-cream);
+            color: var(--luft-espresso);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 15px;
+        }
+
+        .serif-font {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+        }
+
+        .luxury-card {
+            width: 100%;
+            max-width: 680px;
+            background: #ffffff;
+            border-radius: 22px;
+            border: 1px solid var(--luft-border);
+            box-shadow: 0 16px 45px rgba(28, 22, 18, 0.08);
+            overflow: hidden;
+        }
+
+        .card-header-styled {
+            background: linear-gradient(135deg, #241c17 0%, #3e2d22 100%);
+            padding: 28px 36px;
+            color: #ffffff;
+            border-bottom: 2px solid var(--luft-gold);
+        }
+
+        .form-label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #615045;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            height: 50px;
+            border: 1.5px solid var(--luft-border);
+            border-radius: 12px;
+            padding: 10px 16px;
+            font-size: 0.94rem;
+        }
+
+        .form-control:focus {
+            border-color: var(--luft-primary);
+            box-shadow: 0 0 0 4px rgba(133, 83, 37, 0.12);
+        }
+
+        .error {
+            color: #b23a2e;
+            font-size: 0.82rem;
+            margin-top: 5px;
+        }
+
+        .btn-luxury-update {
+            background: linear-gradient(135deg, var(--luft-primary) 0%, #683d16 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            padding: 12px 28px;
+            transition: all 0.2s;
+        }
+        .btn-luxury-update:hover {
+            transform: translateY(-1px);
+            color: #fff;
+        }
+
+        .btn-cancel {
+            background: #ffffff;
+            border: 1px solid var(--luft-border);
+            border-radius: 10px;
+            color: #635348;
+            font-weight: 600;
+            padding: 12px 24px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+   <div layout:fragment="content">
+        <div class="card-header-styled d-flex justify-content-between align-items-center">
+            <div>
+                <h3 class="serif-font mb-1"><i class="bi bi-pencil-square me-2" style="color: var(--luft-gold);"></i>Edit Supplier Details</h3>
+                <small class="text-white-50">Update vendor records and logistics channels</small>
+            </div>
+            <a th:href="@{/admin/suppliers}" class="btn-close btn-close-white"></a>
+        </div>
+
+        <div class="p-4 p-md-5">
+            <form th:action="@{/admin/suppliers/edit}" th:object="${supplier}" method="post">
+                <input type="hidden" name="supplier_id" th:value="${supplier.supplier_id}">
+
+                <div class="mb-4">
+                    <label class="form-label">Supplier / Company Name</label>
+                    <input type="text" class="form-control" th:field="*{name}" placeholder="Enter supplier name" required>
+                    <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Contact Information</label>
+                    <input type="text" class="form-control" th:field="*{contact_info}" placeholder="Enter contact information" required>
+                    <div class="error" th:if="${#fields.hasErrors('contact_info')}" th:errors="*{contact_info}"></div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-3 pt-3 border-top mt-4">
+                    <a th:href="@{/admin/suppliers}" class="btn-cancel">Cancel</a>
+                    <button type="submit" class="btn-luxury-update">
+                        <i class="bi bi-arrow-repeat me-1"></i> Update Supplier
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
