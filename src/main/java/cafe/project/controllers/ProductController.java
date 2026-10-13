@@ -75,6 +75,9 @@ public class ProductController {
 
 	@PostMapping("/admin/products/search")
 	public String searchProductTypeListAdmin(@ModelAttribute("keywordmodel") SearchKeyword key, Model model) {
+		if (key.getKeyword() == null || key.getKeyword().isBlank()) {
+			return "redirect:/admin/products";
+		}
 		model.addAttribute("product_types", ptservice.searchByNameAdmin(key.getKeyword()));
 		return "products/list-admin";
 	}

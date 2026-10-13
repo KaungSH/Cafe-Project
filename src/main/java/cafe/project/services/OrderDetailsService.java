@@ -32,6 +32,14 @@ public class OrderDetailsService {
         return orderDetailsRepository.findAll();
     }
 
+    // Get order details by branch ID
+    public List<OrderDetails> findByBranchId(String branchId) {
+        if (branchId == null || branchId.isBlank() || "all".equalsIgnoreCase(branchId)) {
+            return orderDetailsRepository.findAll();
+        }
+        return orderDetailsRepository.findByBranchId(branchId);
+    }
+
     // Get order detail by ID
     public OrderDetails findById(String id) {
         OrderDetails entity = orderDetailsRepository.findById(id);
