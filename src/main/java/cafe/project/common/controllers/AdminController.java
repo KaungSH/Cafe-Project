@@ -156,7 +156,7 @@ public class AdminController {
 			model.addAttribute("statuses", branchService.findAllStatuses());
 			return "branches/edit";
 		}
-		if(branchService.loctionExists(dto.getLocation())) {
+		if(branchService.loctionExists(dto.getLocation()) && !dto.getLocation().equals(branchService.findById(branch_id).getLocation())) {
 			model.addAttribute("localerror", "A branch with that location already exist.");
 			model.addAttribute("statuses", branchService.findAllStatuses());
 			return "branches/create";

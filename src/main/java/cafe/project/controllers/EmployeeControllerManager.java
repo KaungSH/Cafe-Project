@@ -127,7 +127,7 @@ public class EmployeeControllerManager {
 			return "employee/edit-manager";
 		}
 		
-		if (emservice.findByEmail(dto.getEmail()) != null) {
+		if (emservice.findByEmail(dto.getEmail()) != null && !dto.getEmail().equals(employeeService.getEmployeeByIdAdmin(dto.getEmployee_id()).getEmail())) {
 			model.addAttribute("emailerror", "There already exist an account with that email!");
 		    bindAvilableData(model);
 			return "employee/edit-manager";
