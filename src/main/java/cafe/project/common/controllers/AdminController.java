@@ -103,6 +103,12 @@ public class AdminController {
 			model.addAttribute("statuses", branchService.findAllStatuses());
 			return "branches/create";
 		}
+		
+		if(branchService.loctionExists(dto.getLocation())) {
+			model.addAttribute("localerror", "A branch with that location already exist.");
+			model.addAttribute("statuses", branchService.findAllStatuses());
+			return "branches/create";
+		}
 		branchService.add(dto);
 		return "redirect:/admin/branches";
 	}
@@ -149,6 +155,11 @@ public class AdminController {
 		if (result.hasErrors()) {
 			model.addAttribute("statuses", branchService.findAllStatuses());
 			return "branches/edit";
+		}
+		if(branchService.loctionExists(dto.getLocation())) {
+			model.addAttribute("localerror", "A branch with that location already exist.");
+			model.addAttribute("statuses", branchService.findAllStatuses());
+			return "branches/create";
 		}
 		branchService.edit(branch_id, dto);
 		return "redirect:/admin/branches";

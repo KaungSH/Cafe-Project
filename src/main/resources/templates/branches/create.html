@@ -156,6 +156,7 @@
             background-color: #E2D7C7;
             color: #3C2B1D;
         }
+        .field-error { font-size: 0.75rem; color: #b04638; margin-top: 3px; display: block; }
     </style>
 </head>
 
@@ -197,6 +198,7 @@
                                    th:classappend="${#fields.hasErrors('location')} ? 'is-invalid' : ''">
                         </div>
                         <div class="invalid-feedback" th:if="${#fields.hasErrors('location')}" th:errors="*{location}"></div>
+                        <div th:text = "${localerror}" class = "field-error"></div>
                     </div>
 
                     <div class="col-md-6">

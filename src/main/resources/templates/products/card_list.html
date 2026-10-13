@@ -6,10 +6,13 @@
 <head>
     <meta charset="UTF-8">
     <title>MENU - Café Луфт</title>
-    
-    <!-- Google Fonts & Font Awesome Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts & Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
@@ -25,8 +28,10 @@
             --cafe-success: #2E7D32;
             --cafe-warning: #D97706;
             --cafe-danger: #DC2626;
-            --shadow-luxury: 0 10px 30px -5px rgba(92, 61, 46, 0.08), 0 4px 12px -2px rgba(92, 61, 46, 0.03);
-            --shadow-hover: 0 20px 35px -5px rgba(92, 61, 46, 0.15), 0 8px 16px -4px rgba(92, 61, 46, 0.06);
+            --shadow-luxury: 0 10px 30px -5px rgba(92, 61, 46, 0.08),
+                             0 4px 12px -2px rgba(92, 61, 46, 0.03);
+            --shadow-hover: 0 20px 35px -5px rgba(92, 61, 46, 0.15),
+                            0 8px 16px -4px rgba(92, 61, 46, 0.06);
         }
 
         body {
@@ -51,10 +56,13 @@
             transform: translateX(-50%);
             width: 70px;
             height: 2.5px;
-            background: linear-gradient(90deg, transparent, var(--cafe-gold), transparent);
+            background: linear-gradient(
+                90deg, transparent, var(--cafe-gold), transparent
+            );
         }
 
-        /* Search Bar Styling */
+        /* Search */
+
         .search-container {
             max-width: 650px;
             margin: 0 auto 2.5rem;
@@ -64,7 +72,7 @@
             border: 1.5px solid var(--cafe-border);
             border-radius: 50px 0 0 50px;
             padding: 0.85rem 1.6rem;
-            background: #ffffff;
+            background: #fff;
             font-size: 0.95rem;
             transition: all 0.3s ease;
         }
@@ -78,7 +86,7 @@
         .luxury-search-btn {
             border-radius: 0 50px 50px 0;
             background: var(--cafe-primary-dark);
-            color: #ffffff;
+            color: #fff;
             border: 1.5px solid var(--cafe-primary-dark);
             padding: 0.85rem 1.8rem;
             font-weight: 600;
@@ -88,16 +96,17 @@
         .luxury-search-btn:hover {
             background: var(--cafe-primary);
             border-color: var(--cafe-primary);
-            color: #ffffff;
+            color: #fff;
         }
 
-        /* Coffee Product Card */
+        /* Product Cards */
+
         .coffee-card {
             background: var(--cafe-card-bg);
             border: 1px solid var(--cafe-border);
             border-radius: 20px;
             overflow: hidden;
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
             box-shadow: var(--shadow-luxury);
             display: flex;
             flex-direction: column;
@@ -105,7 +114,7 @@
         }
 
         .coffee-card:hover {
-            transform: translateY(-6px);
+            transform: translateY(-4px);
             box-shadow: var(--shadow-hover);
         }
 
@@ -128,17 +137,7 @@
         }
 
         .coffee-card:hover .card-img-wrapper img {
-            transform: scale(1.06);
-        }
-
-        .no-img-placeholder {
-            color: var(--cafe-text-muted);
-            font-weight: 500;
-            font-size: 0.9rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
+            transform: scale(1.04);
         }
 
         .badge-category {
@@ -154,18 +153,92 @@
             letter-spacing: 0.8px;
             padding: 5px 12px;
             border-radius: 30px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
             z-index: 2;
         }
 
-        /* Size / Variant Row Styling */
+        /* Sizes Toggle */
+
+        .sizes-toggle {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 15px;
+            border: 1px solid #eadbc7;
+            border-radius: 12px;
+            background: #faf5ed;
+            color: var(--cafe-primary-dark);
+            font-family: inherit;
+            font-size: 0.82rem;
+            font-weight: 700;
+            transition: background 0.2s ease,
+                        border-color 0.2s ease,
+                        color 0.2s ease;
+        }
+
+        .sizes-toggle:hover {
+            background: #f5ead9;
+            border-color: var(--cafe-gold);
+        }
+
+        .sizes-toggle[aria-expanded="true"] {
+            background: #f2e4d0;
+            border-color: var(--cafe-gold);
+        }
+
+        .sizes-toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .sizes-toggle-label > i {
+            font-size: 16px;
+            color: var(--cafe-primary);
+        }
+
+        .sizes-toggle-chevron {
+            font-size: 12px;
+            transition: transform 0.25s ease;
+        }
+
+        .sizes-toggle[aria-expanded="true"] .sizes-toggle-chevron {
+            transform: rotate(180deg);
+        }
+
+        .sizes-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 23px;
+            height: 23px;
+            padding: 0 6px;
+            border-radius: 7px;
+            background: #fff;
+            color: var(--cafe-primary-dark);
+            font-size: 0.7rem;
+        }
+
+        /* Size Variants */
+
+        .variants-container {
+            padding-top: 12px;
+        }
+
         .variant-item {
             background: #FAFAF7;
             border: 1px solid var(--cafe-border);
             border-radius: 14px;
             padding: 12px 14px;
             margin-bottom: 12px;
-            transition: all 0.25s ease;
+            transition: background 0.25s ease,
+                        border-color 0.25s ease;
+        }
+
+        .variant-item:last-child {
+            margin-bottom: 0;
         }
 
         .variant-item.selected {
@@ -190,15 +263,17 @@
             color: var(--cafe-primary-dark);
             font-weight: 700;
             font-size: 0.85rem;
+            flex-shrink: 0;
         }
 
         .price-text {
             font-weight: 700;
             color: var(--cafe-primary-dark);
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
 
-        /* Luxury Checkbox */
+        /* Checkboxes */
+
         .custom-checkbox-wrapper input[type="checkbox"] {
             width: 20px;
             height: 20px;
@@ -209,10 +284,11 @@
         }
 
         /* Quantity Stepper */
+
         .qty-stepper {
             display: flex;
             align-items: center;
-            background: #FFFFFF;
+            background: #fff;
             border: 1px solid var(--cafe-border);
             border-radius: 8px;
             overflow: hidden;
@@ -236,6 +312,11 @@
             background: var(--cafe-gold-light);
         }
 
+        .qty-stepper button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
         .qty-stepper input {
             width: 38px;
             border: none;
@@ -247,9 +328,29 @@
             background: transparent;
         }
 
-        /* Collapsible Ingredient Table */
+        /* Ingredients */
+
+        .ingredient-toggle {
+            color: var(--cafe-text-muted);
+            font-size: 0.74rem;
+            font-weight: 600;
+        }
+
+        .ingredient-toggle:hover {
+            color: var(--cafe-primary);
+        }
+
+        .ingredient-toggle .ingredient-chevron {
+            display: inline-block;
+            transition: transform 0.2s ease;
+        }
+
+        .ingredient-toggle[aria-expanded="true"] .ingredient-chevron {
+            transform: rotate(180deg);
+        }
+
         .ingredient-box {
-            background: #FFFFFF;
+            background: #fff;
             border-radius: 10px;
             border: 1px solid var(--cafe-border);
             padding: 10px 12px;
@@ -257,7 +358,8 @@
             font-size: 0.78rem;
         }
 
-        /* Floating Order Action Footer */
+        /* Floating Order Bar */
+
         .floating-action-bar {
             position: sticky;
             bottom: 20px;
@@ -288,8 +390,10 @@
         }
 
         .btn-luxury-order {
-            background: linear-gradient(135deg, var(--cafe-primary) 0%, var(--cafe-primary-dark) 100%);
-            color: #FFFFFF;
+            background: linear-gradient(
+                135deg, var(--cafe-primary), var(--cafe-primary-dark)
+            );
+            color: #fff;
             border: none;
             padding: 0.75rem 2.2rem;
             border-radius: 30px;
@@ -302,25 +406,52 @@
         .btn-luxury-order:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 22px rgba(92, 61, 46, 0.35);
-            color: #FFFFFF;
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .floating-action-bar {
+                padding: 12px 15px;
+            }
+
+            .btn-luxury-order {
+                padding: 0.7rem 1rem;
+            }
+
+            .btn-luxury-clear {
+                padding: 0.65rem 0.9rem;
+            }
         }
     </style>
 </head>
 
+<body>
+
 <div layout:fragment="content" class="container py-4">
 
-    <!-- Header Section -->
+    <!-- Header -->
     <div class="text-center mb-4">
         <h2 class="luxury-title fw-bold">Café Luft</h2>
-        <p class="text-muted mt-2" style="font-size: 0.95rem; letter-spacing: 0.5px;">Artisanal Brews & Exquisite Coffee Menu</p>
+        <p class="text-muted mt-2"
+           style="font-size: 0.95rem; letter-spacing: 0.5px;">
+            Artisanal Brews &amp; Exquisite Coffee Menu
+        </p>
     </div>
 
-    <!-- Search Section -->
+    <!-- Search -->
     <div class="search-container">
-        <form method="post" th:action="@{/staff/products/search}" th:object="${keywordmodel}" id="search">
+        <form method="post"
+              th:action="@{/staff/products/search}"
+              th:object="${keywordmodel}"
+              id="search">
+
             <div class="input-group">
-                <input type="text" th:field="*{keyword}" class="form-control luxury-search-input"
-                       placeholder="Search products by name or category..." aria-label="Search">
+                <input type="text"
+                       th:field="*{keyword}"
+                       class="form-control luxury-search-input"
+                       placeholder="Search products by name or category..."
+                       aria-label="Search">
+
                 <button type="submit" class="btn luxury-search-btn">
                     <i class="fa-solid fa-magnifying-glass me-2"></i>Search
                 </button>
@@ -329,58 +460,103 @@
     </div>
 
     <!-- Main Order Form -->
-    <form method="post" th:action="@{/staff/products}" th:object="${product_quantities}" id="productTypeForm">
+    <form method="post"
+          th:action="@{/staff/products}"
+          th:object="${product_quantities}"
+          id="productTypeForm">
 
         <div class="row g-4">
-         
-            <div class="col-lg-4 col-md-6" th:each="p, state : ${product_types}">
+
+            <!-- Product Type Card -->
+            <div class="col-lg-4 col-md-6"
+                 th:each="p, state : ${product_types}">
+
                 <div class="coffee-card">
-                    
+
+                    <!-- Image -->
                     <div class="card-img-wrapper">
-                        <span class="badge-category" th:text="${p.category_name != null ? p.category_name : 'Specialty'}">Coffee</span>
-                       
+
+                        <span class="badge-category"
+                              th:text="${p.category_name != null
+                                  ? p.category_name : 'Specialty'}">
+                            Coffee
+                        </span>
+
                         <img th:if="${p.coverimgpath != null and p.coverimgpath != ''}"
                              th:src="@{'/images/' + ${p.coverimgpath}}"
-                             alt="Product Image" />
+                             alt="Product Image">
 
                         <th:block th:unless="${p.coverimgpath != null and p.coverimgpath != ''}">
-                           
+
                             <img th:if="${#strings.containsIgnoreCase(p.name, 'Cappuccino')}"
                                  th:src="@{/images/Cappuccino.jpg}"
-                                 alt="Cappuccino Image" />
+                                 alt="Cappuccino Image">
 
-                            
                             <img th:if="${#strings.containsIgnoreCase(p.name, 'Espresso')}"
                                  th:src="@{/images/coffee.jpg}"
-                                 alt="Espresso Image" />
+                                 alt="Espresso Image">
 
-                            
                             <img th:unless="${#strings.containsIgnoreCase(p.name, 'Cappuccino') or #strings.containsIgnoreCase(p.name, 'Espresso')}"
                                  th:src="@{/images/cafe.jpg}"
-                                 alt="Cafe Default Image" />
+                                 alt="Cafe Default Image">
+
                         </th:block>
                     </div>
 
                     <!-- Card Body -->
                     <div class="p-4 d-flex flex-column flex-grow-1">
+
                         <div class="mb-3">
-                            <h5 class="fw-bold mb-1" style="color: var(--cafe-dark); font-size: 1.15rem;" th:text="${p.name}">Product Name</h5>
-                            <p class="text-muted small mb-0" style="min-height: 38px; line-height: 1.4;" th:text="${p.description}">Product Description</p>
+                            <h5 class="fw-bold mb-1"
+                                style="color: var(--cafe-dark); font-size: 1.15rem;"
+                                th:text="${p.name}">
+                                Product Name
+                            </h5>
+
+                            <p class="text-muted small mb-0"
+                               style="min-height: 38px; line-height: 1.4;"
+                               th:text="${p.description}">
+                                Product Description
+                            </p>
                         </div>
 
-                        <!-- Variants / Sizes Section -->
-                        <div class="mt-auto">
-                            <label class="form-label text-uppercase fw-semibold mb-2" style="font-size: 0.72rem; letter-spacing: 0.6px; color: var(--cafe-text-muted);">
-                                Available Sizes & Pricing
-                            </label>
+                        <!-- SIZES TOGGLE BUTTON -->
+                        <button class="sizes-toggle"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                th:data-bs-target="'#sizes-' + ${state.index}"
+                                aria-expanded="false"
+                                th:aria-controls="'sizes-' + ${state.index}">
+
+                            <span class="sizes-toggle-label">
+                                <i class="fa-solid fa-mug-hot"></i>
+                                <span>Available Sizes &amp; Pricing</span>
+
+                                <span class="sizes-count"
+                                      th:text="${p.products != null ? p.products.size() : 0}">
+                                    2
+                                </span>
+                            </span>
+
+                            <i class="fa-solid fa-chevron-down sizes-toggle-chevron"></i>
+                        </button>
+
+                        <!-- COLLAPSIBLE PRODUCTS / SIZES -->
+                        <div class="collapse"
+                             th:id="'sizes-' + ${state.index}">
 
                             <div class="variants-container">
+
                                 <th:block th:each="p2, state2 : ${p.products}">
-                                    <div class="variant-item" th:classappend="${!p2.available} ? 'out-of-stock' : ''">
-                                        
-                                        <!-- Top Row: Checkbox, Size Code, Price -->
+
+                                    <div class="variant-item"
+                                         th:classappend="${!p2.available} ? 'out-of-stock' : ''">
+
+                                        <!-- Checkbox, Size, Price, Stock -->
                                         <div class="d-flex align-items-center justify-content-between mb-2">
+
                                             <div class="d-flex align-items-center gap-2">
+
                                                 <div class="custom-checkbox-wrapper">
                                                     <input type="checkbox"
                                                            class="form-check-input product-checkbox"
@@ -389,7 +565,12 @@
                                                            th:id="'product-' + ${state.index} + '-' + ${state2.index}"
                                                            th:disabled="${!p2.available}">
                                                 </div>
-                                                <span class="size-badge" th:text="${p2.size_code}">L</span>
+
+                                                <span class="size-badge"
+                                                      th:text="${p2.size_code}">
+                                                    L
+                                                </span>
+
                                                 <div>
                                                     <div class="price-text"
                                                          th:text="${#numbers.formatDecimal(p2.price, 1, 'COMMA', 2, 'POINT')} + ' MMK'">
@@ -398,129 +579,194 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Stock Status Badge -->
-                                            <div>
+                                            <!-- Stock Status -->
+                                            <div class="text-end">
+
                                                 <span th:if="${p2.available and p2.remainingServings > 5}"
-                                                      class="badge rounded-pill" style="background: rgba(46, 125, 50, 0.12); color: var(--cafe-success); font-size: 0.72rem; font-weight: 600;">
-                                                    In Stock (<span th:text="${p2.remainingServings}"></span>)
+                                                      class="badge rounded-pill"
+                                                      style="background: rgba(46, 125, 50, 0.12); color: var(--cafe-success); font-size: 0.72rem; font-weight: 600;">
+                                                    In Stock
+                                                    (<span th:text="${p2.remainingServings}"></span>)
                                                 </span>
+
                                                 <span th:if="${p2.available and p2.remainingServings > 0 and p2.remainingServings <= 5}"
-                                                      class="badge rounded-pill" style="background: rgba(217, 119, 6, 0.12); color: var(--cafe-warning); font-size: 0.72rem; font-weight: 600;">
-                                                    Low (<span th:text="${p2.remainingServings}"></span>)
+                                                      class="badge rounded-pill"
+                                                      style="background: rgba(217, 119, 6, 0.12); color: var(--cafe-warning); font-size: 0.72rem; font-weight: 600;">
+                                                    Low
+                                                    (<span th:text="${p2.remainingServings}"></span>)
                                                 </span>
+
                                                 <span th:if="${!p2.available}"
-                                                      class="badge rounded-pill" style="background: rgba(220, 38, 38, 0.12); color: var(--cafe-danger); font-size: 0.72rem; font-weight: 600;">
+                                                      class="badge rounded-pill"
+                                                      style="background: rgba(220, 38, 38, 0.12); color: var(--cafe-danger); font-size: 0.72rem; font-weight: 600;">
                                                     Sold Out
                                                 </span>
+
                                             </div>
                                         </div>
 
-                                        <!-- Discount Tags (If Any) -->
-                                        <div th:if="${p2.discount_names != null and !p2.discount_names.empty}" class="mb-2 ps-4 ms-2">
-                                            <div th:each="discountName, discountState : ${p2.discount_names}" class="d-inline-flex align-items-center gap-1 me-1 mb-1">
-                                                <span class="badge" style="background: #FFF7ED; color: #C2410C; border: 1px solid #FFEDD5; font-size: 0.68rem;">
+                                        <!-- Discounts -->
+                                        <div th:if="${p2.discount_names != null and !p2.discount_names.empty}"
+                                             class="mb-2 ps-4 ms-2">
+
+                                            <div th:each="discountName, discountState : ${p2.discount_names}"
+                                                 class="d-inline-flex align-items-center gap-1 me-1 mb-1">
+
+                                                <span class="badge"
+                                                      style="background: #FFF7ED; color: #C2410C; border: 1px solid #FFEDD5; font-size: 0.68rem;">
+
                                                     <i class="fa-solid fa-tag me-1"></i>
+
                                                     <span th:text="${discountName}">Discount</span>
+
                                                     <span th:if="${p2.discount_values != null and discountState.index < p2.discount_values.size()}"
-                                                          th:text="'-' + ${#numbers.formatDecimal(p2.discount_values[discountState.index], 1, 'COMMA', 0, 'POINT')} + '%'"></span>
+                                                          th:text="'-' + ${#numbers.formatDecimal(p2.discount_values[discountState.index], 1, 'COMMA', 0, 'POINT')} + '%'">
+                                                    </span>
+
                                                 </span>
                                             </div>
                                         </div>
 
-                                        <!-- Bottom Control: Stepper + Recipe Collapse -->
-                                        <div class="d-flex align-items-center justify-content-between pt-2 border-top" style="border-color: rgba(0,0,0,0.05) !important;">
-                                            <!-- Recipe Toggle -->
-                                            <button class="btn btn-link p-0 text-decoration-none"
+                                        <!-- Quantity + Ingredients Toggle -->
+                                        <div class="d-flex align-items-center justify-content-between pt-2 border-top"
+                                             style="border-color: rgba(0,0,0,0.05) !important;">
+
+                                            <button class="btn btn-link p-0 text-decoration-none ingredient-toggle"
                                                     type="button"
                                                     data-bs-toggle="collapse"
                                                     th:data-bs-target="'#ingredientRow-' + ${state.index} + '-' + ${state2.index}"
                                                     aria-expanded="false"
-                                                    style="color: var(--cafe-text-muted); font-size: 0.74rem;">
-                                                <i class="fa-solid fa-list-check me-1"></i>Ingredients
+                                                    th:aria-controls="'ingredientRow-' + ${state.index} + '-' + ${state2.index}">
+
+                                                <i class="fa-solid fa-list-check me-1"></i>
+                                                Ingredients
+                                                <i class="fa-solid fa-chevron-down ms-1 ingredient-chevron"></i>
                                             </button>
 
                                             <!-- Quantity Stepper -->
                                             <div class="qty-stepper">
-                                                <button type="button" class="btn-qty-minus" disabled>
+
+                                                <button type="button"
+                                                        class="btn-qty-minus"
+                                                        disabled>
                                                     <i class="fa-solid fa-minus"></i>
                                                 </button>
+
                                                 <input type="number"
                                                        class="product-quantity"
                                                        name="quantities"
-                                                       value="1" min="1" step="1"
+                                                       value="1"
+                                                       min="1"
+                                                       step="1"
                                                        th:max="${p2.remainingServings}"
                                                        disabled>
-                                                <button type="button" class="btn-qty-plus" disabled>
+
+                                                <button type="button"
+                                                        class="btn-qty-plus"
+                                                        disabled>
                                                     <i class="fa-solid fa-plus"></i>
                                                 </button>
+
                                             </div>
                                         </div>
 
-                                        <!-- Collapsible Ingredient Details -->
-                                        <div class="collapse mt-2" th:id="'ingredientRow-' + ${state.index} + '-' + ${state2.index}">
+                                        <!-- COLLAPSIBLE INGREDIENTS -->
+                                        <div class="collapse mt-2"
+                                             th:id="'ingredientRow-' + ${state.index} + '-' + ${state2.index}">
+
                                             <div class="ingredient-box">
-                                                <div class="fw-semibold text-muted mb-1" style="font-size: 0.72rem;">REQUIRED INGREDIENTS:</div>
+
+                                                <div class="fw-semibold text-muted mb-1"
+                                                     style="font-size: 0.72rem;">
+                                                    REQUIRED INGREDIENTS:
+                                                </div>
+
                                                 <div th:if="${p2.ingredient_names != null and !p2.ingredient_names.empty}">
-                                                    <div th:each="ingName, ingState : ${p2.ingredient_names}" class="d-flex justify-content-between py-1 border-bottom border-light">
+
+                                                    <div th:each="ingName, ingState : ${p2.ingredient_names}"
+                                                         class="d-flex justify-content-between py-1 border-bottom border-light">
+
                                                         <span th:text="${ingName}">Milk</span>
+
                                                         <span class="text-muted">
+
                                                             <span th:if="${p2.quantity_required != null and ingState.index < p2.quantity_required.size()}"
-                                                                  th:text="${p2.quantity_required[ingState.index]}"></span>
+                                                                  th:text="${p2.quantity_required[ingState.index]}">
+                                                            </span>
+
                                                             <span th:if="${p2.unit_code != null and ingState.index < p2.unit_code.size()}"
-                                                                  th:text="${p2.unit_code[ingState.index]}"></span>
+                                                                  th:text="${p2.unit_code[ingState.index]}">
+                                                            </span>
+
                                                         </span>
                                                     </div>
                                                 </div>
-                                                <div th:unless="${p2.ingredient_names != null and !p2.ingredient_names.empty}" class="text-muted fst-italic">
+
+                                                <div th:unless="${p2.ingredient_names != null and !p2.ingredient_names.empty}"
+                                                     class="text-muted fst-italic">
                                                     No ingredients mapped.
                                                 </div>
+
                                             </div>
                                         </div>
 
                                     </div>
                                 </th:block>
+
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Floating Bottom Sticky Bar -->
+        <!-- Floating Order Bar -->
         <div class="floating-action-bar d-flex justify-content-between align-items-center">
+
             <button type="reset" class="btn btn-luxury-clear" id="resetBtn">
-                <i class="fa-solid fa-rotate-left me-2"></i>Clear Selection
+                <i class="fa-solid fa-rotate-left me-2"></i>
+                Clear Selection
             </button>
 
             <div class="d-flex align-items-center gap-3">
+
                 <div class="text-end d-none d-sm-block">
                     <span class="text-muted small">Items selected:</span>
-                    <span id="selectedCountBadge" class="fw-bold ms-1" style="color: var(--cafe-primary-dark);">0</span>
+                    <span id="selectedCountBadge"
+                          class="fw-bold ms-1"
+                          style="color: var(--cafe-primary-dark);">0</span>
                 </div>
+
                 <button type="submit" class="btn btn-luxury-order">
-                    <i class="fa-solid fa-mug-saucer me-2"></i>Go to Order
+                    <i class="fa-solid fa-mug-saucer me-2"></i>
+                    Go to Order
                 </button>
+
             </div>
         </div>
 
     </form>
 
-    <!-- Interactive Logic Script -->
+    <!-- Interactive Logic -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+
             const checkboxes = document.querySelectorAll(".product-checkbox");
             const selectedCountBadge = document.getElementById("selectedCountBadge");
+            const resetBtn = document.getElementById("resetBtn");
 
             function updateCount() {
-                const checkedBoxes = document.querySelectorAll(".product-checkbox:checked");
                 if (selectedCountBadge) {
-                    selectedCountBadge.textContent = checkedBoxes.length;
+                    selectedCountBadge.textContent =
+                        document.querySelectorAll(".product-checkbox:checked").length;
                 }
             }
 
+            // Checkbox selection and quantity controls
             checkboxes.forEach(function (checkbox) {
+
                 checkbox.addEventListener("change", function () {
+
                     const variantItem = checkbox.closest(".variant-item");
                     const qtyInput = variantItem.querySelector(".product-quantity");
                     const minusBtn = variantItem.querySelector(".btn-qty-minus");
@@ -529,64 +775,152 @@
                     if (checkbox.checked) {
                         variantItem.classList.add("selected");
                         qtyInput.disabled = false;
+
                         if (minusBtn) minusBtn.disabled = false;
                         if (plusBtn) plusBtn.disabled = false;
+
                     } else {
                         variantItem.classList.remove("selected");
                         qtyInput.disabled = true;
                         qtyInput.value = 1;
+
                         if (minusBtn) minusBtn.disabled = true;
                         if (plusBtn) plusBtn.disabled = true;
                     }
+
                     updateCount();
                 });
             });
 
-            // Quantity Stepper Controls (+ / -)
+            // Quantity increment
             document.querySelectorAll(".btn-qty-plus").forEach(function (btn) {
+
                 btn.addEventListener("click", function () {
-                    const input = btn.closest(".qty-stepper").querySelector(".product-quantity");
+
+                    const input = btn.closest(".qty-stepper")
+                                     .querySelector(".product-quantity");
+
                     const max = parseInt(input.getAttribute("max")) || 999;
-                    let val = parseInt(input.value) || 1;
+                    const val = parseInt(input.value) || 1;
+
                     if (val < max) {
                         input.value = val + 1;
                     }
                 });
             });
 
+            // Quantity decrement
             document.querySelectorAll(".btn-qty-minus").forEach(function (btn) {
+
                 btn.addEventListener("click", function () {
-                    const input = btn.closest(".qty-stepper").querySelector(".product-quantity");
+
+                    const input = btn.closest(".qty-stepper")
+                                     .querySelector(".product-quantity");
+
                     const min = parseInt(input.getAttribute("min")) || 1;
-                    let val = parseInt(input.value) || 1;
+                    const val = parseInt(input.value) || 1;
+
                     if (val > min) {
                         input.value = val - 1;
                     }
                 });
             });
 
-            // Clear Button Handler
-            const resetBtn = document.getElementById("resetBtn");
+            // Keep the sizes button's expanded state synchronized
+            document.querySelectorAll(".sizes-toggle").forEach(function (btn) {
+
+                const targetSelector = btn.getAttribute("data-bs-target");
+                const sizesPanel = document.querySelector(targetSelector);
+
+                if (!sizesPanel) return;
+
+                sizesPanel.addEventListener("show.bs.collapse", function () {
+                    btn.setAttribute("aria-expanded", "true");
+                });
+
+                sizesPanel.addEventListener("hide.bs.collapse", function () {
+
+                    btn.setAttribute("aria-expanded", "false");
+
+                    // Close any open ingredient panels when sizes are hidden.
+                    sizesPanel.querySelectorAll(".collapse.show").forEach(function (panel) {
+
+                        const collapseInstance =
+                            bootstrap.Collapse.getOrCreateInstance(panel, {
+                                toggle: false
+                            });
+
+                        collapseInstance.hide();
+                    });
+                });
+
+                sizesPanel.addEventListener("shown.bs.collapse", function () {
+                    btn.setAttribute("aria-expanded", "true");
+                });
+
+                sizesPanel.addEventListener("hidden.bs.collapse", function () {
+                    btn.setAttribute("aria-expanded", "false");
+                });
+            });
+
+            // Synchronize ingredient button arrows
+            document.querySelectorAll(".ingredient-toggle").forEach(function (btn) {
+
+                const targetSelector = btn.getAttribute("data-bs-target");
+                const ingredientPanel = document.querySelector(targetSelector);
+
+                if (!ingredientPanel) return;
+
+                ingredientPanel.addEventListener("show.bs.collapse", function () {
+                    btn.setAttribute("aria-expanded", "true");
+                });
+
+                ingredientPanel.addEventListener("hide.bs.collapse", function () {
+                    btn.setAttribute("aria-expanded", "false");
+                });
+
+                ingredientPanel.addEventListener("shown.bs.collapse", function () {
+                    btn.setAttribute("aria-expanded", "true");
+                });
+
+                ingredientPanel.addEventListener("hidden.bs.collapse", function () {
+                    btn.setAttribute("aria-expanded", "false");
+                });
+            });
+
+            // Clear selections and reset quantities
             if (resetBtn) {
+
                 resetBtn.addEventListener("click", function () {
-                    setTimeout(() => {
-                        checkboxes.forEach(cb => {
-                            const variantItem = cb.closest(".variant-item");
-                            variantItem.classList.remove("selected");
+
+                    setTimeout(function () {
+
+                        checkboxes.forEach(function (checkbox) {
+
+                            const variantItem = checkbox.closest(".variant-item");
                             const qtyInput = variantItem.querySelector(".product-quantity");
                             const minusBtn = variantItem.querySelector(".btn-qty-minus");
                             const plusBtn = variantItem.querySelector(".btn-qty-plus");
 
+                            variantItem.classList.remove("selected");
                             qtyInput.disabled = true;
                             qtyInput.value = 1;
+
                             if (minusBtn) minusBtn.disabled = true;
                             if (plusBtn) plusBtn.disabled = true;
                         });
+
                         updateCount();
-                    }, 50);
+
+                    }, 0);
                 });
             }
+
+            updateCount();
         });
     </script>
+
 </div>
+
+</body>
 </html>

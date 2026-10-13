@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 
 import cafe.project.employeemanagement.models.LoginDto;
+import cafe.project.employeemanagement.services.EmployeeManagementService;
 import cafe.project.models.EmployeeEntryDto;
 import cafe.project.models.Gender;
 import cafe.project.models.RoleDto;
@@ -35,13 +36,15 @@ public class EmployeeControllerManager {
 	private final EmployeeRepository employeeRepository;
 	private final StatusRepository statusRepository;
 	private final BranchService branchService;
+	private final EmployeeManagementService emservice;
 
 	public EmployeeControllerManager(EmployeeService employeeService, StatusRepository statusRepository,
-			EmployeeRepository employeeRepository, BranchService branchService) {
+			EmployeeRepository employeeRepository, BranchService branchService, EmployeeManagementService emservice) {
 		this.employeeService = employeeService;
 		this.statusRepository = statusRepository;
 		this.employeeRepository = employeeRepository;
 		this.branchService = branchService;
+		this.emservice = emservice;
 	}
 
 	@GetMapping
@@ -78,6 +81,13 @@ public class EmployeeControllerManager {
 			bindAvilableData(model);
 			return "employee/create-manager";
 		}
+		
+		if (emservice.findByEmail(dto.getEmail()) != null) {
+			model.addAttribute("emailerror", "There already exist an account with that email!");
+		    bindAvilableData(model);
+			return "employee/create-manager";
+		}
+		
 		if (result.hasErrors()) {
 			bindAvilableData(model);
 			return "employee/create-manager";
@@ -114,6 +124,12 @@ public class EmployeeControllerManager {
 		if (dto.getDob() == null || dto.getDob().isAfter(LocalDate.now().minusYears(16))) {
 			model.addAttribute("error", "The person you are hiring must be older than 16 years.");
 			bindAvilableData(model);
+			return "employee/edit-manager";
+		}
+		
+		if (emservice.findByEmail(dto.getEmail()) != null) {
+			model.addAttribute("emailerror", "There already exist an account with that email!");
+		    bindAvilableData(model);
 			return "employee/edit-manager";
 		}
 		if (result.hasErrors()) {

@@ -205,6 +205,7 @@
     .readonly-field {
         background-color: #f8f5f2;
     }
+    .field-error { font-size: 0.8rem; color: #b04638; margin-top: 4px; display: block; }
 </style>
 
 </head>
@@ -331,7 +332,7 @@
                          th:errors="*{email}"
                          class="validation-error">
                     </div>
-
+					<div th:text = "${emailerror}" class = "field-error"></div>
                 </div>
 
 

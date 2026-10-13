@@ -13,7 +13,7 @@ public class StarterController {
 	public String starter(HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		if(ldto.getEmployee_role().equals("STAFF")) {
-			return "products/card_list";
+			return "redirect:/staff/products";
 		}
 		return "common/starter";
 	}

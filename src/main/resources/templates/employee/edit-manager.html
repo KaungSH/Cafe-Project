@@ -58,6 +58,7 @@
                     <label class="form-label">Email Address</label>
                     <input type="email" th:field="*{email}" class="form-control">
                     <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="field-error"></span>
+                    <span th:text = "${emailerror}" class = "field-error"></span>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Password</label>
@@ -74,12 +75,14 @@
                     <input type="number" step="0.01" th:field="*{salary}" class="form-control">
                     <span th:if="${#fields.hasErrors('salary')}" th:errors="*{salary}" class="field-error"></span>
                 </div>
-                <div class="col-md-6">
-                    <label class="form-label">Date of Birth</label>
-                    <input type="date" th:field="*{dob}" class="form-control">
-                    <span th:if="${#fields.hasErrors('dob')}" th:errors="*{dob}" class="field-error"></span>
-                    <span th:text="${error}" class="field-error"></span>
-                </div>
+               <div class="col-md-6">
+					    <label class="form-label">Date of Birth</label>
+					    <input type="date" name="dob" 
+					           th:value="${employeeDto.dob}" 
+					           class="form-control">
+					    <span th:if="${#fields.hasErrors('dob')}" th:errors="*{dob}" class="field-error"></span>
+					    <span th:text="${error}" class="field-error"></span>
+				</div>
                 <div class="col-12">
                     <label class="form-label">Address</label>
                     <input type="text" th:field="*{address}" class="form-control">

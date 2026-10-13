@@ -32,6 +32,14 @@ public class SizeRepository {
 				+ "ORDER BY s.created_at DESC";
 		return jdbcTemplate.query(sql, new SizeMapper2());
 	}
+	
+	public List<Size> findAllAll() {
+		String sql = "SELECT s.*, e.name AS employee_name \r\n" + "FROM sizes s \r\n"
+				+ "LEFT JOIN employees e ON s.employee_id = e.employee_id \r\n"
+				+ "WHERE s.isdeleted = false AND s.size_id != 'deleted'\r\n"
+				+ "ORDER BY s.created_at DESC";
+		return jdbcTemplate.query(sql, new SizeMapper2());
+	}
 
 	public Size findById(String size_id) {
 		String sql = "SELECT s.*, e.name AS employee_name \r\n" + "FROM sizes s \r\n"

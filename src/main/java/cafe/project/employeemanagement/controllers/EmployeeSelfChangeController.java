@@ -63,6 +63,11 @@ public class EmployeeSelfChangeController {
 		if (result.hasErrors()) {
 			return "common/user/changeprofile";
 		}
+		
+		if(emservice.findByEmail(cfdto.getEmail()) != null) {
+			model.addAttribute("emailerror", "There already exist an account with that email!");
+			return "common/user/changeprofile";
+		}
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		cfdto.setEmployee_id(ldto.getEmployee_id());
 		

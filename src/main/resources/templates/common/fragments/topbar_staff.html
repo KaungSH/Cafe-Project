@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout}"> <!-- သင့်ရဲ့ layout ဖိုင်လမ်းကြောင်းအတိုင်း ပြင်ရန် -->
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -10,49 +8,461 @@
 
 <body>
 
-<div th:fragment="topbar_staff" class="staff-topbar">
-    <!-- Left Side Navigation Links -->
-    <div class="d-flex align-items-center gap-2">
-        <a th:href="@{/staff/discount}" class="staff-nav-item">
-            <i class="bi bi-percent"></i> <span>Discount</span>
-        </a>
-        <a th:href="@{/order-with-details}" class="staff-nav-item">
-            <i class="bi bi-receipt"></i> <span>Order Details</span>
-        </a>
-        <a th:href="@{/payments}" class="staff-nav-item">
-            <i class="bi bi-credit-card"></i> <span>Payments</span>
-        </a>
-        <a th:href="@{/staff/product}" class="staff-nav-item">
-            <i class="bi bi-box-seam"></i> <span>Products</span>
-        </a>
-    </div>
+<div th:fragment="topbar_staff">
 
-    <!-- Right Side Profile, Employee Name & Branch Name -->
-    <div class="d-flex align-items-center gap-3">
-        <!-- Branch Name Badge -->
-        <div class="branch-badge">
-            <i class="bi bi-shop"></i>
-            <span th:text="${session.loggedInUser.branch_name != null ? session.loggedInUser.branch_name: 'Main Branch'}">Branch Name</span>
-        </div>
+    <style>
+        /* ================= STAFF TOPBAR ================= */
 
-        <!-- Employee Profile & Name -->
-         <img th:if="${session.loggedInUser != null}" 
-			 th:src="@{'/images/' + ${session.loggedInUser.photopath}}"
-			 alt="Thumbnail Error" 
-			 style="height: 30px; width: 30px; object-fit: cover; border-radius: 100%;" class = "shadow-lg">
-        <div class="dropdown">
-            <a href="#" class="staff-profile-dropdown dropdown-toggle text-decoration-none d-flex align-items-center gap-2" id="staffUserDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-               
-         <span class="staff-name" th:text="${session.loggedInUser != null ? session.loggedInUser.employee_name : 'Staff Name'}">Employee Name</span>
+        .staff-topbar {
+            width: 100%;
+            min-height: 82px;
+            padding: 14px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            background: #fffaf5;
+            border-bottom: 1px solid #eee0d3;
+            box-shadow: 0 3px 12px rgba(70, 42, 25, 0.045);
+            position: relative;
+            z-index: 100;
+        }
+
+        .staff-topbar-left,
+        .staff-topbar-right,
+        .staff-brand,
+        .staff-nav,
+        .staff-nav-item,
+        .staff-branch,
+        .staff-profile-trigger {
+            display: flex;
+            align-items: center;
+        }
+
+        .staff-topbar-left {
+            gap: 26px;
+            min-width: 0;
+        }
+
+        /* Brand */
+
+        .staff-brand {
+            gap: 11px;
+            padding-right: 24px;
+            border-right: 1px solid #eadbce;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        .staff-brand-icon {
+            width: 46px;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #f9d9b8, #f2b879);
+            color: #75421f;
+            font-size: 23px;
+        }
+
+        .staff-brand-text {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .staff-brand-name {
+            color: #3e291e;
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            white-space: nowrap;
+        }
+
+        .staff-brand-role {
+            color: #c77b3b;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        /* Navigation */
+
+        .staff-nav {
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .staff-nav-item {
+            min-height: 44px;
+            gap: 9px;
+            padding: 0 15px;
+            border-radius: 12px;
+            color: #746256;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: background 0.2s ease,
+                        color 0.2s ease,
+                        transform 0.2s ease;
+        }
+
+        .staff-nav-item i {
+            font-size: 17px;
+        }
+
+        .staff-nav-item:hover {
+            color: #a65f2b;
+            background: #f8ebdf;
+            transform: translateY(-1px);
+        }
+
+        .staff-nav-item.active {
+            color: #a65f2b;
+            background: #fbead8;
+        }
+
+        /* Right side */
+
+        .staff-topbar-right {
+            gap: 17px;
+            flex-shrink: 0;
+        }
+
+        .staff-branch {
+            max-width: 220px;
+            gap: 9px;
+            padding: 10px 14px;
+            border: 1px solid #eee2d7;
+            border-radius: 12px;
+            background: #f8f2ec;
+            color: #604737;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .staff-branch > i {
+            color: #b8733c;
+            font-size: 17px;
+        }
+
+        .staff-branch-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .staff-topbar-divider {
+            width: 1px;
+            height: 35px;
+            background: #eadbce;
+        }
+
+        /* Profile dropdown */
+
+        .staff-profile-dropdown {
+            position: relative;
+        }
+
+        .staff-profile-trigger {
+            gap: 10px;
+            padding: 5px 9px 5px 5px;
+            border: 1px solid transparent;
+            border-radius: 14px;
+            background: transparent;
+            color: #3e291e;
+            text-decoration: none;
+            transition: background 0.2s ease,
+                        border-color 0.2s ease;
+        }
+
+        .staff-profile-trigger:hover,
+        .staff-profile-trigger[aria-expanded="true"] {
+            background: #f8f0e8;
+            border-color: #eee0d3;
+        }
+
+        .staff-avatar {
+            width: 39px;
+            height: 39px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #f0d5bc;
+            background: #f8ebdf;
+        }
+
+        .staff-avatar-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #b8733c;
+            font-size: 20px;
+        }
+
+        .staff-name {
+            max-width: 145px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .staff-profile-chevron {
+            color: #9c806b;
+            font-size: 12px;
+            transition: transform 0.2s ease;
+        }
+
+        .staff-profile-trigger[aria-expanded="true"]
+        .staff-profile-chevron {
+            transform: rotate(180deg);
+        }
+
+        .staff-profile-menu {
+            min-width: 220px;
+            margin-top: 10px !important;
+            padding: 8px;
+            border: 1px solid #eee1d5;
+            border-radius: 14px;
+            background: #fffaf5;
+            box-shadow: 0 12px 30px rgba(62, 41, 30, 0.12);
+        }
+
+        .staff-profile-menu .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 12px;
+            border-radius: 9px;
+            color: #604737;
+            font-size: 13px;
+            font-weight: 500;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .staff-profile-menu .dropdown-item i {
+            width: 18px;
+            color: #bd8148;
+            font-size: 16px;
+        }
+
+        .staff-profile-menu .dropdown-item:hover {
+            color: #9e5928;
+            background: #f8ebdf;
+        }
+
+        .staff-profile-menu .logout-link,
+        .staff-profile-menu .logout-link i {
+            color: #c84c42;
+        }
+
+        .staff-profile-menu .logout-link:hover {
+            color: #a8322a;
+            background: #fff0ec;
+        }
+
+        .staff-profile-menu .dropdown-divider {
+            margin: 6px 4px;
+            border-color: #eee1d5;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 1100px) {
+            .staff-topbar {
+                padding: 12px 18px;
+                gap: 12px;
+            }
+
+            .staff-topbar-left {
+                gap: 12px;
+            }
+
+            .staff-brand {
+                padding-right: 12px;
+            }
+
+            .staff-nav-item {
+                padding: 0 10px;
+            }
+
+            .staff-branch {
+                padding: 9px;
+            }
+        }
+
+        @media (max-width: 850px) {
+            .staff-topbar {
+                align-items: flex-start;
+                flex-wrap: wrap;
+            }
+
+            .staff-topbar-left {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .staff-nav {
+                width: 100%;
+            }
+
+            .staff-topbar-right {
+                margin-left: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .staff-brand-name {
+                font-size: 17px;
+            }
+
+            .staff-nav-item {
+                min-height: 40px;
+                padding: 0 9px;
+                font-size: 12px;
+            }
+
+            .staff-nav-item i {
+                font-size: 15px;
+            }
+
+            .staff-branch {
+                max-width: 145px;
+            }
+
+            .staff-name {
+                max-width: 90px;
+            }
+        }
+    </style>
+
+    <header class="staff-topbar">
+
+        <!-- BRAND + NAVIGATION -->
+        <div class="staff-topbar-left">
+
+            <a th:href="@{/staff/products}" class="staff-brand">
+                <span class="staff-brand-icon">
+                    <i class="bi bi-cup-hot-fill"></i>
+                </span>
+
+                <span class="staff-brand-text">
+                    <span class="staff-brand-name">Café Shop</span>
+                    <span class="staff-brand-role">STAFF</span>
+                </span>
             </a>
-            <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="staffUserDropdown" style="background: #fffaf5;">
-                <li><a class="dropdown-item py-2 px-3 text-dark fw-medium" th:href="@{/changeprofile}"><i class="bi bi-person me-2 text-warning"></i> Change Profile</a></li>
-                <li><a class="dropdown-item py-2 px-3 text-dark fw-medium" th:href="@{/changepassword}"><i class="bi bi-person me-2 text-warning"></i> Change Password</a></li>
-                <li><hr class="dropdown-divider bg-light"></li>
-                <li><a class="dropdown-item py-2 px-3 text-danger fw-medium" th:href="@{/logout}"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
-            </ul>
+
+            <nav class="staff-nav" aria-label="Staff navigation">
+
+                <a th:href="@{/staff/discounts}" class="staff-nav-item">
+                    <i class="bi bi-percent"></i>
+                    <span>Discount</span>
+                </a>
+
+                <a th:href="@{/order-with-details}" class="staff-nav-item">
+                    <i class="bi bi-receipt"></i>
+                    <span>Order Details</span>
+                </a>
+
+                <a th:href="@{/payments}" class="staff-nav-item">
+                    <i class="bi bi-credit-card"></i>
+                    <span>Payments</span>
+                </a>
+
+                <a th:href="@{/staff/products}" class="staff-nav-item">
+                    <i class="bi bi-box-seam"></i>
+                    <span>Products</span>
+                </a>
+
+            </nav>
         </div>
-    </div>
+
+        <!-- BRANCH + EMPLOYEE PROFILE -->
+        <div class="staff-topbar-right">
+
+            <div class="staff-branch">
+                <i class="bi bi-shop"></i>
+                <span class="staff-branch-name"
+                      th:text="${session.loggedInUser != null
+                          and session.loggedInUser.branch_name != null
+                          ? session.loggedInUser.branch_name
+                          : 'Main Branch'}">
+                    Main Branch
+                </span>
+            </div>
+
+            <div class="staff-topbar-divider"></div>
+
+            <div class="dropdown staff-profile-dropdown">
+
+                <a href="#"
+                   class="staff-profile-trigger dropdown-toggle"
+                   id="staffUserDropdown"
+                   data-bs-toggle="dropdown"
+                   aria-expanded="false">
+
+                    <img th:if="${session.loggedInUser != null
+                                 and session.loggedInUser.photopath != null
+                                 and !#strings.isEmpty(session.loggedInUser.photopath)}"
+                         th:src="@{'/images/' + ${session.loggedInUser.photopath}}"
+                         th:alt="${session.loggedInUser.employee_name}"
+                         class="staff-avatar">
+
+                    <span th:if="${session.loggedInUser == null
+                                  or session.loggedInUser.photopath == null
+                                  or #strings.isEmpty(session.loggedInUser.photopath)}"
+                          class="staff-avatar staff-avatar-placeholder">
+                        <i class="bi bi-person-fill"></i>
+                    </span>
+
+                    <span class="staff-name"
+                          th:text="${session.loggedInUser != null
+                              ? session.loggedInUser.employee_name
+                              : 'Staff Name'}">
+                        Staff Name
+                    </span>
+
+                    <i class="bi bi-chevron-down staff-profile-chevron"></i>
+                </a>
+
+                <ul class="dropdown-menu dropdown-menu-end staff-profile-menu"
+                    aria-labelledby="staffUserDropdown">
+				<li><a class="dropdown-item py-2 px-3 text-dark fw-medium" th:href="@{/closeshift}"><i class="bi bi-person me-2 text-warning"></i> Close Shift</a></li>
+                    <li>
+                        <a class="dropdown-item" th:href="@{/changeprofile}">
+                            <i class="bi bi-person"></i>
+                            <span>Change Profile</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item" th:href="@{/changepassword}">
+                            <i class="bi bi-shield-lock"></i>
+                            <span>Change Password</span>
+                        </a>
+                    </li>
+
+                    <li><hr class="dropdown-divider"></li>
+
+                    <li>
+                        <a class="dropdown-item logout-link" th:href="@{/logout}">
+                            <i class="bi bi-box-arrow-right"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
+    </header>
+
 </div>
+
 </body>
 </html>
+```
