@@ -283,16 +283,6 @@
         <p class="brand-subtext"><i class="bi bi-cup-hot me-1"></i> Expense &amp; Financial Register</p>
       </div>
     </div>
-
-    <!-- Actions Area -->
-    <div class="d-flex gap-3">
-      <a th:href="@{/manager-only/expense/add}" class="btn-gold">
-        <i class="bi bi-plus-lg"></i> Add Expense
-      </a>
-      <a th:href="@{/manager-only/expense/deleted}" class="btn-glass">
-        <i class="bi bi-archive"></i> Deleted Expenses List
-      </a>
-    </div>
   </div>
 
   <!-- Error Alert (If Any) -->
@@ -309,7 +299,6 @@
             <th>Category</th>
             <th>Description</th>
             <th>Amount</th>
-            <th class="text-end">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -334,19 +323,6 @@
             <td class="text-secondary" th:text="${e.description}">Description</td>
             <td>
               <span class="amount-value">$<span th:text="${e.amount}">Amount</span></span>
-            </td>
-            <td class="text-end">
-              <a th:href="@{/manager-only/expense/edit/{expense_id}(expense_id=${e.expense_id})}" 
-                 class="action-btn-edit" title="Edit Expense">
-                <i class="bi bi-pencil-square"></i>
-              </a>
-              <form th:action="@{/manager-only/expense/delete}" method="post" style="display: inline;"
-                    onsubmit="return confirm('Are you sure you want to delete this expense?');">
-                <input type="hidden" name="expense_id" th:value="${e.expense_id}">
-                <button type="submit" class="action-btn-delete" title="Delete">
-                  <i class="bi bi-trash3"></i>
-                </button>
-              </form>
             </td>
           </tr>
         </tbody>

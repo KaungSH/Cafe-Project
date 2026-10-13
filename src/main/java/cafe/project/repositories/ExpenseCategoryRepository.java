@@ -41,9 +41,14 @@ public class ExpenseCategoryRepository {
 	}
 
 	public int delete(String expense_category_id) {
-		setExpenses(expense_category_id);
-		String sql = "DELETE FROM expense_categories WHERE expense_category_id = ? expense_category_id != 'deleted'";
-		return this.jdbcTemplate.update(sql, expense_category_id);
+		if(!"deleted".equals(expense_category_id)) {
+			setExpenses(expense_category_id);
+			String sql = "DELETE FROM expense_categories WHERE expense_category_id = ?";
+			return this.jdbcTemplate.update(sql, expense_category_id);
+		}
+		
+		return 0;
+		
 	}
 	
 	private int setExpenses(String expense_category_id) {

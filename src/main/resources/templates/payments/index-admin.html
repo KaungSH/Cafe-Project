@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payments - Café Luft</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --cafe-primary: #8C6239;
+            --cafe-primary-dark: #5C3D2E;
+            --cafe-gold: #C5A059;
+            --cafe-gold-light: #F7F3EB;
+            --cafe-dark: #1E1A17;
+            --cafe-bg: #FDFBF7;
+            --cafe-card-bg: #FFFFFF;
+            --cafe-border: #EFE9E1;
+            --cafe-muted: #827E7A;
+            --shadow-luxury: 0 10px 30px -5px rgba(92, 61, 46, 0.08), 0 4px 12px -2px rgba(92, 61, 46, 0.03);
+        }
+
+        body {
+            background-color: var(--cafe-bg);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--cafe-dark);
+        }
+
+        .page-container {
+            max-width: 1480px;
+            margin: 0 auto;
+            padding: 30px 25px 60px;
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--cafe-primary-dark);
+            margin: 0;
+        }
+
+        .luxury-card {
+            background: var(--cafe-card-bg);
+            border: 1px solid var(--cafe-border);
+            border-radius: 18px;
+            box-shadow: var(--shadow-luxury);
+        }
+
+        .btn-luxury-outline {
+            background: #ffffff;
+            color: var(--cafe-primary-dark);
+            border: 1px solid var(--cafe-border);
+            border-radius: 10px;
+            padding: 8px 18px;
+            font-weight: 600;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .btn-luxury-outline:hover {
+            background: var(--cafe-gold-light);
+            border-color: var(--cafe-gold);
+            color: var(--cafe-primary-dark);
+        }
+
+        .search-wrapper {
+            position: relative;
+        }
+        .search-wrapper i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--cafe-muted);
+        }
+        .search-input, .date-input {
+            height: 46px;
+            border: 1px solid var(--cafe-border);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .search-input {
+            padding-left: 44px;
+        }
+        .search-input:focus, .date-input:focus {
+            border-color: var(--cafe-gold);
+            box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.15);
+        }
+
+        .payment-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .payment-table thead th {
+            background: #FAF8F5;
+            color: var(--cafe-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            font-weight: 700;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--cafe-border);
+            white-space: nowrap;
+        }
+        .payment-table tbody td {
+            padding: 16px 18px;
+            border-bottom: 1px solid #F5EFEB;
+            vertical-align: middle;
+            font-size: 0.88rem;
+        }
+        .payment-table tbody tr:hover td {
+            background-color: #FDFBF8;
+        }
+
+        .token-tag {
+            font-weight: 700;
+            color: var(--cafe-primary-dark);
+            background: var(--cafe-gold-light);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            display: inline-block;
+        }
+
+        .method-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #EBF5FF;
+            color: #1E40AF;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Stacked Pill Button (Size List Style) */
+        .btn-pill-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 82px;
+            padding: 6px 12px;
+            border-radius: 9px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .btn-pill-delete {
+            background-color: #FFF5F4;
+            color: #A3281D !important;
+            border: 1px solid transparent;
+        }
+
+        .btn-pill-delete:hover {
+            background-color: #FFE6E4;
+            color: #7A1910 !important;
+        }
+
+        .empty-box {
+            padding: 60px 20px;
+            text-align: center;
+        }
+        .empty-box i {
+            font-size: 3rem;
+            color: var(--cafe-muted);
+            opacity: 0.4;
+            margin-bottom: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+   <div layout:fragment="content">
+
+        <!-- Header -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+            <div>
+                <h1 class="page-title">Payment Transactions</h1>
+                <p class="text-muted small mb-0">Record of settled customer payments and receipts</p>
+            </div>
+        </div>
+
+        <!-- Filter Toolbar -->
+        <div class="luxury-card p-3 mb-4">
+            <div class="row g-2 align-items-center">
+                <div class="col-lg-6">
+                    <div class="search-wrapper">
+                        <i class="bi bi-search"></i>
+                        <input type="text" id="searchPayment" class="form-control search-input"
+                               placeholder="Search token, staff, branch, method, note...">
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <input type="date" id="searchDate" class="form-control date-input">
+                </div>
+                <div class="col-lg-2">
+                    <button type="button" class="btn btn-luxury-outline w-100" onclick="clearSearch()">
+                        <i class="bi bi-x-lg me-1"></i> Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div th:if="${#lists.isEmpty(payments)}" class="luxury-card empty-box">
+            <i class="bi bi-credit-card d-block"></i>
+            <h5 class="fw-bold mb-1" style="color: var(--cafe-primary-dark); font-family: 'Playfair Display', serif;">No Payments Found</h5>
+            <p class="text-muted small mb-0">No recorded payments match the current filter.</p>
+        </div>
+
+        <!-- Payments Table -->
+        <div th:unless="${#lists.isEmpty(payments)}" class="luxury-card overflow-hidden">
+            <div class="table-responsive">
+                <table class="payment-table">
+                    <thead>
+                        <tr>
+                            <th>Token No.</th>
+                            <th>Tender Method</th>
+                            <th>Staff & Branch</th>
+                            <th>Products</th>
+                            <th>Note</th>
+                            <th>Total Amount</th>
+                            <th>Paid Date</th>
+                            <th>File / Attachment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="payment : ${payments}"
+                            th:attr="data-date=${payment.date != null ? payment.date : ''}">
+                            <td><span class="token-tag" th:text="${payment.token_number}">#001</span></td>
+                            <td>
+                                <span class="method-badge">
+                                    <i class="bi bi-cash-stack"></i>
+                                    <span th:text="${payment.pay_method_name}">Cash</span>
+                                </span>
+                            </td>
+                            <td>
+                                <div class="fw-semibold" th:text="${payment.employee_name}">Staff</div>
+                                <div class="text-muted small" th:text="${payment.branch_name}">Branch</div>
+                            </td>
+                            <td><span class="fw-medium" th:text="${payment.product_name}">Espresso</span></td>
+                            <td><span class="text-muted small" th:text="${payment.note != null ? payment.note : '—'}">—</span></td>
+                            <td>
+                                <strong style="color: var(--cafe-primary-dark);"
+                                        th:text="${#numbers.formatDecimal(payment.total_amount, 1, 2) + ' Ks'}">0.00 Ks</strong>
+                            </td>
+                            <td><span class="text-muted small" th:text="${payment.date}">2026-10-10</span></td>
+                            <td>
+                                <span class="text-truncate d-inline-block text-muted small" style="max-width: 140px;"
+                                      th:text="${payment.filepath != null and payment.filepath != '' ? payment.filepath : '—'}">—</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.getElementById("searchPayment").addEventListener("input", filterPayments);
+        document.getElementById("searchDate").addEventListener("change", filterPayments);
+
+        function filterPayments() {
+            const searchValue = document.getElementById("searchPayment").value.toLowerCase().trim();
+            const selectedDate = document.getElementById("searchDate").value;
+            const rows = document.querySelectorAll(".payment-table tbody tr[data-date]");
+
+            rows.forEach(function(row) {
+                const rowText = row.innerText.toLowerCase();
+                const rowDate = row.getAttribute("data-date");
+                const matchesSearch = rowText.includes(searchValue);
+                const matchesDate = selectedDate === "" || rowDate === selectedDate;
+                row.style.display = (matchesSearch && matchesDate) ? "" : "none";
+            });
+        }
+
+        function clearSearch() {
+            document.getElementById("searchPayment").value = "";
+            document.getElementById("searchDate").value = "";
+            document.querySelectorAll(".payment-table tbody tr[data-date]").forEach(row => row.style.display = "");
+        }
+    </script>
+</body>
+</html>

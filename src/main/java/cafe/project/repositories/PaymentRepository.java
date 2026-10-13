@@ -18,7 +18,22 @@ public class PaymentRepository {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	public List<Payment> findAll() {
+	public List<Payment> findAll(String branch_id) {
+
+		String sql = "SELECT " + "p.*, " + "o.token_number, " + "pm.name AS pay_method_name, "
+				+ "e.name AS employee_name, " + "b.name AS branch_name, " + "o.total_amount, "
+				+ "GROUP_CONCAT(pt.name SEPARATOR ', ') AS product_name " + "FROM payments p " + "LEFT JOIN orders o "
+				+ "ON p.order_id = o.order_id " + "LEFT JOIN pay_methods pm " + "ON p.method_id = pm.method_id "
+				+ "LEFT JOIN employees e " + "ON p.employee_id = e.employee_id " + "LEFT JOIN branches b "
+				+ "ON o.branch_id = b.branch_id " + "LEFT JOIN order_details od " + "ON o.order_id = od.order_id "
+				+ "LEFT JOIN products pr " + "ON od.product_id = pr.product_id " + "LEFT JOIN product_types pt "
+				+ "ON pr.item_id = pt.type_id " + "WHERE p.isdeleted = false AND o.branch_id = ? " + "GROUP BY p.payment_id "
+				+ "ORDER BY DATE(o.created_time) DESC, " + "o.created_time ASC, " + "o.token_number ASC";
+
+		return jdbcTemplate.query(sql, new PaymentMapper(), branch_id);
+	}
+	
+	public List<Payment> findAllAdmin() {
 
 		String sql = "SELECT " + "p.*, " + "o.token_number, " + "pm.name AS pay_method_name, "
 				+ "e.name AS employee_name, " + "b.name AS branch_name, " + "o.total_amount, "
@@ -33,7 +48,7 @@ public class PaymentRepository {
 		return jdbcTemplate.query(sql, new PaymentMapper());
 	}
 
-	public List<Payment> findDeletedAll() {
+	public List<Payment> findDeletedAll(String branch_id) {
 
 		String sql = "SELECT " + "p.*, " + "o.token_number, " + "pm.name AS pay_method_name, "
 				+ "e.name AS employee_name, " + "b.name AS branch_name, " + "o.total_amount, "
@@ -42,10 +57,10 @@ public class PaymentRepository {
 				+ "LEFT JOIN employees e " + "ON p.employee_id = e.employee_id " + "LEFT JOIN branches b "
 				+ "ON o.branch_id = b.branch_id " + "LEFT JOIN order_details od " + "ON o.order_id = od.order_id "
 				+ "LEFT JOIN products pr " + "ON od.product_id = pr.product_id " + "LEFT JOIN product_types pt "
-				+ "ON pr.item_id = pt.type_id " + "WHERE p.isdeleted = true " + "GROUP BY p.payment_id "
+				+ "ON pr.item_id = pt.type_id " + "WHERE p.isdeleted = true AND o.branch_id = ?" + "GROUP BY p.payment_id "
 				+ "ORDER BY DATE(o.created_time) DESC, " + "o.created_time ASC, " + "o.token_number ASC";
 
-		return jdbcTemplate.query(sql, new PaymentMapper());
+		return jdbcTemplate.query(sql, new PaymentMapper(), branch_id);
 	}
 
 	public Payment findById(String id) {

@@ -36,6 +36,10 @@ public class IngredientBatchService {
 	public List<IngredientBatch> getAllBatches(String branch_id) {
 		return repository.findAll(branch_id);
 	}
+	
+	public List<IngredientBatch> getAllBatchesAdmin() {
+		return repository.findAllAdmin();
+	}
 
 	public IngredientBatch getBatchById(String id) {
 		IngredientBatch entity = repository.findById(id);

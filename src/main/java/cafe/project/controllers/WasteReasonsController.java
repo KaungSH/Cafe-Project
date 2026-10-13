@@ -36,7 +36,7 @@ public class WasteReasonsController {
 	@PostMapping("/add")
 	public String addReason(@ModelAttribute WasteReason reason, Model model) {
 		repo.addReason(reason.getReason_name());
-		return "redirect:/manager/wastereasons";
+		return "redirect:/admin/wastereasons";
 	}
 
 	@GetMapping("/edit/{id}")
@@ -52,13 +52,13 @@ public class WasteReasonsController {
 		System.out.println(reason.getReason_name());
 		System.out.println(reason.getWaste_reason_id());
 		repo.editReason(reason.getWaste_reason_id(), reason.getReason_name());
-		return "redirect:/manager/wastereasons";
+		return "redirect:/admin/wastereasons";
 	}
 
 	@GetMapping("/delete/{id}")
 	public String deleteReason(@PathVariable String id) {
 		repo.deleteReason(id);
-		return "redirect:/manager/wastereasons";
+		return "redirect:/admin/wastereasons";
 	}
 
 }

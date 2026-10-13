@@ -287,11 +287,6 @@
                                 <a th:href="@{/admin/branches/edit/{branch_id}(branch_id=${branch.branch_id})}" class="btn-pill-action btn-pill-edit" title="Edit Branch">
                                     <i class="fa-solid fa-pen-to-square"></i> Edit
                                 </a>
-                                <form th:action="@{/admin/branches/delete/{branch_id}(branch_id=${branch.branch_id})}" method="post" class="m-0">
-                                    <button type="submit" class="btn-pill-action btn-pill-delete" onclick="return confirm('Are you sure you want to delete this branch?')" title="Delete Branch">
-                                        <i class="fa-solid fa-trash-can"></i> Delete
-                                    </button>
-                                </form>
                             </div>
                         </td>
                     </tr>

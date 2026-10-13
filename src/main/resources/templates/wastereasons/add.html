@@ -85,18 +85,7 @@
                 <div class="mb-3">
                     <label for="reason_name" class="form-label fw-bold small text-secondary">REASON NAME</label>
                     <input type="text" class="form-control py-2" id="reason_name"
-                           th:field="*{reason_name}" placeholder="e.g., Grinder Dial-in Purge" required>
-                </div>
-
-                <!-- Quick Presets -->
-                <div class="mb-4">
-                    <label class="form-label text-muted d-block small" style="font-size: 0.75rem;">COMMON REASONS</label>
-                    <div class="d-flex flex-wrap gap-2">
-                        <span class="suggestion-chip" onclick="setPreset('Expired Dairy / Milk')">+ Expired Milk</span>
-                        <span class="suggestion-chip" onclick="setPreset('Grinder Dial-in Purge')">+ Dial-in Purge</span>
-                        <span class="suggestion-chip" onclick="setPreset('Barista Error / Wrong Order')">+ Wrong Order</span>
-                        <span class="suggestion-chip" onclick="setPreset('Damaged Pastry / Bakery')">+ Damaged Pastry</span>
-                    </div>
+                           th:field="*{reason_name}" placeholder="" required>
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center pt-3 border-top">

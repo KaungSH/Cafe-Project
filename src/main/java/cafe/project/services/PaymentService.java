@@ -26,13 +26,18 @@ public class PaymentService {
 	
 
 	// GET ALL
-	public List<Payment> findAll() {
-		return paymentRepository.findAll();
+	public List<Payment> findAll(String branch_id) {
+		return paymentRepository.findAll(branch_id);
 	}
+	
+	// GET ALL
+		public List<Payment> findAllAdmin() {
+			return paymentRepository.findAllAdmin();
+		}
 
 	// GET DELETED
-	public List<Payment> findDeletedAll() {
-		return paymentRepository.findDeletedAll();
+	public List<Payment> findDeletedAll(String branch_id) {
+		return paymentRepository.findDeletedAll(branch_id);
 	}
 
 	// GET BY ID
