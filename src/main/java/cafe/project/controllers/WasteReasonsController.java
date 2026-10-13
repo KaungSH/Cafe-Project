@@ -12,7 +12,7 @@ import cafe.project.repositories.WasteReasonRepository;
 import cafe.project.repositories.entities.WasteReason;
 
 @Controller
-@RequestMapping("/manager/wastereasons")
+@RequestMapping("/admin/wastereasons")
 public class WasteReasonsController {
 
 	private WasteReasonRepository repo;

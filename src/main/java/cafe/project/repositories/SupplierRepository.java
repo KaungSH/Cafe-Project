@@ -19,7 +19,7 @@ public class SupplierRepository {
 	}
 
 	public List<Supplier> findAll() {
-		String sql = "SELECT * FROM suppliers WHERE isdeleted = false";
+		String sql = "SELECT * FROM suppliers WHERE isdeleted = false AND supplier_id != 'deleted'";
 		List<Supplier> entities = this.jdbcTemplate.query(sql, new SupplierMapper());
 		return entities;
 	}

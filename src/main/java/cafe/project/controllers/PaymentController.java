@@ -24,7 +24,6 @@ import cafe.project.services.OrderDetailsService;
 import cafe.project.services.OrdersService;
 import cafe.project.services.PayMethodService;
 import cafe.project.services.PaymentService;
-import cafe.project.services.PaymentStockService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -35,17 +34,14 @@ public class PaymentController {
 	private final OrdersService ordersService;
 	private final OrderDetailsService orderDetailsService;
 	private final PayMethodService payMethodService;
-	private final PaymentStockService paymentStockService;
 
 	public PaymentController(PaymentService paymentService, OrdersService orderService,
-			OrderDetailsService orderDetailsService, PayMethodService payMethodService,
-			PaymentStockService paymentStockService) {
+			OrderDetailsService orderDetailsService, PayMethodService payMethodService) {
 
 		this.paymentService = paymentService;
 		this.ordersService = orderService;
 		this.orderDetailsService = orderDetailsService;
 		this.payMethodService = payMethodService;
-		this.paymentStockService = paymentStockService;
 	}
 
 	@GetMapping

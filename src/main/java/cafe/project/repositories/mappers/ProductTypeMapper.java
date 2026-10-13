@@ -12,7 +12,7 @@ public class ProductTypeMapper implements RowMapper<ProductType> {
 
 	@Override
 	public ProductType mapRow(ResultSet rs, int rowNum) throws SQLException {
-		return  new ProductType(rs.getString("type_id"), rs.getString("name"), rs.getString("description"), rs.getString("coverimgpath"), rs.getDouble("price"), rs.getObject("created_at", LocalDateTime.class), rs.getBoolean("isdeleted"), rs.getBoolean("isedited"), rs.getString("category_id"), rs.getString("employee_id"));
+		return  new ProductType(rs.getString("type_id"), rs.getString("name"), rs.getString("description"), rs.getString("coverimgpath"), rs.getDouble("price"), rs.getObject("created_at", LocalDateTime.class), rs.getBoolean("isdeleted"), rs.getBoolean("isedited"), rs.getString("category_id"), rs.getString("employee_id"), rs.getString("branches_branch_id"));
 	}
 
 }

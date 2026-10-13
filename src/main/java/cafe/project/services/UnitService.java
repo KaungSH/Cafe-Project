@@ -15,9 +15,11 @@ import cafe.project.repositories.entities.Unit;
 public class UnitService {
 
 	private final UnitRepository repo;
+	private final EmployeeService employeeService;
 
-	public UnitService(UnitRepository repo) {
+	public UnitService(UnitRepository repo, EmployeeService employeeService) {
 		this.repo = repo;
+		this.employeeService = employeeService;
 	}
 
 	public List<UnitDto> findAll() {
@@ -98,6 +100,7 @@ public class UnitService {
 		dto.setIsdeleted(entity.getIsedited());
 		dto.setIsdeleted(entity.getIsdeleted());
 		dto.setCreated_at(entity.getCreated_at());
+		dto.setEmployee_name(employeeService.getEmployeeByIdAdmin(entity.getEmployee_id()).getName());
 
 		return dto;
 	}

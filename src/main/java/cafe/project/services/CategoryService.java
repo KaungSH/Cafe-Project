@@ -15,13 +15,15 @@ import cafe.project.repositories.entities.Category;
 public class CategoryService {
 
 	private final CategoryRepository repo;
+	private final BranchService bservice;
 
-	public CategoryService(CategoryRepository repo) {
+	public CategoryService(CategoryRepository repo, BranchService bservice) {
 		this.repo = repo;
+		this.bservice = bservice;
 	}
 
-	public List<CategoryDto> findAll() {
-		List<Category> entities = repo.findAll();
+	public List<CategoryDto> findAllActive() {
+		List<Category> entities = repo.findAllActive();
 		return entities.stream().map(this::toDto).toList();
 	}
 
@@ -68,8 +70,8 @@ public class CategoryService {
 		return repo.delete(id);
 	}
 
-	public List<CategoryDto> deletedList(String branch_id) {
-		return this.repo.findDeletedAll(branch_id).stream().map(this::toDto).toList();
+	public List<Category> deletedList(String branch_id) {
+		return this.repo.findDeletedAll(branch_id);
 	}
 
 	public int restore(String id) {
@@ -97,6 +99,7 @@ public class CategoryService {
 		dto.setCreated_at(entity.getCreated_at());
 		dto.setEmployee_id(entity.getEmployee_id());
 		dto.setBranch_id(entity.getBranch_id());
+		dto.setBranch_name(bservice.findById(entity.getBranch_id()).getName());
 		return dto;
 	}
 

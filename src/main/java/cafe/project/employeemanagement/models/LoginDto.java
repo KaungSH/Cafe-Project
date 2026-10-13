@@ -23,6 +23,8 @@ public class LoginDto {
 	private String password;
 
 	private String employee_name;
+	
+	private String photopath;
 
 
 	public LoginDto() {
@@ -33,7 +35,7 @@ public class LoginDto {
 		this.password = password;
 	}
 	
-	public LoginDto(String email, String password, String employee_id, String employee_role, String branch_id, String branch_name, String employee_status, String employee_role_id, String employee_status_id, String employee_name) {
+	public LoginDto(String email, String password, String employee_id, String employee_role, String branch_id, String branch_name, String employee_status, String employee_role_id, String employee_status_id, String employee_name, String photopath) {
 		this.email = email;
 		this.password = password;
 		this.employee_id = employee_id;
@@ -44,6 +46,7 @@ public class LoginDto {
 		this.employee_role_id = employee_role_id;
 		this.employee_status_id = employee_status_id;
 		this.employee_name = employee_name;
+		this.photopath = photopath;
 	}
 
 	public String getEmail() {
@@ -124,6 +127,14 @@ public class LoginDto {
 
 	public void setEmployee_name(String employee_name) {
 		this.employee_name = employee_name;
+	}
+
+	public String getPhotopath() {
+		return photopath;
+	}
+
+	public void setPhotopath(String photopath) {
+		this.photopath = photopath;
 	}
 	
 	

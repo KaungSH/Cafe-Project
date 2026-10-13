@@ -50,7 +50,7 @@ public class ProductRepository {
 	}
 
 	public List<Product> findListAll() {
-		String sql = "SELECT p.*, d.name discount_name, d.discount_value discount_value, i.name ingredient_name, pi.quantity_required, e.name employee_name, pt.name type_name, s.size_code, u.abbreviation unit_code FROM products p LEFT JOIN discounts_products dp ON p.product_id = dp.product_id LEFT JOIN discounts d ON dp.discount_id = d.discount_id LEFT JOIN products_ingredients pi ON p.product_id = pi.product_id LEFT JOIN ingredient_types i ON pi.ingredient_type_id = i.ingredient_type_id LEFT JOIN units u ON i.unit_id = u.unit_id LEFT JOIN product_types pt ON p.item_id = pt.type_id LEFT JOIN employees e ON p.employee_id = e.employee_id LEFT JOIN sizes s ON p.size_id = s.size_id WHERE p.isdeleted = false AND p.is_active = true ORDER BY p.created_at DESC";
+		String sql = "SELECT p.*, d.name discount_name, d.discount_value discount_value, i.name ingredient_name, i.ingredient_type_id ingredient_type_id, pi.quantity_required, e.name employee_name, pt.name type_name, s.size_code, u.abbreviation unit_code FROM products p LEFT JOIN discounts_products dp ON p.product_id = dp.product_id LEFT JOIN discounts d ON dp.discount_id = d.discount_id LEFT JOIN products_ingredients pi ON p.product_id = pi.product_id LEFT JOIN ingredient_types i ON pi.ingredient_type_id = i.ingredient_type_id LEFT JOIN units u ON i.unit_id = u.unit_id LEFT JOIN product_types pt ON p.item_id = pt.type_id LEFT JOIN employees e ON p.employee_id = e.employee_id LEFT JOIN sizes s ON p.size_id = s.size_id WHERE p.isdeleted = false AND p.is_active = true ORDER BY p.created_at DESC";
 		return jdbcTemplate.query(sql, new ProductResultSetExtractor2());
 	}
 

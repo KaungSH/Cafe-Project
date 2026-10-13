@@ -10,7 +10,6 @@ import cafe.project.repositories.DiscountRepository;
 import cafe.project.repositories.entities.Discount;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,8 +49,6 @@ public class DiscountService {
 
 	public List<DiscountListModel> getAllDiscountsActive(String branch_id) {
 		List<DiscountListModel> modelList = discountRepository.findAllForListActive(branch_id);
-		if (modelList == null || modelList.isEmpty())
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Discount");
 
 		for (DiscountListModel m : modelList) {
 			setStatus(m.getDiscount_id(), m.getStartdate(), m.getEnddate());
@@ -62,8 +59,6 @@ public class DiscountService {
 
 	public List<DiscountListModel> getAllDiscountsAdmin() {
 		List<DiscountListModel> modelList = discountRepository.findAllForListAdmin();
-		if (modelList == null || modelList.isEmpty())
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Discount");
 
 		for (DiscountListModel m : modelList) {
 			setStatus(m.getDiscount_id(), m.getStartdate(), m.getEnddate());
@@ -88,7 +83,7 @@ public class DiscountService {
 	}
 
 	public DiscountEntryModel getDiscountById(String id) {
-		Discount discount = discountRepository.findById(id).orElse(null);
+		Discount discount = discountRepository.findById(id);
 
 		if (discount == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Discount");
@@ -139,7 +134,7 @@ public class DiscountService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Discount data is required");
 		}
 
-		Discount discount = discountRepository.findById(dto.getDiscount_id()).orElse(null);
+		Discount discount = discountRepository.findById(dto.getDiscount_id());
 		if (discount == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Discount");
 		}
@@ -159,25 +154,23 @@ public class DiscountService {
 	}
 
 	public void deleteDiscount(String id) {
-		getAllDiscountsById(id);
+		getDiscountById(id);
 		discountRepository.softDelete(id);
 	}
 
 	public List<DiscountListModel> DeletedList(String branch_id) {
-		List<DiscountListModel> list = discountRepository.findActiveDiscountByProductId(branch_id);
-		if (list == null || list.isEmpty())
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Discount");
+		List<DiscountListModel> list = discountRepository.DeletedList(branch_id);
 
 		return list;
 	}
 
 	public int restore(String id) {
-		getAllDiscountsById(id);
+		getDiscountById(id);
 		return discountRepository.restore(id);
 	}
 
 	public int hardDelete(String id) {
-		getAllDiscountsById(id);
+		getDiscountById(id);
 		return discountRepository.hardDelete(id);
 	}
 

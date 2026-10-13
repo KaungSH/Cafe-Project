@@ -202,7 +202,7 @@ body {
 						<div class="row g-4">
 							
 							<!-- Main Input Area -->
-							<div class="col-lg-7">
+							<div class="col-lg-12">
 								<div class="sub-panel">
 									<div class="sub-panel-title">
 										<i class="fa-solid fa-pen-to-square"></i> Update Information
@@ -213,32 +213,19 @@ body {
 										<input type="text" id="name" class="input-rounded" th:field="*{name}" placeholder="Enter category name" required>
 									</div>
 
-									<div class="mb-3">
-										<label class="form-label-caps" for="branch">Assigned Branch</label>
-										<select id="branch" class="select-rounded" th:field="*{branch_id}">
-											<option value="">-- Select Branch --</option>
-											<option th:each="branch : ${branches}" th:value="${branch.branch_id}" th:text="${branch.name}"></option>
-										</select>
-									</div>
-
 									<div class="mb-0">
 										<label class="form-label-caps" for="description">Description</label>
 										<textarea id="description" class="textarea-rounded" rows="4" th:field="*{description}" placeholder="Enter description..."></textarea>
 									</div>
 								</div>
+								<div class="d-flex align-items-center gap-2 p-3 bg-light rounded-3 border">
+										<input type="checkbox" id="isActive" class="custom-checkbox" th:field="*{is_active}" checked>
+										<label for="isActive" class="fw-semibold text-dark mb-0 small" style="cursor: pointer;">
+											Set this category active for ordering and menu display
+										</label>
+									</div>
 							</div>
 
-							<!-- Tips Panel -->
-							<div class="col-lg-5">
-								<div class="sub-panel bg-light">
-									<div class="sub-panel-title">
-										<i class="fa-solid fa-lightbulb"></i> Note
-									</div>
-									<p class="text-muted small">
-										Modifying the category name will automatically reflect on all linked coffee and tea products.
-									</p>
-								</div>
-							</div>
 
 						</div>
 					</div>

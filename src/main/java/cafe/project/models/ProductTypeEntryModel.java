@@ -6,13 +6,13 @@ public class ProductTypeEntryModel {
 	
 	private String type_id, name, description, coverimgpath, coverimgname;
 	private double price;
-	private String category_id, employee_id;
+	private String category_id, employee_id, branch_id;
 	
 	private List<ProductEntryModel> product;
 	
 	public ProductTypeEntryModel() {}
 	
-	public ProductTypeEntryModel(String type_id, String name, String description, String coverimgpath, double price, String category_id, String employee_id) {
+	public ProductTypeEntryModel(String type_id, String name, String description, String coverimgpath, double price, String category_id, String employee_id, String branch_id) {
 		this.type_id = type_id;
 		this.name = name;
 		this.description = description;
@@ -20,9 +20,10 @@ public class ProductTypeEntryModel {
 		this.price = price;
 		this.category_id = category_id;
 		this.employee_id = employee_id;
+		this.branch_id = branch_id;
 	}
 	
-	public ProductTypeEntryModel(String type_id, String name, String description, String coverimgpath, double price, String category_id, String employee_id, String coverimgname) {
+	public ProductTypeEntryModel(String type_id, String name, String description, String coverimgpath, double price, String category_id, String employee_id, String coverimgname, String branch_id) {
 		this.type_id = type_id;
 		this.name = name;
 		this.description = description;
@@ -31,9 +32,10 @@ public class ProductTypeEntryModel {
 		this.category_id = category_id;
 		this.employee_id = employee_id;
 		this.coverimgname = coverimgname;
+		this.branch_id = branch_id;
 	}
 	
-	public ProductTypeEntryModel(String type_id, String name, String description, String coverimgpath, double price, String category_id, String employee_id, String coverimgname, List<ProductEntryModel> product) {
+	public ProductTypeEntryModel(String type_id, String name, String description, String coverimgpath, double price, String category_id, String employee_id, String coverimgname, List<ProductEntryModel> product, String branch_id) {
 		this.type_id = type_id;
 		this.name = name;
 		this.description = description;
@@ -43,6 +45,7 @@ public class ProductTypeEntryModel {
 		this.employee_id = employee_id;
 		this.coverimgname = coverimgname;
 		this.product = product;
+		this.branch_id = branch_id;
 	}
 
 	public String getType_id() {
@@ -115,6 +118,14 @@ public class ProductTypeEntryModel {
 
 	public void setProduct(List<ProductEntryModel> product) {
 		this.product = product;
+	}
+
+	public String getBranch_id() {
+		return branch_id;
+	}
+
+	public void setBranch_id(String branch_id) {
+		this.branch_id = branch_id;
 	}
 	
 	

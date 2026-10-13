@@ -147,8 +147,7 @@ body {
         <thead>
           <tr>
             <th style="width: 100px;">No</th>
-            <th style="width: 200px;">Category ID</th>
-            <th>Category Name</th>
+            <th>Expense Category Name</th>
           </tr>
         </thead>
         <tbody>
@@ -157,7 +156,6 @@ body {
           </tr>
           <tr th:each="category, stat : ${expense}">
             <td th:text="${stat.count}">1</td>
-            <td><span class="badge-id" th:text="${category.expense_category_id}">#001</span></td>
             <td><strong th:text="${category.category_name}">Consumables</strong></td>
           </tr>
         </tbody>

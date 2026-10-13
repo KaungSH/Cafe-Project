@@ -73,7 +73,7 @@ public class EmployeeSelfChangeController {
 				model.addAttribute("error", "Wrong Credentials.");
 				return "common/user/changepassword";
 			}
-			return "redirect:/";
+			return "redirect:/logout";
 		}
 
 		cfdto.setPhotopath(file);
@@ -82,7 +82,7 @@ public class EmployeeSelfChangeController {
 			model.addAttribute("error", "Wrong Credentials.");
 			return "common/user/changepassword";
 		}
-		return "redirect:/";
+		return "redirect:/logout";
 	}
 	
 	private String saveImgFile(Part imgPart) {

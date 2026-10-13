@@ -16,8 +16,6 @@ import cafe.project.employeemanagement.models.LoginDto;
 import cafe.project.models.OrderDetailsDto;
 import cafe.project.repositories.entities.OrderDetails;
 import cafe.project.repositories.entities.Orders;
-import cafe.project.services.BranchService;
-import cafe.project.services.EmployeeService;
 import cafe.project.services.OrderDetailsService;
 import cafe.project.services.OrdersService;
 import cafe.project.services.PaymentService;
@@ -31,26 +29,22 @@ public class OrderDetailsController {
 	private final OrderDetailsService orderDetailsService;
 	private final ProductService productService;
 	private final OrdersService ordersService;
-	private final BranchService branchService;
-	private final EmployeeService employeeService;
 	private final PaymentService paymentService;
 
 	public OrderDetailsController(OrderDetailsService orderDetailsService, ProductService productService,
-			OrdersService ordersService, BranchService branchService, EmployeeService employeeService,
+			OrdersService ordersService,
 			PaymentService paymentService) {
 
 		this.orderDetailsService = orderDetailsService;
 		this.productService = productService;
 		this.ordersService = ordersService;
-		this.branchService = branchService;
-		this.employeeService = employeeService;
 		this.paymentService = paymentService;
 	}
 
 	@GetMapping
 	public String list(Model model, HttpSession session) {
-
-		List<Orders> orders = ordersService.findNotReceivedAll();
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		List<Orders> orders = ordersService.findNotReceivedAll(ldto.getBranch_id());
 
 		for (Orders order : orders) {
 
@@ -80,9 +74,9 @@ public class OrderDetailsController {
 	}
 
 	@GetMapping("/received-list")
-	public String receivedList(Model model) {
-
-		List<Orders> orders = ordersService.findReceivedAll();
+	public String receivedList(Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		List<Orders> orders = ordersService.findReceivedAll(ldto.getBranch_id());
 
 		model.addAttribute("orders", orders);
 		model.addAttribute("orderDetails", orderDetailsService.findAll());
@@ -105,6 +99,7 @@ public class OrderDetailsController {
 		Orders order = new Orders();
 		OrderDetailsDto orderDetailsDto;
 
+		@SuppressWarnings("unchecked")
 		List<OrderDetails> selectedDetails = (List<OrderDetails>) session.getAttribute("selectedOrderDetails");
 
 		if (selectedDetails != null && !selectedDetails.isEmpty()) {
@@ -270,9 +265,10 @@ public class OrderDetailsController {
 	}
 
 	@GetMapping("/deleted")
-	public String deletedList(Model model) {
+	public String deletedList(Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 
-		model.addAttribute("orders", ordersService.findDeletedAll());
+		model.addAttribute("orders", ordersService.findDeletedAll(ldto.getBranch_id()));
 
 		model.addAttribute("orderDetails", orderDetailsService.findAll());
 

@@ -244,7 +244,6 @@ public class ProductService {
 		}
 		em.setProduct_id(id);
 		em.setType_id(type_id);
-		em.setEmployee_id("1");
 		return prepo.add(toEntity(em));
 	}
 
@@ -254,7 +253,6 @@ public class ProductService {
 		}
 		em.setProduct_id(id);
 		em.setType_id(type_id);
-		em.setEmployee_id("1");
 		return prepo.add2(toEntity(em));
 	}
 

@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import cafe.project.employeemanagement.models.LoginDto;
@@ -112,8 +111,8 @@ public class CategoryController {
 		return "categories/deleted-list";
 	}
 
-	@PostMapping("/categories/restore")
-	public String restoreCategory(@RequestParam String id, HttpSession session) {
+	@GetMapping("/categories/restore/{id}")
+	public String restoreCategory(@PathVariable String id, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		CategoryDto existingCategory = this.categoryService.findById(id);
 
@@ -125,8 +124,8 @@ public class CategoryController {
 		return "redirect:/manager-only/categories/deleted-list";
 	}
 
-	@PostMapping("/categories/real-delete")
-	public String realDeleteCategory(@RequestParam String id, HttpSession session) {
+	@GetMapping("/categories/real-delete/{id}")
+	public String realDeleteCategory(@PathVariable String id, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		CategoryDto existingCategory = this.categoryService.findById(id);
 

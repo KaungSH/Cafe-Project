@@ -2,7 +2,6 @@ package cafe.project.repositories;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -50,15 +49,16 @@ public class DiscountRepository {
 				+ "JOIN promo_types pt ON d.promo_type_id = pt.promo_type_id \r\n"
 				+ "JOIN audience_types at ON d.audience_type_id = at.audience_type_id \r\n"
 				+ "LEFT JOIN employees e ON d.employee_id = e.employee_id \r\n"
-				+ "LEFT JOIN branches b ON  d.branches_branch_id = b.branch_id WHERE d.isdeleted = 1 AND d.branches_branch_id = ? \r\n"
+				+ "LEFT JOIN branches b ON  d.branches_branch_id = b.branch_id WHERE d.isdeleted = true AND d.branches_branch_id = ? \r\n"
 				+ "ORDER BY d.created_at DESC";
 		return jdbcTemplate.query(sql, new DiscountListModelResultSetExtractor(), branch_id);
 	}
 
-	public Optional<Discount> findById(String id) {
-		String sql = "SELECT * FROM discounts WHERE discount_id = ? AND isdeleted = 0";
+	public Discount findById(String id) {
+		String sql = "SELECT * FROM discounts WHERE discount_id = ?";
+		System.out.println("id in the repo" + id);
 		List<Discount> results = jdbcTemplate.query(sql, new DiscountResultSetExtractor(), id);
-		return (results != null && !results.isEmpty()) ? Optional.of(results.get(0)) : Optional.empty();
+		return results.isEmpty() ? null : results.get(0);
 	}
 
 	public List<DiscountListModel> findAllForList(String branch_id) {
@@ -88,8 +88,8 @@ public class DiscountRepository {
 	public List<DiscountListModel> findActiveDiscountByProductId(String productId) {
 
 		String sql = "SELECT d.discount_id, " + "d.name AS discount_name, " + "d.description, " + "d.discount_value, "
-				+ "d.startdate, " + "d.enddate, " + "d.is_active, " + "pt.name AS promo_type_name, "
-				+ "at.name AS audience_type_name, " + "e.name AS employee_name, " + "b.name AS branch_name "
+				+ "d.startdate, " + "d.enddate, " + "d.is_active, " + "pt.type_name AS promo_type_name, "
+				+ "at.type_name AS audience_type_name, " + "e.name AS employee_name, " + "b.name AS branch_name "
 				+ "FROM discounts d " +
 
 				"LEFT JOIN promo_types pt " + "ON d.promo_type_id = pt.promo_type_id " +

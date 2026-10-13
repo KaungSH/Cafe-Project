@@ -156,20 +156,17 @@ public class DailyRegisterService {
 	}
 
 	public void deleteRegister(String register_id) {
-		DailyRegister entity = repository.findById(register_id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Daily Register"));
+		repository.findById(register_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Daily Register"));
 		repository.delete(register_id);
 	}
 
 	public void recoverRegister(String register_id) {
-		DailyRegister entity = repository.findById(register_id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Daily Register"));
+		repository.findById(register_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Daily Register"));
 		repository.recover(register_id);
 	}
 
 	public void hardDeleteRegister(String register_id) {
-		DailyRegister entity = repository.findById(register_id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Daily Register"));
+		repository.findById(register_id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Daily Register"));
 		repository.hardDelete(register_id);
 	}
 }

@@ -306,7 +306,7 @@
                     <thead>
                         <tr>
                             <th style="width: 50px;">NO</th>
-                            <th>PROMO CODE</th>
+                            <th>PROMO TYPE</th>
                             <th>NAME</th>
                             <th>BRANCH</th>
                             <th>AUDIENCE</th>
@@ -377,11 +377,11 @@
                                         <div class="d-flex justify-content-between align-items-center mb-3">
                                             <div class="fw-bold" style="color: var(--espresso-dark); font-size: 0.92rem;">
                                                 <i class="bi bi-cup-hot-fill me-1" style="color: #8c5332;"></i>
-                                                Assigned Coffee Offerings in <span th:text="${discount.name}"></span>
+                                                Assigned Products Offerings in <span th:text="${discount.name}"></span>
                                             </div>
                                             <a th:href="@{/manager-only/discounts/discountProducts/add/{id}(id=${discount.discount_id})}" 
                                                class="btn-pill-action btn-pill-edit" style="width: auto; padding: 5px 14px;">
-                                                <i class="fa-solid fa-plus"></i> Assign Coffee
+                                                <i class="fa-solid fa-plus"></i> Assign Products
                                             </a>
                                         </div>
                                         <div th:if="${discount.products != null and !discount.products.empty}" class="row g-2">
