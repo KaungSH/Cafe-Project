@@ -15,16 +15,18 @@
 			 th:src="@{'/images/' + ${session.loggedInUser.photopath}}"
 			 alt="Thumbnail Error" 
 			 style="height: 30px; width: 30px; object-fit: cover; border-radius: 100%;" class = "shadow-lg">
-			 <span th:text="${session.loggedInUser != null ? session.loggedInUser.employee_name : 'Staff Name'}"></span>
+			 <span th:text="${session.loggedInUser != null ? session.loggedInUser.employee_name : 'Staff Name'}" style = "color:#c77b3b"></span>
             
             <div class="cafe-role">
                 <i class="bi bi-shield-lock-fill"></i>
                MANAGER
             </div>
             <div class="dropdown">
-            <a href="#" class="staff-profile-dropdown dropdown-toggle text-decoration-none d-flex align-items-center gap-2" id="staffUserDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <a href="#" class="staff-profile-dropdown dropdown-toggle text-decoration-none d-flex align-items-center gap-2" id="staffUserDropdown" data-bs-toggle="dropdown" aria-expanded="false" style = "color:#c77b3b">
+            Profile
             </a>
             <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="staffUserDropdown" style="background: #fffaf5;">
+           		<li><a class="dropdown-item py-2 px-3 text-dark fw-medium" th:href="@{/closeshift}"><i class="bi bi-person me-2 text-warning"></i> Close Shift</a></li>
                 <li><a class="dropdown-item py-2 px-3 text-dark fw-medium" th:href="@{/changeprofile}"><i class="bi bi-person me-2 text-warning"></i> Change Profile</a></li>
                 <li><a class="dropdown-item py-2 px-3 text-dark fw-medium" th:href="@{/changepassword}"><i class="bi bi-person me-2 text-warning"></i> Change Password</a></li>
                 <li><hr class="dropdown-divider bg-light"></li>
@@ -145,7 +147,7 @@
         </a>
 
         <!-- PRODUCTS / MENU ITEMS -->
-        <a style="color:Orange" th:href="@{/manager/products}" class="cafe-menu-item">
+        <a style="color:Orange" th:href="@{/manager-only/products}" class="cafe-menu-item">
             <i class="bi bi-cup-straw"></i>
             <span>Products</span>
         </a>

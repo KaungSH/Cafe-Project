@@ -240,26 +240,7 @@ body {
 					<i class="fa-solid fa-layer-group"></i>
 				</div>
 			</div>
-
-			<div class="stat-card">
-				<div>
-					<div class="text-muted small fw-semibold">Global Branches</div>
-					<div class="fw-bold fs-5 text-dark">All Branches Included</div>
-				</div>
-				<div class="stat-icon stat-icon-branch">
-					<i class="fa-solid fa-code-branch"></i>
-				</div>
-			</div>
-
-			<div class="stat-card">
-				<div>
-					<div class="text-muted small fw-semibold">Access Level</div>
-					<div class="fw-bold fs-5 text-dark">Full System Access</div>
-				</div>
-				<div class="stat-icon stat-icon-scope">
-					<i class="fa-solid fa-shield-halved"></i>
-				</div>
-			</div>
+			
 		</div>
 
 		<!-- 2. Title & Action Controls -->
@@ -270,12 +251,6 @@ body {
 			</div>
 
 			<div class="d-flex align-items-center gap-2">
-				<a th:href="@{/admin/categories/add}" class="btn-add-category">
-					<i class="fa-solid fa-plus"></i> Add Category
-				</a>
-				<a th:href="@{/admin/categories/bin}" class="btn-bin-trash">
-					<i class="fa-solid fa-trash-can"></i> Category Bin
-				</a>
 			</div>
 		</div>
 
@@ -291,7 +266,6 @@ body {
 							<th style="width: 16%;">Created By</th>
 							<th style="width: 22%;">Description</th>
 							<th style="width: 10%; text-align: center;">Status</th>
-							<th style="width: 10%; text-align: end;">Action</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -314,17 +288,7 @@ body {
 								<span th:if="${category.is_active == true}" class="badge-status badge-active">Active</span>
 								<span th:if="${category.is_active == false or category.is_active == null}" class="badge-status badge-inactive">Inactive</span>
 							</td>
-							<td class="text-end">
-								<!-- Stacked Pill Action Buttons (Size list style) -->
-								<div class="action-pill-group">
-									<a class="btn-pill-action btn-pill-edit" th:href="@{/admin/categories/edit/{id}(id=${category.category_id})}" title="Edit Category">
-										<i class="fa-solid fa-pen-to-square"></i> Edit
-									</a>
-									<a class="btn-pill-action btn-pill-delete" th:href="@{/admin/categories/delete/{id}(id=${category.category_id})}" onclick="return confirm('Are you sure you want to delete this category?');" title="Delete Category">
-										<i class="fa-solid fa-trash-can"></i> Delete
-									</a>
-								</div>
-							</td>
+						
 						</tr>
 
 						<tr th:if="${#lists.isEmpty(categories)}">

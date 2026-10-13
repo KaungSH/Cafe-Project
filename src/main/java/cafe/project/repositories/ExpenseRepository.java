@@ -41,7 +41,7 @@ public class ExpenseRepository {
 				+ "b.Name As branch_name,\r\n" + "ec.category_name\r\n" + "FROM expenses e\r\n"
 				+ "LEFT JOIN branches b ON e.branch_id = b.branch_id \r\n"
 				+ "LEFT JOIN expense_categories ec ON e.expense_category_id = ec.expense_category_id\r\n"
-				+ "WHERE e.expense_id = ? AND e.branch_id = ? AND e.isdeleted = 0";
+				+ "WHERE e.expense_id = ? AND e.branch_id = ?";
 		List<Expense> entities = this.jdbcTemplate.query(sql, new ExpenseMapper(), expense_id, branch_id);
 		return entities.isEmpty() ? null : entities.get(0);
 	}

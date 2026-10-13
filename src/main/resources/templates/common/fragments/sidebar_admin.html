@@ -3,50 +3,35 @@
 <body>
 <div th:fragment="sidebar_admin" class="cafe-sidebar admin-sidebar">
 
-<!-- ================= BRAND / LOGO ================= -->
-<div class="cafe-brand text-center pt-3 pb-2 px-2 d-flex flex-column align-items-center justify-content-center">
-    <div class="cafe-brand-name fw-bold fs-4 text-warning text-nowrap d-flex align-items-center justify-content-center">
-        <i class="bi bi-cup-hot-fill me-2 fs-5"></i>
-        <span>Café Luft</span>
-    </div>
-
-    <div class="cafe-role mt-1">
-        <span class="badge rounded-pill bg-dark bg-opacity-75 text-warning border border-warning-subtle px-2 py-1" 
-              style="font-size: 11px; letter-spacing: 1px;">
-            <i class="bi bi-shield-lock-fill me-1"></i>
-            <span th:text="${session.employeeRole != null ? session.employeeRole : 'ADMIN'}">ADMIN</span>
-        </span>
-    </div>
-</div>
-
-<!-- ================= USER PROFILE CARD ================= -->
-<div class="cafe-profile-card px-3 py-2 mb-2">
-    <!-- Manager အတွက် /manager/profile သို့ ညွှန်းပါ -->
-    <a th:href="@{/admin/profile}" 
-       class="d-flex align-items-center text-decoration-none p-2 rounded-3"
-       style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.08); transition: all 0.2s ease;">
-        
-        <div class="position-relative me-2 flex-shrink-0">
-            <img th:src="${session.employeeImage != null ? session.employeeImage : '/images/profile.jpg'}" 
-                 src="/images/profile.jpg" 
-                 alt="Profile Photo"
-                 class="rounded-circle border border-warning"
-                 style="width: 40px; height: 40px; object-fit: cover;">
-            <span class="position-absolute bottom-0 end-0 bg-success border border-dark rounded-circle" 
-                  style="width: 10px; height: 10px;"></span>
+<!-- ================= BRAND ================= -->
+    <div class="cafe-brand">
+        <div class="cafe-brand-icon admin-icon">
+            <i class="bi bi-cup-hot-fill"></i>
         </div>
-
-        <div class="overflow-hidden flex-grow-1">
-            <div class="fw-semibold text-truncate text-white" style="font-size: 14px;"
-                 th:text="${session.employeeName != null ? session.employeeName : 'Admin'}">
-                Admin
+        <div>
+             <img th:if="${session.loggedInUser != null}" 
+			 th:src="@{'/images/' + ${session.loggedInUser.photopath}}"
+			 alt="Thumbnail Error" 
+			 style="height: 30px; width: 30px; object-fit: cover; border-radius: 100%;" class = "shadow-lg">
+			 <span th:text="${session.loggedInUser != null ? session.loggedInUser.employee_name : 'Staff Name'}" style = "color:#c77b3b"></span>
+            
+            <div class="cafe-role">
+                <i class="bi bi-shield-lock-fill"></i>
+               ADMIN
             </div>
-            <small class="text-white-50 d-flex align-items-center" style="font-size: 11px;">
-                Edit Profile <i class="bi bi-chevron-right ms-1" style="font-size: 9px;"></i>
-            </small>
+            <div class="dropdown">
+            <a href="#" class="staff-profile-dropdown dropdown-toggle text-decoration-none d-flex align-items-center gap-2" id="staffUserDropdown" data-bs-toggle="dropdown" aria-expanded="false" style = "color:#c77b3b">
+            Profile
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="staffUserDropdown" style="background: #fffaf5;">
+                <li><a class="dropdown-item py-2 px-3 text-dark fw-medium" th:href="@{/changeprofile}"><i class="bi bi-person me-2 text-warning"></i> Change Profile</a></li>
+                <li><a class="dropdown-item py-2 px-3 text-dark fw-medium" th:href="@{/changepassword}"><i class="bi bi-person me-2 text-warning"></i> Change Password</a></li>
+                <li><hr class="dropdown-divider bg-light"></li>
+                <li><a class="dropdown-item py-2 px-3 text-danger fw-medium" th:href="@{/logout}"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
+            </ul>
         </div>
-    </a>
-</div>
+        </div>
+    </div>
 
     <!-- ================= MENU ================= -->
     <div class="cafe-menu">

@@ -30,7 +30,7 @@ import cafe.project.services.OrdersService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/manager-only/branches-stats")
+@RequestMapping("/manager-only/branchstats")
 public class BranchesStatsController {
 
 	private final BranchesStatsService bsService;

@@ -373,15 +373,14 @@ body {
 								</div>
 							</div>
 
-							<!-- Right Column: Sizes & Ingredients Setup -->
+							<!-- Right Column: Sizes & Recipe Setup -->
 							<div class="col-lg-7">
 								<div class="sub-panel">
 									<div class="sub-panel-title">
 										<i class="fa-solid fa-layer-group"></i> Sizes and Variant Pricing Setup
 									</div>
-
 									<p class="text-muted small mb-3">
-										Turn on sizes and specify individual pricing for each cup size:
+										Select the sizes to activate for this product and define their variant prices:
 									</p>
 
 									<table class="variant-card-table">
@@ -396,11 +395,11 @@ body {
 										<tbody>
 											<th:block th:each="s : ${sizes}">
 												<tr class="product-size-row">
-													<!-- Enable Size & Name -->
+													<!-- Enable & Size Name -->
 													<td>
 														<div class="d-flex align-items-center gap-2">
 															<input type="checkbox" class="custom-checkbox size-enable">
-															<span class="fw-semibold text-dark" th:text="${s.name}">Small (S)</span>
+															<span class="fw-semibold text-dark" th:text="${s.name}">Small</span>
 														</div>
 													</td>
 
@@ -418,18 +417,18 @@ body {
 														</div>
 													</td>
 
-													<!-- Active State -->
+													<!-- Active -->
 													<td class="text-center">
 														<input type="checkbox" class="custom-checkbox is-active" checked>
 													</td>
 												</tr>
 
-												<!-- Hidden Row for Ingredients Data Preservation -->
-												<tr style="display: none;">
+												<!-- Hidden Row for Ingredients -->
+												<tr>
 													<td>
 														<div th:each="ing : ${ingredients}" class="ingredient-row">
 															<input type="hidden" class="ingredient-id" th:value="${ing.ingredient_type_id}">
-															<input type="checkbox" class="ingredient-required">
+															<input type="checkbox" class="ingredient-required" th:text = "${ing.name}">
 															<input type="number" class="ingredient-quantity" value="1">
 														</div>
 													</td>

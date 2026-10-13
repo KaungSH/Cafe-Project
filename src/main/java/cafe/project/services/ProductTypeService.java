@@ -144,7 +144,7 @@ public class ProductTypeService {
 
 		for (ProductType item : pt.searchByName(keyword, branch_id)) {
 			String categoryName = cr.findById(item.getCategory_id()).getName();
-			String employeeName = er.findById(item.getEmployee_id()).getName();
+			String employeeName = er.findByIdAdmin(item.getEmployee_id()).getName();
 
 			list.add(toListModel2(item, categoryName, employeeName, bs.findById(item.getBranch_id()).getName()));
 		}
@@ -160,7 +160,7 @@ public class ProductTypeService {
 
 		for (ProductType item : pt.searchByNameAdmin(keyword)) {
 			String categoryName = cr.findById(item.getCategory_id()).getName();
-			String employeeName = er.findById(item.getEmployee_id()).getName();
+			String employeeName = er.findByIdAdmin(item.getEmployee_id()).getName();
 
 			list.add(toListModel2(item, categoryName, employeeName, bs.findById(item.getBranch_id()).getName()));
 		}
@@ -177,7 +177,7 @@ public class ProductTypeService {
 
 		for (ProductType item : pt.searchDeletedByName(keyword, branch_id)) {
 			String categoryName = cr.findById(item.getCategory_id()).getName();
-			String employeeName = er.findById(item.getEmployee_id()).getName();
+			String employeeName = er.findByIdAdmin(item.getEmployee_id()).getName();
 
 			list.add(toListModel3(item, categoryName, employeeName, bs.findById(item.getBranch_id()).getName()));
 		}
@@ -190,7 +190,7 @@ public class ProductTypeService {
 
 		for (ProductType item : pt.findDeletedAll(branch_id)) {
 			String categoryName = cr.findById(item.getCategory_id()).getName();
-			String employeeName = er.findById(item.getEmployee_id()).getName();
+			String employeeName = er.findByIdAdmin(item.getEmployee_id()).getName();
 
 			list.add(toListModel3(item, categoryName, employeeName, bs.findById(item.getBranch_id()).getName()));
 		}
@@ -249,7 +249,7 @@ public class ProductTypeService {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Type");
 		}
 		return toListModel(entity, cr.findById(entity.getCategory_id()).getName(),
-				er.findById(entity.getEmployee_id()).getName(), bs.findById(entity.getBranch_id()).getName());
+				er.findByIdAdmin(entity.getEmployee_id()).getName(), bs.findById(entity.getBranch_id()).getName());
 	}
 
 	public ProductTypeListModel findDeletedById(String id) {
@@ -258,7 +258,7 @@ public class ProductTypeService {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Type");
 		}
 		return toListModel(entity, cr.findById(entity.getCategory_id()).getName(),
-				er.findById(entity.getEmployee_id()).getName(), bs.findById(entity.getBranch_id()).getName());
+				er.findByIdAdmin(entity.getEmployee_id()).getName(), bs.findById(entity.getBranch_id()).getName());
 	}
 
 	public int add(ProductTypeEntryModel pe) {
@@ -342,10 +342,10 @@ public class ProductTypeService {
 	}
 
 	private String getCoverImageFileName(String cover_img_path) {
-		if (cover_img_path == null || cover_img_path.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cover image");
-		}
 		// Extracts just the file name from the full path string
+		if(cover_img_path == null) {
+			return null;
+		}
 		return java.nio.file.Paths.get(cover_img_path).getFileName().toString();
 	}
 

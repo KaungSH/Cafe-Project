@@ -36,7 +36,7 @@ public class IngredientBatchController {
 				service.softDeleteBatch(ing.getBatch_id());
 			}
 		}
-		return "redirect:/manager-onlyingredient-batches";
+		return "redirect:/manager-only/ingredient-batches";
 	}
 
 	@GetMapping("/delete/{id}")
@@ -48,7 +48,7 @@ public class IngredientBatchController {
 		}
 
 		service.softDeleteBatch(id);
-		return "redirect:/manager-onlyingredient-batches";
+		return "redirect:/manager-only/ingredient-batches";
 	}
 
 	@GetMapping("/deleted-list")
@@ -68,7 +68,7 @@ public class IngredientBatchController {
 		}
 
 		service.recoverBatch(id);
-		return "redirect:/manager-onlyingredient-batches/deleted-list";
+		return "redirect:/manager-only/ingredient-batches/deleted-list";
 	}
 
 	@GetMapping("/hard-delete/{id}")
@@ -81,6 +81,6 @@ public class IngredientBatchController {
 		}
 
 		service.hardDeleteBatch(id);
-		return "redirect:/manager-onlyingredient-batches/deleted-list";
+		return "redirect:/manager-only/ingredient-batches/deleted-list";
 	}
 }

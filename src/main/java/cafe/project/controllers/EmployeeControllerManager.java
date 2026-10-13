@@ -65,7 +65,7 @@ public class EmployeeControllerManager {
 		dto.setEmployee_role_id(bindAvilableData(model).getRole_id());
 		model.addAttribute("employeeDto", dto);
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-		model.addAttribute("branch_name", branchService.findById(ldto.getBranch_id()));
+		model.addAttribute("branch_name", branchService.findById(ldto.getBranch_id()).getName());
 		return "employee/create-manager";
 	}
 
@@ -91,7 +91,7 @@ public class EmployeeControllerManager {
 	public String showEditForm(@PathVariable("id") String id, Model model, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		EmployeeEntryDto existingEmployee = employeeService.getEmployeeById(id);
-
+		model.addAttribute("branch_name", branchService.findById(ldto.getBranch_id()).getName());
 		if (!existingEmployee.getBranch_id().equals(ldto.getBranch_id())) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not Your Branch's Data!!!");
 		}

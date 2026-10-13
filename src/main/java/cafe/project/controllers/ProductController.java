@@ -20,7 +20,6 @@ import cafe.project.models.OrderDetailsDto;
 import cafe.project.models.ProductTypeEntryModel;
 import cafe.project.models.SearchKeyword;
 import cafe.project.repositories.entities.OrderDetails;
-import cafe.project.repositories.entities.Orders;
 import cafe.project.repositories.entities.ProductsAndQuantities;
 import cafe.project.services.CategoryService;
 import cafe.project.services.IngredientTypeService;
@@ -161,32 +160,32 @@ public class ProductController {
 		}
 	}
 
-	@GetMapping("/add")
-	public String add(Model model, HttpSession session) {
-
-		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-
-		Orders order = new Orders();
-		order.setEmployee_id(ldto.getEmployee_id());
-		order.setBranch_id(ldto.getBranch_id());
-
-		@SuppressWarnings("unchecked")
-		List<OrderDetails> selectedDetails = (List<OrderDetails>) session.getAttribute("selectedOrderDetails");
-
-		OrderDetailsDto dto;
-
-		if (selectedDetails != null && !selectedDetails.isEmpty()) {
-			dto = new OrderDetailsDto(selectedDetails);
-		} else {
-			dto = new OrderDetailsDto();
-		}
-
-		model.addAttribute("order", order);
-		model.addAttribute("orderDetailsDto", dto);
-		model.addAttribute("products", pservice.findAllForOrder(ldto.getBranch_id()));
-
-		return "orderwithdetails/add";
-	}
+//	@GetMapping("/add")
+//	public String add(Model model, HttpSession session) {
+//
+//		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+//
+//		Orders order = new Orders();
+//		order.setEmployee_id(ldto.getEmployee_id());
+//		order.setBranch_id(ldto.getBranch_id());
+//
+//		@SuppressWarnings("unchecked")
+//		List<OrderDetails> selectedDetails = (List<OrderDetails>) session.getAttribute("selectedOrderDetails");
+//
+//		OrderDetailsDto dto;
+//
+//		if (selectedDetails != null && !selectedDetails.isEmpty()) {
+//			dto = new OrderDetailsDto(selectedDetails);
+//		} else {
+//			dto = new OrderDetailsDto();
+//		}
+//
+//		model.addAttribute("order", order);
+//		model.addAttribute("orderDetailsDto", dto);
+//		model.addAttribute("products", pservice.findAllForOrder(ldto.getBranch_id()));
+//
+//		return "orderwithdetails/add";
+//	}
 
 	@GetMapping("/manager-only/products/deleted")
 	public String productTypeDeleted(Model model, HttpSession session) {

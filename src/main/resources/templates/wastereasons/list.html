@@ -162,7 +162,7 @@
                 </div>
                 <p class="text-muted small mb-0">Manage and audit coffee waste, calibration, and stock loss.</p>
             </div>
-            <a th:href="@{/manager/wastereasons/add}" class="btn btn-coffee mt-2 mt-sm-0">
+            <a th:href="@{/admin/wastereasons/add}" class="btn btn-coffee mt-2 mt-sm-0">
                 <i class="bi bi-plus-lg me-1"></i> Add Waste Reason
             </a>
         </div>
@@ -173,15 +173,15 @@
                 <table class="table table-coffee table-hover mb-0 w-100">
                     <thead>
                         <tr>
-                            <th style="width: 30%;">Reason ID</th>
+                            <th style="width: 30%;">No</th>
                             <th>Reason Name</th>
                             <th class="text-end" style="width: 15%;">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="r : ${reasons}">
+                        <tr th:each="r, state : ${reasons}">
                             <td>
-                                <span class="badge-id" th:text="${r.waste_reason_id}">WR-01</span>
+                                <span class="badge-id" th:text="${state.count}">WR-01</span>
                             </td>
                             <td>
                                 <div class="d-flex align-items-center gap-2">
@@ -192,12 +192,12 @@
                             <td class="text-end">
                                 <!-- Stacked Pill Action Buttons matching Category List design -->
                                 <div class="action-pill-group">
-                                    <a th:href="@{/manager/wastereasons/edit/{id}(id=${r.waste_reason_id})}" 
+                                    <a th:href="@{/admin/wastereasons/edit/{id}(id=${r.waste_reason_id})}" 
                                        class="btn-pill-action btn-pill-edit" 
                                        title="Edit Waste Reason">
                                         <i class="fa-solid fa-pen-to-square"></i> Edit
                                     </a>
-                                    <a th:href="@{/manager/wastereasons/delete/{id}(id=${r.waste_reason_id})}" 
+                                    <a th:href="@{/admin/wastereasons/delete/{id}(id=${r.waste_reason_id})}" 
                                        class="btn-pill-action btn-pill-delete" 
                                        title="Delete Waste Reason"
                                        onclick="return confirm('Are you sure you want to remove this waste reason?');">
@@ -218,7 +218,7 @@
                                     <p class="text-muted small mx-auto mb-4" style="max-width: 320px;">
                                         There are currently no recorded loss indicators for this outlet.
                                     </p>
-                                    <a th:href="@{/manager/wastereasons/add}" class="btn btn-coffee">
+                                    <a th:href="@{/admin/wastereasons/add}" class="btn btn-coffee">
                                         <i class="bi bi-plus-circle me-1"></i> Add Waste Reason
                                     </a>
                                 </div>

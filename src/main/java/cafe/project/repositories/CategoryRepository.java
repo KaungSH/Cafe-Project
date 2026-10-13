@@ -49,9 +49,12 @@ public class CategoryRepository {
 	}
 
 	public List<Category> findDeletedAll(String branch_id) {
-		String sql = "SELECT * FROM categories WHERE isdeleted = true AND category_id != 'deleted' AND branches_branch_id = ?";
+		String sql = "SELECT c.*, e.name employee_name, b.name branch_name " + "FROM categories c "
+				+ "LEFT JOIN employees e ON c.employee_id = e.employee_id "
+				+ "LEFT JOIN branches b ON c.branches_branch_id = b.branch_id " + "WHERE c.isdeleted = true "
+				+ "AND c.category_id != 'deleted' " + "AND c.branches_branch_id = ?";
 
-		return jdbcTemplate.query(sql, new CategoryMapper(), branch_id);
+		return jdbcTemplate.query(sql, new CategoryMapper2(), branch_id);
 	}
 
 	// GET BY ID
