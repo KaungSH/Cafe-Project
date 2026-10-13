@@ -1,240 +1,330 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout}">
 <head>
-<meta charset="UTF-8">
-<title>Supplier List</title>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Café Luft | Supplier Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<style>
-body {
-	margin: 0;
-	background-color: #faf7f1;
-	color: #241c16;
-	font-family: Arial, sans-serif;
-	font-size: 14px;
-}
+    <style>
+        body {
+            background-color: #F8F5F0;
+            color: #2D241E;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 14px;
+        }
 
-.supplier-container {
-	width: 95%;
-	max-width: 1450px;
-	margin: 25px auto;
-}
+        .stats-dashboard {
+            width: 95%;
+            max-width: 1400px;
+            margin: 32px auto;
+        }
 
-.supplier-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: flex-start;
-	margin-bottom: 28px;
-}
+        /* ================= Header matching Branch Stats Management ================= */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
 
-.supplier-title h2 {
-	margin: 0 0 6px 0;
-	color: #241c16;
-	font-size: 27px;
-	font-weight: 700;
-	line-height: 1.2;
-}
+        .header-title-box {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
 
-.supplier-title h2 i {
-	color: #875522;
-	font-size: 22px;
-	margin-right: 7px;
-}
+        .header-avatar {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #7D5127, #4E3013);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #F4E8D8;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(78, 48, 19, 0.2);
+            flex-shrink: 0;
+        }
 
-.supplier-title p {
-	margin: 0;
-	color: #806b56;
-	font-size: 14px;
-	line-height: 1.5;
-}
+        .header-title-box h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #261B14;
+            margin: 0;
+            letter-spacing: -0.2px;
+        }
 
-.btn-add {
-	display: inline-flex;
-	align-items: center;
-	gap: 6px;
-	background-color: #925d2b;
-	color: #ffffff;
-	border: none;
-	border-radius: 9px;
-	padding: 10px 18px;
-	font-size: 14px;
-	font-weight: 600;
-	text-decoration: none;
-	transition: 0.2s;
-}
+        .header-title-box p {
+            font-size: 13px;
+            color: #8C7A68;
+            margin: 2px 0 0 0;
+        }
 
-.btn-add:hover {
-	background-color: #75451f;
-	color: #ffffff;
-}
+        .action-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
 
-.btn-deleted {
-	display: inline-flex;
-	align-items: center;
-	gap: 6px;
-	background-color: #eadbc7;
-	color: #624522;
-	border: none;
-	border-radius: 9px;
-	padding: 10px 18px;
-	font-size: 14px;
-	font-weight: 600;
-	text-decoration: none;
-	margin-left: 7px;
-	transition: 0.2s;
-}
+        .btn-action-primary {
+            background: linear-gradient(135deg, #7D5127 0%, #583718 100%);
+            color: #FFFFFF !important;
+            border: none;
+            border-radius: 9px;
+            padding: 8px 16px;
+            font-size: 13.5px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(88, 55, 24, 0.15);
+        }
 
-.btn-deleted:hover {
-	background-color: #ddc9ae;
-	color: #4f351c;
-}
+        .btn-action-primary:hover {
+            transform: translateY(-1px);
+            background: linear-gradient(135deg, #6C441E 0%, #432810 100%);
+        }
 
-.supplier-container .table {
-	width: 100%;
-	margin: 0;
-	background-color: #fffaf4;
-	border: 1px solid #eadcca;
-	border-radius: 14px;
-	overflow: hidden;
-	border-collapse: separate;
-	border-spacing: 0;
-	box-shadow: 0 2px 8px rgba(80, 50, 20, 0.04);
-}
+        .btn-action-outline {
+            background: #FFFFFF;
+            color: #6A4421 !important;
+            border: 1px solid #D8C8B5;
+            border-radius: 9px;
+            padding: 8px 15px;
+            font-size: 13.5px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            transition: all 0.2s;
+        }
 
-.supplier-container .table thead th {
-	background-color: #f5ecdf;
-	color: #9a8067;
-	padding: 13px 20px;
-	font-size: 12px;
-	font-weight: 600;
-	text-transform: uppercase;
-	letter-spacing: 0.4px;
-	border: none;
-	border-bottom: 1px solid #eadcca;
-	white-space: nowrap;
-}
+        .btn-action-outline:hover {
+            background: #F3EBDD;
+            border-color: #BFA78E;
+        }
 
-.supplier-container .table tbody td {
-	padding: 14px 20px;
-	color: #705a45;
-	font-size: 14px;
-	vertical-align: middle;
-	border: none;
-	border-bottom: 1px solid #eadcca;
-}
+        /* ================= Glass / Card Table Design ================= */
+        .table-container {
+            background: #FFFFFF;
+            border-radius: 16px;
+            border: 1px solid #EADBCC;
+            box-shadow: 0 8px 24px -6px rgba(58, 41, 26, 0.05);
+            overflow: hidden;
+        }
 
-.supplier-container .table tbody tr:last-child td {
-	border-bottom: none;
-}
+        .table-luxury {
+            width: 100%;
+            margin: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
 
-.supplier-container .table tbody tr:hover {
-	background-color: #fcf5eb;
-}
+        .table-luxury thead th {
+            background: #F8F3EC;
+            color: #796450;
+            padding: 14px 18px;
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            border-bottom: 1px solid #EADBCC;
+            white-space: nowrap;
+        }
 
-.supplier-container .table tbody td:nth-child(2) {
-	color: #211a15;
-	font-weight: 500;
-}
+        .table-luxury tbody td {
+            padding: 14px 18px;
+            color: #49382B;
+            font-size: 13.5px;
+            border-bottom: 1px solid #F3ECE2;
+            vertical-align: middle;
+        }
 
-.supplier-container .table tbody td:nth-child(3) {
-	color: #745d47;
-}
+        .table-luxury tbody tr:last-child td {
+            border-bottom: none;
+        }
 
-.supplier-container .table tbody td:nth-child(4) {
-	color: #806b56;
-	white-space: nowrap;
-}
+        .table-luxury tbody tr:hover {
+            background-color: #FAF6EF;
+        }
 
-.btn-edit {
-	display: inline-block;
-	color: #5f401f;
-	background-color: #ffffff;
-	border: 1px solid #ddcbb4;
-	border-radius: 8px;
-	padding: 6px 13px;
-	font-size: 13px;
-	font-weight: 600;
-	text-decoration: none;
-	transition: 0.2s;
-}
+        /* Supplier Badges & Avatar */
+        .supplier-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1px solid #EADBCC;
+        }
 
-.btn-edit:hover {
-	background-color: #f1e4d1;
-	color: #5f401f;
-	border-color: #cdb391;
-}
+        .badge-supplier-name {
+            font-weight: 600;
+            color: #2D1D12;
+        }
 
-.btn-delete {
-	display: inline-block;
-	color: #8f3e2e;
-	background-color: #ffffff;
-	border: 1px solid #e2c9bf;
-	border-radius: 8px;
-	padding: 6px 13px;
-	font-size: 13px;
-	font-weight: 600;
-	text-decoration: none;
-	margin-left: 5px;
-	transition: 0.2s;
-}
+        .badge-id-pill {
+            background-color: #F1E7D9;
+            color: #6C4724;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: monospace;
+            display: inline-block;
+        }
 
-.btn-delete:hover {
-	background-color: #f2d8d0;
-	color: #8f3e2e;
-	border-color: #d6afa3;
-}
-</style>
+        /* ================= Edit & Delete Buttons Style (From Categories) ================= */
+        .action-pill-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: flex-end;
+        }
+
+        .btn-pill-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 78px;
+            padding: 5px 10px;
+            border-radius: 9px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        /* Edit Pill Button */
+        .btn-pill-edit {
+            background-color: #FBF6EE;
+            color: #8C5332 !important;
+            border: 1px solid #E8D9C8;
+        }
+
+        .btn-pill-edit:hover {
+            background-color: #F2E7D5;
+            color: #5C3218 !important;
+            border-color: #D9C3A8;
+        }
+
+        /* Delete Pill Button */
+        .btn-pill-delete {
+            background-color: #FFF5F4;
+            color: #A3281D !important;
+            border: 1px solid transparent;
+        }
+
+        .btn-pill-delete:hover {
+            background-color: #FFE6E4;
+            color: #7A1910 !important;
+        }
+
+        .btn-pill-action i {
+            font-size: 0.8rem;
+        }
+    </style>
 </head>
 <body>
+<div layout:fragment="content">
+    <div class="stats-dashboard">
+        
+        <!-- Header matching Branch Stats Management (image_901199.png) -->
+        <div class="dashboard-header">
+            <div class="header-title-box">
+                <div class="header-avatar">
+                    <i class="bi bi-cup-hot-fill"></i>
+                </div>
+                <div>
+                    <h2>Supplier Management</h2>
+                    <p>Manage roastery partnerships, farm bean origins, and wholesale vendors for Café Luft</p>
+                </div>
+            </div>
 
-	<div class="supplier-container">
-		<div class="supplier-header">
-			<div class="supplier-title">
-				<h2>
-					<i class="bi bi-truck"></i> Supplier Management
-				</h2>
-				<p>Manage your suppliers and contact information</p>
-			</div>
-			<div>
-				<a th:href="@{/manager/suppliers/add}" class="btn-add"><i
-					class="bi bi-plus-lg"></i> Add Supplier</a> <a
-					th:href="@{/manager/suppliers/deleted}" class="btn-deleted"><i
-					class="bi bi-trash"></i> Deleted List</a>
-			</div>
-		</div>
+            <div class="action-group">
+                <a th:href="@{/manager/suppliers/deleted}" class="btn-action-outline">
+                    <i class="bi bi-archive"></i> Deleted List
+                </a>
+                <a th:href="@{/manager/suppliers/add}" class="btn-action-primary">
+                    <i class="bi bi-plus-lg"></i> Add Supplier
+                </a>
+            </div>
+        </div>
 
-		<table class="table">
-			<thead>
-				<tr>
-					<th>ID</th>
-					<th>Name</th>
-					<th>Contact Info</th>
-					<th>Created At</th>
-					<th class="text-end">Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="supplier : ${suppliers}">
-					<td th:text="${supplier.supplier_id}">SUP-001</td>
-					<td th:text="${supplier.name}">Supplier Name</td>
-					<td th:text="${supplier.contact_info}">Yangon / 09765473828</td>
-					<td
-						th:text="${supplier.created_at != null ? #temporals.format(supplier.created_at, 'yyyy-MM-dd HH:mm') : '-'}">2026-09-24
-						15:30</td>
-					<td class="text-end"><a
-						th:href="@{/manager/suppliers/edit/{id}(id=${supplier.supplier_id})}"
-						class="btn-edit">Edit</a> <a
-						th:href="@{/manager/suppliers/delete/{id}(id=${supplier.supplier_id})}"
-						class="btn-delete" onclick="return confirm('Are you sure?')">Delete</a>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+        <!-- Luxury Table Card -->
+        <div class="table-container">
+            <table class="table-luxury">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">No</th>
+                        <th>Supplier / Vendor</th>
+                        <th>Internal Reference ID</th>
+                        <th>Contact & Logistics</th>
+                        <th>Registered Date</th>
+                        <th class="text-end" style="width: 120px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="supplier, state : ${suppliers}">
+                        <td th:text="${state.count}" class="text-muted">1</td>
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                <img src="https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=120&q=80" 
+                                     class="supplier-avatar" alt="Vendor">
+                                <div>
+                                    <div class="badge-supplier-name" th:text="${supplier.name}">Yami Artisanal Roasters</div>
+                                    <small class="text-muted"><i class="bi bi-patch-check-fill text-warning me-1"></i>Exclusive Partner</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge-id-pill" th:text="${supplier.supplier_id}">83a01982-34ca-4367-8f2f</span>
+                        </td>
+                        <td>
+                            <span class="fw-medium"><i class="bi bi-telephone me-1 text-muted"></i><span th:text="${supplier.contact_info}">Coffee / 09455678894</span></span>
+                        </td>
+                        <td>
+                            <span th:text="${supplier.created_at != null ? #temporals.format(supplier.created_at, 'yyyy-MM-dd HH:mm') : '-'}">
+                                2026-10-01 15:22
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            <!-- Stacked Pill Action Buttons matching Category List design -->
+                            <div class="action-pill-group">
+                                <a th:href="@{/manager/suppliers/edit/{id}(id=${supplier.supplier_id})}" 
+                                   class="btn-pill-action btn-pill-edit" title="Edit Supplier">
+                                    <i class="fa-solid fa-pen-to-square"></i> Edit
+                                </a>
+                                <a th:href="@{/manager/suppliers/delete/{id}(id=${supplier.supplier_id})}" 
+                                   class="btn-pill-action btn-pill-delete" onclick="return confirm('Are you sure you want to delete this supplier?');" title="Delete Supplier">
+                                    <i class="fa-solid fa-trash-can"></i> Delete
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(suppliers)}">
+                        <td colspan="6" class="text-center py-5 text-muted">
+                            <i class="bi bi-truck fs-2 d-block mb-2 text-secondary opacity-50"></i>
+                            No active suppliers found in system.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
+    </div>
+</div>
 </body>
 </html>

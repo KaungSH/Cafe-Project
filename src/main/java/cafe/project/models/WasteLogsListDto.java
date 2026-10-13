@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 	    private String name; //employee-name
 	    private LocalDateTime logged_at;
 	    private String notes;
+	    private String branch_name;
 
 	    public WasteLogsListDto() {}
 
@@ -77,6 +78,14 @@ import java.time.LocalDateTime;
 
 		public void setNotes(String notes) {
 			this.notes = notes;
+		}
+
+		public String getBranch_name() {
+			return branch_name;
+		}
+
+		public void setBranch_name(String branch_name) {
+			this.branch_name = branch_name;
 		}
 	    
 	    

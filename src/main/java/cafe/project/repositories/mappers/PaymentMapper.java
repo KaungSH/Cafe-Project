@@ -9,34 +9,36 @@ import cafe.project.repositories.entities.Payment;
 
 public class PaymentMapper implements RowMapper<Payment> {
 
-    @Override
-    public Payment mapRow(ResultSet rs, int rowNum) throws SQLException {
+	@Override
+	public Payment mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-        Payment payment = new Payment();
+		Payment payment = new Payment();
 
-        payment.setPayment_id(rs.getString("payment_id"));
-        payment.setOrder_id(rs.getString("order_id"));
+		payment.setPayment_id(rs.getString("payment_id"));
+		payment.setOrder_id(rs.getString("order_id"));
 
-        if (rs.getTimestamp("paid_time") != null) {
-            payment.setPaid_time(
-                rs.getTimestamp("paid_time").toLocalDateTime()
-            );
-        }
+		if (rs.getTimestamp("paid_time") != null) {
+			payment.setPaid_time(rs.getTimestamp("paid_time").toLocalDateTime());
+		}
 
-        payment.setMethod_id(rs.getString("method_id"));
-        payment.setNote(rs.getString("note"));
-        payment.setIsedited(rs.getBoolean("isedited"));
-        payment.setIsdeleted(rs.getBoolean("isdeleted"));
+		payment.setMethod_id(rs.getString("method_id"));
+		payment.setNote(rs.getString("note"));
+		payment.setIsedited(rs.getBoolean("isedited"));
+		payment.setIsdeleted(rs.getBoolean("isdeleted"));
 
-        if (rs.getDate("date") != null) {
-            payment.setDate(
-                rs.getDate("date").toLocalDate()
-            );
-        }
+		if (rs.getDate("date") != null) {
+			payment.setDate(rs.getDate("date").toLocalDate());
+		}
 
-        payment.setFilepath(rs.getString("filepath"));
-        payment.setEmployee_id(rs.getString("employee_id"));
+		payment.setFilepath(rs.getString("filepath"));
+		payment.setEmployee_id(rs.getString("employee_id"));
 
-        return payment;
-    }
+		payment.setToken_number(rs.getInt("token_number"));
+		payment.setPay_method_name(rs.getString("pay_method_name"));
+		payment.setEmployee_name(rs.getString("employee_name"));
+		payment.setBranch_name(rs.getString("branch_name"));
+		payment.setTotal_amount(rs.getBigDecimal("total_amount"));
+		payment.setProduct_name(rs.getString("product_name"));
+		return payment;
+	}
 }

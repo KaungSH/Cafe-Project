@@ -3,33 +3,21 @@ package cafe.project.repositories.entities;
 import java.time.LocalDateTime;
 
 public class IngredientType {
-	private String ingredientTypeId;
+	private String ingredient_type_id;
 	private String name;
 	private String description;
-	private String unitId;
+	private String unit_id;
 	private boolean isDeleted;
-	private String unitAbbreviation;
-	private LocalDateTime createdAt;
+	private LocalDateTime created_at;
 
-	public IngredientType() {
+	public IngredientType() {}
+
+	public String getIngredient_type_id() {
+		return ingredient_type_id;
 	}
 
-	public IngredientType(String ingredientTypeId, String name, String description, String unitId, boolean isDeleted,
-			String unitAbbreviation) {
-		this.ingredientTypeId = ingredientTypeId;
-		this.name = name;
-		this.description = description;
-		this.unitId = unitId;
-		this.isDeleted = isDeleted;
-		this.unitAbbreviation = unitAbbreviation;
-	}
-
-	public String getIngredientTypeId() {
-		return ingredientTypeId;
-	}
-
-	public void setIngredientTypeId(String ingredientTypeId) {
-		this.ingredientTypeId = ingredientTypeId;
+	public void setIngredient_type_id(String ingredient_type_id) {
+		this.ingredient_type_id = ingredient_type_id;
 	}
 
 	public String getName() {
@@ -48,12 +36,12 @@ public class IngredientType {
 		this.description = description;
 	}
 
-	public String getUnitId() {
-		return unitId;
+	public String getUnit_id() {
+		return unit_id;
 	}
 
-	public void setUnitId(String unitId) {
-		this.unitId = unitId;
+	public void setUnit_id(String unit_id) {
+		this.unit_id = unit_id;
 	}
 
 	public boolean isDeleted() {
@@ -64,23 +52,14 @@ public class IngredientType {
 		this.isDeleted = isDeleted;
 	}
 
-	public void setIsDeleted(boolean isDeleted) {
-		this.isDeleted = isDeleted;
+	public LocalDateTime getCreated_at() {
+		return created_at;
 	}
 
-	public String getUnitAbbreviation() {
-		return unitAbbreviation;
+	public void setCreated_at(LocalDateTime created_at) {
+		this.created_at = created_at;
 	}
 
-	public void setUnitAbbreviation(String unitAbbreviation) {
-		this.unitAbbreviation = unitAbbreviation;
 	}
 
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-}
+	

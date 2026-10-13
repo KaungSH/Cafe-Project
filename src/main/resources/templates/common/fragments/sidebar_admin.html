@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="sidebar_admin" class="cafe-sidebar admin-sidebar" id="adminSidebar">
+
+    <!-- ================= BRAND & PROFILE ================= -->
+    <div class="cafe-brand">
+        <div class="cafe-brand-icon admin-icon">
+            <i class="bi bi-cup-hot-fill"></i>
+        </div>
+        <div class="d-flex flex-column" style="min-width: 0;">
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <img th:if="${session.loggedInUser != null and session.loggedInUser.photopath != null}" 
+                     th:src="@{'/images/' + ${session.loggedInUser.photopath}}"
+                     alt="Avatar" 
+                     style="height: 28px; width: 28px; object-fit: cover; border-radius: 50%; border: 1.5px solid rgba(199, 123, 59, 0.4);" class="shadow-sm">
+                <span class="admin-user-title" th:text="${session.loggedInUser != null ? session.loggedInUser.employee_name : 'Admin User'}">Staff Name</span>
+            </div>
+            
+            <div class="d-flex align-items-center gap-2">
+                <div class="cafe-role">
+                    <i class="bi bi-shield-lock-fill"></i>
+                    ADMIN
+                </div>
+                <div class="dropdown">
+                    <a href="#" class="staff-profile-dropdown dropdown-toggle text-decoration-none d-flex align-items-center gap-1" id="staffUserDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        Profile
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="staffUserDropdown" style="background: #251912; border: 1px solid rgba(199, 123, 59, 0.25);">
+                        <li><a class="dropdown-item py-2 px-3 text-light fw-medium" th:href="@{/changeprofile}"><i class="bi bi-person me-2 text-warning"></i> Change Profile</a></li>
+                        <li><a class="dropdown-item py-2 px-3 text-light fw-medium" th:href="@{/changepassword}"><i class="bi bi-key me-2 text-warning"></i> Change Password</a></li>
+                        <li><hr class="dropdown-divider" style="border-color: rgba(255, 255, 255, 0.1);"></li>
+                        <li><a class="dropdown-item py-2 px-3 text-danger fw-medium" th:href="@{/logout}"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MENU ================= -->
+    <div class="cafe-menu" id="adminSidebarMenu">
+        <!-- HOME -->
+        <a th:href="@{/}" class="cafe-menu-item">
+            <i class="bi bi-house"></i>
+            <span>Home</span>
+        </a>
+
+        <!-- EMPLOYEES -->
+        <a th:href="@{/admin/employee}" class="cafe-menu-item">
+            <i class="bi bi-person-badge"></i>
+            <span>Employees</span>
+        </a>
+
+        <!-- DAILY REGISTERS -->
+        <a th:href="@{/admin/daily-registers}" class="cafe-menu-item">
+            <i class="bi bi-journal-bookmark"></i>
+            <span>Daily Registers</span>
+        </a>
+
+        <!-- DISCOUNTS -->
+        <a th:href="@{/admin/discounts}" class="cafe-menu-item">
+            <i class="bi bi-percent"></i>
+            <span>Discounts</span>
+        </a>
+
+        <!-- CATEGORIES -->
+        <a th:href="@{/admin/categories}" class="cafe-menu-item">
+            <i class="bi bi-grid"></i>
+            <span>Categories</span>
+        </a>
+
+        <!-- BRANCHES -->
+        <a th:href="@{/admin/branches}" class="cafe-menu-item">
+            <i class="bi bi-shop"></i>
+            <span>Branches</span>
+        </a>
+
+        <!-- EXPENSES -->
+        <a th:href="@{/admin/expenses}" class="cafe-menu-item">
+            <i class="bi bi-cash-coin"></i>
+            <span>Expenses</span>
+        </a>
+
+        <!-- INGREDIENT BATCHES -->
+        <a th:href="@{/admin/ingredientBatches}" class="cafe-menu-item">
+            <i class="bi bi-boxes"></i>
+            <span>IngredientBatches</span>
+        </a>
+
+        <!-- AUDIENCE -->
+        <a th:href="@{/admin/types/audience}" class="cafe-menu-item">
+            <i class="bi bi-people"></i>
+            <span>Audience</span>
+        </a>
+
+        <!-- PROMO -->
+        <a th:href="@{/admin/types/promo}" class="cafe-menu-item">
+            <i class="bi bi-megaphone"></i>
+            <span>Promo</span>
+        </a>
+
+        <!-- EXPENSE CATEGORIES -->
+        <a th:href="@{/admin/expensecategories}" class="cafe-menu-item">
+            <i class="bi bi-tags"></i>
+            <span>Expense Categories</span>
+        </a>
+
+        <!-- INGREDIENT TYPE -->
+        <a th:href="@{/admin/ingredientType}" class="cafe-menu-item">
+            <i class="bi bi-basket3"></i>
+            <span>Ingredient Type</span>
+        </a>
+
+        <!-- ORDER DETAILS -->
+        <a th:href="@{/admin/order-with-details}" class="cafe-menu-item">
+            <i class="bi bi-receipt-cutoff"></i>
+            <span>Order Details</span>
+        </a>
+
+        <!-- PAYMENTS -->
+        <a th:href="@{/payments}" class="cafe-menu-item">
+            <i class="bi bi-wallet2"></i>
+            <span>Payments</span>
+        </a>
+
+        <!-- PAY METHOD -->
+        <a th:href="@{/admin/paymethod}" class="cafe-menu-item">
+            <i class="bi bi-credit-card-2-front"></i>
+            <span>PayMethod</span>
+        </a>
+
+        <!-- PRODUCTS -->
+        <a th:href="@{/admin/products}" class="cafe-menu-item">
+            <i class="bi bi-cup-hot"></i>
+            <span>Products</span>
+        </a>
+
+        <!-- SIZES -->
+        <a th:href="@{/admin/sizes}" class="cafe-menu-item">
+            <i class="bi bi-aspect-ratio"></i>
+            <span>Sizes</span>
+        </a>
+
+        <!-- UNITS -->
+        <a th:href="@{/admin/units}" class="cafe-menu-item">
+            <i class="bi bi-speedometer2"></i>
+            <span>Units</span>
+        </a>
+
+        <!-- STATUSES -->
+        <a th:href="@{/admin/statuses}" class="cafe-menu-item">
+            <i class="bi bi-toggle-on"></i>
+            <span>Statuses</span>
+        </a>
+
+        <!-- SUPPLIERS -->
+        <a th:href="@{/admin/suppliers}" class="cafe-menu-item">
+            <i class="bi bi-truck"></i>
+            <span>Suppliers</span>
+        </a>
+
+        <!-- WASTE LOGS -->
+        <a th:href="@{/admin/wastelogs}" class="cafe-menu-item">
+            <i class="bi bi-trash3"></i>
+            <span>Waste Logs</span>
+        </a>
+    </div>
+
+    <!-- ================= DIVIDER ================= -->
+    <div class="cafe-divider"></div>
+
+    <!-- ================= LOGOUT ================= -->
+    <div class="cafe-bottom-menu">
+        <a th:href="@{/logout}" class="cafe-menu-item logout-item">
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Log out</span>
+        </a>
+    </div>
+
+    <!-- ================= SCROLL REFRESHING & ACTIVE STATE SCRIPT ================= -->
+    <script>
+        (function() {
+            const sidebar = document.getElementById('adminSidebar');
+            if (!sidebar) return;
+
+            const STORAGE_KEY = 'admin_sidebar_scroll_top';
+            let isRestoring = true;
+
+            // 1. Identify active menu link based on current URL
+            const currentPath = window.location.pathname.toLowerCase();
+            const menuLinks = Array.from(sidebar.querySelectorAll('.cafe-menu-item'));
+            let activeLink = null;
+
+            menuLinks.forEach(function(link) {
+                const href = link.getAttribute('href');
+                if (!href) return;
+                const linkPath = href.toLowerCase();
+
+                const isHome = (linkPath === '/' || linkPath === '') && 
+                               (currentPath === '/' || currentPath === '' || currentPath === '/starter');
+                const isExactOrSub = (linkPath !== '/' && linkPath !== '') && 
+                                     (currentPath === linkPath || currentPath.startsWith(linkPath + '/'));
+
+                if (isHome || isExactOrSub) {
+                    link.classList.add('active');
+                    activeLink = link;
+                } else {
+                    link.classList.remove('active');
+                }
+
+                // Explicitly save scroll position when user clicks any tab
+                link.addEventListener('click', function() {
+                    sessionStorage.setItem(STORAGE_KEY, String(sidebar.scrollTop));
+                });
+            });
+
+            // 2. Multi-stage scroll restoration
+            function applyStoredScroll() {
+                const saved = sessionStorage.getItem(STORAGE_KEY);
+                const val = saved !== null ? parseInt(saved, 10) : NaN;
+
+                if (!isNaN(val) && val > 0) {
+                    sidebar.scrollTop = val;
+                } else if (activeLink) {
+                    // Fallback: If no saved scroll or val is 0, ensure active tab is centered in view
+                    activeLink.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' });
+                    sessionStorage.setItem(STORAGE_KEY, String(sidebar.scrollTop));
+                }
+            }
+
+            // Execute restoration across initial rendering cycle
+            applyStoredScroll();
+            requestAnimationFrame(applyStoredScroll);
+            setTimeout(applyStoredScroll, 40);
+            setTimeout(applyStoredScroll, 120);
+            setTimeout(applyStoredScroll, 250);
+
+            // Re-check after full window load
+            window.addEventListener('load', function() {
+                applyStoredScroll();
+            });
+
+            // Only allow scroll events to update sessionStorage AFTER restoration is complete
+            setTimeout(function() {
+                isRestoring = false;
+            }, 350);
+
+            // 3. Save scroll position on user scroll (guarded against initial zero-events)
+            let scrollDebounce;
+            sidebar.addEventListener('scroll', function() {
+                if (isRestoring) return;
+                clearTimeout(scrollDebounce);
+                scrollDebounce = setTimeout(function() {
+                    sessionStorage.setItem(STORAGE_KEY, String(sidebar.scrollTop));
+                }, 60);
+            }, { passive: true });
+
+            // 4. Also capture right before page navigation
+            window.addEventListener('beforeunload', function() {
+                sessionStorage.setItem(STORAGE_KEY, String(sidebar.scrollTop));
+            });
+        })();
+    </script>
+</div>
+</body>
+</html>

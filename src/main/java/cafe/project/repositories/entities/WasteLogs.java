@@ -6,14 +6,15 @@ import java.time.LocalDateTime;
 public class WasteLogs {
 
 	private String waste_id; 
-	private String batch_id ;
-	private String waste_reason_id ; 
+	private String batch_id;
+	private String waste_reason_id; 
 	private BigDecimal quantity_lost; 
-	private BigDecimal  financial_loss ;
-	private String  employee_id ;
-	private LocalDateTime logged_at ;
-	private String notes ; 
+	private BigDecimal  financial_loss;
+	private String  employee_id;
+	private LocalDateTime logged_at;
+	private String notes; 
 	private boolean isdeleted;
+	private String branch_id;
 	
 	public String getWaste_id() {
 		return waste_id;
@@ -68,6 +69,12 @@ public class WasteLogs {
 	}
 	public void setIsdeleted(boolean isdeleted) {
 		this.isdeleted = isdeleted;
+	}
+	public String getBranch_id() {
+		return branch_id;
+	}
+	public void setBranch_id(String branch_id) {
+		this.branch_id = branch_id;
 	}
 	
 	

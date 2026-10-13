@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 <head>
 <meta charset="UTF-8">
 <title>Edit Expense</title>
@@ -128,18 +130,18 @@ textarea.form-control {
 
 <body>
 
-	<div class="edit-box">
+	<div layout:fragment="content">
 
 		<div class="edit-header">
 
-			<h2>Edit Expense</h2>
+			<h2>Edit Expense For <span th:text = "${branch}"></span></h2>
 
-			<a th:href="@{/manager/expense}" class="close-btn"
+			<a th:href="@{/manager-only/expense}" class="close-btn"
 				style="text-decoration: none;"> &times; </a>
 
 		</div>
 
-		<form th:action="@{/manager/expense/edit}" th:object="${expense}"
+		<form th:action="@{/manager-only/expense/edit}" th:object="${expense}"
 			method="post">
 
 			<div class="edit-body">
@@ -147,24 +149,6 @@ textarea.form-control {
 				<input type="hidden" th:field="*{expense_id}">
 
 				<div class="row g-3">
-
-					<div class="col-md-6">
-
-						<label class="form-label"> Branch </label> <select
-							class="form-select" th:field="*{branch_id}">
-
-							<option value="">Select Branch</option>
-
-							<option th:each="branch : ${branches}"
-								th:value="${branch.branch_id}" th:text="${branch.name}">
-							</option>
-
-						</select>
-
-						<div class="error" th:if="${#fields.hasErrors('branch_id')}"
-							th:errors="*{branch_id}"></div>
-
-					</div>
 
 
 					<div class="col-md-6 mb-3">
@@ -232,7 +216,7 @@ textarea.form-control {
 
 			<div class="footer">
 
-				<a th:href="@{/manager/expense}" class="cancel-btn"> Cancel </a>
+				<a th:href="@{/manager-only/expense}" class="cancel-btn"> Cancel </a>
 
 				<button type="submit" class="save-btn">Save changes</button>
 

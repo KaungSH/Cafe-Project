@@ -11,7 +11,6 @@ import jakarta.validation.constraints.NotNull;
 public class ExpenseDto {
 
 	private String expense_id;
-	@NotBlank(message = "Please select a branch")
 	private String branch_id;
 	@NotBlank(message = "Please select a category")
 	private String expense_category_id;

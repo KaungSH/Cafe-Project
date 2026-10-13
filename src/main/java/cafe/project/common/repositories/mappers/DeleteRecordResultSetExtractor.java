@@ -21,7 +21,10 @@ public class DeleteRecordResultSetExtractor implements ResultSetExtractor<List<D
 		while(rs.next()) {
 			String parentId = rs.getString("parent_id");
 			DeleteRecord dr = deleteRecordMap.get(parentId);
-			dr.setChild_ids(new ArrayList<String>());
+			if (dr == null) {
+				dr = new DeleteRecord();
+				dr.setChild_ids(new ArrayList<String>());
+			}
 			
 			String child_id = rs.getString("child_id");
 			if (child_id  != null) {

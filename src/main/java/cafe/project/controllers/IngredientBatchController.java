@@ -1,144 +1,86 @@
 package cafe.project.controllers;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import cafe.project.models.IngredientBatchDto;
-import cafe.project.repositories.IngredientTypeRepository;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import cafe.project.employeemanagement.models.LoginDto;
+import cafe.project.repositories.entities.IngredientBatch;
 import cafe.project.services.IngredientBatchService;
-import cafe.project.repositories.BranchRepository;
-import jakarta.validation.Valid;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/manager/ingredientBatch")
+@RequestMapping("/manager-only/ingredient-batches")
 public class IngredientBatchController {
+	private final IngredientBatchService service;
 
-	private final IngredientBatchService ingredientBatchService;
-	private final BranchRepository branchRepository;
-	private final IngredientTypeRepository ingredientTypeRepository;
-
-	public IngredientBatchController(IngredientBatchService ingredientBatchService, BranchRepository branchRepository,
-			IngredientTypeRepository ingredientTypeRepository) {
-		this.ingredientBatchService = ingredientBatchService;
-		this.branchRepository = branchRepository;
-		this.ingredientTypeRepository = ingredientTypeRepository;
+	public IngredientBatchController(IngredientBatchService service) {
+		this.service = service;
 	}
 
-	@GetMapping("/batches-expiry")
-	public String batchesAndExpiry(Model model) {
-		model.addAttribute(ingredientBatchService.getBatchesAndExpiry());
-		return "NayZarLinn/ingredientBatch/batchesAndExpiry";
-
+	@GetMapping("")
+	public String listBatches(Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		model.addAttribute("batches", service.getAllBatches(ldto.getBranch_id()));
+		return "ingredient-batch/list";
 	}
-
-	@GetMapping
-	public String ingredientBatchList(Model model) {
-		model.addAttribute("ingredientBatch", this.ingredientBatchService.findAll());
-		return "NayZarLinn/ingredientBatch/list";
-	}
-
-	@GetMapping("/add")
-	public String addIngredientBatch(Model model) {
-		model.addAttribute("ingredientBatch", new IngredientBatchDto());
-		model.addAttribute("branches", branchRepository.findAll());
-		model.addAttribute("ingredientTypes", ingredientTypeRepository.findAll());
-		return "NayZarLinn/ingredientBatch/add";
-	}
-
-	@PostMapping("/add")
-	public String addIngredientBatch(@Valid @ModelAttribute("ingredientBatch") IngredientBatchDto ingredientBatch,
-			BindingResult bindingResult, Model model) {
-		if (bindingResult.hasErrors()) {
-			model.addAttribute("branches", branchRepository.findAll());
-			model.addAttribute("ingredientTypes", ingredientTypeRepository.findAll());
-			return "NayZarLinn/ingredientBatch/add";
+	
+	@GetMapping("/clear")
+	public String clear(HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		for(IngredientBatch ing : service.getAllBatches(ldto.getBranch_id())) {
+			if(ing.getRemaining_quantity().compareTo(BigDecimal.ZERO) <= 0) {
+				service.softDeleteBatch(ing.getBatch_id());
+			}
 		}
-		ingredientBatch.setCreatedAt(LocalDateTime.now());
-		this.ingredientBatchService.add(ingredientBatch);
-		return "redirect:/manager/ingredientBatch";
+		return "redirect:/manager-only/ingredient-batches";
 	}
 
-	@GetMapping("/expired")
-	public String expiredIngredientBatchList(Model model) {
-		model.addAttribute("ingredientBatch", ingredientBatchService.findExpired());
-		return "NayZarLinn/ingredientBatch/expiredList";
-	}
-
-	@PostMapping("/expired/delete")
-	public String deleteExpiredIngredientBatch(@RequestParam String batchId) {
-
-		ingredientBatchService.softDeleteExpired(batchId);
-
-		return "redirect:/manager/ingredientBatch/expired";
-	}
-
-	@GetMapping("/edit/{batchId}")
-	public String editIngredientBatch(@PathVariable String batchId, Model model) {
-		IngredientBatchDto existingIb = this.ingredientBatchService.findByBatchId(batchId);
-		if (existingIb != null) {
-			model.addAttribute("ingredientBatch", existingIb);
-			model.addAttribute("branches", branchRepository.findAll());
-			model.addAttribute("ingredientTypes", ingredientTypeRepository.findAll());
-			return "NayZarLinn/ingredientBatch/edit";
+	@GetMapping("/delete/{id}")
+	public String softDelete(@PathVariable("id") String id, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		var batch = service.getBatchById(id);
+		if (batch != null && !batch.getBranch_id().equals(ldto.getBranch_id())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not Your Branch's Data!!!");
 		}
-		return "redirect:/error/404";
+
+		service.softDeleteBatch(id);
+		return "redirect:/manager-only/ingredient-batches";
 	}
 
-	@PostMapping("/edit")
-	public String editIngredientBatch(@Valid @ModelAttribute("ingredientBatch") IngredientBatchDto ingredientBatch,
-			BindingResult bindingResult, Model model) {
-		if (bindingResult.hasErrors()) {
-			model.addAttribute("branches", branchRepository.findAll());
-			model.addAttribute("ingredientTypes", ingredientTypeRepository.findAll());
-			return "NayZarLinn/ingredientBatch/edit";
+	@GetMapping("/deleted-list")
+	public String showDeletedList(Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		model.addAttribute("deletedBatches", service.getDeletedBatches(ldto.getBranch_id()));
+		return "ingredient-batch/deleted-list";
+	}
+
+	@GetMapping("/recover/{id}")
+	public String recover(@PathVariable("id") String id, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+
+		var batch = service.getBatchById(id);
+		if (batch != null && !batch.getBranch_id().equals(ldto.getBranch_id())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not Your Branch's Data!!!");
 		}
-		ingredientBatch.setCreatedAt(LocalDateTime.now());
-		this.ingredientBatchService.edit(ingredientBatch.getBatchId(), ingredientBatch);
-		return "redirect:/error/404";
+
+		service.recoverBatch(id);
+		return "redirect:/manager-only/ingredient-batches/deleted-list";
 	}
 
-	@GetMapping("/delete/{batchId}")
-	public String deleteIngredientBatch(@PathVariable String batchId, Model model) {
-		IngredientBatchDto existingIb = this.ingredientBatchService.findByBatchId(batchId);
-		if (existingIb != null) {
-			model.addAttribute("ingredientBatch", existingIb);
-			return "NayZarLinn/ingredientBatch/delete";
+	@GetMapping("/hard-delete/{id}")
+	public String hardDelete(@PathVariable("id") String id, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+
+		var batch = service.getBatchById(id);
+		if (batch != null && !batch.getBranch_id().equals(ldto.getBranch_id())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not Your Branch's Data!!!");
 		}
-		model.addAttribute("ingredientBatch", existingIb);
-		return "redirect:/error/404";
-	}
 
-	@PostMapping("/delete")
-	public String deletedIngredientBatch(@ModelAttribute("ingredientBatch") IngredientBatchDto ingredientBatch) {
-		this.ingredientBatchService.delete(ingredientBatch.getBatchId());
-		return "redirect:/manager/ingredientBatch";
+		service.hardDeleteBatch(id);
+		return "redirect:/manager-only/ingredient-batches/deleted-list";
 	}
-
-	@GetMapping("/deleted")
-	public String deletedingredientBatchList(Model model) {
-		model.addAttribute("ingredientBatch", ingredientBatchService.findDeleted());
-		return "NayZarLinn/ingredientBatch/deletedList";
-	}
-
-	@PostMapping("/restore")
-	public String restoreSupplier(@RequestParam String batchId) {
-		ingredientBatchService.restore(batchId);
-		return "redirect:/manager/ingredientBatch/deleted";
-	}
-
-	@PostMapping("real-delete")
-	public String realDeleteingredientBatch(@ModelAttribute("ingredientBatch") IngredientBatchDto ingredientBatch) {
-		ingredientBatchService.hardDelete(ingredientBatch.getBatchId());
-		return "redirect:/manager/ingredientBatch/deleted";
-	}
-
 }

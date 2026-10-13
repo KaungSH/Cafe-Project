@@ -1,60 +1,89 @@
 package cafe.project.services;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import cafe.project.models.IngredientTypeDto;
+import cafe.project.models.UnitDto;
 import cafe.project.repositories.IngredientTypeRepository;
 import cafe.project.repositories.entities.IngredientType;
+import cafe.project.repositories.mappers.IngredientTypeMapper;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class IngredientTypeService {
-	private final IngredientTypeRepository repository;
 
-	public IngredientTypeService(IngredientTypeRepository repository) {
-		this.repository = repository;
-	}
+    private final IngredientTypeRepository repository;
+    private final IngredientTypeMapper mapper;
 
-	public List<IngredientType> getAllActive() {
-		return repository.findAll();
-	}
+    public IngredientTypeService(IngredientTypeRepository repository, IngredientTypeMapper mapper) {
+        this.repository = repository;
+        this.mapper = mapper;
+    }
 
-	public List<IngredientType> getAllDeleted() {
-		return repository.findAllDeleted();
-	}
+    public List<UnitDto> getAllUnits() {
+        return repository.findAllUnits();
+    }
 
-	public IngredientType getById(String id) {
-		return repository.findById(id);
-				
-	}
+    public void addIngredientType(IngredientTypeDto dto) {
+    	if (dto == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ingredient Type data is required");
+		}
+        dto.setIngredient_type_id(UUID.randomUUID().toString());
+        IngredientType entity = mapper.toEntity(dto);
+        repository.save(entity);
+    }
 
-	public void create(IngredientTypeDto form) {
-		IngredientType item = new IngredientType();
-		item.setIngredientTypeId(form.getIngredientTypeId());
-		item.setName(form.getName());
-		item.setDescription(form.getDescription());
-		item.setUnitId(form.getUnitId());
-		repository.save(item);
-	}
+    public List<IngredientTypeDto> getAllActiveIngredientTypes() {
+        return repository.findAllActive();
+    }
 
-	public void update(String id, IngredientTypeDto form) {
-		IngredientType item = getById(id);
-		item.setName(form.getName());
-		item.setDescription(form.getDescription());
-		item.setUnitId(form.getUnitId());
-		repository.update(item);
-	}
+    public List<IngredientTypeDto> getAllDeletedIngredientTypes() {
+        return repository.findAllDeleted();
+    }
 
-	public void softDelete(String id) {
-		repository.softDelete(id);
-	}
+    public IngredientTypeDto getById(String id) {
+    	IngredientType entity = repository.findById(id).orElse(null);
+		if (entity == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingredient Type");
+		}
+        return mapper.toDto(entity);
+    }
 
-	public void restore(String id) {
-		repository.restore(id);
-	}
+    public void updateIngredientType(IngredientTypeDto dto) {
+    	if (dto == null || dto.getIngredient_type_id() == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ingredient Type data is required");
+		}
+		IngredientType existingEntity = repository.findById(dto.getIngredient_type_id()).orElse(null);
+		if (existingEntity == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingredient Type");
+		}
+        IngredientType entity = mapper.toEntity(dto);
+        repository.update(entity);
+    }
 
-	public void hardDelete(String id) {
-		repository.hardDelete(id);
-	}
+    public void softDelete(String id) {
+    	IngredientType entity = repository.findById(id).orElse(null);
+		if (entity == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingredient Type");
+		}
+    	repository.softDelete(id); 
+    }
+    public void recover(String id) { 
+    	IngredientType entity = repository.findById(id).orElse(null);
+		if (entity == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingredient Type");
+		}
+    	repository.recover(id); 
+    }
+    public void hardDelete(String id) { 
+    	IngredientType entity = repository.findById(id).orElse(null);
+		if (entity == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingredient Type");
+		}
+    	repository.hardDelete(id); 
+    }
 }

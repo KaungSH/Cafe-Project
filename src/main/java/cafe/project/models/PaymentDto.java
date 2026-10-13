@@ -15,6 +15,7 @@ public class PaymentDto {
     private LocalDate date;
     private String filepath;
     private String employee_id;
+    private Double discount;
 
     public PaymentDto() {
     }
@@ -97,5 +98,12 @@ public class PaymentDto {
 
     public void setEmployee_id(String employee_id) {
         this.employee_id = employee_id;
+    }
+    public Double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Double discount) {
+        this.discount = discount;
     }
 }

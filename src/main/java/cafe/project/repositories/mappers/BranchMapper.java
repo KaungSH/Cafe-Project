@@ -18,8 +18,8 @@ public class BranchMapper implements RowMapper<Branch> {
 	    branch.setBranch_status_id(rs.getString("branch_status_id"));
 	    branch.setOpening_time(rs.getTime("opening_time"));
 	    branch.setClosing_time(rs.getTime("closing_time"));
-	    branch.setIsdeleted(rs.getBoolean("isdeleted"));
 	    branch.setCreated_at(rs.getTimestamp("created_at")!= null ? rs.getTimestamp("created_at").toLocalDateTime():null);
+	    branch.setBranch_finance(rs.getBigDecimal("branch_finance"));
 	    return branch;
 	
 	    

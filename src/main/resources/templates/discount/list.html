@@ -1,90 +1,423 @@
-
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout}">
 <head>
-<meta charset="UTF-8">
-<title>Discount Management</title>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discount Management | Café Luft</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-canvas: #faf7f2;
+            --surface: #ffffff;
+            --espresso-dark: #23160e;
+            --subtext: #8c7e75;
+            --border-line: #f1e8df;
+            --pill-tag-bg: #f5ece2;
+            --pill-tag-text: #6b4d36;
+            --status-active-bg: #dff6e8;
+            --status-active-text: #217d46;
+            --status-inactive-bg: #fdeeee;
+            --status-inactive-text: #ba3429;
+            --btn-brown: #5c3820;
+            --btn-brown-hover: #452814;
+        }
+
+        body {
+            background-color: var(--bg-canvas);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--espresso-dark);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .main-container {
+            max-width: 1440px;
+            margin: 36px auto;
+            padding: 0 24px;
+        }
+
+        /* Top Header Area */
+        .page-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 22px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .header-icon-squircle {
+            width: 58px;
+            height: 58px;
+            background: linear-gradient(145deg, #5c3820, #412613);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 24px;
+            box-shadow: 0 8px 18px rgba(65, 38, 19, 0.22);
+            flex-shrink: 0;
+        }
+
+        .header-title-box h2 {
+            font-size: 1.62rem;
+            font-weight: 800;
+            color: var(--espresso-dark);
+            margin: 0;
+            letter-spacing: -0.02em;
+        }
+
+        .header-title-box p {
+            color: var(--subtext);
+            font-size: 0.88rem;
+            margin: 3px 0 0 0;
+            font-weight: 500;
+        }
+
+        .btn-header-action {
+            background-color: var(--btn-brown);
+            color: #ffffff !important;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 14px;
+            padding: 12px 24px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 6px 16px rgba(92, 56, 32, 0.25);
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .btn-header-action:hover {
+            background-color: var(--btn-brown-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-header-outline {
+            background: #ffffff;
+            color: var(--btn-brown) !important;
+            border: 1.5px solid #e2d2c3;
+            border-radius: 14px;
+            padding: 11px 20px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-header-outline:hover {
+            background-color: #f7eee3;
+        }
+
+        /* Clean Table Card */
+        .management-table-card {
+            background: var(--surface);
+            border-radius: 20px;
+            border: 1px solid rgba(225, 210, 196, 0.5);
+            box-shadow: 0 10px 32px rgba(45, 30, 20, 0.04);
+            padding: 12px 28px 24px 28px;
+        }
+
+        .luft-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .luft-table thead th {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #8c7e75;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 20px 14px 16px 14px;
+            border-bottom: 1.5px solid var(--border-line);
+            white-space: nowrap;
+        }
+
+        .luft-table tbody tr td {
+            padding: 18px 14px;
+            vertical-align: middle;
+            font-size: 0.92rem;
+            border-bottom: 1px solid var(--border-line);
+            color: #4a3e36;
+        }
+
+        .luft-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .luft-table tbody tr:hover {
+            background-color: #fdfbf8;
+        }
+
+        .tag-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 12px;
+            border-radius: 30px;
+            background-color: var(--pill-tag-bg);
+            color: var(--pill-tag-text);
+            font-weight: 700;
+            font-size: 0.84rem;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .status-pill.active {
+            background-color: var(--status-active-bg);
+            color: var(--status-active-text);
+        }
+
+        .status-pill.inactive {
+            background-color: var(--status-inactive-bg);
+            color: var(--status-inactive-text);
+        }
+
+        /* ================= Edit & Delete Buttons Style (Size List Style) ================= */
+        .action-pill-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: flex-end;
+        }
+
+        .btn-pill-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 78px;
+            padding: 5px 10px;
+            border-radius: 9px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        /* Edit Pill Button */
+        .btn-pill-edit {
+            background-color: #FBF6EE;
+            color: #8C5332 !important;
+            border: 1px solid #E8D9C8;
+        }
+
+        .btn-pill-edit:hover {
+            background-color: #F2E7D5;
+            color: #5C3218 !important;
+            border-color: #D9C3A8;
+        }
+
+        /* Delete Pill Button */
+        .btn-pill-delete {
+            background-color: #FFF5F4;
+            color: #A3281D !important;
+            border: 1px solid transparent;
+        }
+
+        .btn-pill-delete:hover {
+            background-color: #FFE6E4;
+            color: #7A1910 !important;
+        }
+
+        .btn-pill-action i {
+            font-size: 0.8rem;
+        }
+
+        /* Drawer Details Container */
+        .drawer-detail-card {
+            background: #faf6f0;
+            border-radius: 14px;
+            border: 1px solid #ebdccb;
+            padding: 20px 24px;
+            margin: 8px 0 12px 0;
+        }
+
+        .item-chip {
+            background: #ffffff;
+            border: 1px solid #ebdccb;
+            border-radius: 10px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+    </style>
 </head>
-<body class="bg-light">
 
-	<div class="container my-4">
-		<div class="d-flex justify-content-between align-items-center mb-4">
-			<div>
-				<h3 class="fw-bold mb-0">Discount & Promotions</h3>
-				<p class="text-muted small">Manage store discount rates and
-					audience targeting</p>
-			</div>
-			<a th:href="@{/manager/discounts/create}" class="btn btn-primary"> <i
-				class="bi bi-plus-circle me-1"></i> Add New Discount
-			</a>
-		</div>
+<body>
+<div layout:fragment="content">
+    <div class="main-container">
 
-		<div class="card border-0 shadow-sm">
-			<div class="card-body p-0">
-				<div class="table-responsive">
-					<table class="table table-hover align-middle mb-0">
-						<thead class="table-dark">
-							<tr>
-								<th>Discount Name</th>
-								<th>Promo Type</th>
-								<th>Audience</th>
-								<th>Value</th>
-								<th>Duration</th>
-								<th>Status</th>
-								<th>Created By</th>
-								<th class="text-end pe-4">Actions</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:if="${#lists.isEmpty(discounts)}">
-								<td colspan="8" class="text-center py-4 text-muted">No
-									discounts available. Click 'Add New Discount' to create one.</td>
-							</tr>
-							<tr th:each="discount : ${discounts}">
-								<td><strong th:text="${discount.name}">Summer Sale</strong>
-									<br th:if="${discount.description != null}"> <small
-									class="text-muted" th:text="${discount.description}">Description</small>
-								</td>
-								<td><span class="badge bg-info text-dark"
-									th:text="${discount.promo_type_name}">Promo</span></td>
-								<td><span class="badge bg-secondary"
-									th:text="${discount.audience_type_name}">Audience</span></td>
-								<td><span class="fw-bold text-success"
-									th:text="${discount.discount_value}">10.00</span></td>
-								<td><small> <i class="bi bi-calendar3 me-1"></i><span
-										th:text="${discount.startdate}">2026-09-01</span> <br> <i
-										class="bi bi-calendar-check me-1"></i><span
-										th:text="${discount.enddate}">2026-09-30</span>
-								</small></td>
-								<td><span th:if="${discount.is_active == 1}"
-									class="badge bg-success">Active</span> <span
-									th:if="${discount.is_active== 0}" class="badge bg-danger">Inactive</span>
-								</td>
-								<td><small
-									th:text="${discount.ename != null ? discount.ename : 'N/A'}">Employee</small>
-								</td>
-								<td class="text-end pe-4"><a
-									th:href="@{/manager/discounts/edit/{id}(id=${discount.discount_id})}"
-									class="btn btn-sm btn-outline-warning me-1"> <i
-										class="bi bi-pencil-square"></i> Edit
-								</a> <a
-									th:href="@{/manager/discounts/delete/{id}(id=${discount.discount_id})}"
-									class="btn btn-sm btn-outline-danger"
-									onclick="return confirm('Are you sure you want to delete this discount?');">
-										<i class="bi bi-trash"></i>
-								</a></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-	</div>
+        <!-- Header -->
+        <div class="page-header-row">
+            <div class="header-left">
+                <div class="header-icon-squircle">
+                    <i class="bi bi-tag-fill"></i>
+                </div>
+                <div class="header-title-box">
+                    <h2>Discount Management</h2>
+                    <p>Overview of active promotional offers, rates and campaign statuses for Café Luft</p>
+                </div>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <a th:href="@{/manager-only/discounts/deleted-list}" class="btn-header-outline">
+                    <i class="bi bi-archive"></i> Archived Offers
+                </a>
+                <a th:href="@{/manager-only/discounts/create}" class="btn-header-action">
+                    + Add New Discount
+                </a>
+            </div>
+        </div>
 
+        <!-- Table Card -->
+        <div class="management-table-card">
+            <div class="table-responsive">
+                <table class="luft-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">NO</th>
+                            <th>PROMO TYPE</th>
+                            <th>NAME</th>
+                            <th>BRANCH</th>
+                            <th>AUDIENCE</th>
+                            <th>VALUE</th>
+                            <th>STATUS</th>
+                            <th>CREATED BY</th>
+                            <th class="text-end" style="width: 120px;">ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <th:block th:each="discount, state : ${discounts}">
+                            <tr>
+                                <td class="text-muted fw-bold" th:text="${state.count}">1</td>
+                                <td>
+                                    <span class="tag-pill" th:text="${discount.promo_type_name}">SEASONAL</span>
+                                </td>
+                                <td>
+                                    <strong class="text-dark" th:text="${discount.name}">Afternoon Special</strong>
+                                    <small class="text-muted d-block" style="font-size: 0.8rem;" th:text="${discount.description}">Description</small>
+                                </td>
+                                <td th:text="${discount.branch_name}">Yangon - Kamayut</td>
+                                <td th:text="${discount.audience_type_name}">All Customers</td>
+                                <td>
+                                    <strong style="color: #4a2e1b;" th:text="${discount.discount_value + '%'}">10%</strong>
+                                </td>
+                                <td>
+                                    <span th:if="${discount.is_active == true}" class="status-pill active">
+                                        <i class="bi bi-check2"></i> Active
+                                    </span>
+                                    <span th:if="${discount.is_active == false or discount.is_active == null}" class="status-pill inactive">
+                                        <i class="bi bi-x"></i> Inactive
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="text-muted" th:text="${discount.ename != null ? discount.ename : '05-13'}">05-13</span>
+                                </td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex align-items-center gap-2">
+                                        <!-- View Items Icon -->
+                                        <button class="btn btn-sm p-1 text-muted" type="button" 
+                                                data-bs-toggle="collapse" 
+                                                th:data-bs-target="'#detailRow-' + ${state.index}" 
+                                                title="View Enrolled Coffees"
+                                                style="border: 1px solid #e8dbce; border-radius: 8px; width: 32px; height: 32px;">
+                                            <i class="bi bi-cup-hot"></i>
+                                        </button>
+
+                                        <!-- Stacked Pill Edit & Delete Buttons (Matching Size List UI) -->
+                                        <div class="action-pill-group">
+                                            <a th:href="@{/manager-only/discounts/edit/{id}(id=${discount.discount_id})}" 
+                                               class="btn-pill-action btn-pill-edit" title="Edit Discount">
+                                                <i class="fa-solid fa-pen-to-square"></i> Edit
+                                            </a>
+                                            <a th:href="@{/manager-only/discounts/delete/{id}(id=${discount.discount_id})}" 
+                                               onclick="return confirm('Archive this discount?');" 
+                                               class="btn-pill-action btn-pill-delete" title="Delete Discount">
+                                                <i class="fa-solid fa-trash-can"></i> Delete
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Expandable Offerings Row -->
+                            <tr class="collapse" th:id="'detailRow-' + ${state.index}">
+                                <td colspan="9" class="p-0 border-0">
+                                    <div class="drawer-detail-card">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <div class="fw-bold" style="color: var(--espresso-dark); font-size: 0.92rem;">
+                                                <i class="bi bi-cup-hot-fill me-1" style="color: #8c5332;"></i>
+                                                Assigned Products Offerings in <span th:text="${discount.name}"></span>
+                                            </div>
+                                            <a th:href="@{/manager-only/discounts/discountProducts/add/{id}(id=${discount.discount_id})}" 
+                                               class="btn-pill-action btn-pill-edit" style="width: auto; padding: 5px 14px;">
+                                                <i class="fa-solid fa-plus"></i> Assign Products
+                                            </a>
+                                        </div>
+                                        <div th:if="${discount.products != null and !discount.products.empty}" class="row g-2">
+                                            <div class="col-md-4 col-sm-6" th:each="dp : ${discount.products}">
+                                                <div class="item-chip">
+                                                    <div>
+                                                        <strong class="d-block" style="font-size: 0.88rem;" th:text="${dp.type_name}">Latte</strong>
+                                                        <small class="text-muted">Specialty Beverage</small>
+                                                    </div>
+                                                    <a th:href="@{/manager-only/discounts/discountProducts/delete/{discount_id}/{product_id}(discount_id=${discount.discount_id}, product_id=${dp.product_id})}"
+                                                       class="btn-pill-action btn-pill-delete" style="width: auto; padding: 4px 10px;"
+                                                       onclick="return confirm('Remove offering?');" title="Remove Product">
+                                                        <i class="fa-solid fa-trash-can"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div th:unless="${discount.products != null and !discount.products.empty}" class="text-muted small py-1">
+                                            No coffees assigned yet.
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </th:block>
+
+                        <tr th:if="${#lists.isEmpty(discounts)}">
+                            <td colspan="9" class="text-center py-5 text-muted">
+                                <i class="bi bi-inbox fs-2 d-block mb-2"></i> No discount records found.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
 </body>
 </html>

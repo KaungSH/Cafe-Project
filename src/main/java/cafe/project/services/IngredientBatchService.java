@@ -1,117 +1,96 @@
 package cafe.project.services;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
-import cafe.project.models.BatchesAndExpiryDto;
-import cafe.project.models.IngredientBatchDto;
+import cafe.project.models.IngredientBatchListDto;
 import cafe.project.repositories.IngredientBatchRepository;
 import cafe.project.repositories.entities.IngredientBatch;
 
 @Service
 public class IngredientBatchService {
+	private final IngredientBatchRepository repository;
 
-	private final IngredientBatchRepository repo;
-
-	public IngredientBatchService(IngredientBatchRepository repo) {
-		this.repo = repo;
+	public IngredientBatchService(IngredientBatchRepository repository) {
+		this.repository = repository;
 	}
 
-	public List<IngredientBatchDto> findAll() {
-		this.repo.updateExpiredStatus();
-		List<IngredientBatch> entities = this.repo.findAll();
-		List<IngredientBatchDto> batches = entities.stream().map(this::toDto).toList();
-		return batches;
+	public void createBatch(IngredientBatchListDto batch) {
+		if (batch == null || batch.getBatchList() == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ingredient Batch data is required");
+		}
+		for (IngredientBatch entity : batch.getBatchList()) {
+			System.out.println("Ingredient Type Name = " + entity.getIngredientType_name());
+			if (entity.getBatch_id() == null || entity.getBatch_id().isEmpty()) {
+				entity.setBatch_id("IB-" + UUID.randomUUID().toString().substring(0, 8));
+			}
+			repository.add(entity);
+		}
 	}
 
-	public List<BatchesAndExpiryDto> getBatchesAndExpiry() {
-		return repo.batchesAndExpiry();
+	public List<IngredientBatch> getAllBatches(String branch_id) {
+		return repository.findAll(branch_id);
 	}
 
-	public IngredientBatchDto findByBatchId(String batchId) {
-		IngredientBatch entity = this.repo.findByBatchId(batchId);
-		if (entity == null)
-			return null;
-		return toDto(entity);
-	}
-
-	public List<IngredientBatchDto> findExpired() {
-		this.repo.updateExpiredStatus();
-		List<IngredientBatch> entities = this.repo.findExpired();
-		List<IngredientBatchDto> batches = entities.stream().map(this::toDto).toList();
-		return batches;
-	}
-
-	public int add(IngredientBatchDto dto) {
-		IngredientBatch entity = toEntity(dto);
-		return this.repo.save(entity);
-	}
-
-	public int edit(String batchId, IngredientBatchDto dto) {
-		IngredientBatch entity = toEntity(dto);
-		return this.repo.edit(batchId, entity);
-	}
-
-	public int delete(String batchId) {
-		return this.repo.softDelete(batchId);
-	}
-
-	public int softDeleteExpired(String batchId) {
-		return this.repo.softDeleteExpired(batchId);
-	}
-
-	public void updateExpiredStatus() {
-		this.repo.updateExpiredStatus();
-	}
-
-	public List<IngredientBatchDto> findDeleted() {
-		return this.repo.DeletedList().stream().map(this::toDto).toList();
-	}
-
-	public int restore(String batchId) {
-		return this.repo.restore(batchId);
-	}
-
-	public int hardDelete(String batchId) {
-		return this.repo.hardDelete(batchId);
-	}
-
-	private IngredientBatchDto toDto(IngredientBatch entity) {
-
-		IngredientBatchDto dto = new IngredientBatchDto();
-
-		dto.setBatchId(entity.getBatchId());
-		dto.setRemainingQuantity(entity.getRemainingQuantity());
-		dto.setManufacturedDate(entity.getManufacturedDate());
-		dto.setExpireDate(entity.getExpireDate());
-		dto.setBranchId(entity.getBranchId());
-		dto.setImportDetailId(entity.getImportDetailId());
-		dto.setIngredientTypeId(entity.getIngredientTypeId());
-		dto.setUnitCost(entity.getUnitCost());
-		dto.setIsExpired(entity.getIsExpired());
-		dto.setIsDeleted(entity.getIsDeleted());
-		dto.setCreatedAt(entity.getCreatedAt());
-
-		return dto;
-	}
-
-	private IngredientBatch toEntity(IngredientBatchDto dto) {
-
-		IngredientBatch entity = new IngredientBatch();
-
-		entity.setBatchId(dto.getBatchId());
-		entity.setRemainingQuantity(dto.getRemainingQuantity());
-		entity.setManufacturedDate(dto.getManufacturedDate());
-		entity.setExpireDate(dto.getExpireDate());
-		entity.setBranchId(dto.getBranchId());
-		entity.setImportDetailId(dto.getImportDetailId());
-		entity.setIngredientTypeId(dto.getIngredientTypeId());
-		entity.setUnitCost(dto.getUnitCost());
-		entity.setIsExpired(dto.getIsExpired());
-		entity.setIsDeleted(dto.getIsDeleted());
-		entity.setCreatedAt(dto.getCreatedAt());
-
+	public IngredientBatch getBatchById(String id) {
+		IngredientBatch entity = repository.findById(id);
+		if (entity == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingredient Batch");
+		}
 		return entity;
+	}
+
+	public void updateBatch(IngredientBatch entity) {
+		if (entity == null || entity.getBatch_id() == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ingredient Batch data is required");
+		}
+		IngredientBatch existingEntity = repository.findById(entity.getBatch_id());
+		if (existingEntity == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingredient Batch");
+		}
+		repository.edit(entity);
+	}
+
+	public void softDeleteBatch(String id) {
+		IngredientBatch entity = repository.findById(id);
+		if (entity == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingredient Batch");
+		}
+		repository.softDelete(id);
+	}
+
+	public List<IngredientBatch> getDeletedBatches(String branch_id) {
+		return repository.findDeletedAll(branch_id);
+	}
+
+	public void recoverBatch(String id) {
+		IngredientBatch entity = repository.findById(id);
+		if (entity == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingredient Batch");
+		}
+		repository.recover(id);
+	}
+
+	public void hardDeleteBatch(String id) {
+		IngredientBatch entity = repository.findById(id);
+		if (entity == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingredient Batch");
+		}
+		repository.hardDelete(id);
+	}
+
+	public BigDecimal getAvailableQuantity(String ingredientTypeId, String branchId) {
+
+		return repository.getAvailableQuantity(ingredientTypeId, branchId);
+	}
+
+	public void reduceStockFIFO(String ingredientTypeId, String branchId, BigDecimal quantity) {
+
+		repository.reduceStockFIFO(ingredientTypeId, branchId, quantity);
 	}
 }

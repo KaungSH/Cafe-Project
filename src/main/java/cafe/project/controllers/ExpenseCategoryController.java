@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.validation.Valid;
 
 @Controller
-@RequestMapping("/manager/expensecategory")
+@RequestMapping("/admin/expensecategory")
 public class ExpenseCategoryController {
 
 	private final ExpenseCategoryService expenseCategoryService;
@@ -36,8 +36,7 @@ public class ExpenseCategoryController {
 	}
 
 	@PostMapping("/add")
-	public String addSupplier(@Valid @ModelAttribute("expensecategory") ExpenseCategoryDto expensecategory,
-			BindingResult bindingResult) {
+	public String addSupplier(@Valid @ModelAttribute("expensecategory") ExpenseCategoryDto expensecategory, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			return "expensecategory/add";
 		}
@@ -66,7 +65,7 @@ public class ExpenseCategoryController {
 	}
 
 	@PostMapping("/delete/{expense_category_id}")
-	public String Delete(@PathVariable String expense_category_id) {
+	public String Delete(@PathVariable String expense_category_id, Model model) {
 		expenseCategoryService.delete(expense_category_id);
 		return "redirect:/manager/expensecategory";
 	}

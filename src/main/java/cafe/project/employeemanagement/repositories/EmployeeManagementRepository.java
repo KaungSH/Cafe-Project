@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import cafe.project.employeemanagement.mappers.LoginMapper;
 import cafe.project.employeemanagement.mappers.LoginMapper2;
+import cafe.project.employeemanagement.models.ChangePasswordDto;
 import cafe.project.employeemanagement.models.ChangeProfileDto;
 import cafe.project.employeemanagement.models.LoginDto;
 
@@ -37,19 +38,19 @@ public class EmployeeManagementRepository {
 		return entities.isEmpty()?null:entities.get(0);
 	}
 	
-	public int changePassword(String id, String password) {
+	public int changePassword(ChangePasswordDto cpdto) {
 		String sql = "UPDATE employees SET password = ? WHERE employee_id = ?";
-		return jdbcTemplate.update(sql, password, id);
+		return jdbcTemplate.update(sql, cpdto.getNewPassword(), cpdto.getEmployee_id());
+	}
+
+	public int changeProfile(ChangeProfileDto cfdto) {
+		String sql = "UPDATE employees SET name = ?, phone = ?, address = ?, photopath = ? WHERE employee_id = ?";
+		return jdbcTemplate.update(sql, cfdto.getEmployee_name(), cfdto.getPhone(), cfdto.getAddress(), cfdto.getPhotopath(), cfdto.getEmployee_id());
 	}
 	
-	public int changeProfile(ChangeProfileDto dto) {
-		String sql = "UPDATE employees SET name = ?, photopath = ?, phone = ?, salary = ?, address = ?, employee_role_id = ?, gender_id = ?, branch_id = ? WHERE employee_id = ?";
-		return jdbcTemplate.update(sql, dto.getEmployee_name(), dto.getPhotopath(), dto.getPhone(), dto.getSalary(), dto.getAddress(), dto.getRole_id(), dto.getGender_id(), dto.getBranch_id(), dto.getEmployee_id());
-	}
-	
-	public int changeStatus(String id, String status_id) {
-		String sql = "UPDATE employees SET employee_status_id ? WHERE employee_id = ?";
-		return jdbcTemplate.update(sql, status_id, id);
+	public int changeStatus(String employee_id, String employee_status_id) {
+		String sql = "UPDATE employees SET employee_status_id = ? WHERE employee_id = ?";
+		return jdbcTemplate.update(sql, employee_status_id, employee_id);
 	}
 
 }

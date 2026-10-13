@@ -1,5 +1,6 @@
 package cafe.project.models;
 
+import java.math.BigDecimal;
 import java.sql.Time;
 import java.time.LocalDateTime;
 
@@ -11,23 +12,22 @@ public class BranchListDto {
 	private String description;
 	private Time opening_time;
 	private Time closing_time;
-	private boolean isdeleted;
 	private LocalDateTime created_at;
 	private String status_name;
+	private BigDecimal branch_finance;
 
 	public BranchListDto() {
 	}
 
-	public BranchListDto(String branch_id, String name, String location, Time opening_time, Time closing_time,
-			boolean isdeleted, LocalDateTime created_at, String status_name) {
+	public BranchListDto(String branch_id, String name, String location, Time opening_time, Time closing_time, LocalDateTime created_at, String status_name, BigDecimal branch_finance) {
 		this.branch_id = branch_id;
 		this.name = name;
 		this.location = location;
 		this.opening_time = opening_time;
 		this.closing_time = closing_time;
-		this.isdeleted = isdeleted;
 		this.created_at = created_at;
 		this.status_name = status_name;
+		this.branch_finance = branch_finance;
 	}
 
 	public String getBranch_id() {
@@ -78,14 +78,6 @@ public class BranchListDto {
 		this.closing_time = closing_time;
 	}
 
-	public boolean Isdeleted() {
-		return isdeleted;
-	}
-
-	public void setIsdeleted(boolean isdeleted) {
-		this.isdeleted = isdeleted;
-	}
-
 	public LocalDateTime getCreated_at() {
 		return created_at;
 	}
@@ -101,4 +93,14 @@ public class BranchListDto {
 	public void setStatus_name(String status_name) {
 		this.status_name = status_name;
 	}
+
+	public BigDecimal getBranch_finance() {
+		return branch_finance;
+	}
+
+	public void setBranch_finance(BigDecimal branch_finance) {
+		this.branch_finance = branch_finance;
+	}
+	
+	
 }

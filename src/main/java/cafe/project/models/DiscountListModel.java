@@ -2,6 +2,7 @@ package cafe.project.models;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 public class DiscountListModel {
 	private String discount_id;
@@ -13,14 +14,16 @@ public class DiscountListModel {
 	private boolean is_active;
 	private String promo_type_name;
 	private String audience_type_name;
-	private String ename; //employee
+	private String ename; // employee
+	private String branch_name;
+	private List<ProductListModel> products;
 
 	public DiscountListModel() {
 	}
 
 	public DiscountListModel(String discount_id, String name, String description, BigDecimal discount_value,
-			LocalDate startdate, LocalDate enddate, boolean is_active, String promo_type_name, String audience_type_name,
-			String ename) {
+			LocalDate startdate, LocalDate enddate, boolean is_active, String promo_type_name,
+			String audience_type_name, String ename, String branch_name, List<ProductListModel> products) {
 		this.discount_id = discount_id;
 		this.name = name;
 		this.description = description;
@@ -31,6 +34,8 @@ public class DiscountListModel {
 		this.promo_type_name = promo_type_name;
 		this.audience_type_name = audience_type_name;
 		this.ename = ename;
+		this.branch_name = branch_name;
+		this.products = products;
 	}
 
 	public String getDiscount_id() {
@@ -113,6 +118,22 @@ public class DiscountListModel {
 		this.ename = ename;
 	}
 
+	public String getBranch_name() {
+		return branch_name;
+	}
+
+	public void setBranch_name(String branch_name) {
+		this.branch_name = branch_name;
+	}
+
+	public List<ProductListModel> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<ProductListModel> discountProducts) {
+		this.products = discountProducts;
+	}
+	
 	
 
 }
