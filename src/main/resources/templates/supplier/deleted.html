@@ -174,7 +174,7 @@ body {
 					<td th:text="${supplier.created_at}"></td>
 
 					<td>
-						<form method="post" th:action="@{/supplier/restore}"
+						<form method="post" th:action="@{/admin/suppliers/restore}"
 							style="display: inline;">
 
 							<input type="hidden" name="supplier_id"
@@ -182,7 +182,7 @@ body {
 
 							<button type="submit">Restore</button>
 						</form>
-						<form method="post" th:action="@{/supplier/real-delete}"
+						<form method="post" th:action="@{/admin/suppliers/real-delete}"
 							style="display: inline;">
 
 							<input type="hidden" name="supplier_id"

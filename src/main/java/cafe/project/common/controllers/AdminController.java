@@ -1,5 +1,8 @@
 package cafe.project.common.controllers;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -8,17 +11,22 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import cafe.project.employeemanagement.models.LoginDto;
 import cafe.project.models.BranchEntryDto;
+import cafe.project.repositories.entities.Orders;
 import cafe.project.services.BranchService;
+import cafe.project.services.BranchesStatsService;
 import cafe.project.services.CategoryService;
 import cafe.project.services.DailyRegisterService;
 import cafe.project.services.DiscountService;
 import cafe.project.services.ExpenseService;
 import cafe.project.services.IngredientBatchService;
+import cafe.project.services.OrderDetailsService;
+import cafe.project.services.OrdersService;
+import cafe.project.services.PaymentService;
+import cafe.project.services.StockImportService;
 import cafe.project.services.WasteLogsService;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
@@ -32,8 +40,14 @@ public class AdminController {
 	private final ExpenseService expenseService;
 	private final WasteLogsService wasteLogsService;
 	private final IngredientBatchService ingredientBatchService;
+	private final StockImportService stockImportService;
+	private final BranchesStatsService bsService;
+	private final OrdersService ordersService;
+	private final OrderDetailsService orderDetailsService;
+	private final PaymentService paymentService;
+	
 
-	public AdminController(DailyRegisterService dailyRegisterservice, BranchService branchService, CategoryService categoryService, DiscountService discountService, ExpenseService expenseService, WasteLogsService wasteLogsService, IngredientBatchService ingredientBatchService) {
+	public AdminController(DailyRegisterService dailyRegisterservice, PaymentService paymentService, OrderDetailsService orderDetailsService, OrdersService ordersService, BranchService branchService, CategoryService categoryService, DiscountService discountService, ExpenseService expenseService, WasteLogsService wasteLogsService, IngredientBatchService ingredientBatchService, StockImportService stockImportService, BranchesStatsService bsService) {
 		this.expenseService = expenseService;
 		this.dailyRegisterservice = dailyRegisterservice;
 		this.categoryService = categoryService;
@@ -41,6 +55,11 @@ public class AdminController {
 		this.discountService = discountService;
 		this.wasteLogsService = wasteLogsService;
 		this.ingredientBatchService = ingredientBatchService;
+		this.stockImportService = stockImportService;
+		this.bsService = bsService;
+		this.orderDetailsService = orderDetailsService;
+		this.ordersService = ordersService;
+		this.paymentService = paymentService;
 	}
 	
 	@GetMapping("/daily-registers")
@@ -81,6 +100,12 @@ public class AdminController {
 	public String save(@Valid @ModelAttribute("branchDto") BranchEntryDto dto, BindingResult result, Model model) {
 		validateTimeRange(dto, result);
 		if (result.hasErrors()) {
+			model.addAttribute("statuses", branchService.findAllStatuses());
+			return "branches/create";
+		}
+		
+		if(branchService.loctionExists(dto.getLocation())) {
+			model.addAttribute("localerror", "A branch with that location already exist.");
 			model.addAttribute("statuses", branchService.findAllStatuses());
 			return "branches/create";
 		}
@@ -131,15 +156,92 @@ public class AdminController {
 			model.addAttribute("statuses", branchService.findAllStatuses());
 			return "branches/edit";
 		}
+		if(branchService.loctionExists(dto.getLocation()) && !dto.getLocation().equals(branchService.findById(branch_id).getLocation())) {
+			model.addAttribute("localerror", "A branch with that location already exist.");
+			model.addAttribute("statuses", branchService.findAllStatuses());
+			return "branches/create";
+		}
 		branchService.edit(branch_id, dto);
 		return "redirect:/admin/branches";
 	}
 	
-	@GetMapping("/ingredientbatches")
-	public String listBatches(Model model, HttpSession session) {
-		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-		model.addAttribute("batches", ingredientBatchService.getAllBatches(ldto.getBranch_id()));
+	@GetMapping("/branchesstats")
+	public String BranchesStatsList(Model model) {
+		model.addAttribute("branchesStatses", this.bsService.findAllAdmin());
+		return "branchesStats/list-admin";
+	}
+	
+	@GetMapping("/ingredientBatches")
+	public String listBatches(Model model) {
+		model.addAttribute("batches", ingredientBatchService.getAllBatchesAdmin());
 		return "ingredient-batch/list-admin";
+	}
+	
+	@GetMapping("/stock-imports")
+	public String listActive(Model model) {
+		System.out.println("Imports : " + stockImportService.getAllAdmin().get(0));
+		model.addAttribute("imports", stockImportService.getAllAdmin());
+		return "stock-import/list-admin";
+	}
+	
+	@GetMapping("/stock-imports/detail-batches/{id}")
+	@ResponseBody
+	public Object getBatchesDetail(@PathVariable("id") String id) {
+		return stockImportService.getBatchesByImportId(id);
+	}
+	
+	@GetMapping("/order-with-details")
+	public String listOrders(Model model) {
+		List<Orders> orders = ordersService.findNotReceivedAllAdmin();
+
+		for (Orders order : orders) {
+
+			boolean paymentDone = ordersService.isPaymentDone(order.getOrder_id());
+
+			order.setPaymentDone(paymentDone);
+
+			BigDecimal subtotal = orderDetailsService.calculateTotalAmount(order.getOrder_id());
+
+			BigDecimal finalAmount = order.getTotal_amount();
+
+			BigDecimal discountAmount = subtotal.subtract(finalAmount);
+
+			order.setSubtotal(subtotal);
+			order.setFinalAmount(finalAmount);
+			order.setDiscountAmount(discountAmount);
+
+			boolean hasDiscount = discountAmount.compareTo(BigDecimal.ZERO) > 0;
+
+			order.setHasDiscount(hasDiscount);
+		}
+
+		model.addAttribute("orders", orders);
+		model.addAttribute("orderDetails", orderDetailsService.findAll());
+
+		return "orderwithdetails/list-admin";
+	}
+	
+	@GetMapping("/order-with-details/received-list")
+	public String receivedList(Model model) {
+		List<Orders> orders = ordersService.findReceivedAllAdmin();
+
+		model.addAttribute("orders", orders);
+		model.addAttribute("orderDetails", orderDetailsService.findAll());
+
+		for (Orders order : orders) {
+
+			boolean paid = ordersService.isPaymentDone(order.getOrder_id());
+
+			order.setPaymentDone(paid);
+		}
+
+		return "orderwithdetails/receivedlist-admin";
+	}
+	
+	@GetMapping("/payments")
+	public String listPayment(Model model) {
+		model.addAttribute("payments", paymentService.findAllAdmin());
+		return "payments/index-admin";
 	}
 
 }

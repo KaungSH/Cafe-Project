@@ -41,7 +41,7 @@ public class ExpenseCategoryController {
 			return "expensecategory/add";
 		}
 		expenseCategoryService.add(expensecategory);
-		return "redirect:/manager/expensecategory";
+		return "redirect:/admin/expensecategory";
 	}
 
 	@GetMapping("/edit/{expense_category_id}")
@@ -51,7 +51,7 @@ public class ExpenseCategoryController {
 			model.addAttribute("expensecategory", existingEC);
 			return "expensecategory/edit";
 		}
-		return "redirect:/manager/expensecategory";
+		return "redirect:/admin/expensecategory";
 	}
 
 	@PostMapping("/edit")
@@ -61,13 +61,13 @@ public class ExpenseCategoryController {
 			return "ExpenseCategoryDto/edit";
 		}
 		this.expenseCategoryService.edit(expensecategory.getExpense_category_id(), expensecategory);
-		return "redirect:/manager/expensecategory";
+		return "redirect:/admin/expensecategory";
 	}
 
 	@PostMapping("/delete/{expense_category_id}")
 	public String Delete(@PathVariable String expense_category_id, Model model) {
 		expenseCategoryService.delete(expense_category_id);
-		return "redirect:/manager/expensecategory";
+		return "redirect:/admin/expensecategory";
 	}
 
 }

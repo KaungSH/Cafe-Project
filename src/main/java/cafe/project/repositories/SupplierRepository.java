@@ -25,7 +25,7 @@ public class SupplierRepository {
 	}
 
 	public Supplier findById(String supplier_id) {
-		String sql = "SELECT * FROM suppliers WHERE supplier_id=? AND isdeleted = false";
+		String sql = "SELECT * FROM suppliers WHERE supplier_id=?";
 		List<Supplier> entities = this.jdbcTemplate.query(sql, new SupplierMapper(), supplier_id);
 		return entities.isEmpty() ? null : entities.get(0);
 	}

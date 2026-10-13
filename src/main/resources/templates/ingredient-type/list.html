@@ -249,13 +249,13 @@
             </div>
 
             <div class="action-group">
-                <a th:href="@{/stock-imports}" class="btn-luxury-outline">
+                <a th:href="@{/admin/stock-imports}" class="btn-luxury-outline">
                     <i class="fa-solid fa-dolly"></i> Stock Import List
                 </a>
-                <a th:href="@{/ingredient-types/deleted}" class="btn-luxury-outline">
+                <a th:href="@{/admin/ingredient-types/deleted}" class="btn-luxury-outline">
                     <i class="fa-solid fa-box-archive"></i> View Deleted List
                 </a>
-                <a th:href="@{/ingredient-types/add}" class="btn-luxury-primary">
+                <a th:href="@{/admin/ingredient-types/add}" class="btn-luxury-primary">
                     <i class="fa-solid fa-plus"></i> Add New Type
                 </a>
             </div>
@@ -281,11 +281,11 @@
                         <td class="text-end">
                             <!-- Stacked Pill Action Buttons matching Category List design -->
                             <div class="action-pill-group">
-                                <a th:href="@{/ingredient-types/edit/{id}(id=${item.ingredient_type_id})}" 
+                                <a th:href="@{/admin/ingredient-types/edit/{id}(id=${item.ingredient_type_id})}" 
                                    class="btn-pill-action btn-pill-edit" title="Edit Ingredient Type">
                                     <i class="fa-solid fa-pen-to-square"></i> Edit
                                 </a>
-                                <a th:href="@{/ingredient-types/soft-delete/{id}(id=${item.ingredient_type_id})}" 
+                                <a th:href="@{/admin/ingredient-types/soft-delete/{id}(id=${item.ingredient_type_id})}" 
                                    class="btn-pill-action btn-pill-delete" onclick="return confirm('Soft delete this record?');" title="Delete Ingredient Type">
                                     <i class="fa-solid fa-trash-can"></i> Delete
                                 </a>

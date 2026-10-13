@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Gateway Management | Café Luft</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-canvas: #f8f5f0;
+            --surface: #ffffff;
+            --espresso-dark: #1a110a;
+            --espresso-medium: #2e1d13;
+            --roast-caramel: #b8864e;
+            --champagne-gold: #cbb493;
+            --cream-soft: #faf6f0;
+            --border-subtle: #ede3d5;
+            --text-main: #2b1d14;
+            --text-secondary: #7f7267;
+            --active-bg: #edf6f0;
+            --active-color: #27673c;
+            --danger-bg: #fdf2f0;
+            --danger-color: #b94234;
+        }
+
+        body {
+            background-color: var(--bg-canvas);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        .main-wrapper {
+            max-width: 1240px;
+            margin: 40px auto;
+            padding: 0 24px;
+        }
+
+        .cafe-header-banner {
+            background: linear-gradient(135deg, rgba(26, 17, 10, 0.90) 0%, rgba(46, 29, 19, 0.85) 100%),
+                        url('https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+            border-radius: 24px;
+            padding: 28px 40px;
+            box-shadow: 0 18px 45px -10px rgba(26, 17, 10, 0.25);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(203, 180, 147, 0.35);
+            position: relative;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .brand-logo-circle {
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(203, 180, 147, 0.45);
+            border: 2.5px solid var(--champagne-gold);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .brand-logo-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .brand-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.95rem;
+            color: #ffffff;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .brand-subtitle {
+            color: var(--champagne-gold);
+            font-size: 0.76rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .btn-recycle {
+            background: rgba(255, 255, 255, 0.08);
+            color: #f7ede2;
+            border: 1.5px solid rgba(255, 255, 255, 0.18);
+            border-radius: 14px;
+            padding: 11px 22px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            backdrop-filter: blur(8px);
+            transition: all 0.25s ease;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .btn-recycle:hover {
+            background: rgba(255, 255, 255, 0.16);
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .btn-add-primary {
+            background: linear-gradient(135deg, var(--roast-caramel) 0%, #9c6c39 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 14px;
+            padding: 12px 26px;
+            font-size: 0.92rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            box-shadow: 0 6px 20px rgba(184, 134, 78, 0.35);
+            transition: all 0.25s ease;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .btn-add-primary:hover {
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(184, 134, 78, 0.5);
+        }
+
+        .table-card {
+            background: var(--surface);
+            border-radius: 24px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 16px 40px -10px rgba(43, 29, 20, 0.05);
+            padding: 24px 30px;
+            margin-top: 24px;
+        }
+
+        .table-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .table-controls h4 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .search-box {
+            position: relative;
+            min-width: 280px;
+        }
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        .search-box input {
+            border: 1.5px solid var(--border-subtle);
+            background: var(--cream-soft);
+            border-radius: 12px;
+            padding: 8px 14px 8px 38px;
+            font-size: 0.88rem;
+            width: 100%;
+            transition: all 0.2s ease;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--roast-caramel);
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(184, 134, 78, 0.12);
+        }
+
+        .cafe-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .cafe-table thead th {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1.4px;
+            padding: 16px 14px;
+            border-bottom: 1.5px solid var(--border-subtle);
+        }
+        .cafe-table tbody tr:not(:last-child) td {
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .cafe-table tbody tr:hover {
+            background-color: var(--cream-soft);
+        }
+        .cafe-table tbody td {
+            padding: 16px 14px;
+            vertical-align: middle;
+        }
+
+        .logo-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: #ffffff;
+            border: 1px solid var(--border-subtle);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3px;
+        }
+        .logo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 9px;
+        }
+
+        .badge-status {
+            font-size: 0.76rem;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .badge-status.active {
+            background: var(--active-bg);
+            color: var(--active-color);
+        }
+        .badge-status.inactive {
+            background: #f0ebe5;
+            color: #887a71;
+        }
+
+        /* Action Buttons: Size List Style Stacked Pills */
+        .action-pill-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: flex-end;
+        }
+
+        .btn-pill-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 78px;
+            padding: 5px 10px;
+            border-radius: 9px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .btn-pill-edit {
+            background-color: #FBF6EE;
+            color: #8C5332 !important;
+            border: 1px solid #E8D9C8;
+        }
+        .btn-pill-edit:hover {
+            background-color: #F2E7D5;
+            color: #5C3218 !important;
+            border-color: #D9C3A8;
+        }
+
+        .btn-pill-delete {
+            background-color: #FFF5F4;
+            color: #A3281D !important;
+            border: 1px solid transparent;
+        }
+        .btn-pill-delete:hover {
+            background-color: #FFE6E4;
+            color: #7A1910 !important;
+        }
+
+        .btn-toggle-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-main);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
+        }
+        .btn-toggle-icon:hover {
+            background: #f4ecdf;
+            border-color: #cbb493;
+        }
+    </style>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div class="main-wrapper">
+        <div class="cafe-header-banner">
+            <div class="brand-section">
+                <div class="brand-logo-circle">
+                    <img th:src="@{/images/luft-logo.png}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/924/924514.png'" alt="Café Luft Logo">
+                </div>
+                <div>
+                    <h1 class="brand-name">Café Luft</h1>
+                    <div class="brand-subtitle">
+                        <i class="bi bi-credit-card-2-front"></i> PAYMENT CHANNELS &amp; GATEWAYS
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+                <a th:href="@{/admin/paymethod/deleted}" class="btn-recycle">
+                    <i class="bi bi-archive"></i> Recycle Bin
+                </a>
+                <a th:href="@{/admin/paymethod/add}" class="btn-add-primary">
+                    <i class="bi bi-plus-circle"></i> Add New Method
+                </a>
+            </div>
+        </div>
+
+        <div class="table-card">
+            <div class="table-controls">
+                <div>
+                    <span class="text-uppercase fw-bold" style="font-size: 0.72rem; letter-spacing: 1.5px; color: var(--roast-caramel);">Roster Overview</span>
+                    <h4 class="fw-bold mb-0" style="color: var(--espresso-dark);">Active Gateways</h4>
+                </div>
+                <div class="search-box">
+                    <i class="bi bi-search"></i>
+                    <input type="text" id="methodSearchInput" placeholder="Quick search payment method..." onkeyup="filterPaymentMethods()">
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="cafe-table" id="paymentMethodTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 8%;">No.</th>
+                            <th style="width: 10%;">Logo</th>
+                            <th style="width: 25%;">Method Name</th>
+                            <th style="width: 23%;">Description</th>
+                            <th style="width: 12%;">Status</th>
+                            <th style="width: 10%;">Created</th>
+                            <th class="text-end" style="width: 12%;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="pm, state : ${payMethods}">
+                            <td class="text-muted fw-bold" th:text="${state.count < 10 ? '0' + state.count : state.count}">01</td>
+                            <td>
+                                <div class="logo-box">
+                                    <img th:if="${pm.logoPath != null and pm.logoPath != ''}"
+                                         th:src="@{'/images/' + ${pm.logoPath}}" alt="Logo" />
+                                    <span th:unless="${pm.logoPath != null and pm.logoPath != ''}" 
+                                          class="fw-bold text-muted" 
+                                          th:text="${#strings.substring(pm.name,0,1)}">P</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="fw-bold" style="color: var(--espresso-dark);" th:text="${pm.name}">KBZPay</div>
+                                <small class="text-muted" th:text="'ID: #' + ${pm.methodId}">#01</small>
+                            </td>
+                            <td>
+                                <span class="text-muted small" th:text="${pm.description != null ? pm.description : '—'}">Mobile Banking &amp; QR Scan</span>
+                            </td>
+                            <td>
+                                <span th:if="${pm.active}" class="badge-status active">
+                                    <i class="bi bi-check2-circle"></i> Active
+                                </span>
+                                <span th:unless="${pm.active}" class="badge-status inactive">
+                                    <i class="bi bi-slash-circle"></i> Inactive
+                                </span>
+                            </td>
+                            <td>
+                                <small class="text-muted" th:text="${pm.createdAt}">2026-10-07</small>
+                            </td>
+                            <td class="text-end">
+                                <div class="d-inline-flex align-items-center gap-2">
+                                    <a th:href="@{/admin/paymethod/isActive/{id}(id=${pm.methodId})}" 
+                                       class="btn-toggle-icon" title="Toggle Active / Inactive"
+                                       onclick="return confirm('Toggle status for this method?');">
+                                        <i class="fa-solid fa-arrows-rotate"></i>
+                                    </a>
+
+                                    <div class="action-pill-group">
+                                        <a th:href="@{/admin/paymethod/edit/{id}(id=${pm.methodId})}" 
+                                           class="btn-pill-action btn-pill-edit" title="Edit Method">
+                                            <i class="fa-solid fa-pen-to-square"></i> Edit
+                                        </a>
+                                        <button type="button" class="btn-pill-action btn-pill-delete border-0" 
+                                                th:attr="data-id=${pm.methodId},data-name=${pm.name}"
+                                                onclick="showDeleteModal(this)" title="Delete Method">
+                                            <i class="fa-solid fa-trash-can"></i> Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr th:if="${#lists.isEmpty(payMethods)}">
+                            <td colspan="7" class="text-center py-5">
+                                <i class="bi bi-inbox fs-1 text-muted d-block mb-2"></i>
+                                <div class="fw-semibold text-muted">No payment methods found.</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 24px; border: 1px solid var(--border-subtle); overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif;">
+            <div class="modal-body p-4 text-center">
+                <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" 
+                     style="width: 60px; height: 60px; border-radius: 50%; background: var(--danger-bg); color: var(--danger-color);">
+                    <i class="bi bi-trash3 fs-3"></i>
+                </div>
+                <h4 class="brand-name mb-2" style="color: var(--espresso-dark); font-size: 1.5rem; font-family: 'Playfair Display', serif;">Move to Recycle Bin?</h4>
+                <p class="text-muted small mb-4">Are you certain you want to disable <strong id="deleteMethodName"></strong>?</p>
+                <div class="d-flex justify-content-center gap-2">
+                    <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal" style="border-radius: 12px; font-weight: 600;">Cancel</button>
+                    <a id="confirmDeleteBtn" href="#" class="btn btn-danger px-4" style="border-radius: 12px; font-weight: 600; background: var(--danger-color); border: none;">Confirm Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function showDeleteModal(button) {
+        const id = button.getAttribute('data-id');
+        const name = button.getAttribute('data-name');
+        document.getElementById('deleteMethodName').textContent = name;
+        document.getElementById('confirmDeleteBtn').href = '/admin/paymethod/delete/' + id;
+        new bootstrap.Modal(document.getElementById('deleteModal')).show();
+    }
+
+    function filterPaymentMethods() {
+        const input = document.getElementById("methodSearchInput");
+        const filter = input.value.toLowerCase();
+        const table = document.getElementById("paymentMethodTable");
+        const trs = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+
+        for (let i = 0; i < trs.length; i++) {
+            const rowText = trs[i].textContent || trs[i].innerText;
+            trs[i].style.display = rowText.toLowerCase().indexOf(filter) > -1 ? "" : "none";
+        }
+    }
+</script>
+</body>
+</html>

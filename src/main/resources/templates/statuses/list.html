@@ -245,11 +245,6 @@
                     <i class="bi bi-person-badge"></i> Employee
                 </a>
                 <a class="capsule-link" 
-                   th:classappend="${selectedType == 'customer'} ? 'active'"
-                   th:href="@{/admin/statuses(type='customer')}">
-                    <i class="bi bi-people"></i> Customer
-                </a>
-                <a class="capsule-link" 
                    th:classappend="${selectedType == 'register'} ? 'active'"
                    th:href="@{/admin/statuses(type='register')}">
                     <i class="bi bi-clipboard2-check"></i> Register

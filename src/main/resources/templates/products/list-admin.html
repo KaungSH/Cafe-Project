@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Manage Menu (Admin) - Café System</title>
+<title>Products Management - Café Shop</title>
 
 <!-- Fonts & FontAwesome -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -73,6 +73,106 @@ body {
 	font-size: 0.95rem;
 }
 
+.user-profile-wrapper {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+}
+
+.notif-bell {
+	position: relative;
+	width: 44px;
+	height: 44px;
+	border-radius: 12px;
+	background: #ffffff;
+	border: 1px solid #e2e8f0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #475569;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.notif-bell:hover {
+	background-color: #f8fafc;
+	color: #0f172a;
+}
+
+.notif-bell::after {
+	content: '';
+	position: absolute;
+	top: 11px;
+	right: 12px;
+	width: 8px;
+	height: 8px;
+	background-color: #3B2014;
+	border-radius: 50%;
+	border: 2px solid #ffffff;
+}
+
+/* ================= Profile Label with Click-to-Upload ================= */
+.profile-card-label {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	background: #ffffff;
+	padding: 6px 16px 6px 8px;
+	border-radius: 30px;
+	border: 1px solid #e2e8f0;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+	cursor: pointer;
+	user-select: none;
+	margin-bottom: 0;
+	transition: all 0.2s ease;
+}
+
+.profile-card-label:hover {
+	background-color: #f8fafc;
+	border-color: #cbd5e1;
+	transform: translateY(-1px);
+}
+
+.profile-avatar-wrapper {
+	position: relative;
+	width: 38px;
+	height: 38px;
+	flex-shrink: 0;
+	border-radius: 50%;
+	overflow: hidden;
+}
+
+.profile-img {
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	object-fit: cover;
+	border: 1.5px solid #e2e8f0;
+	transition: all 0.2s ease;
+}
+
+.avatar-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #ffffff;
+	font-size: 0.8rem;
+	background: rgba(0, 0, 0, 0.45);
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.2s ease;
+}
+
+.profile-card-label:hover .avatar-overlay {
+	opacity: 1;
+}
+
 /* ================= Stat Mini Cards ================= */
 .stat-card-row {
 	display: grid;
@@ -133,13 +233,57 @@ body {
 	align-items: center;
 	gap: 8px;
 	cursor: pointer;
-	text-decoration: none;
 	transition: all 0.2s;
 }
 
 .btn-pill-white:hover {
 	background-color: #f1f5f9;
 	color: #0f172a;
+}
+
+/* Real Deep Coffee Tone (+ Add Product Type Button) */
+.btn-add-type {
+	background: #3B2014 !important;
+	background-color: #3B2014 !important;
+	color: #ffffff !important;
+	border-radius: 10px !important;
+	padding: 10px 22px !important;
+	font-weight: 700 !important;
+	font-size: 0.88rem !important;
+	border: 1px solid #2B160D !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	gap: 8px !important;
+	text-decoration: none !important;
+	box-shadow: 0 6px 16px rgba(59, 32, 20, 0.35) !important;
+	transition: all 0.25s ease !important;
+}
+
+.btn-add-type:hover {
+	background: #4E2A1A !important;
+	background-color: #4E2A1A !important;
+	transform: translateY(-2px) !important;
+	box-shadow: 0 8px 20px rgba(59, 32, 20, 0.45) !important;
+}
+
+.btn-bin-trash {
+	background-color: #f1f5f9;
+	color: #475569 !important;
+	border-radius: 10px;
+	padding: 10px 18px;
+	font-weight: 600;
+	font-size: 0.88rem;
+	border: none;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	text-decoration: none;
+	transition: all 0.2s;
+}
+
+.btn-bin-trash:hover {
+	background-color: #e2e8f0;
+	color: #0f172a !important;
 }
 
 /* ================= Main Table Design ================= */
@@ -180,8 +324,8 @@ body {
 }
 
 .product-cover-img {
-	width: 54px;
-	height: 54px;
+	width: 58px;
+	height: 58px;
 	object-fit: cover;
 	border-radius: 14px;
 	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
@@ -192,24 +336,11 @@ body {
 	background-color: #fffbeb;
 	color: #b45309;
 	border: 1px solid #fde68a;
-	padding: 5px 12px;
+	padding: 6px 14px;
 	border-radius: 30px;
 	font-weight: 700;
 	font-size: 0.74rem;
 	display: inline-block;
-}
-
-.badge-tag-branch {
-	background-color: #f0fdf4;
-	color: #166534;
-	border: 1px solid #bbf7d0;
-	padding: 5px 12px;
-	border-radius: 30px;
-	font-weight: 700;
-	font-size: 0.74rem;
-	display: inline-flex;
-	align-items: center;
-	gap: 5px;
 }
 
 .price-text {
@@ -236,13 +367,62 @@ body {
 	display: inline-flex;
 	align-items: center;
 	gap: 6px;
-	cursor: pointer;
 	transition: background-color 0.2s;
 }
 
 .btn-details-expand:hover {
 	background: #334155;
-	color: #ffffff;
+}
+
+/* ================= Edit & Delete Buttons Style (From Categories) ================= */
+.action-pill-group {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	align-items: flex-end;
+}
+
+.btn-pill-action {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	width: 78px;
+	padding: 5px 10px;
+	border-radius: 9px;
+	font-size: 0.82rem;
+	font-weight: 600;
+	text-decoration: none;
+	transition: all 0.2s ease;
+}
+
+/* Edit Pill Button */
+.btn-pill-edit {
+	background-color: #FBF6EE;
+	color: #8C5332 !important;
+	border: 1px solid #E8D9C8;
+}
+
+.btn-pill-edit:hover {
+	background-color: #F2E7D5;
+	color: #5C3218 !important;
+	border-color: #D9C3A8;
+}
+
+/* Delete Pill Button */
+.btn-pill-delete {
+	background-color: #FFF5F4;
+	color: #A3281D !important;
+	border: 1px solid transparent;
+}
+
+.btn-pill-delete:hover {
+	background-color: #FFE6E4;
+	color: #7A1910 !important;
+}
+
+.btn-pill-action i {
+	font-size: 0.8rem;
 }
 </style>
 </head>
@@ -251,21 +431,12 @@ body {
 <div layout:fragment="content">
 	<div class="container-fluid py-4 px-4">
 
-		<!-- 1. Top Navbar: Search & Admin Navigation -->
+		<!-- 1. Top Navbar: Search & Manager Profile -->
 		<div class="top-navbar-wrapper">
 			<form method="post" th:action="@{/admin/products/search}" th:object="${keywordmodel}" id="search" class="search-box-wrapper mb-0">
 				<i class="fa-solid fa-magnifying-glass search-icon"></i>
-				<input type="text" th:field="*{keyword}" placeholder="Search menu items, drinks, branches..." aria-label="Search">
+				<input type="text" th:field="*{keyword}" placeholder="Search coffee, recipes, categories..." aria-label="Search">
 			</form>
-			
-			<div class="d-flex align-items-center gap-2">
-				<a th:href="@{/admin/products}" class="btn-pill-white" title="Reset Search">
-					<i class="fa-solid fa-rotate text-muted"></i> All Products
-				</a>
-				<a th:href="@{/}" class="btn-pill-white">
-					<i class="fa-solid fa-arrow-left text-muted"></i> Dashboard
-				</a>
-			</div>
 		</div>
 
 		<!-- 2. Mini Metric KPI Summary Cards -->
@@ -273,7 +444,7 @@ body {
 			<div class="stat-card">
 				<div>
 					<div class="text-muted small fw-semibold">Total Menu Items</div>
-					<div class="fw-bold fs-4 text-dark" th:text="${product_types != null ? product_types.size() : '0'}">0</div>
+					<div class="fw-bold fs-4 text-dark" th:text="${product_types != null ? product_types.size() : '0'}">2</div>
 				</div>
 				<div class="stat-icon stat-icon-coffee">
 					<i class="fa-solid fa-mug-hot"></i>
@@ -282,19 +453,19 @@ body {
 
 			<div class="stat-card">
 				<div>
-					<div class="text-muted small fw-semibold">Administration Level</div>
-					<div class="fw-bold fs-4 text-dark">Central</div>
+					<div class="text-muted small fw-semibold">Category Types</div>
+					<div class="fw-bold fs-4 text-dark">Hot Drinks</div>
 				</div>
 				<div class="stat-icon stat-icon-category">
-					<i class="fa-solid fa-shield-halved"></i>
+					<i class="fa-solid fa-layer-group"></i>
 				</div>
 			</div>
 
 			<div class="stat-card">
 				<div>
-					<div class="text-muted small fw-semibold">System Status</div>
+					<div class="text-muted small fw-semibold">Store Status</div>
 					<div class="fw-bold fs-5 text-success">
-						<i class="fa-solid fa-circle-check me-1 small"></i> All Branches Synced
+						<i class="fa-solid fa-circle-check me-1 small"></i> Serving Active
 					</div>
 				</div>
 				<div class="stat-icon stat-icon-stock">
@@ -303,11 +474,32 @@ body {
 			</div>
 		</div>
 
-		<!-- 3. Title & Action Header -->
+		<!-- 3. Title & Action Buttons -->
 		<div class="page-header-row">
 			<div>
-				<h3 class="fw-bold mb-1" style="color: #0f172a; font-size: 1.55rem;">Manage Menu - Central Admin</h3>
-				<p class="text-muted mb-0" style="font-size: 0.88rem;">Overview of all menu products, variant sizes, recipes, base pricing, and branch allocation.</p>
+				<h3 class="fw-bold mb-1" style="color: #0f172a; font-size: 1.55rem;">Products List - Manager</h3>
+				<p class="text-muted mb-0" style="font-size: 0.88rem;">Manage coffee types, sizes, variant pricing, recipes, and active states.</p>
+			</div>
+
+			<div class="d-flex align-items-center gap-2 flex-wrap">
+				<div class="dropdown">
+					<button class="btn btn-pill-white dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+						Showing <span class="fw-bold">10</span>
+					</button>
+					<ul class="dropdown-menu">
+						<li><a class="dropdown-item" href="#">10</a></li>
+						<li><a class="dropdown-item" href="#">25</a></li>
+						<li><a class="dropdown-item" href="#">50</a></li>
+					</ul>
+				</div>
+
+				<button class="btn btn-pill-white" type="button">
+					<i class="fa-solid fa-filter text-muted"></i> Filter
+				</button>
+
+				<button class="btn btn-pill-white" type="button">
+					<i class="fa-solid fa-arrow-up-from-bracket text-muted"></i> Export
+				</button>
 			</div>
 		</div>
 
@@ -318,23 +510,17 @@ body {
 					<thead>
 						<tr>
 							<th style="width: 5%;">No.</th>
-							<th style="width: 8%;">Cover</th>
-							<th style="width: 18%;">Product Name</th>
-							<th style="width: 14%;">Branch</th>
-							<th style="width: 13%;">Category</th>
+							<th style="width: 9%;">Cover</th>
+							<th style="width: 17%;">Product Name</th>
+							<th style="width: 20%;">Description</th>
+							<th style="width: 12%;">Category</th>
 							<th style="width: 12%;">Default Price</th>
-							<th style="width: 11%;">Created By</th>
-							<th style="width: 11%;">Created At</th>
-							<th style="width: 8%; text-align: end;">Details</th>
+							<th style="width: 6%; text-align: center;">Edited</th>
+							<th style="width: 9%;">Created At</th>
+							<th style="width: 10%; text-align: end;">Action</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:if="${product_types == null or product_types.empty}">
-							<td colspan="9" class="text-center py-5 text-muted">
-								<i class="fa-solid fa-mug-hot fa-2x mb-3 text-secondary d-block"></i>
-								No menu products found.
-							</td>
-						</tr>
 						<th:block th:each="p, state : ${product_types}">
 							<tr>
 								<td class="fw-bold text-muted" th:text="${state.count}">1</td>
@@ -380,15 +566,11 @@ body {
 								</td>
 
 								<td>
-									<div class="fw-bold text-dark" style="font-size: 0.93rem;" th:text="${p.name}">Coffee - Cappuccino</div>
-									<small class="text-muted text-truncate d-inline-block" style="max-width: 220px;" th:text="${p.description}">Description</small>
+									<div class="fw-bold text-dark" style="font-size: 0.93rem;" th:text="${p.name}">Coffee - Cappucino</div>
 								</td>
 
 								<td>
-									<span class="badge-tag-branch">
-										<i class="fa-solid fa-store" style="font-size: 0.7rem;"></i>
-										<span th:text="${p.branch_name != null ? p.branch_name : 'Central'}">Downtown Branch</span>
-									</span>
+									<span class="text-muted text-truncate d-inline-block" style="max-width: 230px;" th:text="${p.description}">A Hot Cup of Cappucino</span>
 								</td>
 
 								<td>
@@ -400,16 +582,19 @@ body {
 									<span class="currency-sub">MMK</span>
 								</td>
 
-								<td>
-									<span class="text-dark small fw-semibold" th:text="${p.employee_name}">Manager</span>
+								<td class="text-center">
+									<span th:if="${p.isedited}" class="badge bg-light text-warning border px-2 py-1 small">Yes</span>
+									<span th:unless="${p.isedited}" class="badge bg-light text-muted border px-2 py-1 small">No</span>
 								</td>
 
-								<td class="text-muted small" th:text="${p.created_at != null ? #temporals.format(p.created_at, 'yyyy-MM-dd HH:mm') : '-'}">2026-09-27 23:52</td>
+								<td class="text-muted small" th:text="${#temporals.format(p.created_at, 'yyyy-MM-dd HH:mm')}">2026-09-27 23:52</td>
 
 								<td class="text-end">
-									<button class="btn-details-expand" type="button" data-bs-toggle="collapse" th:data-bs-target="'#detailRow-' + ${state.index}">
-										Details <i class="fa-solid fa-chevron-down ms-1" style="font-size: 0.65rem;"></i>
-									</button>
+									<div class="d-inline-flex align-items-center justify-content-end gap-2">
+										<button class="btn-details-expand" type="button" data-bs-toggle="collapse" th:data-bs-target="'#detailRow-' + ${state.index}">
+											Details <i class="fa-solid fa-chevron-down ms-1" style="font-size: 0.65rem;"></i>
+										</button>
+									</div>
 								</td>
 							</tr>
 
@@ -421,9 +606,6 @@ body {
 											<h6 class="fw-bold text-dark mb-0">
 												<i class="fa-solid fa-mug-saucer text-warning me-2"></i> Recipes & Sizes: <span class="text-primary" th:text="${p.name}">Product</span>
 											</h6>
-											<span class="badge bg-secondary-subtle text-secondary px-3 py-1 small">
-												<span th:text="${p.branch_name}">Branch</span>
-											</span>
 										</div>
 
 										<div th:if="${p.products != null and !p.products.empty}">
@@ -462,7 +644,7 @@ body {
 											</div>
 										</div>
 										<div th:unless="${p.products != null and !p.products.empty}" class="text-muted text-center py-2 small fst-italic">
-											No variant sizes configured for this item.
+											No variant sizes configured.
 										</div>
 									</div>
 								</td>
@@ -476,6 +658,34 @@ body {
 	</div>
 
 	<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+	<!-- Profile Instant Update & LocalStorage Persistence Script -->
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			const profileInput = document.getElementById("profileFileInput");
+			const profileImg = document.getElementById("manager-onlyProfileImg");
+
+			const savedProfileImage = localStorage.getItem("manager-only_profile_avatar");
+			if (savedProfileImage && profileImg) {
+				profileImg.src = savedProfileImage;
+			}
+
+			if (profileInput && profileImg) {
+				profileInput.addEventListener("change", function (event) {
+					const file = event.target.files[0];
+					if (file) {
+						const reader = new FileReader();
+						reader.onload = function (e) {
+							const newImageDataUrl = e.target.result;
+							profileImg.src = newImageDataUrl;
+							localStorage.setItem("manager-only_profile_avatar", newImageDataUrl);
+						};
+						reader.readAsDataURL(file);
+					}
+				});
+			}
+		});
+	</script>
 </div>
 </body>
 </html>

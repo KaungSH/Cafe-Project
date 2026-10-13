@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Change Profile - Café Luft</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet">
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap"
+      rel="stylesheet">
+
+<style>
+    :root {
+        --cafe-espresso: #1a0b05;
+        --caramel: #e28e44;
+        --caramel-soft: #fcf4ec;
+        --cream-bg: #f9f5f1;
+        --card-border: #ede0d4;
+        --text-dark: #20130b;
+        --text-muted: #856e62;
+    }
+
+    body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: var(--cream-bg);
+        color: var(--text-dark);
+    }
+
+    .profile-card {
+        background: #ffffff;
+        border: 1px solid var(--card-border);
+        border-radius: 28px;
+        box-shadow: 0 15px 35px rgba(26, 11, 5, 0.05);
+        max-width: 700px;
+        margin: 50px auto;
+        overflow: hidden;
+    }
+
+    .profile-header {
+        background: #ffffff;
+        padding: 30px 35px 20px;
+        border-bottom: 1px solid var(--card-border);
+    }
+
+    .profile-title {
+        font-size: 24px;
+        font-weight: 800;
+        color: var(--cafe-espresso);
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin: 0;
+    }
+
+    .profile-title i {
+        color: var(--caramel);
+        background: var(--caramel-soft);
+        padding: 12px;
+        border-radius: 14px;
+        font-size: 20px;
+        border: 1px solid rgba(226, 142, 68, 0.2);
+    }
+
+    .profile-subtitle {
+        color: var(--text-muted);
+        font-size: 14px;
+        margin-top: 12px;
+        margin-bottom: 0;
+    }
+
+    .profile-body {
+        padding: 30px 35px 35px;
+    }
+
+    .form-label {
+        font-weight: 700;
+        font-size: 14px;
+        color: var(--cafe-espresso);
+    }
+
+    .form-control {
+        border: 1px solid #e5d8ce;
+        border-radius: 12px;
+        padding: 11px 14px;
+        font-size: 14px;
+    }
+
+    .form-control:focus {
+        border-color: var(--caramel);
+        box-shadow: 0 0 0 0.2rem rgba(226, 142, 68, 0.15);
+    }
+
+    .form-control.is-invalid {
+        border-color: #dc3545;
+    }
+
+    .form-control.is-invalid:focus {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15);
+    }
+
+    .validation-error {
+        color: #dc3545;
+        font-size: 12.5px;
+        margin-top: 6px;
+    }
+
+    .password-note {
+        background: #faf5f0;
+        border: 1px solid #eedecf;
+        border-radius: 12px;
+        padding: 12px 15px;
+        margin-top: 8px;
+        color: var(--text-muted);
+        font-size: 12.5px;
+    }
+
+    .wrong-credentials {
+        border-radius: 12px;
+        font-size: 13.5px;
+    }
+
+    .section-title {
+        font-size: 15px;
+        font-weight: 800;
+        color: var(--cafe-espresso);
+        margin-bottom: 18px;
+    }
+
+    .section-title i {
+        color: var(--caramel);
+        margin-right: 8px;
+    }
+
+    .photo-placeholder {
+        min-height: 180px;
+        border: 2px dashed #e5d8ce;
+        border-radius: 16px;
+        background: #fcfaf8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-muted);
+        font-size: 13px;
+        margin-bottom: 30px;
+    }
+
+    .photo-placeholder-content {
+        text-align: center;
+    }
+
+    .photo-placeholder-content i {
+        font-size: 30px;
+        color: #d7c5b7;
+        margin-bottom: 10px;
+    }
+
+    .btn-caramel {
+        background: var(--caramel);
+        color: #ffffff;
+        border: none;
+        padding: 11px 24px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 14px;
+        text-decoration: none;
+        transition: all 0.25s ease;
+        box-shadow: 0 4px 14px rgba(226, 142, 68, 0.3);
+    }
+
+    .btn-caramel:hover {
+        background: #d2792e;
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(226, 142, 68, 0.4);
+    }
+
+    .btn-cancel {
+        background: #ffffff;
+        color: var(--text-muted);
+        border: 1px solid #ded2c9;
+        padding: 11px 24px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 14px;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .btn-cancel:hover {
+        background: #f8f4f1;
+        color: var(--cafe-espresso);
+    }
+
+    .readonly-field {
+        background-color: #f8f5f2;
+    }
+</style>
+
+</head>
+
+<body>
+
+<div layout:fragment="content">
+
+<div class="container">
+
+    <div class="profile-card">
+
+        <!-- Header -->
+        <div class="profile-header">
+
+            <h1 class="profile-title">
+                <i class="fa-solid fa-user-pen"></i>
+                Change Profile
+            </h1>
+
+            <p class="profile-subtitle">
+                Update your profile information and confirm the changes
+                using your current password.
+            </p>
+
+        </div>
+
+
+        <!-- Body -->
+        <div class="profile-body">
+
+            <!-- Service Error -->
+            <div th:if="${error}"
+                 class="alert alert-danger wrong-credentials mb-4">
+
+                <i class="fa-solid fa-circle-exclamation me-2"></i>
+
+                <span th:text="${error}">
+                    Wrong Credentials.
+                </span>
+
+            </div>
+            
+            <form method="post"
+                  th:action="@{/changeprofile}"
+                  th:object="${changeprofile}"
+                  enctype="multipart/form-data">
+                    <input type="hidden"
+                           th:field="*{photopath}">
+                  
+                  <div class="mb-4">
+									<label class="form-label fw-semibold"> Original Cover
+										Image </label><br> <img th:if="*{photopath != null}"
+										th:src="@{'/images/' + *{photopath}}"
+										alt="Thumbnail Error"
+										style="height: 300px; width: auto; object-fit: cover;" />
+									<div th:unless="*{photopath != null}">No Image</div>
+								</div>
+								
+								<div class="mb-3">
+
+									<label for="coverImg" class="form-label fw-semibold">
+										New Cover Image </label> <input type="file" id="coverImg"
+										name="coverImgPart" class="form-control" accept="image/*">
+									<div class="form-text">Select an image to use as the
+										cover of your post.</div>
+
+									<div class="mt-3">
+										<img id="coverPreview" class="img-fluid"
+											style="height: 300px; width: auto;" alt="Cover image Error">
+									</div>
+
+								</div>
+
+
+                <!-- Profile Information -->
+                <div class="section-title">
+                    <i class="fa-solid fa-user"></i>
+                    Profile Information
+                </div>
+
+
+                <!-- Employee Name -->
+                <div class="mb-4">
+
+                    <label for="employee_name"
+                           class="form-label">
+                        Employee Name
+                    </label>
+
+                    <input type="text"
+                           id="employee_name"
+                           class="form-control"
+                           th:classappend="${#fields.hasErrors('employee_name')} ? ' is-invalid'"
+                           th:field="*{employee_name}"
+                           maxlength="45"
+                           required>
+
+                    <div th:if="${#fields.hasErrors('employee_name')}"
+                         th:errors="*{employee_name}"
+                         class="validation-error">
+                    </div>
+
+                </div>
+
+
+                <!-- Email -->
+                <div class="mb-4">
+
+                    <label for="email"
+                           class="form-label">
+                        Email
+                    </label>
+
+                    <input type="email"
+                           id="email"
+                           class="form-control"
+                           th:classappend="${#fields.hasErrors('email')} ? ' is-invalid'"
+                           th:field="*{email}"
+                           maxlength="200"
+                           required>
+
+                    <div th:if="${#fields.hasErrors('email')}"
+                         th:errors="*{email}"
+                         class="validation-error">
+                    </div>
+
+                </div>
+
+
+                <!-- Phone -->
+                <div class="mb-4">
+
+                    <label for="phone"
+                           class="form-label">
+                        Phone Number
+                    </label>
+
+                    <input type="text"
+                           id="phone"
+                           class="form-control"
+                           th:classappend="${#fields.hasErrors('phone')} ? ' is-invalid'"
+                           th:field="*{phone}"
+                           placeholder="09xxxxxxxxx"
+                           required>
+
+                    <div th:if="${#fields.hasErrors('phone')}"
+                         th:errors="*{phone}"
+                         class="validation-error">
+                    </div>
+
+                </div>
+
+
+                <!-- Address -->
+                <div class="mb-4">
+
+                    <label for="address"
+                           class="form-label">
+                        Address
+                    </label>
+
+                    <textarea id="address"
+                              class="form-control"
+                              th:classappend="${#fields.hasErrors('address')} ? ' is-invalid'"
+                              th:field="*{address}"
+                              rows="3"
+                              maxlength="100"
+                              required></textarea>
+
+                    <div th:if="${#fields.hasErrors('address')}"
+                         th:errors="*{address}"
+                         class="validation-error">
+                    </div>
+
+                </div>
+
+
+                <!-- Password -->
+                <div class="mb-4">
+
+                    <label for="password"
+                           class="form-label">
+                        Current Password
+                    </label>
+
+                    <input type="password"
+                           id="password"
+                           class="form-control"
+                           th:classappend="${#fields.hasErrors('password')} ? ' is-invalid'"
+                           th:field="*{password}"
+                           autocomplete="current-password"
+                           required>
+
+                    <div th:if="${#fields.hasErrors('password')}"
+                         th:errors="*{password}"
+                         class="validation-error">
+                    </div>
+
+                    <div class="password-note">
+                        <i class="fa-solid fa-lock me-1"></i>
+                        Your current password is required to confirm
+                        profile changes.
+                    </div>
+
+                </div>
+
+
+                <!-- Buttons -->
+                <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+
+                    <a th:href="@{/}"
+                       class="btn-cancel">
+                        Cancel
+                    </a>
+
+                    <button type="submit"
+                            class="btn-caramel">
+
+                        <i class="fa-solid fa-floppy-disk me-2"></i>
+                        Save Changes
+
+                    </button>
+
+                </div>
+
+            </form>
+		<!-- Bootstrap JavaScript -->
+		<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+
+		<!-- Image Preview -->
+		<script>
+			document.getElementById("coverImg")
+					.addEventListener(
+							"change",
+							function(event) {
+
+								const file = event.target.files[0];
+								const preview = document
+										.getElementById("coverPreview");
+
+								if (file) {
+									preview.src = URL.createObjectURL(file);
+									preview.style.display = "block";
+								} else {
+									preview.src = "";
+									preview.style.display = "none";
+								}
+							});
+		</script>
+		
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+</body>
+</html>

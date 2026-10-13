@@ -23,6 +23,10 @@ public class SizeService {
 	public List<Size> getAllSizes() {
 		return sizeRepository.findAll();
 	}
+	
+	public List<Size> getAllSizesAll() {
+		return sizeRepository.findAllAll();
+	}
 
 	public List<Size> getDeletedSizes() {
 		return sizeRepository.findDeletedAll();

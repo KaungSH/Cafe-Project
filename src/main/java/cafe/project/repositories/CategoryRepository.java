@@ -43,7 +43,7 @@ public class CategoryRepository {
 	public List<Category> findAllByRelationAdmin() {
 		String sql = "SELECT c.*,e.name employee_name , b.name branch_name\r\n" + "FROM categories c \r\n"
 				+ "LEFT JOIN employees e ON c.employee_id=e.employee_id     \r\n"
-				+ "LEFT JOIN branches b ON c.branches_branch_id = b.branch_id \r\n" + "WHERE  c.isdeleted = false;";
+				+ "LEFT JOIN branches b ON c.branches_branch_id = b.branch_id \r\n" + "WHERE  c.isdeleted = false AND c.category_id != 'deleted';";
 
 		return jdbcTemplate.query(sql, new CategoryMapper2());
 	}

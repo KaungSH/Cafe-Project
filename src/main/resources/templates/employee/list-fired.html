@@ -91,7 +91,7 @@
                                 <i class="bi bi-arrow-counterclockwise"></i> Re-Hire
                             </a>
                             <a th:if="${session.loggedInUser.employee_role == 'ADMIN'}" 
-                               th:href="@{/manager-only/employee/setonleave/{id}(id=${emp.employee_id})}" 
+                               th:href="@{/admin/employee/setonleave/{id}(id=${emp.employee_id})}" 
                                onclick="return confirm('Do you really want to re-hire this employee?')" class="btn-rehire">
                                 <i class="bi bi-arrow-counterclockwise"></i> Re-Hire
                             </a>

@@ -94,6 +94,14 @@ public class BranchService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Branch");
         return this.branchRepository.updateFinance(branch_id, finance);
     }
+    
+    public boolean loctionExists(String location) {
+    	if (branchRepository.findByLocation(location) != null) {
+    		return true;
+    	}
+    	
+    	return false;
+    }
 
     private BranchListDto toListDto(Branch entity) {
         BranchListDto dto = new BranchListDto();

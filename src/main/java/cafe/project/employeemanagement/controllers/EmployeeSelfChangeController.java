@@ -16,6 +16,7 @@ import cafe.project.employeemanagement.models.ChangePasswordDto;
 import cafe.project.employeemanagement.models.ChangeProfileDto;
 import cafe.project.employeemanagement.models.LoginDto;
 import cafe.project.employeemanagement.services.EmployeeManagementService;
+import cafe.project.services.EmployeeService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import jakarta.validation.Valid;
@@ -24,9 +25,11 @@ import jakarta.validation.Valid;
 public class EmployeeSelfChangeController {
 	
 	private final EmployeeManagementService emservice;
+	private final EmployeeService employeeService;
 	
-	public EmployeeSelfChangeController(EmployeeManagementService emservice) {
+	public EmployeeSelfChangeController(EmployeeManagementService emservice, EmployeeService employeeService) {
 		this.emservice = emservice;
+		this.employeeService = employeeService;
 	}
 	
 	@GetMapping("/changepassword")
@@ -64,6 +67,12 @@ public class EmployeeSelfChangeController {
 			return "common/user/changeprofile";
 		}
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		System.out.println("cfdto - " + cfdto.getEmail()); System.out.println("ldto - " + employeeService.getEmployeeByIdAdmin(ldto.getEmployee_id()).getEmail());
+		if(emservice.findByEmail(cfdto.getEmail()) != null && !cfdto.getEmail().equals(employeeService.getEmployeeByIdAdmin(ldto.getEmployee_id()).getEmail())) {
+			model.addAttribute("emailerror", "There already exist an account with that email!");
+			return "common/user/changeprofile";
+		}
+		
 		cfdto.setEmployee_id(ldto.getEmployee_id());
 		
 		String file = saveImgFile(imgPart);

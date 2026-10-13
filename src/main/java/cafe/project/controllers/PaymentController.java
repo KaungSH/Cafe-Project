@@ -45,9 +45,9 @@ public class PaymentController {
 	}
 
 	@GetMapping
-	public String index(Model model) {
-
-		model.addAttribute("payments", paymentService.findAll());
+	public String index(Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		model.addAttribute("payments", paymentService.findAll(ldto.getBranch_id()));
 
 		return "payments/index";
 	}
@@ -134,7 +134,7 @@ public class PaymentController {
 			    "Payment completed successfully."
 			);
 
-			return "redirect:/receipt/" + orderId;
+			return "redirect:/receipt/preview/" + orderId;
 
 		} catch (IllegalArgumentException e) {
 			redirect.addFlashAttribute("error", e.getMessage());
@@ -175,8 +175,9 @@ public class PaymentController {
 	}
 
 	@GetMapping("/deleted")
-	public String deletedList(Model model) {
-		model.addAttribute("payments", paymentService.findDeletedAll());
+	public String deletedList(Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		model.addAttribute("payments", paymentService.findDeletedAll(ldto.getBranch_id()));
 		return "/payments/deletedList";
 	}
 

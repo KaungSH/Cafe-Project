@@ -48,7 +48,7 @@ public class PayMethodRepository {
 	}
 
 	public PayMethod findById(String methodId) {
-		String sql = "SELECT * FROM pay_methods WHERE method_id = ? AND isdeleted = 0 AND method_id != 'deleted'";
+		String sql = "SELECT * FROM pay_methods WHERE method_id = ? AND method_id != 'deleted'";
 		List<PayMethod> list = jdbcTemplate.query(sql, new PayMethodMapper(), methodId);
 		return list.isEmpty() ? null : list.get(0);
 	}

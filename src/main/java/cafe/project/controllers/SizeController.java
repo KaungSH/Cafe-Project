@@ -23,7 +23,7 @@ public class SizeController {
 
 	@GetMapping
 	public String list(Model model) {
-		model.addAttribute("sizes", sizeService.getAllSizes());
+		model.addAttribute("sizes", sizeService.getAllSizesAll());
 		return "sizes/list";
 	}
 

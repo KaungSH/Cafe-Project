@@ -71,6 +71,12 @@
             <i class="bi bi-shop"></i>
             <span>Branches</span>
         </a>
+        
+        <!-- BRANCHES -->
+        <a th:href="@{/admin/branchesstats}" class="cafe-menu-item">
+            <i class="bi bi-shop"></i>
+            <span>Branch Stats</span>
+        </a>
 
         <!-- EXPENSES -->
         <a th:href="@{/admin/expenses}" class="cafe-menu-item">
@@ -97,13 +103,13 @@
         </a>
 
         <!-- EXPENSE CATEGORIES -->
-        <a th:href="@{/admin/expensecategories}" class="cafe-menu-item">
+        <a th:href="@{/admin/expensecategory}" class="cafe-menu-item">
             <i class="bi bi-tags"></i>
             <span>Expense Categories</span>
         </a>
 
         <!-- INGREDIENT TYPE -->
-        <a th:href="@{/admin/ingredientType}" class="cafe-menu-item">
+        <a th:href="@{/admin/ingredient-types}" class="cafe-menu-item">
             <i class="bi bi-basket3"></i>
             <span>Ingredient Type</span>
         </a>
@@ -115,7 +121,7 @@
         </a>
 
         <!-- PAYMENTS -->
-        <a th:href="@{/payments}" class="cafe-menu-item">
+        <a th:href="@{/admin/payments}" class="cafe-menu-item">
             <i class="bi bi-wallet2"></i>
             <span>Payments</span>
         </a>
@@ -160,6 +166,11 @@
         <a th:href="@{/admin/wastelogs}" class="cafe-menu-item">
             <i class="bi bi-trash3"></i>
             <span>Waste Logs</span>
+        </a>
+         <!-- WASTE LOGS -->
+        <a th:href="@{/admin/wastereasons}" class="cafe-menu-item">
+            <i class="bi bi-trash3"></i>
+            <span>Waste Reasons</span>
         </a>
     </div>
 

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Café Luft — Deleted Ingredient Batches (Trash)</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f9f7f4;
+            color: #2d241e;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+
+        .cafe-header-brand {
+            font-family: 'Playfair Display', serif;
+            color: #1f1712;
+        }
+
+        .table-container {
+            background: #ffffff;
+            border: 1px solid #ede7e0;
+            border-radius: 18px;
+            padding: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        }
+
+        .table thead th {
+            background-color: #fbf9f6;
+            color: #7b6f65;
+            font-size: 0.72rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #ede7e0;
+            padding: 15px;
+        }
+
+        .table tbody td {
+            padding: 16px 15px;
+            border-bottom: 1px solid #f4efe9;
+        }
+
+        .batch-id-tag {
+            font-family: monospace;
+            background: #f4efe9;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .btn-recover {
+            background-color: #24753a;
+            color: #fff;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 6px 14px;
+        }
+        .btn-recover:hover { background-color: #1d5f2f; color: #fff; }
+
+        .btn-hard-delete {
+            background-color: #b8332a;
+            color: #fff;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 6px 14px;
+        }
+        .btn-hard-delete:hover { background-color: #992921; color: #fff; }
+    </style>
+</head>
+
+<body>
+<div  layout:fragment="content" class="container px-4 pt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+        <div>
+            <span class="badge bg-danger-subtle text-danger px-3 py-1 rounded-pill mb-1 fw-bold">TRASH REPOSITORY</span>
+            <h2 class="cafe-header-brand fw-bold mb-0">Deleted Batches Archive</h2>
+        </div>
+        <a th:href="@{/manager-only/ingredient-batches}" class="btn btn-outline-dark rounded-pill px-4">
+            <i class="bi bi-arrow-left me-1"></i> Back to Active Batches
+        </a>
+    </div>
+
+    <div class="table-container">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Batch ID</th>
+                        <th>Ingredient</th>
+                        <th>Branch</th>
+                        <th>Remaining Qty</th>
+                        <th>Expire Date</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${#lists.isEmpty(deletedBatches)}">
+                        <td colspan="6" class="text-center text-muted py-5">
+                            <i class="bi bi-trash fs-2 d-block mb-2"></i>
+                            Trash is empty. No deleted batches found.
+                        </td>
+                    </tr>
+                    <tr th:each="batch : ${deletedBatches}">
+                        <td><span class="batch-id-tag" th:text="${batch.batch_id}"></span></td>
+                        <td class="fw-bold" th:text="${batch.ingredientType_name}"></td>
+                        <td class="text-muted" th:text="${batch.branch_name}"></td>
+                        <td class="fw-semibold" th:text="${batch.remaining_quantity}"></td>
+                        <td class="text-muted" th:text="${batch.expire_date}"></td>
+                        <td class="text-end">
+                            <a th:href="@{/manager-only/ingredient-batches/recover/{id}(id=${batch.batch_id})}"
+                               class="btn btn-recover me-1">
+                                <i class="bi bi-arrow-counterclockwise"></i> Recover
+                            </a>
+                            <a th:href="@{/manager-only/ingredient-batches/hard-delete/{id}(id=${batch.batch_id})}"
+                               class="btn btn-hard-delete">
+                                <i class="bi bi-x-octagon"></i> Permanently Delete
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
