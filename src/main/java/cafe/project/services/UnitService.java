@@ -100,8 +100,9 @@ public class UnitService {
 		dto.setIsdeleted(entity.getIsedited());
 		dto.setIsdeleted(entity.getIsdeleted());
 		dto.setCreated_at(entity.getCreated_at());
-		dto.setEmployee_name(employeeService.getEmployeeByIdAdmin(entity.getEmployee_id()).getName());
-
+		if(entity.getEmployee_id() != null) {
+			dto.setEmployee_name(employeeService.getEmployeeByIdAdmin(entity.getEmployee_id()).getName());
+		}
 		return dto;
 	}
 

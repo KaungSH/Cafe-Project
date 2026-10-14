@@ -76,14 +76,14 @@ public class DiscountController {
 	}
 
 	@GetMapping("/discountProducts/add/{id}")
-	public String add(@PathVariable("id") String id, Model model) {
+	public String add(@PathVariable("id") String id, Model model, HttpSession session) {
 		List<String> existingProductIds = discountService.getAllDiscountsById(id).getProducts().stream()
 				.map(ProductListModel::getProduct_id).toList();
-
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		model.addAttribute("existingProductIds", existingProductIds);
 		model.addAttribute("discountProduct", new DiscountProductDto());
 		model.addAttribute("discount", discountService.getAllDiscountsById(id));
-		model.addAttribute("products", productService.findAll());
+		model.addAttribute("products", productService.findAllForOrder(ldto.getBranch_id()));
 		return "discount/product-add";
 	}
 

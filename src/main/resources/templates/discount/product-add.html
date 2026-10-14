@@ -286,8 +286,6 @@
                                 <th style="width: 70px;">Item</th>
                                 <th>Coffee / Offering Name</th>
                                 <th>Cup Size</th>
-                                <th>Category</th>
-                                <th class="text-end">Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -316,18 +314,6 @@
                                 <!-- Size Column -->
                                 <td>
                                     <span class="badge-branch" th:text="${product.size_code != null ? product.size_code : 'Regular'}">Regular</span>
-                                </td>
-
-                                <!-- Category Column -->
-                                <td>
-                                    <span class="fw-semibold text-muted">SPECIALTY</span>
-                                </td>
-
-                                <!-- Status Column -->
-                                <td class="text-end">
-                                    <span class="badge-status-pill">
-                                        <i class="bi bi-check2"></i> Available
-                                    </span>
                                 </td>
                             </tr>
 

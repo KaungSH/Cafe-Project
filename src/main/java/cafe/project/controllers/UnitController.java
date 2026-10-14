@@ -45,6 +45,7 @@ public class UnitController {
 	public String addUnit(@ModelAttribute("unit") UnitDto unit, Model model, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		unit.setEmployee_name(ldto.getEmployee_id());
+		unit.setEmployee_id(ldto.getEmployee_id());
 		this.unitService.add(unit);
 		return "redirect:/admin/units";
 	}
@@ -68,6 +69,7 @@ public class UnitController {
 	public String editUnit(@ModelAttribute("unit") UnitDto unit, Model model, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		unit.setEmployee_name(ldto.getEmployee_id());
+		unit.setEmployee_id(ldto.getEmployee_id());
 		this.unitService.edit(unit.getUnit_id(), unit);
 		return "redirect:/admin/units";
 	}

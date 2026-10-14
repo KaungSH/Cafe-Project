@@ -270,7 +270,6 @@
                     <tr>
                         <th style="width: 60px;">No</th>
                         <th>Supplier / Vendor</th>
-                        <th>Internal Reference ID</th>
                         <th>Contact & Logistics</th>
                         <th>Registered Date</th>
                         <th class="text-end" style="width: 120px;">Action</th>
@@ -285,12 +284,8 @@
                                      class="supplier-avatar" alt="Vendor">
                                 <div>
                                     <div class="badge-supplier-name" th:text="${supplier.name}">Yami Artisanal Roasters</div>
-                                    <small class="text-muted"><i class="bi bi-patch-check-fill text-warning me-1"></i>Exclusive Partner</small>
                                 </div>
                             </div>
-                        </td>
-                        <td>
-                            <span class="badge-id-pill" th:text="${supplier.supplier_id}">83a01982-34ca-4367-8f2f</span>
                         </td>
                         <td>
                             <span class="fw-medium"><i class="bi bi-telephone me-1 text-muted"></i><span th:text="${supplier.contact_info}">Coffee / 09455678894</span></span>

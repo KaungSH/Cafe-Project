@@ -34,145 +34,153 @@
     </div>
 
     <!-- ================= MENU ================= -->
-    <div class="cafe-menu">
-        <!-- HOME -->
-        <a th:href="@{/}" class="cafe-menu-item">
-            <i class="bi bi-house"></i>
-            <span>Home</span>
-            
-        </a>
-
-        <!-- EMPLOYEES -->
-        <a th:href="@{/admin/employee}" class="cafe-menu-item">
-            <i class="bi bi-person-badge"></i>
-            <span>Employees</span>
-        </a>
-
-        <!-- DAILY REGISTERS -->
-        <a th:href="@{/admin/daily-registers}" class="cafe-menu-item">
-            <i class="bi bi-journal-bookmark"></i>
-            <span>Daily Registers</span>
-        </a>
-
-        <!-- DISCOUNTS -->
-        <a th:href="@{/admin/discounts}" class="cafe-menu-item">
-            <i class="bi bi-percent"></i>
-            <span>Discounts</span>
-        </a>
-
-        <!-- CATEGORIES -->
-        <a th:href="@{/admin/categories}" class="cafe-menu-item">
-            <i class="bi bi-grid"></i>
-            <span>Categories</span>
-        </a>
-
-        <!-- BRANCHES -->
-        <a th:href="@{/admin/branches}" class="cafe-menu-item">
-            <i class="bi bi-shop"></i>
-            <span>Branches</span>
-        </a>
-        
-        <!-- BRANCHES -->
-        <a th:href="@{/admin/branchesstats}" class="cafe-menu-item">
-            <i class="bi bi-shop"></i>
-            <span>Branch Stats</span>
-        </a>
-
-        <!-- EXPENSES -->
-        <a th:href="@{/admin/expenses}" class="cafe-menu-item">
-            <i class="bi bi-cash-coin"></i>
-            <span>Expenses</span>
-        </a>
-
-        <!-- INGREDIENT BATCHES -->
-        <a th:href="@{/admin/ingredientBatches}" class="cafe-menu-item">
-            <i class="bi bi-boxes"></i>
-            <span>IngredientBatches</span>
-        </a>
-
-        <!-- AUDIENCE -->
-        <a th:href="@{/admin/types/audience}" class="cafe-menu-item">
-            <i class="bi bi-people"></i>
-            <span>Audience</span>
-        </a>
-
-        <!-- PROMO -->
-        <a th:href="@{/admin/types/promo}" class="cafe-menu-item">
-            <i class="bi bi-megaphone"></i>
-            <span>Promo</span>
-        </a>
-
-        <!-- EXPENSE CATEGORIES -->
-        <a th:href="@{/admin/expensecategory}" class="cafe-menu-item">
-            <i class="bi bi-tags"></i>
-            <span>Expense Categories</span>
-        </a>
-
-        <!-- INGREDIENT TYPE -->
-        <a th:href="@{/admin/ingredient-types}" class="cafe-menu-item">
-            <i class="bi bi-basket3"></i>
-            <span>Ingredient Type</span>
-        </a>
-
-        <!-- ORDER DETAILS -->
-        <a th:href="@{/admin/order-with-details}" class="cafe-menu-item">
-            <i class="bi bi-receipt-cutoff"></i>
-            <span>Order Details</span>
-        </a>
-
-        <!-- PAYMENTS -->
-        <a th:href="@{/admin/payments}" class="cafe-menu-item">
-            <i class="bi bi-wallet2"></i>
-            <span>Payments</span>
-        </a>
-
-        <!-- PAY METHOD -->
-        <a th:href="@{/admin/paymethod}" class="cafe-menu-item">
-            <i class="bi bi-credit-card-2-front"></i>
-            <span>PayMethod</span>
-        </a>
-
-        <!-- PRODUCTS -->
-        <a th:href="@{/admin/products}" class="cafe-menu-item">
-            <i class="bi bi-cup-hot"></i>
-            <span>Products</span>
-        </a>
-
-        <!-- SIZES -->
-        <a th:href="@{/admin/sizes}" class="cafe-menu-item">
-            <i class="bi bi-aspect-ratio"></i>
-            <span>Sizes</span>
-        </a>
-
-        <!-- UNITS -->
-        <a th:href="@{/admin/units}" class="cafe-menu-item">
-            <i class="bi bi-speedometer2"></i>
-            <span>Units</span>
-        </a>
-
-        <!-- STATUSES -->
-        <a th:href="@{/admin/statuses}" class="cafe-menu-item">
-            <i class="bi bi-toggle-on"></i>
-            <span>Statuses</span>
-        </a>
-
-        <!-- SUPPLIERS -->
-        <a th:href="@{/admin/suppliers}" class="cafe-menu-item">
-            <i class="bi bi-truck"></i>
-            <span>Suppliers</span>
-        </a>
-
-        <!-- WASTE LOGS -->
-        <a th:href="@{/admin/wastelogs}" class="cafe-menu-item">
-            <i class="bi bi-trash3"></i>
-            <span>Waste Logs</span>
-        </a>
-         <!-- WASTE LOGS -->
-        <a th:href="@{/admin/wastereasons}" class="cafe-menu-item">
-            <i class="bi bi-trash3"></i>
-            <span>Waste Reasons</span>
-        </a>
-    </div>
+	<div class="cafe-menu">
+	
+	    <!-- HOME -->
+	    <a th:href="@{/}" class="cafe-menu-item">
+	        <i class="bi bi-house"></i>
+	        <span>Home</span>
+	    </a>
+	
+	    <!-- ================= MENU ================= -->
+	    <div class="sidebar-section-header px-3 mt-3 mb-1 fw-bold text-uppercase" style="color: #c77b3b; font-size: 0.75rem; letter-spacing: 1px;">MENU</div>
+	
+	    <!-- EMPLOYEES -->
+	    <a th:href="@{/admin/employee}" class="cafe-menu-item">
+	        <i class="bi bi-person-badge"></i>
+	        <span>Employees</span>
+	    </a>
+	
+	    <!-- BRANCHES -->
+	    <a th:href="@{/admin/branches}" class="cafe-menu-item">
+	        <i class="bi bi-shop"></i>
+	        <span>Branches</span>
+	    </a>
+	
+	    <!-- AUDIENCE -->
+	    <a th:href="@{/admin/types/audience}" class="cafe-menu-item">
+	        <i class="bi bi-people"></i>
+	        <span>Audience</span>
+	    </a>
+	
+	    <!-- PROMO -->
+	    <a th:href="@{/admin/types/promo}" class="cafe-menu-item">
+	        <i class="bi bi-megaphone"></i>
+	        <span>Promo</span>
+	    </a>
+	
+	    <!-- EXPENSE CATEGORIES -->
+	    <a th:href="@{/admin/expensecategory}" class="cafe-menu-item">
+	        <i class="bi bi-tags"></i>
+	        <span>Expense Categories</span>
+	    </a>
+	
+	    <!-- INGREDIENT TYPE -->
+	    <a th:href="@{/admin/ingredient-types}" class="cafe-menu-item">
+	        <i class="bi bi-basket3"></i>
+	        <span>Ingredient Type</span>
+	    </a>
+	
+	    <!-- PAY METHOD -->
+	    <a th:href="@{/admin/paymethod}" class="cafe-menu-item">
+	        <i class="bi bi-credit-card-2-front"></i>
+	        <span>PayMethod</span>
+	    </a>
+	
+	    <!-- SIZES -->
+	    <a th:href="@{/admin/sizes}" class="cafe-menu-item">
+	        <i class="bi bi-aspect-ratio"></i>
+	        <span>Sizes</span>
+	    </a>
+	
+	    <!-- UNITS -->
+	    <a th:href="@{/admin/units}" class="cafe-menu-item">
+	        <i class="bi bi-speedometer2"></i>
+	        <span>Units</span>
+	    </a>
+	
+	    <!-- SUPPLIERS -->
+	    <a th:href="@{/admin/suppliers}" class="cafe-menu-item">
+	        <i class="bi bi-truck"></i>
+	        <span>Suppliers</span>
+	    </a>
+	
+	    <!-- WASTE REASONS -->
+	    <a th:href="@{/admin/wastereasons}" class="cafe-menu-item">
+	        <i class="bi bi-trash3"></i>
+	        <span>Waste Reasons</span>
+	    </a>
+	
+	    <!-- ================= VIEW ONLY ================= -->
+	    <div class="sidebar-section-header px-3 mt-3 mb-1 fw-bold text-uppercase" style="color: #c77b3b; font-size: 0.75rem; letter-spacing: 1px;">View Only</div>
+	
+	    <!-- DAILY REGISTERS -->
+	    <a th:href="@{/admin/daily-registers}" class="cafe-menu-item">
+	        <i class="bi bi-journal-bookmark"></i>
+	        <span>Daily Registers</span>
+	    </a>
+	
+	    <!-- DISCOUNTS -->
+	    <a th:href="@{/admin/discounts}" class="cafe-menu-item">
+	        <i class="bi bi-percent"></i>
+	        <span>Discounts</span>
+	    </a>
+	
+	    <!-- CATEGORIES -->
+	    <a th:href="@{/admin/categories}" class="cafe-menu-item">
+	        <i class="bi bi-grid"></i>
+	        <span>Categories</span>
+	    </a>
+	
+	    <!-- BRANCH STATS -->
+	    <a th:href="@{/admin/branchesstats}" class="cafe-menu-item">
+	        <i class="bi bi-shop"></i>
+	        <span>Branch Stats</span>
+	    </a>
+	
+	    <!-- EXPENSES -->
+	    <a th:href="@{/admin/expenses}" class="cafe-menu-item">
+	        <i class="bi bi-cash-coin"></i>
+	        <span>Expenses</span>
+	    </a>
+	
+	    <!-- INGREDIENT BATCHES -->
+	    <a th:href="@{/admin/ingredientBatches}" class="cafe-menu-item">
+	        <i class="bi bi-boxes"></i>
+	        <span>IngredientBatches</span>
+	    </a>
+	
+	    <!-- ORDER DETAILS -->
+	    <a th:href="@{/admin/order-with-details}" class="cafe-menu-item">
+	        <i class="bi bi-receipt-cutoff"></i>
+	        <span>Order Details</span>
+	    </a>
+	
+	    <!-- PAYMENTS -->
+	    <a th:href="@{/admin/payments}" class="cafe-menu-item">
+	        <i class="bi bi-wallet2"></i>
+	        <span>Payments</span>
+	    </a>
+	
+	    <!-- PRODUCTS -->
+	    <a th:href="@{/admin/products}" class="cafe-menu-item">
+	        <i class="bi bi-cup-hot"></i>
+	        <span>Products</span>
+	    </a>
+	
+	    <!-- STATUSES -->
+	    <a th:href="@{/admin/statuses}" class="cafe-menu-item">
+	        <i class="bi bi-toggle-on"></i>
+	        <span>Statuses</span>
+	    </a>
+	
+	    <!-- WASTE LOGS -->
+	    <a th:href="@{/admin/wastelogs}" class="cafe-menu-item">
+	        <i class="bi bi-trash3"></i>
+	        <span>Waste Logs</span>
+	    </a>
+	
+	</div>
 
     <!-- ================= DIVIDER ================= -->
     <div class="cafe-divider"></div>

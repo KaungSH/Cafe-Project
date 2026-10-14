@@ -31,8 +31,8 @@ public class ExpenseService {
 		return expenses;
 	}
 
-	public ExpenseDto findById(String expense_id, String branch_id) {
-		Expense entity = this.repo.findById(expense_id, branch_id);
+	public ExpenseDto findById(String expense_id) {
+		Expense entity = this.repo.findById(expense_id);
 		if (entity == null) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Expense");
 		}
@@ -51,7 +51,7 @@ public class ExpenseService {
 		if (dto == null) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expense data is required");
 		}
-		Expense existingEntity = this.repo.findById(expense_id, null);
+		Expense existingEntity = this.repo.findById(expense_id);
 		if (existingEntity == null) {
 			// Alternatively fallback if branch-specific lookup is preferred, but matching
 			// pattern:

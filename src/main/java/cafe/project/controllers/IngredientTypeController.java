@@ -44,7 +44,7 @@ public class IngredientTypeController {
     public String save(@ModelAttribute("ingredientType") IngredientTypeDto dto) {
     	System.out.println("name = " + dto.getName());
     	service.addIngredientType(dto);
-        return "redirect:/ingredient-types";
+        return "redirect:/admin/ingredient-types";
     }
 
     @GetMapping("/edit/{id}")
@@ -57,19 +57,19 @@ public class IngredientTypeController {
     @PostMapping("/edit")
     public String update(@ModelAttribute("ingredientType") IngredientTypeDto dto) {
         service.updateIngredientType(dto);
-        return "redirect:/ingredient-types";
+        return "redirect:/admin/ingredient-types";
     }
 
     @GetMapping("/soft-delete/{id}")
     public String softDelete(@PathVariable("id") String id) {
         service.softDelete(id);
-        return "redirect:/ingredient-types";
+        return "redirect:/admin/ingredient-types";
     }
 
     @GetMapping("/recover/{id}")
     public String recover(@PathVariable("id") String id) {
         service.recover(id);
-        return "redirect:/ingredient-types/deleted";
+        return "redirect:/admin/ingredient-types/deleted";
     }
 
     @GetMapping("/hard-delete/{id}")
@@ -81,6 +81,6 @@ public class IngredientTypeController {
     @PostMapping("/hard-delete")
     public String hardDelete(@RequestParam("typeId") String ingredientTypeId) {
         service.hardDelete(ingredientTypeId);
-        return "redirect:/ingredient-types/deleted";
+        return "redirect:/admin/ingredient-types/deleted";
     }
 }

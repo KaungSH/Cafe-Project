@@ -249,7 +249,7 @@ public class ProductController {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		ProductTypeEntryModel existingProduct = ptservice.findById(tentry.getType_id());
 
-		if (existingProduct != null && !existingProduct.getType_id().equals(ldto.getBranch_id())) {
+		if (existingProduct != null && !existingProduct.getBranch_id().equals(ldto.getBranch_id())) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "NOT YOUR BRANCH!!!");
 		}
 
@@ -269,7 +269,7 @@ public class ProductController {
 		ProductTypeEntryModel existingProduct = ptservice.findById(id);
 
 		if (existingProduct != null) {
-			if (!existingProduct.getType_id().equals(ldto.getBranch_id())) {
+			if (!existingProduct.getBranch_id().equals(ldto.getBranch_id())) {
 				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "NOT YOUR BRANCH!!!");
 			}
 			ptservice.delete(id);
@@ -285,7 +285,7 @@ public class ProductController {
 		ProductTypeEntryModel existingProduct = ptservice.findById3(id);
 
 		if (existingProduct != null) {
-			if (!existingProduct.getType_id().equals(ldto.getBranch_id())) {
+			if (!existingProduct.getBranch_id().equals(ldto.getBranch_id())) {
 				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "NOT YOUR BRANCH!!!");
 			}
 			ptservice.deletePerm(id);
@@ -298,10 +298,10 @@ public class ProductController {
 	@GetMapping("/manager-only/products/delete/{id}")
 	public String productTypeDeletePro(@PathVariable String id, Model model, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-		var existingPro = pservice.findById(id);
+		ProductTypeEntryModel existingProduct = ptservice.findById3(id);
 
-		if (existingPro != null) {
-			if (!existingPro.getType_id().equals(ldto.getBranch_id())) {
+		if (existingProduct != null) {
+			if (!existingProduct.getBranch_id().equals(ldto.getBranch_id())) {
 				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "NOT YOUR BRANCH!!!");
 			}
 			pservice.delete(id);
@@ -317,7 +317,7 @@ public class ProductController {
 		ProductTypeEntryModel existingProduct = ptservice.findById3(id);
 
 		if (existingProduct != null) {
-			if (!existingProduct.getType_id().equals(ldto.getBranch_id())) {
+			if (!existingProduct.getBranch_id().equals(ldto.getBranch_id())) {
 				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "NOT YOUR BRANCH!!!");
 			}
 			ptservice.recover(id);

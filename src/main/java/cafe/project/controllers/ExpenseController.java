@@ -73,7 +73,7 @@ public class ExpenseController {
 	@GetMapping("/edit/{expense_id}")
 	public String editExpense(@PathVariable String expense_id, Model model, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-		ExpenseDto existingEp = expenseService.findById(expense_id, ldto.getBranch_id());
+		ExpenseDto existingEp = expenseService.findById(expense_id);
 
 		if (!existingEp.getBranch_id().equals(ldto.getBranch_id())) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not Your Branch's Data!!!");
@@ -90,7 +90,7 @@ public class ExpenseController {
 			Model model, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 
-		ExpenseDto existingEp = expenseService.findById(expense.getExpense_id(), ldto.getBranch_id());
+		ExpenseDto existingEp = expenseService.findById(expense.getExpense_id());
 
 		if (!existingEp.getBranch_id().equals(ldto.getBranch_id())) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not Your Branch's Data!!!");
@@ -112,7 +112,7 @@ public class ExpenseController {
 	@PostMapping("/delete")
 	public String deletedExpense(@RequestParam String expense_id, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-		ExpenseDto existingEp = expenseService.findById(expense_id, ldto.getBranch_id());
+		ExpenseDto existingEp = expenseService.findById(expense_id);
 
 		if (!existingEp.getBranch_id().equals(ldto.getBranch_id())) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not Your Branch's Data!!!");
@@ -132,7 +132,7 @@ public class ExpenseController {
 	@PostMapping("/restore")
 	public String restoreSupplier(@RequestParam String expense_id, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-		ExpenseDto existingEp = expenseService.findById(expense_id, ldto.getBranch_id());
+		ExpenseDto existingEp = expenseService.findById(expense_id);
 
 		if (!existingEp.getBranch_id().equals(ldto.getBranch_id())) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not Your Branch's Data!!!");
@@ -145,7 +145,7 @@ public class ExpenseController {
 	@PostMapping("/real-delete")
 	public String realDeleteExpense(@RequestParam String expense_id, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-		ExpenseDto existingEp = expenseService.findById(expense_id, ldto.getBranch_id());
+		ExpenseDto existingEp = expenseService.findById(expense_id);
 
 		if (!existingEp.getBranch_id().equals(ldto.getBranch_id())) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Not Your Branch's Data!!!");

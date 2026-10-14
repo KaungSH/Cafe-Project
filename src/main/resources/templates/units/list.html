@@ -303,8 +303,7 @@
 								<div class="employee-avatar-circle">
 									<i class="fa-solid fa-user-tie"></i>
 								</div>
-								<span class="employee-name"
-									th:text="${session.loggedInUser != null ? session.loggedInUser.employee_name : 'Admin'}">
+								<span class="employee-name" th:text="${unit.employee_name}">
 								</span>
 							</div>
 						</td>
