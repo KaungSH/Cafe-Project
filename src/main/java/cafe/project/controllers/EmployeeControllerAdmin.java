@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import cafe.project.employeemanagement.models.LoginDto;
+import cafe.project.employeemanagement.services.EmployeeManagementService;
 import cafe.project.models.EmployeeEntryDto;
 import cafe.project.models.Gender;
 import cafe.project.models.StatusDto;
@@ -31,12 +32,14 @@ public class EmployeeControllerAdmin{
 	private final EmployeeRepository employeeRepository;
 	private final StatusRepository statusRepository;
 	private final BranchService branchService;
+	private final EmployeeManagementService emservice;
 
-	public EmployeeControllerAdmin(EmployeeService employeeService, StatusRepository statusRepository, EmployeeRepository employeeRepository, BranchService branchService) {
+	public EmployeeControllerAdmin(EmployeeService employeeService, StatusRepository statusRepository, EmployeeRepository employeeRepository, BranchService branchService, EmployeeManagementService emservice) {
 		this.employeeService = employeeService;
 		this.statusRepository = statusRepository;
 		this.employeeRepository = employeeRepository;
 		this.branchService = branchService;
+		this.emservice = emservice;
 	}
 
 	@GetMapping
@@ -66,6 +69,12 @@ public class EmployeeControllerAdmin{
 		    bindAvilableData(model);
 			return "employee/create-admin";
 		}
+		
+		if (emservice.findByEmail(dto.getEmail()) != null) {
+			model.addAttribute("emailerror", "There already exist an account with that email!");
+		    bindAvilableData(model);
+			return "employee/create-admin";
+		}
 		if (result.hasErrors()) {
 			bindAvilableData(model);
 			return "employee/create-admin";
@@ -78,6 +87,7 @@ public class EmployeeControllerAdmin{
 	public String showEditForm(@PathVariable("id") String id, Model model) {
 		System.out.println("Password - " + employeeService.getEmployeeByIdAdmin(id).getPassword());
 		model.addAttribute("employeeDto", employeeService.getEmployeeByIdAdmin(id));
+		System.out.println("DOB - " + employeeService.getEmployeeByIdAdmin(id).getDob());
 		bindAvilableData(model);
 		return "employee/edit-admin";
 	}
@@ -90,6 +100,12 @@ public class EmployeeControllerAdmin{
 		    model.addAttribute("error", "The person you are hiring must be older than 16 years.");
 		    bindAvilableData(model);
 			return "employee/create-admin";
+		}
+		
+		if (emservice.findByEmail(dto.getEmail()) != null && !dto.getEmail().equals(employeeService.getEmployeeByIdAdmin(dto.getEmployee_id()).getEmail())) {
+			model.addAttribute("emailerror", "There already exist an account with that email!");
+		    bindAvilableData(model);
+			return "employee/edit-admin";
 		}
 		if (result.hasErrors()) {
 			bindAvilableData(model);

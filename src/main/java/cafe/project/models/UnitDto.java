@@ -12,6 +12,7 @@ public class UnitDto{
 	private boolean isedited;
 	private boolean isdeleted;
 	private LocalDateTime created_at;
+	private String employee_id;
 	
 	public UnitDto() {}
 	
@@ -89,6 +90,14 @@ public class UnitDto{
 
 	public void setCreated_at(LocalDateTime created_at) {
 		this.created_at = created_at;
+	}
+
+	public String getEmployee_id() {
+		return employee_id;
+	}
+
+	public void setEmployee_id(String employee_id) {
+		this.employee_id = employee_id;
 	}
 
 	

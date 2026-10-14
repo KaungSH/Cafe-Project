@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,7 +13,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.server.ResponseStatusException;
+
 import cafe.project.employeemanagement.models.LoginDto;
+import cafe.project.employeemanagement.services.EmployeeManagementService;
 import cafe.project.models.EmployeeEntryDto;
 import cafe.project.models.Gender;
 import cafe.project.models.RoleDto;
@@ -32,12 +36,15 @@ public class EmployeeControllerManager {
 	private final EmployeeRepository employeeRepository;
 	private final StatusRepository statusRepository;
 	private final BranchService branchService;
+	private final EmployeeManagementService emservice;
 
-	public EmployeeControllerManager(EmployeeService employeeService, StatusRepository statusRepository, EmployeeRepository employeeRepository, BranchService branchService) {
+	public EmployeeControllerManager(EmployeeService employeeService, StatusRepository statusRepository,
+			EmployeeRepository employeeRepository, BranchService branchService, EmployeeManagementService emservice) {
 		this.employeeService = employeeService;
 		this.statusRepository = statusRepository;
 		this.employeeRepository = employeeRepository;
 		this.branchService = branchService;
+		this.emservice = emservice;
 	}
 
 	@GetMapping
@@ -61,18 +68,26 @@ public class EmployeeControllerManager {
 		dto.setEmployee_role_id(bindAvilableData(model).getRole_id());
 		model.addAttribute("employeeDto", dto);
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-		model.addAttribute("branch_name", branchService.findById(ldto.getBranch_id()));
+		model.addAttribute("branch_name", branchService.findById(ldto.getBranch_id()).getName());
 		return "employee/create-manager";
 	}
 
 	@PostMapping("/add")
-	public String addEmployee(@Valid @ModelAttribute("employeeDto") EmployeeEntryDto dto, BindingResult result, Model model, HttpSession session) {
+	public String addEmployee(@Valid @ModelAttribute("employeeDto") EmployeeEntryDto dto, BindingResult result,
+			Model model, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		if (dto.getDob() == null || dto.getDob().isAfter(LocalDate.now().minusYears(16))) {
-		    model.addAttribute("error", "The person you are hiring must be older than 16 years.");
+			model.addAttribute("error", "The person you are hiring must be older than 16 years.");
+			bindAvilableData(model);
+			return "employee/create-manager";
+		}
+		
+		if (emservice.findByEmail(dto.getEmail()) != null) {
+			model.addAttribute("emailerror", "There already exist an account with that email!");
 		    bindAvilableData(model);
 			return "employee/create-manager";
 		}
+		
 		if (result.hasErrors()) {
 			bindAvilableData(model);
 			return "employee/create-manager";
@@ -83,18 +98,37 @@ public class EmployeeControllerManager {
 	}
 
 	@GetMapping("/edit/{id}")
-	public String showEditForm(@PathVariable("id") String id, Model model) {
-		model.addAttribute("employeeDto", employeeService.getEmployeeById(id));
+	public String showEditForm(@PathVariable("id") String id, Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		EmployeeEntryDto existingEmployee = employeeService.getEmployeeById(id);
+		model.addAttribute("branch_name", branchService.findById(ldto.getBranch_id()).getName());
+		if (!existingEmployee.getBranch_id().equals(ldto.getBranch_id())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not Your Branch's Data!!!");
+		}
+
+		model.addAttribute("employeeDto", existingEmployee);
 		bindAvilableData(model);
 		return "employee/edit-manager";
 	}
-	
-	
 
 	@PostMapping("/edit")
-	public String updateEmployee(@Valid @ModelAttribute("employeeDto") EmployeeEntryDto dto, BindingResult result,Model model) {
+	public String updateEmployee(@Valid @ModelAttribute("employeeDto") EmployeeEntryDto dto, BindingResult result,
+			Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		EmployeeEntryDto existingEmployee = employeeService.getEmployeeById(dto.getEmployee_id());
+
+		if (!existingEmployee.getBranch_id().equals(ldto.getBranch_id())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not Your Branch's Data!!!");
+		}
+
 		if (dto.getDob() == null || dto.getDob().isAfter(LocalDate.now().minusYears(16))) {
-		    model.addAttribute("error", "The person you are hiring must be older than 16 years.");
+			model.addAttribute("error", "The person you are hiring must be older than 16 years.");
+			bindAvilableData(model);
+			return "employee/edit-manager";
+		}
+		
+		if (emservice.findByEmail(dto.getEmail()) != null && !dto.getEmail().equals(employeeService.getEmployeeByIdAdmin(dto.getEmployee_id()).getEmail())) {
+			model.addAttribute("emailerror", "There already exist an account with that email!");
 		    bindAvilableData(model);
 			return "employee/edit-manager";
 		}
@@ -102,53 +136,90 @@ public class EmployeeControllerManager {
 			bindAvilableData(model);
 			return "employee/edit-manager";
 		}
+		
+		dto.setBranch_id(ldto.getBranch_id());
 		employeeService.updateEmployee(dto);
 		return "redirect:/manager-only/employee";
 	}
-	
+
 	@GetMapping("/setnormal/{id}")
-	public String setNormal(@PathVariable("id") String id) {
+	public String setNormal(@PathVariable("id") String id, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		EmployeeEntryDto existingEmployee = employeeService.getEmployeeById(id);
+
+		if (!existingEmployee.getBranch_id().equals(ldto.getBranch_id())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Not Your Branch's Data!!!");
+		}
+
 		employeeService.putEmployeeNormal(id);
 		return "redirect:/manager-only/employee";
 	}
-	
+
 	@GetMapping("/setonleave/{id}")
-	public String setOnLeave(@PathVariable("id") String id) {
+	public String setOnLeave(@PathVariable("id") String id, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		EmployeeEntryDto existingEmployee = employeeService.getEmployeeById(id);
+
+		if (!existingEmployee.getBranch_id().equals(ldto.getBranch_id())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not Your Branch's Data!!!");
+		}
+
 		employeeService.putEmployeeOnLeave(id);
 		return "redirect:/manager-only/employee";
 	}
-	
+
 	@GetMapping("/fire/{id}")
-	public String fireEmployee(@PathVariable("id") String id) {
+	public String fireEmployee(@PathVariable("id") String id, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		EmployeeEntryDto existingEmployee = employeeService.getEmployeeById(id);
+
+		if (!existingEmployee.getBranch_id().equals(ldto.getBranch_id())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not Your Branch's Data!!!");
+		}
+
 		employeeService.fireEmployee(id);
 		return "redirect:/manager-only/employee";
 	}
-	
-	@GetMapping("/transfer/{id}") 
-	public String transferEmployee(@PathVariable("id") String id, Model model) {
-		model.addAttribute("employeeDto", employeeService.getEmployeeById(id));
-		model.addAttribute("branch_name", branchService.findById(employeeService.getEmployeeById(id).getBranch_id()).getName());
+
+	@GetMapping("/transfer/{id}")
+	public String transferEmployee(@PathVariable("id") String id, Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		EmployeeEntryDto existingEmployee = employeeService.getEmployeeById(id);
+
+		if (!existingEmployee.getBranch_id().equals(ldto.getBranch_id())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not Your Branch's Data!!!");
+		}
+
+		model.addAttribute("employeeDto", existingEmployee);
+		model.addAttribute("branch_name", branchService.findById(existingEmployee.getBranch_id()).getName());
 		model.addAttribute("branches", branchService.findAll());
 		return "employee/transfer-manager";
 	}
-	
+
 	@PostMapping("/transfer")
-	public String transferEmployee(@ModelAttribute("employeeDto") EmployeeEntryDto dto){
+	public String transferEmployee(@ModelAttribute("employeeDto") EmployeeEntryDto dto, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		EmployeeEntryDto existingEmployee = employeeService.getEmployeeById(dto.getEmployee_id());
+
+		if (!existingEmployee.getBranch_id().equals(ldto.getBranch_id())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not Your Branch's Data!!!");
+		}
+
 		System.out.println("Employee_id - " + dto.getEmployee_id() + " Branch_id - " + dto.getBranch_id());
 		employeeService.tranferEmployee(dto.getEmployee_id(), dto.getBranch_id());
 		return "redirect:/manager-only/employee";
 	}
-	
+
 	private RoleDto bindAvilableData(Model model) {
 		List<RoleDto> list = new ArrayList<RoleDto>();
-		for(RoleDto dto : employeeRepository.getAllRoles()) {
+		for (RoleDto dto : employeeRepository.getAllRoles()) {
 			if (dto.getName().equals("STAFF")) {
 				list.add(dto);
 			}
 		}
-		
+
 		List<StatusDto> list2 = new ArrayList<StatusDto>();
-		for(StatusDto dto2 : statusRepository.findAll2("employee")) {
+		for (StatusDto dto2 : statusRepository.findAll2("employee")) {
 			if (!dto2.getName().equals("FIRED")) {
 				list2.add(dto2);
 			}

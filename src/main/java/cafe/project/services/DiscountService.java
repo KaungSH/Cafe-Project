@@ -1,6 +1,8 @@
 package cafe.project.services;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import cafe.project.models.DiscountEntryModel;
 import cafe.project.models.DiscountListModel;
@@ -24,6 +26,8 @@ public class DiscountService {
 
 	public List<DiscountListModel> getAllDiscounts(String branch_id) {
 		List<DiscountListModel> modelList = discountRepository.findAllForList(branch_id);
+//		if (modelList == null || modelList.isEmpty())
+//			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Discount");
 
 		for (DiscountListModel m : modelList) {
 			setStatus(m.getDiscount_id(), m.getStartdate(), m.getEnddate());
@@ -39,6 +43,7 @@ public class DiscountService {
 			setStatus(m.getDiscount_id(), m.getStartdate(), m.getEnddate());
 			m.setProducts(productService.findListAllByDiscountId(m.getDiscount_id()));
 		}
+
 		return modelList;
 	}
 
@@ -64,18 +69,29 @@ public class DiscountService {
 
 	public DiscountListModel getAllDiscountsById(String id) {
 		DiscountListModel listModel = discountRepository.findAllForListById(id);
+		if (listModel == null)
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Discount");
 		listModel.setProducts(productService.findListAllByDiscountId(listModel.getDiscount_id()));
 		return listModel;
 	}
 
 	public List<DiscountListModel> findActiveDiscountByProductId(String productId) {
-
-		return discountRepository.findActiveDiscountByProductId(productId);
+		List<DiscountListModel> list = discountRepository.findActiveDiscountByProductId(productId);
+		if (list == null || list.isEmpty())
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Discount");
+		return list;
 	}
 
 	public DiscountEntryModel getDiscountById(String id) {
-		Discount discount = discountRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Discount not found with ID: " + id));
+		Discount discount = discountRepository.findById(id);
+
+		if (discount == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Discount");
+		}
+
+		if (discount.getBranches_branch_id() == null) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, "Discount has no branch assigned");
+		}
 
 		DiscountEntryModel dto = new DiscountEntryModel();
 		dto.setDiscount_id(discount.getDiscount_id());
@@ -93,6 +109,10 @@ public class DiscountService {
 	}
 
 	public void createDiscount(DiscountEntryModel dto) {
+		if (dto == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Discount data is required");
+		}
+
 		Discount discount = new Discount();
 		discount.setDiscount_id(UUID.randomUUID().toString());
 		discount.setEmployee_id(dto.getEmployee_id());
@@ -110,8 +130,14 @@ public class DiscountService {
 	}
 
 	public void updateDiscount(DiscountEntryModel dto) {
-		Discount discount = discountRepository.findById(dto.getDiscount_id())
-				.orElseThrow(() -> new RuntimeException("Discount not found with ID: " + dto.getDiscount_id()));
+		if (dto == null || dto.getDiscount_id() == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Discount data is required");
+		}
+
+		Discount discount = discountRepository.findById(dto.getDiscount_id());
+		if (discount == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Discount");
+		}
 
 		discount.setEmployee_id(dto.getEmployee_id());
 		discount.setName(dto.getName());
@@ -128,18 +154,23 @@ public class DiscountService {
 	}
 
 	public void deleteDiscount(String id) {
+		getDiscountById(id);
 		discountRepository.softDelete(id);
 	}
 
 	public List<DiscountListModel> DeletedList(String branch_id) {
-		return discountRepository.DeletedList(branch_id);
+		List<DiscountListModel> list = discountRepository.DeletedList(branch_id);
+
+		return list;
 	}
 
 	public int restore(String id) {
+		getDiscountById(id);
 		return discountRepository.restore(id);
 	}
 
 	public int hardDelete(String id) {
+		getDiscountById(id);
 		return discountRepository.hardDelete(id);
 	}
 

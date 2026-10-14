@@ -2,7 +2,9 @@ package cafe.project.services;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import cafe.project.models.BranchesStatsDto;
 import cafe.project.repositories.BranchesStatsRepository;
@@ -22,7 +24,7 @@ public class BranchesStatsService {
 		List<BranchesStatsDto> branchesStats = entities.stream().map(this::toDto).toList();
 		return branchesStats;
 	}
-	
+
 	public List<BranchesStatsDto> findAllAdmin() {
 		List<BranchesStats> entities = this.bsrepo.findAllAdmin();
 		List<BranchesStatsDto> branchesStats = entities.stream().map(this::toDto).toList();
@@ -32,21 +34,28 @@ public class BranchesStatsService {
 	public BranchesStatsDto findById(String branch_stats_id, String branch_id) {
 		BranchesStats entity = this.bsrepo.findById(branch_stats_id, branch_id);
 		if (entity == null)
-			return null;
-		return toDto(entity);
-	}
-	
-	public BranchesStatsDto findByIdAdmin(String branch_stats_id) {
-		BranchesStats entity = this.bsrepo.findByIdAdmin(branch_stats_id);
-		if (entity == null)
-			return null;
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Branch Stats");
 		return toDto(entity);
 	}
 
-	public BranchesStatsDto findByMonth(String month) {
-		BranchesStats entity = this.bsrepo.findByMonth(month);
+	public BranchesStatsDto findByIdAdmin(String branch_stats_id) {
+		BranchesStats entity = this.bsrepo.findByIdAdmin(branch_stats_id);
 		if (entity == null)
-			return null;
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Branch Stats");
+		return toDto(entity);
+	}
+
+	public BranchesStatsDto findByMonth(String month, String branch_id) {
+		BranchesStats entity = this.bsrepo.findByMonth(month, branch_id);
+		if (entity == null)
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Branch Stats");
+		return toDto(entity);
+	}
+	
+	public BranchesStatsDto findByMonthdmin(String month) {
+		BranchesStats entity = this.bsrepo.findByMonthAdmin(month);
+		if (entity == null)
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Branch Stats");
 		return toDto(entity);
 	}
 
@@ -56,23 +65,37 @@ public class BranchesStatsService {
 	}
 
 	public int edit(String branch_stats_id, BranchesStatsDto dto) {
+		if (dto == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Branch Stats data is required");
+		}
 		BranchesStats entity = toEntity(dto);
+		if (entity == null)
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Branch Stats");
 		return this.bsrepo.edit(branch_stats_id, entity);
 	}
 
 	public int delete(String branch_stats_id) {
+		BranchesStats entity = this.bsrepo.findByIdAdmin(branch_stats_id);
+		if (entity == null)
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Branch Stats");
 		return this.bsrepo.delete(branch_stats_id);
 	}
 
-	public List<BranchesStatsDto> findDeleted() {
-		return this.bsrepo.findDeleted().stream().map(this::toDto).toList();
+	public List<BranchesStatsDto> findDeleted(String branch_id) {
+		return this.bsrepo.findDeleted(branch_id).stream().map(this::toDto).toList();
 	}
 
 	public int restore(String branch_stats_id) {
+		BranchesStats entity = this.bsrepo.findByIdAdmin(branch_stats_id);
+		if (entity == null)
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Branch Stats");
 		return this.bsrepo.restore(branch_stats_id);
 	}
 
 	public int hardDelete(String branch_stats_id) {
+		BranchesStats entity = this.bsrepo.findByIdAdmin(branch_stats_id);
+		if (entity == null)
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Branch Stats");
 		return this.bsrepo.hardDelte(branch_stats_id);
 	}
 

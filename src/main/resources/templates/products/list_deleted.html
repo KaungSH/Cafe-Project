@@ -277,7 +277,7 @@ body {
 
 		<!-- 1. Top Navbar: Search & Manager Profile -->
 		<div class="top-navbar-wrapper">
-			<form method="post" th:action="@{/manager/products/deleted/search}" th:object="${keywordmodel}" id="search" class="search-box-wrapper mb-0">
+			<form method="post" th:action="@{/manager-only/products/deleted/search}" th:object="${keywordmodel}" id="search" class="search-box-wrapper mb-0">
 				<i class="fa-solid fa-magnifying-glass search-icon"></i>
 				<input type="text" th:field="*{keyword}" placeholder="Search deleted products..." aria-label="Search">
 			</form>
@@ -294,7 +294,7 @@ body {
 					     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80';">
 					<div class="d-flex flex-column text-start">
 						<span class="fw-bold text-dark" style="font-size: 0.88rem; line-height: 1.2;">Manager Thura</span>
-						<span class="text-muted" style="font-size: 0.72rem;">manager@cafeluft.com</span>
+						<span class="text-muted" style="font-size: 0.72rem;">manager-only@cafeluft.com</span>
 					</div>
 				</div>
 			</div>
@@ -308,7 +308,7 @@ body {
 			</div>
 
 			<div>
-				<a th:href="@{/manager/products}" class="btn-back-list">
+				<a th:href="@{/manager-only/products}" class="btn-back-list">
 					<i class="fa-solid fa-arrow-left"></i> Go Back to Products List
 				</a>
 			</div>
@@ -413,12 +413,12 @@ body {
 								<td class="text-end">
 									<div class="d-flex justify-content-end gap-1 flex-wrap align-items-center">
 										<!-- Recover Button -->
-										<a class="btn-action-recover" th:href="@{/manager/products/recover/type/{id}(id=${p.type_id})}" onclick="return confirm('Are you sure you want to recover this product?');" title="Recover">
+										<a class="btn-action-recover" th:href="@{/manager-only/products/recover/type/{id}(id=${p.type_id})}" onclick="return confirm('Are you sure you want to recover this product?');" title="Recover">
 											<i class="fa-solid fa-rotate-left"></i> Recover
 										</a>
 
 										<!-- Permanent Delete Button -->
-										<a class="btn-action-perm-delete" th:href="@{/manager/products/delete_perm/type/{id}(id=${p.type_id})}" onclick="return confirm('Are you sure you want to PERMANENTLY delete this?');" title="Delete Forever">
+										<a class="btn-action-perm-delete" th:href="@{/manager-only/products/delete_perm/type/{id}(id=${p.type_id})}" onclick="return confirm('Are you sure you want to PERMANENTLY delete this?');" title="Delete Forever">
 											<i class="fa-solid fa-trash"></i>
 										</a>
 

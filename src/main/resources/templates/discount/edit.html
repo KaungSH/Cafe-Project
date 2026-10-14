@@ -1,206 +1,226 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layout}">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout}">
 <head>
     <meta charset="UTF-8">
-    <title>Café Luft | Edit Discount</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Discount | Café Luft</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --luft-primary: #8b5a2b;
-            --luft-espresso: #261e1a;
-            --luft-cream: #faf7f2;
-            --luft-border: #ede4d8;
+            --bg-canvas: #faf7f2;
+            --surface: #ffffff;
+            --espresso-dark: #23160e;
+            --subtext: #8c7e75;
+            --border-line: #f1e8df;
+            --btn-brown: #5c3820;
+            --btn-brown-hover: #452814;
         }
 
         body {
+            background-color: var(--bg-canvas);
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--luft-cream);
-            color: var(--luft-espresso);
-            min-height: 100vh;
+            color: var(--espresso-dark);
         }
 
-        .serif-font {
-            font-family: 'Cormorant Garamond', Georgia, serif;
+        .main-container {
+            max-width: 900px;
+            margin: 36px auto;
+            padding: 0 24px;
         }
 
-        .luxury-form-card {
-            background-color: #ffffff;
-            border: 1px solid var(--luft-border);
-            border-radius: 20px;
-            box-shadow: 0 16px 40px rgba(58, 38, 25, 0.05);
-            overflow: hidden;
+        .page-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 22px;
         }
 
-        .form-card-header {
-            background: linear-gradient(135deg, #37281f 0%, #201712 100%);
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .header-icon-squircle {
+            width: 58px;
+            height: 58px;
+            background: linear-gradient(145deg, #5c3820, #412613);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: #ffffff;
-            padding: 28px 36px;
-            border-bottom: 2px solid #c5a059;
+            font-size: 24px;
+            box-shadow: 0 8px 18px rgba(65, 38, 19, 0.22);
+            flex-shrink: 0;
         }
 
-        .form-card-header h4 {
-            font-size: 1.65rem;
+        .header-title-box h2 {
+            font-size: 1.62rem;
+            font-weight: 800;
+            color: var(--espresso-dark);
             margin: 0;
         }
 
+        .header-title-box p {
+            color: var(--subtext);
+            font-size: 0.88rem;
+            margin: 3px 0 0 0;
+            font-weight: 500;
+        }
+
+        .form-card {
+            background: var(--surface);
+            border-radius: 20px;
+            border: 1px solid rgba(225, 210, 196, 0.5);
+            box-shadow: 0 10px 32px rgba(45, 30, 20, 0.04);
+            padding: 36px 40px;
+        }
+
         .form-label {
-            font-size: 0.83rem;
-            font-weight: 600;
-            color: #5d4e43;
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: #8c7e75;
             text-transform: uppercase;
-            letter-spacing: 0.04em;
-            margin-bottom: 7px;
+            letter-spacing: 0.8px;
+            margin-bottom: 8px;
         }
 
         .form-control, .form-select {
             height: 48px;
-            border: 1.5px solid var(--luft-border);
-            border-radius: 10px;
+            border: 1.5px solid var(--border-line);
+            border-radius: 12px;
             padding: 10px 16px;
             font-size: 0.92rem;
-            color: var(--luft-espresso);
             background-color: #ffffff;
-        }
-
-        textarea.form-control {
-            height: auto;
         }
 
         .form-control:focus, .form-select:focus {
-            border-color: var(--luft-primary);
-            box-shadow: 0 0 0 4px rgba(139, 90, 43, 0.12);
+            border-color: var(--btn-brown);
+            box-shadow: 0 0 0 4px rgba(92, 56, 32, 0.12);
             outline: none;
         }
 
-        .form-check-input:checked {
-            background-color: var(--luft-primary);
-            border-color: var(--luft-primary);
-        }
+        textarea.form-control { height: auto; }
 
-        .btn-luxury-primary {
-            background: linear-gradient(135deg, var(--luft-primary), #6f431f);
+        .btn-save {
+            background-color: var(--btn-brown);
             color: #ffffff;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 12px;
+            padding: 11px 24px;
             border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 0.92rem;
-            padding: 12px 28px;
-            box-shadow: 0 4px 14px rgba(110, 67, 31, 0.2);
-            transition: all 0.2s;
-        }
-        .btn-luxury-primary:hover {
-            background: linear-gradient(135deg, #78471e, #532e12);
-            color: #ffffff;
-            transform: translateY(-1px);
+            transition: all 0.2s ease;
         }
 
-        .btn-luxury-cancel {
-            background-color: #ffffff;
-            border: 1px solid var(--luft-border);
-            border-radius: 10px;
-            color: #635348;
-            font-weight: 600;
-            font-size: 0.92rem;
-            padding: 12px 24px;
+        .btn-save:hover { background-color: var(--btn-brown-hover); }
+
+        .btn-cancel {
+            background: #ffffff;
+            color: var(--btn-brown) !important;
+            border: 1.5px solid #e2d2c3;
+            border-radius: 12px;
+            padding: 10px 22px;
+            font-size: 0.9rem;
+            font-weight: 700;
             text-decoration: none;
+            display: inline-flex;
+            align-items: center;
         }
-        .btn-luxury-cancel:hover {
-            background-color: #f7eee3;
-            color: var(--luft-espresso);
-        }
+
+        .btn-cancel:hover { background-color: #f7eee3; }
     </style>
 </head>
 
 <body>
 <div layout:fragment="content">
-        <div class="row justify-content-center">
-            <div class="col-lg-8 col-md-10">
+    <div class="main-container">
 
-                <div class="luxury-form-card">
-                    <div class="form-card-header">
-                        <h4 class="serif-font"><i class="bi bi-pencil-square me-2" style="color: #c5a059;"></i>Modify Promotion Details</h4>
-                        <p class="mb-0 text-white-50">Branch: <strong class="text-white" th:text="${branch}">Café Luft - Main Reserve</strong></p>
+        <div class="page-header-row">
+            <div class="header-left">
+                <div class="header-icon-squircle">
+                    <i class="bi bi-pencil-square"></i>
+                </div>
+                <div class="header-title-box">
+                    <h2>Edit Discount</h2>
+                    <p>Modify promotional parameters and operational status</p>
+                </div>
+            </div>
+            <a th:href="@{/manager-only/discounts}" class="btn-cancel">
+                <i class="bi bi-arrow-left me-1"></i> Back
+            </a>
+        </div>
+
+        <div class="form-card">
+            <form th:action="@{/manager-only/discounts/save}" th:object="${discountForm}" method="post">
+                <input type="hidden" th:field="*{discount_id}">
+                <input type="hidden" th:field="*{employee_id}">
+
+                <div class="row g-4 mb-3">
+                    <div class="col-md-7">
+                        <label for="name" class="form-label">Discount Title <span class="text-danger">*</span></label>
+                        <input type="text" th:field="*{name}" class="form-control" id="name" required>
                     </div>
-
-                    <div class="p-4 p-md-5">
-                        <form th:action="@{/manager-only/discounts/save}" th:object="${discountForm}" method="post">
-                            <input type="hidden" th:field="*{discount_id}">
-                            <input type="hidden" th:field="*{employee_id}">
-
-                            <div class="row g-4 mb-4">
-                                <div class="col-md-7">
-                                    <label for="name" class="form-label">Discount Title <span class="text-danger">*</span></label>
-                                    <input type="text" th:field="*{name}" class="form-control" id="name" required>
-                                </div>
-                                <div class="col-md-5">
-                                    <label for="discountValue" class="form-label">Value Amount (%) <span class="text-danger">*</span></label>
-                                    <input type="number" step="0.01" th:field="*{discount_value}" class="form-control" id="discountValue" required>
-                                </div>
-                            </div>
-
-                            <div class="row g-4 mb-4">
-                                <div class="col-md-6">
-                                    <label for="promo_type_id" class="form-label">Promotion Type <span class="text-danger">*</span></label>
-                                    <select th:field="*{promo_type_id}" class="form-select" id="promo_type_id" required>
-                                        <option th:each="promo : ${promoTypes}" 
-                                                th:value="${promo.promo_type_id}" 
-                                                th:text="${promo.promo_type_name}" 
-                                                th:selected="${promo.promo_type_id == discountForm.promo_type_id}">Seasonal</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="audience_type_id" class="form-label">Audience Privilege <span class="text-danger">*</span></label>
-                                    <select th:field="*{audience_type_id}" class="form-select" id="audience_type_id" required>
-                                        <option th:each="audience : ${audienceTypes}" 
-                                                th:value="${audience.audience_type_id}" 
-                                                th:text="${audience.audience_type_name}" 
-                                                th:selected="${audience.audience_type_id == discountForm.audience_type_id}">All Customers</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="row g-4 mb-4">
-                                <div class="col-md-6">
-                                    <label for="startdate" class="form-label">Effective From <span class="text-danger">*</span></label>
-                                    <input type="date" th:field="*{startdate}" class="form-control" id="startdate" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="enddate" class="form-label">Valid Until <span class="text-danger">*</span></label>
-                                    <input type="date" th:field="*{enddate}" class="form-control" id="enddate" required>
-                                </div>
-                            </div>
-
-                            <div class="mb-4">
-                                <label for="description" class="form-label">Description & Policy</label>
-                                <textarea th:field="*{description}" class="form-control" id="description" rows="3"></textarea>
-                            </div>
-
-                            <div class="mb-4 p-3 rounded-3" style="background-color: #faf6f0; border: 1px dashed var(--luft-border);">
-                                <div class="form-check form-switch mb-0">
-                                    <input class="form-check-input" type="checkbox" id="is_active" th:field="*{is_active}" th:value="1" th:checked="${discountForm.is_active == 1}">
-                                    <label class="form-check-label fw-semibold ms-2 text-dark" for="is_active">Active Promotion Status</label>
-                                </div>
-                            </div>
-
-                            <div class="d-flex justify-content-end gap-3 pt-3 border-top">
-                                <a th:href="@{/manager-only/discounts}" class="btn-luxury-cancel">Cancel</a>
-                                <button type="submit" class="btn btn-luxury-primary">
-                                    <i class="bi bi-arrow-repeat me-1"></i> Update Promotion
-                                </button>
-                            </div>
-                        </form>
+                    <div class="col-md-5">
+                        <label for="discountValue" class="form-label">Discount Value (%) <span class="text-danger">*</span></label>
+                        <input type="number" step="0.01" th:field="*{discount_value}" class="form-control" id="discountValue" required>
                     </div>
                 </div>
 
-            </div>
+                <div class="row g-4 mb-3">
+                    <div class="col-md-6">
+                        <label for="promo_type_id" class="form-label">Promo Code / Type <span class="text-danger">*</span></label>
+                        <select th:field="*{promo_type_id}" class="form-select" id="promo_type_id" required>
+                            <option th:each="promo : ${promoTypes}" th:value="${promo.promo_type_id}" th:text="${promo.promo_type_name}" th:selected="${promo.promo_type_id == discountForm.promo_type_id}">Seasonal</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="audience_type_id" class="form-label">Audience Target <span class="text-danger">*</span></label>
+                        <select th:field="*{audience_type_id}" class="form-select" id="audience_type_id" required>
+                            <option th:each="audience : ${audienceTypes}" th:value="${audience.audience_type_id}" th:text="${audience.audience_type_name}" th:selected="${audience.audience_type_id == discountForm.audience_type_id}">All Customers</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row g-4 mb-3">
+                    <div class="col-md-6">
+                        <label for="startdate" class="form-label">Start Date <span class="text-danger">*</span></label>
+                        <input type="date" th:field="*{startdate}" class="form-control" id="startdate" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="enddate" class="form-label">End Date <span class="text-danger">*</span></label>
+                        <input type="date" th:field="*{enddate}" class="form-control" id="enddate" required>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="description" class="form-label">Description & Policy</label>
+                    <textarea th:field="*{description}" class="form-control" id="description" rows="3"></textarea>
+                </div>
+
+                <div class="mb-4 p-3 rounded-3" style="background-color: #faf5ee; border: 1px dashed #ebdccb;">
+                    <div class="form-check form-switch mb-0">
+                        <input class="form-check-input" type="checkbox" id="is_active" th:field="*{is_active}" th:value="1" th:checked="${discountForm.is_active == 1}" style="accent-color: var(--btn-brown);">
+                        <label class="form-check-label fw-bold ms-2" for="is_active">Active Discount Status</label>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 pt-3 border-top" style="border-color: var(--border-line) !important;">
+                    <a th:href="@{/manager-only/discounts}" class="btn-cancel">Discard</a>
+                    <button type="submit" class="btn-save"><i class="bi bi-arrow-repeat"></i> Update Discount</button>
+                </div>
+            </form>
         </div>
+
     </div>
+</div>
 </body>
 </html>

@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,60 +11,118 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-canvas: #fcf9f5;
+            --bg-canvas: #f8f5f0;
             --surface: #ffffff;
-            --espresso: #1f140e;
-            --caramel: #c49a6c;
+            --espresso-dark: #1a110a;
+            --roast-caramel: #b8864e;
+            --champagne-gold: #cbb493;
             --border-subtle: #ede4d8;
         }
         body { background-color: var(--bg-canvas); font-family: 'Plus Jakarta Sans', sans-serif; color: #2a1d17; }
-        .transfer-card {
-            background: var(--surface); border-radius: 24px; border: 1px solid var(--border-subtle);
-            box-shadow: 0 16px 40px -10px rgba(43, 29, 20, 0.06); padding: 40px; max-width: 580px; margin: 60px auto;
+        
+        .compact-transfer-card {
+            background: var(--surface);
+            border-radius: 24px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 16px 40px -10px rgba(43, 29, 20, 0.08);
+            overflow: hidden;
+            max-width: 520px;
+            margin: 40px auto 60px;
         }
-        .brand-title { font-family: 'Playfair Display', serif; color: var(--espresso); font-weight: 700; }
-        .form-select { border: 1.5px solid var(--border-subtle); border-radius: 12px; padding: 12px 16px; }
+        .card-header-banner {
+            background: linear-gradient(180deg, rgba(26, 17, 10, 0.70) 0%, rgba(26, 17, 10, 0.95) 100%),
+                        url('https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+            padding: 28px 24px 20px;
+            position: relative;
+            text-align: center;
+        }
+        .logo-glow {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--champagne-gold);
+            box-shadow: 0 0 16px rgba(203, 180, 147, 0.45);
+            margin-bottom: 8px;
+            overflow: hidden;
+        }
+        .logo-glow img { width: 100%; height: 100%; object-fit: cover; }
+        .brand-title { font-family: 'Playfair Display', serif; color: var(--espresso-dark); font-weight: 700; }
+        
+        .form-select {
+            border: 1.5px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: 0.92rem;
+        }
+        .form-select:focus {
+            border-color: var(--roast-caramel);
+            box-shadow: 0 0 0 3px rgba(184, 134, 78, 0.15);
+        }
         .btn-luxury {
-            background: linear-gradient(135deg, #c49a6c 0%, #aa7e4e 100%); color: #ffffff; border: none;
-            border-radius: 12px; font-weight: 600; padding: 11px 26px;
+            background: linear-gradient(135deg, var(--roast-caramel) 0%, #9c6c39 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            padding: 10px 24px;
+            font-size: 0.9rem;
+            transition: 0.25s;
+        }
+        .btn-luxury:hover {
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(61, 38, 24, 0.25);
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="transfer-card">
-        <div class="text-center mb-4">
-            <div class="mx-auto mb-3 d-flex align-items-center justify-content-center"
-                 style="width: 55px; height: 55px; border-radius: 50%; background: #fbf5ee; color: var(--caramel); border: 1.5px solid var(--border-subtle);">
-                <i class="bi bi-arrow-left-right fs-4"></i>
+<div layout:fragment="content">
+    <div class="compact-transfer-card">
+        <!-- Top Coffee Banner -->
+        <div class="card-header-banner">
+            <div class="logo-glow">
+                <img th:src="@{/images/luft-logo.png}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/924/924514.png'" alt="Logo">
             </div>
-            <h2 class="brand-title mb-1">Transfer Employee</h2>
-            <p class="text-muted small">
-                Moving <strong th:text="*{employeeDto.name}" style="color: var(--espresso);">Staff</strong> 
-                from branch <strong th:text="${branch_name}" style="color: var(--espresso);">Branch</strong>
-            </p>
+            <h2 class="brand-title text-white mb-1" style="font-size: 1.6rem;">Café Luft</h2>
+            <span class="badge" style="background: rgba(255,255,255,0.12); color: var(--champagne-gold); border: 1px solid rgba(255,255,255,0.2); font-size: 0.72rem;">
+                <i class="bi bi-arrow-left-right me-1"></i> Branch Reassignment
+            </span>
         </div>
 
-        <form th:action="@{/admin/employee/transfer}" th:object="${employeeDto}" method="post">
-            <input type="hidden" th:field="*{employee_id}" />
-
-            <div class="mb-4">
-                <label class="form-label fw-bold small text-uppercase">Destination Branch</label>
-                <select th:field="*{branch_id}" class="form-select" required>
-                    <option value="" disabled selected hidden>Select Target Branch</option>
-                    <option th:if="${s.branch_id != employeeDto.branch_id}"
-                            th:each="s : ${branches}" 
-                            th:value="${s.branch_id}" 
-                            th:text="${s.name}">
-                    </option>
-                </select>
+        <div class="p-4">
+            <div class="text-center mb-3">
+                <h3 class="brand-title mb-1" style="font-size: 1.35rem;">Transfer Employee</h3>
+                <p class="text-muted small">
+                    Moving <strong th:text="*{employeeDto.name}" style="color: var(--espresso-dark);">Staff</strong> 
+                    from branch <strong th:text="${branch_name}" style="color: var(--roast-caramel);">Branch</strong>
+                </p>
             </div>
 
-            <div class="d-flex justify-content-center gap-2 pt-2">
-                <a th:href="@{/admin/employee}" class="btn btn-light px-4" style="border-radius: 12px; font-weight: 600;">Cancel</a>
-                <button type="submit" class="btn btn-luxury px-4">Complete Transfer</button>
-            </div>
-        </form>
+            <form th:action="@{/admin/employee/transfer}" th:object="${employeeDto}" method="post">
+                <input type="hidden" th:field="*{employee_id}" />
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold small text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.8px; color: #7f7267;">Destination Branch</label>
+                    <select th:field="*{branch_id}" class="form-select" required>
+                        <option value="" disabled selected hidden>Select Target Branch</option>
+                        <option th:if="${s.branch_id != employeeDto.branch_id}"
+                                th:each="s : ${branches}" 
+                                th:value="${s.branch_id}" 
+                                th:text="${s.name}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="d-flex justify-content-center gap-2 pt-2 border-top">
+                    <a th:href="@{/admin/employee}" class="btn btn-light px-3" style="border-radius: 12px; font-weight: 600;">Cancel</a>
+                    <button type="submit" class="btn btn-luxury px-3">Complete Transfer</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 </body>

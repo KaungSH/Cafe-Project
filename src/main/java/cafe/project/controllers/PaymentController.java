@@ -24,7 +24,6 @@ import cafe.project.services.OrderDetailsService;
 import cafe.project.services.OrdersService;
 import cafe.project.services.PayMethodService;
 import cafe.project.services.PaymentService;
-import cafe.project.services.PaymentStockService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -35,23 +34,20 @@ public class PaymentController {
 	private final OrdersService ordersService;
 	private final OrderDetailsService orderDetailsService;
 	private final PayMethodService payMethodService;
-	private final PaymentStockService paymentStockService;
 
 	public PaymentController(PaymentService paymentService, OrdersService orderService,
-			OrderDetailsService orderDetailsService, PayMethodService payMethodService,
-			PaymentStockService paymentStockService) {
+			OrderDetailsService orderDetailsService, PayMethodService payMethodService) {
 
 		this.paymentService = paymentService;
 		this.ordersService = orderService;
 		this.orderDetailsService = orderDetailsService;
 		this.payMethodService = payMethodService;
-		this.paymentStockService = paymentStockService;
 	}
 
 	@GetMapping
-	public String index(Model model) {
-
-		model.addAttribute("payments", paymentService.findAll());
+	public String index(Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		model.addAttribute("payments", paymentService.findAll(ldto.getBranch_id()));
 
 		return "payments/index";
 	}
@@ -128,12 +124,17 @@ public class PaymentController {
 				payment.setEmployee_id(user.getEmployee_id());
 			}
 
-			// Save payment and reduce stock in one transaction.
-			paymentStockService.completePayment(payment, dto, order.getBranch_id());
+			// Save payment to database
+			paymentService.save(payment);
 
-			redirect.addFlashAttribute("success", "Payment completed successfully.");
+			// Reduce stock here using your existing stock service
 
-			return "redirect:/order-with-details";
+			redirect.addFlashAttribute(
+			    "success",
+			    "Payment completed successfully."
+			);
+
+			return "redirect:/receipt/preview/" + orderId;
 
 		} catch (IllegalArgumentException e) {
 			redirect.addFlashAttribute("error", e.getMessage());
@@ -174,8 +175,9 @@ public class PaymentController {
 	}
 
 	@GetMapping("/deleted")
-	public String deletedList(Model model) {
-		model.addAttribute("payments", paymentService.findDeletedAll());
+	public String deletedList(Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		model.addAttribute("payments", paymentService.findDeletedAll(ldto.getBranch_id()));
 		return "/payments/deletedList";
 	}
 

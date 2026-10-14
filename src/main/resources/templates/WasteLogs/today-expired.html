@@ -1,275 +1,267 @@
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{common/layout}">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout}">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Today's Expired Batches | Café Luft</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<meta charset="UTF-8">
+    <style>
+        body {
+            background-color: #FAF7F2;
+            color: #2D2422;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 14px;
+        }
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        .expired-wrapper {
+            width: 95%;
+            max-width: 1200px;
+            margin: 35px auto;
+        }
 
-<title>Today's Expired Items - Luft Cafe</title>
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
 
-<link rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+        .header-title-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
 
-<style>
+        .header-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #A8382B, #781F14);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFF2F0;
+            font-size: 20px;
+            box-shadow: 0 6px 14px rgba(168, 56, 43, 0.22);
+            flex-shrink: 0;
+        }
 
-    body {
-        background-color: #f6f1eb;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        color: #5d534a;
-    }
+        .header-title-box h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #2B1D14;
+            margin: 0;
+            letter-spacing: -0.2px;
+        }
 
-    .container-box {
-        background-color: #efe8e0;
-        border-radius: 16px;
-        padding: 30px;
-        margin-top: 30px;
-        margin-bottom: 30px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-    }
+        .header-title-box p {
+            font-size: 13px;
+            color: #8C7B6C;
+            margin: 2px 0 0 0;
+        }
 
-    .page-title {
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: #63584e;
-    }
+        .luxury-table-card {
+            background: #FFFFFF;
+            border-radius: 20px;
+            border: 1px solid rgba(214, 197, 178, 0.45);
+            box-shadow: 0 16px 36px -10px rgba(58, 41, 26, 0.08), 0 0 1px 1px rgba(214, 197, 178, 0.25);
+            overflow: hidden;
+            padding: 24px;
+        }
 
-    .custom-table {
-        border-collapse: separate;
-        border-spacing: 0;
-        width: 100%;
-    }
+        .table-luxury {
+            width: 100%;
+            margin: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
 
-    .custom-table th {
-        color: #7a6e65;
-        font-weight: 600;
-        padding: 12px;
-        border-bottom: 1px solid #e0d6cc;
-        white-space: nowrap;
-    }
+        .table-luxury thead th {
+            background: #FAF5EE;
+            color: #796450;
+            padding: 14px 16px;
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            border-bottom: 1px solid #EADBCC;
+        }
 
-    .custom-table td {
-        padding: 14px 12px;
-        vertical-align: middle;
-        background-color: rgba(255, 255, 255, 0.2);
-        border-bottom: 1px solid #e6ded5;
-    }
+        .table-luxury tbody td {
+            padding: 14px 16px;
+            color: #49382B;
+            font-size: 13.5px;
+            border-bottom: 1px solid #F3ECE2;
+            vertical-align: middle;
+        }
 
-    .display-value {
-        color: #5d534a;
-        font-weight: 500;
-    }
+        .badge-batch {
+            background-color: #F8F4EE;
+            color: #7D5127;
+            font-weight: 700;
+            padding: 4px 9px;
+            border-radius: 6px;
+            font-size: 12px;
+            border: 1px solid #EADBCC;
+        }
 
-    .notes-input {
-        background-color: #fdfbf7;
-        border: 1px solid #d8ceca;
-        border-radius: 8px;
-        padding: 8px 10px;
-        min-width: 220px;
-        color: #5d534a;
-    }
+        .badge-reason {
+            background-color: #FFF2F0;
+            color: #A8382B;
+            border: 1px solid #FACDC7;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
 
-    .notes-input:focus {
-        background-color: #ffffff;
-        border-color: #a39387;
-        box-shadow: 0 0 0 0.2rem rgba(115, 99, 86, 0.15);
-        outline: none;
-    }
+        .notes-input-luxury {
+            width: 100%;
+            background-color: #FAF8F5;
+            border: 1px solid #DFD5C6;
+            border-radius: 9px;
+            padding: 8px 12px;
+            color: #2D2422;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
 
-    .btn-submit {
-        background-color: #736356;
-        color: #ffffff;
-        border-radius: 8px;
-        padding: 9px 24px;
-        font-weight: 500;
-        border: none;
-    }
+        .notes-input-luxury:focus {
+            background-color: #FFFFFF;
+            border-color: #8B572A;
+            box-shadow: 0 0 0 3px rgba(139, 87, 42, 0.12);
+            outline: none;
+        }
 
-    .btn-submit:hover {
-        background-color: #5c4e43;
-        color: #ffffff;
-    }
+        .btn-luxury-primary {
+            background: linear-gradient(135deg, #7D5127 0%, #583718 100%);
+            color: #FFFFFF;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 6px 14px rgba(88, 55, 24, 0.2);
+        }
 
-    .btn-cancel {
-        background-color: #e5ded7;
-        color: #5d534a;
-        border-radius: 8px;
-        padding: 9px 20px;
-        font-weight: 500;
-        text-decoration: none;
-        display: inline-block;
-    }
+        .btn-luxury-primary:hover {
+            background: linear-gradient(135deg, #6C441E 0%, #442911 100%);
+            transform: translateY(-1px);
+            color: #FFFFFF;
+        }
 
-    .btn-cancel:hover {
-        background-color: #d8cec5;
-        color: #433b34;
-    }
+        .btn-luxury-cancel {
+            background-color: #EFE8DD;
+            color: #5C4533;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
 
-    .empty-message {
-        padding: 50px 20px;
-        text-align: center;
-        color: #7a6e65;
-        font-size: 1.05rem;
-    }
-
-</style>
-
+        .btn-luxury-cancel:hover {
+            background-color: #E2D7C7;
+            color: #3C2B1D;
+        }
+    </style>
 </head>
 
-<body class="p-4">
-
+<body>
 <div layout:fragment="content">
+    <div class="expired-wrapper">
+        
+        <div class="dashboard-header">
+            <div class="header-title-box">
+                <div class="header-avatar">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div>
+                    <h2>Today's Expired Batches</h2>
+                    <p>Review and convert today's expired inventory into official waste records</p>
+                </div>
+            </div>
+        </div>
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="luxury-table-card">
+            
+            <div th:if="${wasteLogs == null or #lists.isEmpty(wasteLogs)}" class="text-center py-5 text-muted">
+                <i class="fa-solid fa-circle-check fs-1 d-block mb-3 text-success opacity-75"></i>
+                <h5 class="fw-bold text-dark">All clear!</h5>
+                <p class="mb-0">There are no expired ingredient batches today.</p>
+            </div>
 
-        <h2 class="page-title m-0">
-            Today's Expired Items
-        </h2>
+            <form th:if="${wasteLogs != null and not #lists.isEmpty(wasteLogs)}"
+                  th:action="@{/manager-only/WasteLogs/today-expired}" method="post">
+                
+                <table class="table-luxury mb-4">
+                    <thead>
+                        <tr>
+                            <th>Batch ID</th>
+                            <th>Waste Reason</th>
+                            <th>Quantity Lost</th>
+                            <th>Financial Loss</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="log, stat : ${wasteLogs.dtoList}">
+                            <td>
+                                <span class="badge-batch" th:text="${log.batch_id}">BATCH001</span>
+                                <input type="hidden" th:name="${'dtoList[' + stat.index + '].batch_id'}" th:value="${log.batch_id}">
+                            </td>
+                            <td>
+                                <span class="badge-reason">Expired</span>
+                                <input type="hidden" th:name="${'dtoList[' + stat.index + '].waste_reason_id'}" th:value="${log.waste_reason_id}">
+                            </td>
+                            <td>
+                                <strong th:text="${log.quantity_lost}">2.500</strong>
+                                <input type="hidden" th:name="${'dtoList[' + stat.index + '].quantity_lost'}" th:value="${log.quantity_lost}">
+                            </td>
+                            <td>
+                                <span class="text-danger fw-bold" th:text="${#numbers.formatDecimal(log.financial_loss, 1, 'COMMA', 2, 'POINT')} + ' MMK'">15,000.00 MMK</span>
+                                <input type="hidden" th:name="${'dtoList[' + stat.index + '].financial_loss'}" th:value="${log.financial_loss}">
+                            </td>
+                            <td>
+                                <input type="hidden" th:name="${'dtoList[' + stat.index + '].employee_id'}" th:value="${log.employee_id}">
+                                <input type="text" class="notes-input-luxury"
+                                       th:name="${'dtoList[' + stat.index + '].notes'}"
+                                       th:value="${log.notes}" maxlength="255"
+                                       placeholder="Add remarks (optional)...">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
 
-    </div>
+                <div class="d-flex justify-content-end align-items-center gap-2 pt-3 border-top border-light-subtle">
+                    <a th:href="@{/manager-only/WasteLogs}" class="btn-luxury-cancel">
+                        <i class="fa-solid fa-xmark"></i> Cancel
+                    </a>
+                    <button type="submit" class="btn-luxury-primary">
+                        <i class="fa-solid fa-floppy-disk"></i> Save Waste Logs
+                    </button>
+                </div>
 
-
-    <!--
-        EMPTY LIST
-    -->
-    <div th:if="${wasteLogs == null or #lists.isEmpty(wasteLogs)}"
-         class="empty-message">
-
-        There is no Expired Ingredient Batches Today
-
-    </div>
-
-
-    <!--
-        WASTE LOG LIST
-    -->
-    <form th:if="${wasteLogs != null and not #lists.isEmpty(wasteLogs)}"
-          th:action="@{/manager-only/WasteLogs/today-expired}"
-          method="post">
-
-        <div class="table-responsive">
-
-            <table class="table custom-table">
-
-                <thead>
-
-                    <tr>
-                        <th>Batch ID</th>
-                        <th>Waste Reason</th>
-                        <th>Quantity Lost</th>
-                        <th>Financial Loss</th>
-                        <th>Notes</th>
-                    </tr>
-
-                </thead>
-
-
-                <tbody>
-
-                    <tr th:each="log, stat : ${wasteLogs.dtoList}">
-
-					    <td>
-					
-					        <span class="display-value"
-					              th:text="${log.batch_id}">
-					            BATCH001
-					        </span>
-					
-					        <input type="hidden"
-					               th:name="${'dtoList[' + stat.index + '].batch_id'}"
-					               th:value="${log.batch_id}">
-					
-					    </td>
-					
-					
-					    <td>
-					
-					        <span class="display-value">
-					            Expired
-					        </span>
-					
-					        <input type="hidden"
-					               th:name="${'dtoList[' + stat.index + '].waste_reason_id'}"
-					               th:value="${log.waste_reason_id}">
-					
-					    </td>
-					
-					
-					    <td>
-					
-					        <span class="display-value"
-					              th:text="${log.quantity_lost}">
-					            2.500
-					        </span>
-					
-					        <input type="hidden"
-					               th:name="${'dtoList[' + stat.index + '].quantity_lost'}"
-					               th:value="${log.quantity_lost}">
-					
-					    </td>
-					
-					
-					    <td>
-					
-					        <span class="display-value"
-					              th:text="${log.financial_loss}">
-					            15000.00
-					        </span>
-					
-					        <input type="hidden"
-					               th:name="${'dtoList[' + stat.index + '].financial_loss'}"
-					               th:value="${log.financial_loss}">
-					
-					    </td>
-					
-					
-					    <td>
-					
-					        <input type="hidden"
-					               th:name="${'dtoList[' + stat.index + '].employee_id'}"
-					               th:value="${log.employee_id}">
-					
-					        <input type="text"
-					               class="form-control notes-input"
-					               th:name="${'dtoList[' + stat.index + '].notes'}"
-					               th:value="${log.notes}"
-					               maxlength="255"
-					               placeholder="Enter optional notes">
-					
-					    </td>
-					
-					</tr>
-                </tbody>
-
-            </table>
+            </form>
 
         </div>
 
-
-        <!-- Buttons -->
-
-        <div class="d-flex justify-content-end gap-2 mt-4">
-
-            <a th:href="@{/manager-only/WasteLogs}"
-               class="btn btn-cancel">
-                Cancel
-            </a>
-
-            <button type="submit"
-                    class="btn btn-submit">
-                Save Waste Logs
-            </button>
-
-        </div>
-
-    </form>
-
+    </div>
 </div>
-
 </body>
-
 </html>

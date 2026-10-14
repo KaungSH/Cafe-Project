@@ -56,11 +56,11 @@ public class WasteLogsController {
 	}
 
 	@GetMapping("/create")
-	public String showCreateForm(Model model) {
-		System.out.println("batch id = " + ingredientBatchService.getAllBatches().get(0).getBatch_id());
+	public String showCreateForm(Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		model.addAttribute("wasteLog", new WasteLogsEntryDto());
 		model.addAttribute("reasons", wasteReasonRepository.findReasonsAll());
-		model.addAttribute("batches", ingredientBatchService.getAllBatches());
+		model.addAttribute("batches", ingredientBatchService.getAllBatches(ldto.getBranch_id()));
 		return "WasteLogs/create";
 	}
 
@@ -69,7 +69,7 @@ public class WasteLogsController {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("reasons", wasteReasonRepository.findReasonsAll());
-			model.addAttribute("batches", ingredientBatchService.getAllBatches());
+			model.addAttribute("batches", ingredientBatchService.getAllBatches(ldto.getBranch_id()));
 			return "WasteLogs/create";
 		}
 		entryDto.setBranch_id(ldto.getBranch_id());
@@ -84,7 +84,7 @@ public class WasteLogsController {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		model.addAttribute("wasteLog", wasteLogsService.getWasteLogsEntryById(waste_id, ldto.getBranch_id()));
 		model.addAttribute("reasons", wasteReasonRepository.findReasonsAll());
-		model.addAttribute("batches", ingredientBatchService.getAllBatches());
+		model.addAttribute("batches", ingredientBatchService.getAllBatches(ldto.getBranch_id()));
 		return "WasteLogs/edit";
 	}
 
@@ -93,7 +93,7 @@ public class WasteLogsController {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("reasons", wasteReasonRepository.findReasonsAll());
-			model.addAttribute("batches", ingredientBatchService.getAllBatches());
+			model.addAttribute("batches", ingredientBatchService.getAllBatches(ldto.getBranch_id()));
 			return "WasteLogs/edit";
 		}
 		BigDecimal actualQuantityLost = wasteLogsService.getWasteLogsEntryById(entryDto.getWaste_id(), ldto.getBranch_id()).getQuantity_lost().subtract(entryDto.getQuantity_lost());

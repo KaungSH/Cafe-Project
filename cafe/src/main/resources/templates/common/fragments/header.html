@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:fragment="header">
+
+    <nav class="navbar navbar-light bg-white border-bottom px-4"
+         style="height: 65px;">
+
+        <div class="container-fluid">
+
+            <span class="navbar-brand fw-bold">
+                ☕ Cafe Shop
+            </span>
+
+            <div th:if="${session.loggedInUser != null}">
+
+                <span class="me-3">
+
+                    <i class="bi bi-person-circle"></i>
+
+                    <span
+                        th:text="${session.loggedInUser.employee_name}">
+                        User
+                    </span>
+
+                </span>
+
+                <span class="badge bg-warning text-dark"
+                      th:text="${session.loggedInUser.employee_role}">
+                    STAFF
+                </span>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cafe Luft — Stock Imports</title>
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --coffee-main: #5c3d2e;         /* Warm Dark Roast Coffee */
+            --coffee-hover: #452b1f;
+            --coffee-accent: #b88654;       /* Caramel Cream */
+            --coffee-bg: #f9f6f0;           /* Soft Ivory Milk Foam */
+            --coffee-card-border: #ebdcd0;
+            --coffee-subtle: #f3ece4;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--coffee-bg);
+            color: #3b2c24;
+            margin: 0;
+            padding: 0;
+        }
+
+        .lux-card {
+            background: #ffffff;
+            border-radius: 18px;
+            border: 1px solid var(--coffee-card-border);
+            box-shadow: 0 12px 35px rgba(92, 61, 46, 0.06);
+            width: 100%;
+        }
+
+        .btn-coffee {
+            background-color: var(--coffee-main);
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-radius: 10px;
+            padding: 9px 20px;
+            border: none;
+            transition: all 0.25s ease;
+            text-decoration: none;
+        }
+        .btn-coffee:hover {
+            background-color: var(--coffee-hover);
+            color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(92, 61, 46, 0.25);
+        }
+
+        .btn-coffee-outline {
+            background-color: #ffffff;
+            color: var(--coffee-main);
+            border: 1px solid var(--coffee-card-border);
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-radius: 10px;
+            padding: 9px 20px;
+            transition: all 0.25s ease;
+            text-decoration: none;
+        }
+        .btn-coffee-outline:hover {
+            background-color: var(--coffee-subtle);
+            color: var(--coffee-hover);
+            border-color: var(--coffee-accent);
+        }
+
+        .table-coffee thead th {
+            font-size: 0.76rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #8c6f5d;
+            font-weight: 700;
+            padding: 1.15rem 1.4rem;
+            background: #faf7f2;
+            border-bottom: 1px solid var(--coffee-card-border);
+        }
+
+        .table-coffee tbody td {
+            padding: 1.15rem 1.4rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #f2ece4;
+            font-size: 0.92rem;
+        }
+
+        .badge-id {
+            background-color: var(--coffee-subtle);
+            color: var(--coffee-main);
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            border: 1px solid #e3d3c5;
+            display: inline-block;
+        }
+
+        .badge-status-orig {
+            background-color: #eaf6ee;
+            color: #1e7e34;
+            border: 1px solid #c9ebd4;
+            border-radius: 8px;
+            padding: 0.35rem 0.75rem;
+            font-weight: 600;
+            font-size: 0.78rem;
+            display: inline-block;
+        }
+
+        .badge-status-edited {
+            background-color: #fef7e7;
+            color: #b27b00;
+            border: 1px solid #fae8ba;
+            border-radius: 8px;
+            padding: 0.35rem 0.75rem;
+            font-weight: 600;
+            font-size: 0.78rem;
+            display: inline-block;
+        }
+
+        .cost-tag {
+            font-weight: 700;
+            font-size: 0.98rem;
+            color: var(--coffee-main);
+        }
+
+        /* ================= View, Edit & Delete Pill Buttons Style ================= */
+        .action-pill-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: flex-end;
+        }
+
+        .btn-pill-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 78px;
+            padding: 5px 10px;
+            border-radius: 9px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .btn-pill-view {
+            background-color: #F8FAFC;
+            color: #334155 !important;
+            border: 1px solid #E2E8F0;
+        }
+        .btn-pill-view:hover {
+            background-color: #EEF2F6;
+            color: #0F172A !important;
+            border-color: #CBD5E1;
+        }
+
+        .btn-pill-edit {
+            background-color: #FBF6EE;
+            color: #8C5332 !important;
+            border: 1px solid #E8D9C8;
+        }
+        .btn-pill-edit:hover {
+            background-color: #F2E7D5;
+            color: #5C3218 !important;
+            border-color: #D9C3A8;
+        }
+
+        .btn-pill-delete {
+            background-color: #FFF5F4;
+            color: #A3281D !important;
+            border: 1px solid transparent;
+        }
+        .btn-pill-delete:hover {
+            background-color: #FFE6E4;
+            color: #7A1910 !important;
+        }
+
+        .btn-pill-action i {
+            font-size: 0.8rem;
+        }
+
+        .empty-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            background: #fbf5ee;
+            border: 1px solid #eadbc9;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            border-radius: 18px;
+            border: 1px solid var(--coffee-card-border);
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div layout:fragment="content" class="container-fluid px-4 py-4 w-100">
+        
+        <!-- Header matching Waste Reasons UI -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+            <div>
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <span class="fs-4"><i class="bi bi-cup-hot-fill" style="color: var(--coffee-main);"></i></span>
+                    <h3 class="fw-bold mb-0" style="color: var(--coffee-main);">Cafe Luft Stock Imports</h3>
+                </div>
+                <p class="text-muted small mb-0">Overview of received raw materials & stock records</p>
+                <a th:href="@{/admin/ingredient-types}" class="btn-luxury-outline">
+                    <i class="fa-solid fa-boxes-stacked"></i> Ingredient Types
+                </a>
+            </div>
+        </div>
+
+        <!-- Table Card -->
+        <div class="lux-card overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-coffee table-hover mb-0 w-100">
+                    <thead>
+                        <tr>
+                            <th>Imported At</th>
+                            <th>Supplier</th>
+                            <th>Received By</th>
+                            <th>Branch</th>
+                            <th>Total Cost</th>
+                            <th>Status</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="imp : ${imports}">
+                            <td>
+                                <div class="fw-semibold text-dark" th:text="${#temporals.format(imp.imported_at, 'yyyy-MM-dd')}">2026-10-01</div>
+                                <div class="text-muted small" th:text="${#temporals.format(imp.imported_at, 'HH:mm a')}">14:50 PM</div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-tag-fill small" style="color: var(--coffee-accent);"></i>
+                                    <span class="fw-semibold text-dark" th:text="${imp.supplier_name}">Arabica Supply Co.</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-person-circle text-muted me-2"></i>
+                                    <span th:text="${imp.employee_name}">Staff Name</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge-id" th:text="${imp.branch_name}">Main Branch</span>
+                            </td>
+                            <td>
+                                <span class="cost-tag" th:text="'$' +${#numbers.formatDecimal(imp.total_cost, 1, 2)}">$200.00</span>
+                            </td>
+                            <td>
+                                <span th:if="${imp.isedited}" class="badge-status-edited">
+                                    <i class="bi bi-pencil-fill me-1"></i>Edited
+                                </span>
+                                <span th:unless="${imp.isedited}" class="badge-status-orig">
+                                    <i class="bi bi-check-circle-fill me-1"></i>Original
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <div class="action-pill-group">
+                                    <button type="button" class="btn-pill-action btn-pill-view"
+                                            th:attr="data-import-id=${imp.import_id}"
+                                            onclick="loadBatchDetails(this)"
+                                            data-bs-toggle="modal" data-bs-target="#detailModal">
+                                        <i class="fa-solid fa-eye"></i> View
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(imports)}">
+                            <td colspan="7" class="text-center py-5">
+                                <div class="py-4">
+                                    <div class="empty-icon-wrapper mb-3">
+                                        <i class="bi bi-inbox fs-2" style="color: var(--coffee-accent);"></i>
+                                    </div>
+                                    <p class="text-muted mb-0 fw-medium">No stock import records found.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content shadow-lg">
+                    <div class="modal-header text-white py-3" style="background-color: var(--coffee-main);">
+                        <h5 class="modal-title fw-bold"><i class="bi bi-cup-hot me-2" style="color: var(--coffee-accent);"></i>Batch Breakdown</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4" style="background-color: var(--coffee-bg);">
+                        <div class="table-responsive bg-white rounded-3 border">
+                            <table class="table table-coffee align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Ingredient</th>
+                                        <th>Unit</th>
+                                        <th>Qty</th>
+                                        <th>Unit Cost</th>
+                                        <th>Total Cost</th>
+                                        <th>Mfg Date</th>
+                                        <th>Exp Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="batchDetailBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+        function loadBatchDetails(btnElement) {
+            const importId = btnElement.getAttribute('data-import-id');
+            const body = document.getElementById('batchDetailBody');
+            body.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-muted"><div class="spinner-border spinner-border-sm text-secondary me-2"></div> Loading ingredients...</td></tr>';
+            
+            fetch('/admin/stock-imports/detail-batches/' + importId)
+                .then(res => res.json())
+                .then(data => {
+                    if (!data || data.length === 0) {
+                        body.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-muted">No items found for this record.</td></tr>';
+                        return;
+                    }
+                    let html = '';
+                    data.forEach(item => {
+                        let name = item.ingredientTypeName || item.ingredient_type_name || '-';
+                        let unit = item.uname || item.Uname || item.unit_name || item.unitName || '-'; 
+                        let qty = item.quantity_ordered !== undefined ? item.quantity_ordered : (item.quantityOrdered || 0);
+                        let cost = item.unit_cost !== undefined ? item.unit_cost : (item.unitCost || 0);
+                        let total = item.total_import_cost ? item.total_import_cost : (parseFloat(qty) * parseFloat(cost));
+                        let mfg = item.manufactured_date || item.manufacturedDate || '-';
+                        let exp = item.expire_date || item.expireDate || '-';
+
+                        html += `<tr>
+                            <td class="fw-bold text-dark">${name}</td>
+                            <td><span class="badge-id">${unit}</span></td>
+                            <td class="fw-semibold">${qty}</td>
+                            <td>$${parseFloat(cost).toFixed(2)}</td>
+                            <td class="fw-bold text-dark">$${parseFloat(total).toFixed(2)}</td>
+                            <td class="small text-muted">${mfg}</td>
+                            <td class="small text-muted">${exp}</td>
+                        </tr>`;
+                    });
+                    body.innerHTML = html;
+                })
+                .catch(() => {
+                    body.innerHTML = '<tr><td colspan="7" class="text-center text-danger py-4">Failed to load details.</td></tr>';
+                });
+        }
+        </script>
+    </div>
+</body>
+</html>

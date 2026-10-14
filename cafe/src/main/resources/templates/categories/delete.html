@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Delete Category - Café Shop</title>
+
+<!-- Fonts & FontAwesome -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+
+<style>
+body {
+	font-family: 'Plus Jakarta Sans', sans-serif;
+	background-color: #f1f5f9;
+	color: #0f172a;
+}
+
+.delete-backdrop {
+	min-height: 80vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 20px;
+}
+
+.delete-card {
+	background: #ffffff;
+	width: 100%;
+	max-width: 440px;
+	border-radius: 20px;
+	padding: 36px 30px;
+	text-align: center;
+	border: 1px solid #fee2e2;
+	box-shadow: 0 20px 25px -5px rgba(239, 68, 68, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.03);
+}
+
+.warning-icon-wrapper {
+	width: 64px;
+	height: 64px;
+	border-radius: 50%;
+	background-color: #fef2f2;
+	color: #ef4444;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.7rem;
+	margin: 0 auto 20px;
+}
+
+.btn-confirm-delete {
+	background-color: #ef4444;
+	color: #ffffff;
+	border: none;
+	border-radius: 10px;
+	padding: 10px 24px;
+	font-weight: 600;
+	font-size: 0.88rem;
+	transition: background-color 0.2s;
+}
+
+.btn-confirm-delete:hover {
+	background-color: #dc2626;
+}
+
+.btn-cancel-modal {
+	background: #ffffff;
+	border: 1px solid #e2e8f0;
+	color: #475569;
+	font-weight: 600;
+	font-size: 0.88rem;
+	border-radius: 10px;
+	padding: 10px 24px;
+	text-decoration: none;
+}
+
+.btn-cancel-modal:hover {
+	background-color: #f8fafc;
+	color: #0f172a;
+}
+</style>
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<div class="delete-backdrop">
+			<div class="delete-card">
+				<div class="warning-icon-wrapper">
+					<i class="fa-solid fa-triangle-exclamation"></i>
+				</div>
+
+				<h4 class="fw-bold text-dark mb-2">Delete Category</h4>
+				<p class="text-muted small mb-4">
+					Are you sure you want to delete this category? Products linked to this category might be affected.
+				</p>
+
+				<form th:action="@{/manager-only/categories/delete}" th:object="${category}" method="post">
+					<input type="hidden" th:field="*{category_id}">
+
+					<div class="d-flex justify-content-center gap-2">
+						<a th:href="@{/manager-only/categories}" class="btn-cancel-modal">Cancel</a>
+						<button type="submit" class="btn-confirm-delete">Yes, Delete</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

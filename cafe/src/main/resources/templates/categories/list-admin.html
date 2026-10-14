@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout}">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin - Category Management</title>
+
+<!-- Fonts & FontAwesome -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+
+<style>
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+
+body {
+	font-family: 'Plus Jakarta Sans', sans-serif;
+	background-color: #f8fafc;
+	margin: 0;
+	color: #0f172a;
+}
+
+/* ================= Stat Mini Cards ================= */
+.stat-card-row {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: 16px;
+	margin-bottom: 26px;
+}
+
+.stat-card {
+	background: #ffffff;
+	border: 1px solid #edf2f7;
+	border-radius: 16px;
+	padding: 18px 20px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	box-shadow: 0 4px 12px rgba(15, 23, 42, 0.02);
+}
+
+.stat-icon {
+	width: 44px;
+	height: 44px;
+	border-radius: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.15rem;
+}
+.stat-icon-cat { background: #eef2ff; color: #4f46e5; }
+.stat-icon-branch { background: #f0fdf4; color: #16a34a; }
+.stat-icon-scope { background: #fdf2f8; color: #db2777; }
+
+/* ================= Header Title & Action Buttons ================= */
+.page-header-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 16px;
+	margin-bottom: 22px;
+}
+
+.btn-add-category {
+	background: linear-gradient(135deg, rgb(64, 0, 0) 0%, rgb(37, 18, 18) 100%);
+	color: #ffffff !important;
+	border-radius: 10px;
+	padding: 10px 22px;
+	font-weight: 600;
+	font-size: 0.88rem;
+	border: none;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	text-decoration: none;
+	box-shadow: 0 4px 12px rgba(64, 0, 0, 0.25);
+	transition: all 0.2s;
+}
+
+.btn-add-category:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 6px 16px rgba(64, 0, 0, 0.35);
+}
+
+.btn-bin-trash {
+	background-color: rgb(64, 0, 0);
+	color: rgb(255, 255, 255) !important;
+	border-radius: 10px;
+	padding: 10px 18px;
+	font-weight: 600;
+	font-size: 0.88rem;
+	border: none;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	text-decoration: none;
+	transition: all 0.2s;
+}
+
+.btn-bin-trash:hover {
+	background-color: #401010;
+	color: #ffffff !important;
+}
+
+/* ================= Custom Modern Table ================= */
+.custom-card-container {
+	background: #ffffff;
+	border-radius: 18px;
+	border: 1px solid #edf2f7;
+	box-shadow: 0 10px 30px rgba(15, 23, 42, 0.03);
+	overflow: hidden;
+}
+
+.custom-table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.custom-table th {
+	font-weight: 700;
+	color: #64748b;
+	background-color: #f8fafc;
+	border-bottom: 1px solid #e2e8f0;
+	padding: 16px 20px;
+	font-size: 0.76rem;
+	text-transform: uppercase;
+	letter-spacing: 0.6px;
+}
+
+.custom-table td {
+	padding: 16px 20px;
+	vertical-align: middle;
+	color: #1e293b;
+	border-bottom: 1px solid #f1f5f9;
+	font-size: 0.88rem;
+}
+
+.custom-table tr:hover td {
+	background-color: #f8fafc;
+}
+
+.badge-category-tag {
+	background-color: #eef2ff;
+	color: #4338ca;
+	border: 1px solid #c7d2fe;
+	padding: 6px 14px;
+	border-radius: 30px;
+	font-weight: 700;
+	font-size: 0.82rem;
+	display: inline-block;
+}
+
+.badge-status {
+	padding: 5px 14px;
+	border-radius: 20px;
+	font-weight: 700;
+	font-size: 0.74rem;
+	display: inline-block;
+}
+.badge-active {
+	background-color: #dcfce7;
+	color: #166534;
+}
+.badge-inactive {
+	background-color: #f1f5f9;
+	color: #475569;
+}
+
+/* ================= Edit & Delete Buttons Style (Size List Style) ================= */
+.action-pill-group {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	align-items: flex-end;
+}
+
+.btn-pill-action {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	width: 82px;
+	padding: 5px 10px;
+	border-radius: 9px;
+	font-size: 0.82rem;
+	font-weight: 600;
+	text-decoration: none;
+	transition: all 0.2s ease;
+}
+
+/* Edit Button */
+.btn-pill-edit {
+	background-color: #FBF6EE;
+	color: #8C5332 !important;
+	border: 1px solid #E8D9C8;
+}
+
+.btn-pill-edit:hover {
+	background-color: #F2E7D5;
+	color: #5C3218 !important;
+	border-color: #D9C3A8;
+}
+
+/* Delete Button */
+.btn-pill-delete {
+	background-color: #FFF5F4;
+	color: #A3281D !important;
+	border: 1px solid transparent;
+}
+
+.btn-pill-delete:hover {
+	background-color: #FFE6E4;
+	color: #7A1910 !important;
+}
+
+.btn-pill-action i {
+	font-size: 0.8rem;
+}
+</style>
+</head>
+
+<body>
+<div layout:fragment="content">
+	<div class="container-fluid py-4 px-4">
+
+		<!-- 1. KPI Summary Cards -->
+		<div class="stat-card-row">
+			<div class="stat-card">
+				<div>
+					<div class="text-muted small fw-semibold">Total System Categories</div>
+					<div class="fw-bold fs-4 text-dark" th:text="${categories != null ? categories.size() : '0'}">0</div>
+				</div>
+				<div class="stat-icon stat-icon-cat">
+					<i class="fa-solid fa-layer-group"></i>
+				</div>
+			</div>
+			
+		</div>
+
+		<!-- 2. Title & Action Controls -->
+		<div class="page-header-row">
+			<div>
+				<h3 class="fw-bold mb-1" style="color: #0f172a; font-size: 1.55rem;">Category Management (Admin)</h3>
+				<p class="text-muted mb-0" style="font-size: 0.88rem;">Oversee all branch menu categories, audit creations, and manage category lifecycles.</p>
+			</div>
+
+			<div class="d-flex align-items-center gap-2">
+			</div>
+		</div>
+
+		<!-- 3. Categories Table -->
+		<div class="custom-card-container">
+			<div class="table-responsive">
+				<table class="table custom-table mb-0 align-middle" id="adminCategoryTable">
+					<thead>
+						<tr>
+							<th style="width: 6%;">No.</th>
+							<th style="width: 20%;">Category Name</th>
+							<th style="width: 16%;">Branch</th>
+							<th style="width: 16%;">Created By</th>
+							<th style="width: 22%;">Description</th>
+							<th style="width: 10%; text-align: center;">Status</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="category, state : ${categories}">
+							<td class="fw-bold text-muted" th:text="${state.count}">1</td>
+							<td>
+								<span class="badge-category-tag" th:text="${category.name}">Hot Drinks</span>
+							</td>
+							<td>
+								<span class="fw-semibold text-dark" th:text="${category.branch_name}">Main Branch</span>
+							</td>
+							<td class="text-muted">
+								<i class="fa-regular fa-user me-1 text-secondary" style="font-size: 0.75rem;"></i>
+								<span th:text="${category.employee_name}">Admin</span>
+							</td>
+							<td>
+								<span class="text-muted text-truncate d-inline-block" style="max-width: 260px;" th:text="${category.description}">Hot and warm coffee items</span>
+							</td>
+							<td class="text-center">
+								<span th:if="${category.is_active == true}" class="badge-status badge-active">Active</span>
+								<span th:if="${category.is_active == false or category.is_active == null}" class="badge-status badge-inactive">Inactive</span>
+							</td>
+						
+						</tr>
+
+						<tr th:if="${#lists.isEmpty(categories)}">
+							<td colspan="7" class="text-center py-5 text-muted fst-italic">
+								<i class="fa-solid fa-box-open fs-2 mb-2 d-block text-secondary opacity-50"></i>
+								No categories found in the system.
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

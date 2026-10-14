@@ -2,11 +2,9 @@ package cafe.project.controllers;
 
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,19 +14,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
-
 import cafe.project.RandomString;
 import cafe.project.employeemanagement.models.LoginDto;
-import cafe.project.models.IngredientTypesListModelFake;
 import cafe.project.models.OrderDetailsDto;
 import cafe.project.models.ProductTypeEntryModel;
 import cafe.project.models.SearchKeyword;
 import cafe.project.repositories.entities.OrderDetails;
-import cafe.project.repositories.entities.Orders;
 import cafe.project.repositories.entities.ProductsAndQuantities;
 import cafe.project.services.CategoryService;
+import cafe.project.services.IngredientTypeService;
 import cafe.project.services.OrderDetailsService;
-import cafe.project.services.OrdersService;
 import cafe.project.services.ProductService;
 import cafe.project.services.ProductTypeService;
 import cafe.project.services.SizeService;
@@ -42,31 +37,49 @@ public class ProductController {
 	private final ProductTypeService ptservice;
 	private final CategoryService cservice;
 	private final SizeService sservice;
-	private final OrdersService ordersService;
 	private final OrderDetailsService orderDetailsService;
+	private final IngredientTypeService ingredientTypeService;
 
 	public ProductController(ProductService pservice, ProductTypeService ptservice, CategoryService cservice,
-			SizeService sservice, OrdersService ordersService, OrderDetailsService orderDetailsService) {
+			SizeService sservice, OrderDetailsService orderDetailsService, IngredientTypeService ingredientTypeService) {
 
 		this.pservice = pservice;
 		this.ptservice = ptservice;
 		this.cservice = cservice;
 		this.sservice = sservice;
-		this.ordersService = ordersService;
 		this.orderDetailsService = orderDetailsService;
+		this.ingredientTypeService = ingredientTypeService;
 	}
 
-	@GetMapping("/manager/products")
-	public String productTypeList(Model model) {
+	@GetMapping("/manager-only/products")
+	public String productTypeList(Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		model.addAttribute("keywordmodel", new SearchKeyword());
-		model.addAttribute("product_types", ptservice.findAll());
+		model.addAttribute("product_types", ptservice.findAll(ldto.getBranch_id()));
 		return "products/list";
 	}
 
-	@PostMapping("/manager/products/search")
-	public String searchProductTypeList(@ModelAttribute("keywordmodel") SearchKeyword key, Model model) {
-		model.addAttribute("product_types", ptservice.searchByName(key.getKeyword()));
+	@PostMapping("/manager-only/products/search")
+	public String searchProductTypeList(@ModelAttribute("keywordmodel") SearchKeyword key, Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		model.addAttribute("product_types", ptservice.searchByName(key.getKeyword(), ldto.getBranch_id()));
 		return "products/list";
+	}
+	
+	@GetMapping("/admin/products")
+	public String productTypeListAdmin(Model model) {
+		model.addAttribute("keywordmodel", new SearchKeyword());
+		model.addAttribute("product_types", ptservice.findAllAdmin());
+		return "products/list-admin";
+	}
+
+	@PostMapping("/admin/products/search")
+	public String searchProductTypeListAdmin(@ModelAttribute("keywordmodel") SearchKeyword key, Model model) {
+		if (key.getKeyword() == null || key.getKeyword().isBlank()) {
+			return "redirect:/admin/products";
+		}
+		model.addAttribute("product_types", ptservice.searchByNameAdmin(key.getKeyword()));
+		return "products/list-admin";
 	}
 
 	@GetMapping("/staff/products")
@@ -150,150 +163,174 @@ public class ProductController {
 		}
 	}
 
-	@GetMapping("/add")
-	public String add(Model model, HttpSession session) {
+//	@GetMapping("/add")
+//	public String add(Model model, HttpSession session) {
+//
+//		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+//
+//		Orders order = new Orders();
+//		order.setEmployee_id(ldto.getEmployee_id());
+//		order.setBranch_id(ldto.getBranch_id());
+//
+//		@SuppressWarnings("unchecked")
+//		List<OrderDetails> selectedDetails = (List<OrderDetails>) session.getAttribute("selectedOrderDetails");
+//
+//		OrderDetailsDto dto;
+//
+//		if (selectedDetails != null && !selectedDetails.isEmpty()) {
+//			dto = new OrderDetailsDto(selectedDetails);
+//		} else {
+//			dto = new OrderDetailsDto();
+//		}
+//
+//		model.addAttribute("order", order);
+//		model.addAttribute("orderDetailsDto", dto);
+//		model.addAttribute("products", pservice.findAllForOrder(ldto.getBranch_id()));
+//
+//		return "orderwithdetails/add";
+//	}
 
+	@GetMapping("/manager-only/products/deleted")
+	public String productTypeDeleted(Model model, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
-
-		Orders order = new Orders();
-		order.setEmployee_id(ldto.getEmployee_id());
-		order.setBranch_id(ldto.getBranch_id());
-
-		@SuppressWarnings("unchecked")
-		List<OrderDetails> selectedDetails = (List<OrderDetails>) session.getAttribute("selectedOrderDetails");
-
-		OrderDetailsDto dto;
-
-		if (selectedDetails != null && !selectedDetails.isEmpty()) {
-			dto = new OrderDetailsDto(selectedDetails);
-		} else {
-			dto = new OrderDetailsDto();
-		}
-
-		model.addAttribute("order", order);
-		model.addAttribute("orderDetailsDto", dto);
-		model.addAttribute("products", pservice.findAllForOrder(ldto.getBranch_id()));
-
-		return "orderwithdetails/add";
-	}
-
-	@GetMapping("/manager/products/deleted")
-	public String productTypeDeleted(Model model) {
 		model.addAttribute("keywordmodel", new SearchKeyword());
-		model.addAttribute("product_types", ptservice.findDeletedAll());
+		model.addAttribute("product_types", ptservice.findDeletedAll(ldto.getBranch_id()));
 		return "products/list_deleted";
 	}
 
-	@PostMapping("/manager/products/deleted/search")
-	public String searchProductTypeDeleted(@ModelAttribute("keywordmodel") SearchKeyword key, Model model) {
-		model.addAttribute("product_types", ptservice.searchDeletedByName(key.getKeyword()));
+	@PostMapping("/manager-only/products/deleted/search")
+	public String searchProductTypeDeleted(@ModelAttribute("keywordmodel") SearchKeyword key, Model model,
+			HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		model.addAttribute("product_types", ptservice.searchDeletedByName(key.getKeyword(), ldto.getBranch_id()));
 		return "products/list_deleted";
 	}
 
-	@GetMapping("/manager/products/add")
+	@GetMapping("/manager-only/products/add")
 	public String productTypeAdd(Model model) {
 		model.addAttribute("product_type", new ProductTypeEntryModel());
 		bindAvialableData(model);
 		return "products/add";
 	}
 
-	@PostMapping("/manager/products/add")
+	@PostMapping("/manager-only/products/add")
 	public String productTypeAdd(@ModelAttribute("product_type") ProductTypeEntryModel tentry,
-			@RequestParam(value = "coverImgPart", required = false) Part imgPart, Model model) {
+			@RequestParam(value = "coverImgPart", required = false) Part imgPart, Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
 		tentry.setCoverimgpath(saveImgFile(imgPart));
 		tentry.setType_id(UUID.randomUUID().toString());
-		// Fake Employee Id Saving later to be replaced with HttpSession Method
-		tentry.setEmployee_id("1");
+		tentry.setEmployee_id(ldto.getEmployee_id());
+		tentry.setBranch_id(ldto.getBranch_id());
 
 		ptservice.add(tentry);
-		return "redirect:/manager/products";
+		return "redirect:/manager-only/products";
 	}
 
-	@GetMapping("/manager/products/edit/{id}")
-	public String productTypeEdit(@PathVariable String id, Model model) {
-		if (ptservice.findById(id) != null) {
+	@GetMapping("/manager-only/products/edit/{id}")
+	public String productTypeEdit(@PathVariable String id, Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		ProductTypeEntryModel existingProduct = ptservice.findById(id);
+
+		if (existingProduct != null) {
+			if (!existingProduct.getBranch_id().equals(ldto.getBranch_id())) {
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "NOT YOUR BRANCH!!!");
+			}
 			model.addAttribute("product_type", ptservice.findById2(id));
 			bindAvialableData(model);
 			return "products/edit";
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product_type");
 		}
-
 	}
 
-	@PostMapping("/manager/products/edit")
+	@PostMapping("/manager-only/products/edit")
 	public String productTypeEdit(@ModelAttribute("product_type") ProductTypeEntryModel tentry,
-			@RequestParam(value = "coverImgPart", required = false) Part imgPart, Model model) {
+			@RequestParam(value = "coverImgPart", required = false) Part imgPart, Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		ProductTypeEntryModel existingProduct = ptservice.findById(tentry.getType_id());
+
+		if (existingProduct != null && !existingProduct.getBranch_id().equals(ldto.getBranch_id())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "NOT YOUR BRANCH!!!");
+		}
+
 		String file = saveImgFile(imgPart);
 		if (file == null || file.isEmpty()) {
 			ptservice.edit(tentry);
-			return "redirect:/manager/products";
+			return "redirect:/manager-only/products";
 		}
 		tentry.setCoverimgpath(file);
-		System.out.println(tentry.getProduct().get(1).isIs_active());
 		ptservice.edit(tentry);
-		return "redirect:/manager/products";
+		return "redirect:/manager-only/products";
 	}
 
-	@GetMapping("/manager/products/delete/type/{id}")
-	public String productTypeDelete(@PathVariable String id, Model model) {
-		if (ptservice.findById(id) != null) {
+	@GetMapping("/manager-only/products/delete/type/{id}")
+	public String productTypeDelete(@PathVariable String id, Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		ProductTypeEntryModel existingProduct = ptservice.findById(id);
+
+		if (existingProduct != null) {
+			if (!existingProduct.getBranch_id().equals(ldto.getBranch_id())) {
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "NOT YOUR BRANCH!!!");
+			}
 			ptservice.delete(id);
-			return "redirect:/manager/products";
+			return "redirect:/manager-only/products";
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product_type");
 		}
-
 	}
 
-	@GetMapping("/manager/products/delete_perm/type/{id}")
-	public String productTypeDeletePerm(@PathVariable String id, Model model) {
-		if (ptservice.findById3(id) != null) {
+	@GetMapping("/manager-only/products/delete_perm/type/{id}")
+	public String productTypeDeletePerm(@PathVariable String id, Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		ProductTypeEntryModel existingProduct = ptservice.findById3(id);
+
+		if (existingProduct != null) {
+			if (!existingProduct.getBranch_id().equals(ldto.getBranch_id())) {
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "NOT YOUR BRANCH!!!");
+			}
 			ptservice.deletePerm(id);
-			return "redirect:/manager/products/deleted";
+			return "redirect:/manager-only/products/deleted";
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product_type");
 		}
-
 	}
 
-	@GetMapping("/manager/products/delete/{id}")
-	public String productTypeDeletePro(@PathVariable String id, Model model) {
-		if (pservice.findById(id) != null) {
+	@GetMapping("/manager-only/products/delete/{id}")
+	public String productTypeDeletePro(@PathVariable String id, Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		ProductTypeEntryModel existingProduct = ptservice.findById3(id);
+
+		if (existingProduct != null) {
+			if (!existingProduct.getBranch_id().equals(ldto.getBranch_id())) {
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "NOT YOUR BRANCH!!!");
+			}
 			pservice.delete(id);
-			return "redirect:/manager/products";
+			return "redirect:/manager-only/products";
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product_type");
 		}
-
 	}
 
-	@GetMapping("/manager/products/recover/type/{id}")
-	public String productTypeRecover(@PathVariable String id, Model model) {
-		if (ptservice.findById3(id) != null) {
+	@GetMapping("/manager-only/products/recover/type/{id}")
+	public String productTypeRecover(@PathVariable String id, Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		ProductTypeEntryModel existingProduct = ptservice.findById3(id);
+
+		if (existingProduct != null) {
+			if (!existingProduct.getBranch_id().equals(ldto.getBranch_id())) {
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "NOT YOUR BRANCH!!!");
+			}
 			ptservice.recover(id);
-			return "redirect:/manager/products/deleted";
+			return "redirect:/manager-only/products/deleted";
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product_type");
 		}
-
-	}
-
-	private List<IngredientTypesListModelFake> ingredientgetAllFake() {
-		List<IngredientTypesListModelFake> list = new ArrayList<IngredientTypesListModelFake>();
-		list.add(new IngredientTypesListModelFake("1", "milk", "cow's milk", "gl"));
-		list.add(new IngredientTypesListModelFake("2", "water", "distilled water", "gl"));
-		list.add(new IngredientTypesListModelFake("3", "cake", "cake", "c"));
-		list.add(new IngredientTypesListModelFake("4", "coffee beans", "java", "kg"));
-		list.add(new IngredientTypesListModelFake("5", "sugar", "sugar", "lb"));
-		list.add(new IngredientTypesListModelFake("6", "orange juice", "orangey", "l"));
-		return list;
 	}
 
 	private void bindAvialableData(Model model) {
-		model.addAttribute("categories", cservice.findAll());
+		model.addAttribute("categories", cservice.findAllActive());
 		model.addAttribute("sizes", sservice.getAllSizes());
-		model.addAttribute("ingredients", ingredientgetAllFake());
+		model.addAttribute("ingredients", ingredientTypeService.getAllActiveIngredientTypes());
 	}
 
 	private String saveImgFile(Part imgPart) {
@@ -312,7 +349,6 @@ public class ProductController {
 
 				imgPart.write(fileToSave.getAbsolutePath());
 
-				// Return ONLY the file name so Thymeleaf can append it to /images/ correctly
 				return fileName;
 			}
 			return null;

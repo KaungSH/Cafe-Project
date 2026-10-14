@@ -1,206 +1,483 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout}">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Café Luft — Batches & Expiry Management</title>
 
-<meta charset="UTF-8">
-<title>Ingredient Batch Lists</title>
+    <!-- Bootstrap 5.3, Bootstrap Icons & FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-	rel="stylesheet">
+    <!-- Unified Typography: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-<style>
-body {
-	background-color: #f8f9fa;
-	color: #333;
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-		sans-serif;
-}
+    <style>
+        :root {
+            --cafe-espresso: #1f1712;
+            --cafe-roast: #2c2018;
+            --cafe-mocha: #4a372c;
+            --cafe-gold: #c59b63;
+            --cafe-gold-hover: #b38850;
+            --cafe-gold-subtle: #fbf5ec;
+            --cafe-bg: #f9f7f4;
+            --cafe-card: #ffffff;
+            --cafe-border: #ede7e0;
+            --cafe-text: #2d241e;
+            --cafe-text-muted: #82756a;
+            --badge-fresh-bg: #eaf6ec;
+            --badge-fresh-txt: #24753a;
+            --badge-warn-bg: #fef7e7;
+            --badge-warn-txt: #9e6900;
+            --badge-danger-bg: #fdf0ee;
+            --badge-danger-txt: #b8332a;
+        }
 
-.stat-card {
-	background-color: #f1ede6;
-	border: none;
-	border-radius: 12px;
-	padding: 20px;
-}
+        body {
+            background-color: var(--cafe-bg);
+            color: var(--cafe-text);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+        }
 
-.stat-card-warning {
-	background-color: #fbf3d5;
-}
+        /* Top Brand Header */
+        .cafe-header-brand {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: -0.2px;
+            color: var(--cafe-espresso);
+        }
 
-.stat-card-danger {
-	background-color: #fbe3e3;
-}
+        .gold-pill {
+            background: linear-gradient(135deg, #c59b63, #a9804b);
+            color: #ffffff;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+        }
 
-.stat-number {
-	font-size: 2.2rem;
-	font-weight: 600;
-	line-height: 1;
-}
+        /* Luxury Metric Cards */
+        .stat-card {
+            background: var(--cafe-card);
+            border: 1px solid var(--cafe-border);
+            border-radius: 18px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(44, 32, 24, 0.03);
+            transition: all 0.25s ease-in-out;
+        }
 
-.stat-label {
-	font-size: 0.85rem;
-	color: #777;
-	margin-top: 6px;
-}
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(44, 32, 24, 0.07);
+            border-color: #dfd4c7;
+        }
 
-.badge-near-expiry {
-	background-color: #fcedc8;
-	color: #8a6300;
-	font-weight: 500;
-}
+        .stat-card .icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+        }
 
-.badge-fresh {
-	background-color: #e2f0d9;
-	color: #385d26;
-	font-weight: 500;
-}
+        .stat-total .icon-box {
+            background-color: var(--cafe-gold-subtle);
+            color: var(--cafe-gold);
+        }
 
-.badge-expired {
-	background-color: #fbe3e3;
-	color: #a82a2a;
-	font-weight: 500;
-}
+        .stat-warning .icon-box {
+            background-color: var(--badge-warn-bg);
+            color: var(--badge-warn-txt);
+        }
 
-.table-custom {
-	font-size: 0.9rem;
-}
+        .stat-danger .icon-box {
+            background-color: var(--badge-danger-bg);
+            color: var(--badge-danger-txt);
+        }
 
-.table-custom th {
-	color: #888;
-	font-weight: 600;
-	text-transform: uppercase;
-	font-size: 0.75rem;
-	border-bottom: 1px solid #eee;
-	padding-bottom: 12px;
-}
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--cafe-espresso);
+            line-height: 1.1;
+        }
 
-.table-custom td {
-	padding-top: 14px;
-	padding-bottom: 14px;
-}
-</style>
+        .stat-label {
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--cafe-text-muted);
+            margin-top: 5px;
+        }
 
+        /* Luxury Action Buttons */
+        .btn-luxury-outline {
+            border: 1.5px solid var(--cafe-border);
+            color: var(--cafe-text);
+            background: #ffffff;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border-radius: 10px;
+            padding: 9px 18px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
 
-<div class="container-fluid">
+        .btn-luxury-outline:hover {
+            border-color: var(--cafe-gold);
+            color: var(--cafe-gold);
+            background: #ffffff;
+        }
 
+        .btn-luxury-danger-outline {
+            border: 1.5px solid #f6dcd9;
+            color: var(--badge-danger-txt);
+            background: #ffffff;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border-radius: 10px;
+            padding: 9px 18px;
+            transition: all 0.2s ease;
+        }
 
-	<div class="d-flex justify-content-between align-items-start mb-2">
-		<div>
-			<h3 class="fw-bold mb-1">Batches & expiry</h3>
-			<p class="text-muted small mb-0">Every dated batch of perishable
-				stock — cakes and pastries on the shelf, plus raw ingredients like
-				milk and beans — sorted by what runs out soonest.</p>
-		</div>
-		<div class="d-flex gap-2">
-		<!--  	<a th:href="@{/ingredient-batches/add}" class="btn btn-primary">+
-				Add New Batch</a>--> <a th:href="@{/ingredient-batches/deleted-list}"
-				class="btn btn-outline-danger">Trash / Deleted Batches</a>
-		</div>
-	</div>
+        .btn-luxury-danger-outline:hover {
+            background-color: #b8332a;
+            color: #ffffff;
+            border-color: #b8332a;
+        }
 
+        /* Modern Luxury Table Container */
+        .table-container {
+            background: var(--cafe-card);
+            border: 1px solid var(--cafe-border);
+            border-radius: 20px;
+            padding: 10px;
+            box-shadow: 0 5px 25px rgba(44, 32, 24, 0.04);
+            overflow: hidden;
+        }
 
-	<div class="row g-3 my-3"
-		th:with="today=${T(java.time.LocalDate).now()}">
+        .table-luxury {
+            margin-bottom: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
 
+        .table-luxury thead th {
+            background-color: #fbf9f6;
+            color: #7b6f65;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--cafe-border);
+            padding: 16px 16px;
+            white-space: nowrap;
+        }
 
-		<div class="col-md-4">
-			<div class="stat-card">
-				<div class="stat-number" th:text="${#lists.size(batches)}">0</div>
-				<div class="stat-label">Total batches</div>
-			</div>
-		</div>
+        .table-luxury tbody td {
+            padding: 18px 16px;
+            vertical-align: middle;
+            border-bottom: 1px solid #f3eeea;
+            font-size: 0.88rem;
+            color: var(--cafe-text);
+        }
 
+        .table-luxury tbody tr:last-child td {
+            border-bottom: none;
+        }
 
-		<div class="col-md-4">
-			<div class="stat-card stat-card-warning">
-				<div class="stat-number"
-					th:text="${#lists.size(batches.?[expire_date != null and T(java.time.temporal.ChronoUnit).DAYS.between(#root.today, expire_date) >= 0 and T(java.time.temporal.ChronoUnit).DAYS.between(#root.today, expire_date) <= 7])}">0</div>
-				<div class="stat-label">Near expiry</div>
-			</div>
-		</div>
+        .table-luxury tbody tr {
+            transition: background-color 0.15s ease;
+        }
 
+        .table-luxury tbody tr:hover {
+            background-color: #fcfbfa;
+        }
 
-		<div class="col-md-4">
-			<div class="stat-card stat-card-danger">
-				<div class="stat-number"
-					th:text="${#lists.size(batches.?[expire_date != null and T(java.time.temporal.ChronoUnit).DAYS.between(#root.today, expire_date) < 0])}">0</div>
-				<div class="stat-label">Expired</div>
-			</div>
-		</div>
-	</div>
+        /* Custom Badges */
+        .badge-status {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+        }
 
-	<div
-		class="table-responsive bg-white rounded-3 p-3 shadow-sm border mt-4">
-		<table class="table table-borderless table-custom align-middle mb-0">
-			<thead>
-				<tr>
-					<th>BATCH ID</th>
-					<th>INGREDIENT</th>
-					<th>BRANCH</th>
-					<th>MADE</th>
-					<th>EXPIRES</th>
-					<th>REMAINING</th>
-					<th>UNIT COST</th>
-					<th>TOTAL COST</th>
-					<th>STATUS</th>
-					<th>SHELF-LIFE</th>
-					<th class="text-end">ACTIONS</th>
-				</tr>
-			</thead>
-			<tbody>
+        .badge-fresh {
+            background-color: var(--badge-fresh-bg);
+            color: var(--badge-fresh-txt);
+        }
 
-				<tr th:if="${#lists.isEmpty(batches)}">
-					<td colspan="11" class="text-center text-muted py-4">No
-						ingredient batches found.</td>
-				</tr>
+        .badge-near-expiry {
+            background-color: var(--badge-warn-bg);
+            color: var(--badge-warn-txt);
+        }
 
+        .badge-expired {
+            background-color: var(--badge-danger-bg);
+            color: var(--badge-danger-txt);
+        }
 
-				<tr th:each="batch : ${batches}"
-					th:with="today=${T(java.time.LocalDate).now()},
-             expireDate=${batch.expire_date},
-             daysLeft=${expireDate != null ? T(java.time.temporal.ChronoUnit).DAYS.between(today, expireDate) : 999}"
-					th:classappend="${daysLeft <= 5} ? 'table-warning-subtle' : ''">
+        .batch-id-tag {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.8rem;
+            color: #4a3e35;
+            background: #f4efe9;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
 
-					<td class="text-muted fw-bold" th:text="${batch.batch_id}"></td>
-					<td class="fw-medium" th:text="${batch.ingredientType_name}"></td>
-					<td class="text-muted" th:text="${batch.branch_name}"></td>
-					<td class="text-muted"
-						th:text="${batch.manufactured_date != null ? #temporals.format(batch.manufactured_date, 'MMM dd, yyyy') : '-'}"></td>
-					<td class="text-muted fw-semibold"
-						th:text="${batch.expire_date != null ? #temporals.format(batch.expire_date, 'MMM dd, yyyy') : '-'}"></td>
-					<td class="fw-medium" th:text="${batch.remaining_quantity}"></td>
-					<td class="text-muted" th:text="${batch.unit_cost}"></td>
-					<td class="text-muted" th:text="${batch.total_import_cost}"></td>
+        .ingredient-title {
+            font-weight: 600;
+            color: var(--cafe-espresso);
+        }
 
-					<td><span th:if="${daysLeft < 0}"
-						class="badge badge-expired rounded-pill px-3 py-1">Expired</span>
-						<span th:if="${daysLeft >= 0 and daysLeft <= 7}"
-						class="badge badge-near-expiry rounded-pill px-3 py-1">NearExpiry</span>
-						<span th:if="${daysLeft > 7}"
-						class="badge badge-fresh rounded-pill px-3 py-1">Fresh</span></td>
+        /* ================= Edit & Delete Buttons Style (From Categories) ================= */
+        .action-pill-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: flex-end;
+        }
 
-					<td class="text-muted"><span th:if="${daysLeft < 0}">Expired</span>
-						<span th:if="${daysLeft >= 0}" th:text="${daysLeft + 'd left'}"></span>
-					</td>
+        .btn-pill-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 78px;
+            padding: 5px 10px;
+            border-radius: 9px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
 
-					<td class="text-end"><!-- <a
-						 th:href="@{/ingredient-batches/edit/{id}(id=${batch.batch_id})}"
-						class="btn btn-sm btn-outline-warning me-1">Edit</a>--> <a
-						th:href="@{/ingredient-batches/delete/{id}(id=${batch.batch_id})}"
-						class="btn btn-sm btn-outline-danger"
-						onclick="return confirm('Are you sure you want to soft delete this batch?');">Delete</a>
-					</td>
-				</tr>
+        /* Edit Pill Button */
+        .btn-pill-edit {
+            background-color: #FBF6EE;
+            color: #8C5332 !important;
+            border: 1px solid #E8D9C8;
+        }
 
-			</tbody>
-		</table>
-		
-	</div>
-	<!--  <a th:href="@{/ingredient-batches/add(importId=${imp.import_id})}" class="btn btn-success btn-sm">
-    <i class="bi bi-plus"></i> Add Ingredient Batch
-</a>-->
+        .btn-pill-edit:hover {
+            background-color: #F2E7D5;
+            color: #5C3218 !important;
+            border-color: #D9C3A8;
+        }
+
+        /* Delete Pill Button */
+        .btn-pill-delete {
+            background-color: #FFF5F4;
+            color: #A3281D !important;
+            border: 1px solid transparent;
+        }
+
+        .btn-pill-delete:hover {
+            background-color: #FFE6E4;
+            color: #7A1910 !important;
+        }
+
+        .btn-pill-action i {
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+
+<body>
+<div layout:fragment="content">
+<div class="container-fluid px-4 px-lg-5 pt-4">
+
+    <!-- Top Navigation / Hero Section -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 pb-3 mb-4 border-bottom">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <span class="gold-pill"><i class="bi bi-cup-hot-fill me-1"></i> CAFÉ LUFT</span>
+                <span class="text-muted small">/ Inventory Control</span>
+            </div>
+            <h2 class="cafe-header-brand fw-bold mb-1">Batches & Expiry Management</h2>
+            <p class="text-muted small mb-0">
+                Track coffee beans, milk, and bakery ingredients sorted precisely by shelf-life status.
+            </p>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+            <a th:href="@{/manager-only/ingredient-batches/clear}"
+               class="btn btn-luxury-danger-outline d-inline-flex align-items-center gap-2"
+               onclick="return confirm('This will clean all empty batches. You can restore them from trash if needed.');">
+                <i class="bi bi-trash-fill"></i> Clear Empty Batches
+            </a>
+            <a th:href="@{/manager-only/ingredient-batches/deleted-list}"
+               class="btn btn-luxury-outline d-inline-flex align-items-center gap-2">
+                <i class="bi bi-archive-fill text-muted"></i> Trash / Deleted Batches
+            </a>
+        </div>
+    </div>
+
+    <!-- 3 Luxury Stat Cards -->
+    <div class="row g-3 mb-4" th:with="today=${T(java.time.LocalDate).now()}">
+
+        <!-- Total Batches -->
+        <div class="col-md-4">
+            <div class="stat-card stat-total">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stat-number" th:text="${#lists.size(batches)}">0</div>
+                        <div class="stat-label">Total Active Batches</div>
+                    </div>
+                    <div class="icon-box">
+                        <i class="bi bi-boxes"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Near Expiry -->
+        <div class="col-md-4">
+            <div class="stat-card stat-warning">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stat-number"
+                             th:text="${#lists.size(batches.?[expire_date != null and T(java.time.temporal.ChronoUnit).DAYS.between(#root.today, expire_date) >= 0 and T(java.time.temporal.ChronoUnit).DAYS.between(#root.today, expire_date) <= 7])}">0</div>
+                        <div class="stat-label">Near Expiry (Within 7 Days)</div>
+                    </div>
+                    <div class="icon-box">
+                        <i class="bi bi-hourglass-split"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Expired Batches -->
+        <div class="col-md-4">
+            <div class="stat-card stat-danger">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stat-number"
+                             th:text="${#lists.size(batches.?[expire_date != null and T(java.time.temporal.ChronoUnit).DAYS.between(#root.today, expire_date) < 0])}">0</div>
+                        <div class="stat-label">Expired Items</div>
+                    </div>
+                    <div class="icon-box">
+                        <i class="bi bi-exclamation-octagon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Luxury Table Card -->
+    <div class="table-container">
+        <div class="table-responsive">
+            <table class="table table-luxury align-middle">
+                <thead>
+                    <tr>
+                        <th>Batch ID</th>
+                        <th>Ingredient</th>
+                        <th>Branch</th>
+                        <th>Made Date</th>
+                        <th>Expiry Date</th>
+                        <th>Remaining</th>
+                        <th>Unit Cost</th>
+                        <th>Total Cost</th>
+                        <th>Quality Status</th>
+                        <th>Shelf-Life</th>
+                        <th class="text-end pe-3">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <!-- Empty State -->
+                    <tr th:if="${#lists.isEmpty(batches)}">
+                        <td colspan="11" class="text-center py-5">
+                            <i class="bi bi-inbox text-muted fs-1 mb-2 d-block"></i>
+                            <span class="text-muted fw-semibold">No ingredient batches currently recorded in stock.</span>
+                        </td>
+                    </tr>
+
+                    <!-- Batch Rows -->
+                    <tr th:each="batch : ${batches}"
+                        th:with="today=${T(java.time.LocalDate).now()},
+                                 expireDate=${batch.expire_date},
+                                 daysLeft=${expireDate != null ? T(java.time.temporal.ChronoUnit).DAYS.between(today, expireDate) : 999}">
+
+                        <td>
+                            <span class="batch-id-tag" th:text="${batch.batch_id}"></span>
+                        </td>
+                        <td>
+                            <div class="ingredient-title">
+                                <i class="bi bi-circle-fill text-warning me-1" style="font-size: 0.5rem;"></i>
+                                <span th:text="${batch.ingredientType_name}"></span>
+                            </div>
+                        </td>
+                        <td class="text-muted" th:text="${batch.branch_name}"></td>
+                        <td class="text-muted"
+                            th:text="${batch.manufactured_date != null ? #temporals.format(batch.manufactured_date, 'MMM dd, yyyy') : '—'}"></td>
+                        <td class="fw-semibold text-secondary"
+                            th:text="${batch.expire_date != null ? #temporals.format(batch.expire_date, 'MMM dd, yyyy') : '—'}"></td>
+                        <td>
+                            <span class="fw-bold" th:text="${batch.remaining_quantity}"></span>
+                        </td>
+                        <td class="text-muted" th:text="${batch.unit_cost}"></td>
+                        <td class="text-muted fw-semibold" th:text="${batch.total_import_cost}"></td>
+
+                        <!-- Status Badges -->
+                        <td>
+                            <span th:if="${daysLeft < 0}" class="badge-status badge-expired">
+                                <i class="bi bi-x-circle-fill"></i> Expired
+                            </span>
+                            <span th:if="${daysLeft >= 0 and daysLeft <= 7}" class="badge-status badge-near-expiry">
+                                <i class="bi bi-clock-fill"></i> Near Expiry
+                            </span>
+                            <span th:if="${daysLeft > 7}" class="badge-status badge-fresh">
+                                <i class="bi bi-check-circle-fill"></i> Fresh
+                            </span>
+                        </td>
+
+                        <!-- Shelf-life count -->
+                        <td>
+                            <span th:if="${daysLeft < 0}" class="text-danger fw-semibold">Expired</span>
+                            <span th:if="${daysLeft >= 0}" class="text-muted fw-medium" th:text="${daysLeft + ' days left'}"></span>
+                        </td>
+
+                        <!-- Actions -->
+                        <td class="text-end pe-3">
+                            <div class="action-pill-group">
+                                <a th:href="@{/manager-only/ingredient-batches/delete/{id}(id=${batch.batch_id})}"
+                                   class="btn-pill-action btn-pill-delete"
+                                   onclick="return confirm('Are you sure you want to move this batch to Trash?');">
+                                    <i class="fa-solid fa-trash-can"></i> Delete
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
 </div>
 </body>
 </html>

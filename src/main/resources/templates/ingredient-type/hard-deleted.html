@@ -1,36 +1,160 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout}">
+
 <head>
     <meta charset="UTF-8">
-    <title>Confirm Permanent Delete</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-</head>
-<body class="bg-light">
-    <div class="container my-5 d-flex justify-content-center">
-        <div class="card shadow-sm border-0" style="max-width: 500px; width: 100%;">
-            <div class="card-header bg-danger text-white py-3">
-                <h4 class="mb-0"><i class="bi bi-exclamation-triangle-fill me-2"></i>Confirm Permanent Delete</h4>
-            </div>
-            <div class="card-body p-4 text-center">
-                <div class="text-danger display-1 mb-3">
-                    <i class="bi bi-x-circle-fill"></i>
-                </div>
-                <h5 class="mb-3">Are you sure you want to permanently delete this?</h5>
-                <p class="text-muted mb-4">
-                    Type ID: <strong class="text-dark" th:text="${typeId}">ING-001</strong><br>
-                    This action will permanently delete the ingredient type record from the database. <strong class="text-danger">This process cannot be undone.</strong>
-                </p>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Delete | Café Luft</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-                <form th:action="@{/ingredient-types/hard-delete}" method="post">
-                    <input type="hidden" name="typeId" th:value="${typeId}" />
-                    <div class="d-flex justify-content-center gap-3">
-                        <a th:href="@{/ingredient-types/deleted}" class="btn btn-outline-secondary px-4">Cancel</a>
-                        <button type="submit" class="btn btn-danger px-4 fw-bold">Delete Permanently</button>
-                    </div>
-                </form>
+    <style>
+        :root {
+            --bg-canvas: #f8f5f0;
+            --surface: #ffffff;
+            --espresso-dark: #1a110a;
+            --champagne-gold: #cbb493;
+            --border-subtle: #ede4d8;
+            --danger-color: #b94234;
+        }
+
+        body {
+            background-color: var(--bg-canvas);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #2b1d14;
+        }
+
+        .compact-dialog-card {
+            background: var(--surface);
+            border-radius: 24px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 16px 40px -10px rgba(43, 29, 20, 0.08);
+            overflow: hidden;
+            max-width: 500px;
+            margin: 50px auto;
+        }
+
+        .card-header-banner {
+            background: linear-gradient(180deg, rgba(26, 17, 10, 0.70) 0%, rgba(26, 17, 10, 0.95) 100%),
+                        url('https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+            padding: 26px 24px 18px;
+            text-align: center;
+        }
+
+        .logo-glow {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--champagne-gold);
+            box-shadow: 0 0 16px rgba(203, 180, 147, 0.45);
+            margin-bottom: 8px;
+            overflow: hidden;
+        }
+
+        .logo-glow img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .brand-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--espresso-dark);
+            font-weight: 700;
+        }
+
+        .alert-circle {
+            width: 60px;
+            height: 60px;
+            background: #fdf2f0;
+            color: var(--danger-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            margin: 0 auto 16px auto;
+            border: 1px solid #facdc7;
+        }
+
+        .id-highlight {
+            background: #f8f4ee;
+            border: 1px solid #eadbcc;
+            color: #7d5127;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .btn-luxury-danger {
+            background: linear-gradient(135deg, #b23b2a 0%, #852215 100%);
+            color: #ffffff !important;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(178, 59, 42, 0.25);
+        }
+
+        .btn-luxury-danger:hover {
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div class="compact-dialog-card">
+        <!-- Top Coffee Banner -->
+        <div class="card-header-banner">
+            <div class="logo-glow">
+                <img th:src="@{/images/luft-logo.png}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/924/924514.png'" alt="Logo">
             </div>
+            <h2 class="brand-title text-white mb-1" style="font-size: 1.6rem;">Café Luft</h2>
+            <span class="badge" style="background: rgba(255,255,255,0.12); color: var(--champagne-gold); border: 1px solid rgba(255,255,255,0.2); font-size: 0.72rem;">
+                <i class="bi bi-exclamation-triangle me-1"></i> Permanent Deletion
+            </span>
+        </div>
+
+        <div class="p-4 text-center">
+            <div class="alert-circle">
+                <i class="bi bi-trash3"></i>
+            </div>
+
+            <h3 class="brand-title mb-2" style="font-size: 1.4rem;">Confirm Permanent Purge</h3>
+            
+            <p class="text-muted small mb-3">
+                Are you certain you want to permanently erase this record? This action cannot be reversed.<br>
+                Target ID: <span class="id-highlight" th:text="${typeId}">ING-001</span>
+            </p>
+
+            <form th:action="@{/admin/ingredient-types/hard-delete}" method="post">
+                <input type="hidden" name="typeId" th:value="${typeId}" />
+
+                <div class="d-flex justify-content-center align-items-center gap-2 pt-2 border-top">
+                    <a th:href="@{/admin/ingredient-types/deleted}" class="btn btn-light px-3" style="border-radius: 12px; font-weight: 600;">
+                        Cancel
+                    </a>
+                    <button type="submit" class="btn-luxury-danger">
+                        <i class="bi bi-trash-fill"></i> Delete Permanently
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 </body>
 </html>

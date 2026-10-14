@@ -1,77 +1,86 @@
 package cafe.project.controllers;
 
+import java.math.BigDecimal;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import cafe.project.models.IngredientBatchEntryDto;
-import cafe.project.models.StockImportEntryDto;
+import org.springframework.web.server.ResponseStatusException;
+import cafe.project.employeemanagement.models.LoginDto;
+import cafe.project.repositories.entities.IngredientBatch;
 import cafe.project.services.IngredientBatchService;
-import cafe.project.services.StockImportService;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/ingredient-batches")
+@RequestMapping("/manager-only/ingredient-batches")
 public class IngredientBatchController {
 	private final IngredientBatchService service;
-	private final StockImportService stockImportService;
 
-	public IngredientBatchController(IngredientBatchService service, StockImportService stockImportService) {
+	public IngredientBatchController(IngredientBatchService service) {
 		this.service = service;
-		this.stockImportService = stockImportService;
 	}
 
 	@GetMapping("")
-	public String listBatches(Model model) {
-		model.addAttribute("batches", service.getAllBatches());
+	public String listBatches(Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		model.addAttribute("batches", service.getAllBatches(ldto.getBranch_id()));
 		return "ingredient-batch/list";
 	}
-
-	@GetMapping("/add")
-	public String showAddBatchForm(@RequestParam("import_id") String import_id, Model model) {
-		IngredientBatchEntryDto dto = new IngredientBatchEntryDto();
-		dto.setImport_id(import_id);
-		dto.setItems(stockImportService.getAllIngredientTypes());
-
-		model.addAttribute("batchEntry", dto);
-		return "ingredient-batch/add";
-	}
-
-	@PostMapping("/add")
-	public String saveIngredientBatches(@ModelAttribute("batchEntry") IngredientBatchEntryDto dto) {
-		String mockBranchId = "BR-001"; // Session/User Context မှ ယူနိုင်သည်
-		stockImportService.addIngredientBatchesToImport(dto, mockBranchId);
-		return "redirect:/stock-imports";
-	}
-
-	@GetMapping("/edit/{import_id}")
-	public String editIngredientBatches(@PathVariable("import_id") String import_id, Model model) {
-		StockImportEntryDto dto = stockImportService.getImportById(import_id);
-		model.addAttribute("stockImport", dto);
-		model.addAttribute("suppliers", stockImportService.getAllSuppliers());
-		return "stock-import/edit";
+	
+	@GetMapping("/clear")
+	public String clear(HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		for(IngredientBatch ing : service.getAllBatches(ldto.getBranch_id())) {
+			if(ing.getRemaining_quantity().compareTo(BigDecimal.ZERO) <= 0) {
+				service.softDeleteBatch(ing.getBatch_id());
+			}
+		}
+		return "redirect:/manager-only/ingredient-batches";
 	}
 
 	@GetMapping("/delete/{id}")
-	public String softDelete(@PathVariable("id") String id) {
+	public String softDelete(@PathVariable("id") String id, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		var batch = service.getBatchById(id);
+		if (batch != null && !batch.getBranch_id().equals(ldto.getBranch_id())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not Your Branch's Data!!!");
+		}
+
 		service.softDeleteBatch(id);
-		return "redirect:/ingredient-batches";
+		return "redirect:/manager-only/ingredient-batches";
 	}
 
 	@GetMapping("/deleted-list")
-	public String showDeletedList(Model model) {
-		model.addAttribute("deletedBatches", service.getDeletedBatches());
+	public String showDeletedList(Model model, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		model.addAttribute("deletedBatches", service.getDeletedBatches(ldto.getBranch_id()));
 		return "ingredient-batch/deleted-list";
 	}
 
 	@GetMapping("/recover/{id}")
-	public String recover(@PathVariable("id") String id) {
+	public String recover(@PathVariable("id") String id, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+
+		var batch = service.getBatchById(id);
+		if (batch != null && !batch.getBranch_id().equals(ldto.getBranch_id())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not Your Branch's Data!!!");
+		}
+
 		service.recoverBatch(id);
-		return "redirect:/ingredient-batches/deleted-list";
+		return "redirect:/manager-only/ingredient-batches/deleted-list";
 	}
 
 	@GetMapping("/hard-delete/{id}")
-	public String hardDelete(@PathVariable("id") String id) {
+	public String hardDelete(@PathVariable("id") String id, HttpSession session) {
+		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+
+		var batch = service.getBatchById(id);
+		if (batch != null && !batch.getBranch_id().equals(ldto.getBranch_id())) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not Your Branch's Data!!!");
+		}
+
 		service.hardDeleteBatch(id);
-		return "redirect:/ingredient-batches/deleted-list";
+		return "redirect:/manager-only/ingredient-batches/deleted-list";
 	}
 }

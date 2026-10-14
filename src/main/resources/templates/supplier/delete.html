@@ -28,7 +28,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 30px 15px;
         }
 
         .serif-font {
@@ -114,7 +113,7 @@
             </div>
         </div>
 
-        <form method="post" th:action="@{/manager/suppliers/delete}" th:object="${supplier}" class="p-4 p-md-5">
+        <form method="post" th:action="@{/admin/suppliers/delete}" th:object="${supplier}" class="p-4 p-md-5">
             <input type="hidden" th:field="*{supplier_id}">
 
             <div class="info-preview-box">
@@ -134,7 +133,7 @@
             </p>
 
             <div class="d-flex justify-content-end gap-3 pt-3 border-top">
-                <a th:href="@{/manager/suppliers}" class="btn btn-outline-secondary rounded-3 px-4">Cancel</a>
+                <a th:href="@{/admin/suppliers}" class="btn btn-outline-secondary rounded-3 px-4">Cancel</a>
                 <button type="submit" class="btn-purge">
                     <i class="bi bi-trash3 me-1"></i> Delete Supplier
                 </button>

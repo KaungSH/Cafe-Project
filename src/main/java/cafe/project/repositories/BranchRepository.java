@@ -35,6 +35,12 @@ public class BranchRepository {
 		List<Branch> list = this.jdbcTemplate.query(sql, new BranchMapper(), branch_id);
 		return list.isEmpty() ? null : list.get(0);
 	}
+	
+	public Branch findByLocation(String location) {
+		String sql = "SELECT * FROM branches WHERE location = ? AND branch_id != 'deleted'";
+		List<Branch> list = this.jdbcTemplate.query(sql, new BranchMapper(), location);
+		return list.isEmpty() ? null : list.get(0);
+	}
 
 	public Branch findByIdWithRelation(String branch_id) {
 		String sql = "SELECT b.*, s.name AS status_name FROM branches b "

@@ -1,846 +1,1941 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{common/layout}">
 
 <head>
-<title>Café Shop - Dashboard</title>
-<style>
-/* Manager UI Styles (Light Cream Theme) */
-.mgr-container {
-	display: flex;
-	flex-direction: column;
-	gap: 25px;
-	width: 100%;
-}
+	<title>Café Shop - Dashboard</title>
+	<style>
+		/* ========================================================
+   MANAGER DASHBOARD - WARM ARTISANAL OPERATIONS THEME
+======================================================== */
+		.mgr-dash-wrapper {
+			display: flex;
+			flex-direction: column;
+			gap: 24px;
+			width: 100%;
+			max-width: 1360px;
+			margin: 0 auto;
+		}
 
-.stats-grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-	gap: 15px;
-}
+		/* 1. Store Identity & Operations Header Banner */
+		.mgr-hero-banner {
+			background: linear-gradient(135deg, #422617 0%, #29160d 100%);
+			border-radius: 20px;
+			padding: 24px 28px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			color: #ffffff;
+			box-shadow: 0 10px 25px rgba(41, 22, 13, 0.18);
+			flex-wrap: wrap;
+			gap: 20px;
+			border: 1px solid rgba(226, 160, 94, 0.15);
+		}
 
-.stat-card {
-	background: #fff;
-	padding: 20px;
-	border-radius: 18px;
-	border: 1px solid #ebd9cd;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-	display: flex;
-	align-items: center;
-	gap: 15px;
-}
+		.mgr-hero-left {
+			display: flex;
+			align-items: center;
+			gap: 18px;
+		}
 
-.stat-icon {
-	width: 50px;
-	height: 50px;
-	border-radius: 14px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-size: 22px;
-}
+		.mgr-store-icon {
+			width: 54px;
+			height: 54px;
+			border-radius: 16px;
+			background: linear-gradient(135deg, #c77b3b, #7d3f1a);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 26px;
+			color: #fff9f5;
+			box-shadow: 0 6px 16px rgba(199, 123, 59, 0.4);
+			flex-shrink: 0;
+		}
 
-.stat-info h4 {
-	margin: 0;
-	font-size: 13px;
-	color: #8c7365;
-	font-weight: 600;
-}
+		.mgr-store-title {
+			font-size: 22px;
+			font-weight: 800;
+			margin: 0 0 4px 0;
+			color: #ffffff;
+			letter-spacing: -0.3px;
+		}
 
-.stat-info .stat-value {
-	margin: 4px 0 0 0;
-	font-size: 20px;
-	font-weight: 700;
-	color: #34251f;
-}
+		.mgr-store-sub {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			font-size: 13px;
+			color: #dfcfc3;
+			flex-wrap: wrap;
+		}
 
-.operations-grid {
-	display: grid;
-	grid-template-columns: 2fr 1fr;
-	gap: 25px;
-}
+		.mgr-badge-role {
+			background: rgba(226, 160, 94, 0.2);
+			border: 1px solid rgba(226, 160, 94, 0.35);
+			color: #f7b77f;
+			padding: 2px 10px;
+			border-radius: 20px;
+			font-size: 11px;
+			font-weight: 700;
+			letter-spacing: 0.5px;
+		}
 
-.op-card {
-	background: #fff;
-	border-radius: 20px;
-	padding: 22px;
-	border: 1px solid #ebd9cd;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-}
+		.mgr-hero-right {
+			display: flex;
+			align-items: center;
+			gap: 14px;
+			flex-wrap: wrap;
+		}
 
-.op-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 18px;
-}
+		.mgr-shift-pill {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			padding: 8px 16px;
+			border-radius: 9999px;
+			font-size: 13px;
+			font-weight: 600;
+		}
 
-.op-title {
-	font-size: 17px;
-	font-weight: 700;
-	color: #34251f;
-	margin: 0;
-}
+		.mgr-shift-open {
+			background: rgba(46, 125, 50, 0.25);
+			border: 1px solid rgba(76, 175, 80, 0.4);
+			color: #a5d6a7;
+		}
 
-.order-table {
-	width: 100%;
-	border-collapse: collapse;
-	font-size: 13px;
-}
+		.mgr-shift-closed {
+			background: rgba(198, 40, 40, 0.25);
+			border: 1px solid rgba(239, 83, 80, 0.4);
+			color: #ef9a9a;
+		}
 
-.order-table th {
-	text-align: left;
-	padding: 10px;
-	color: #8c7365;
-	border-bottom: 1px solid #ebd9cd;
-	font-weight: 600;
-}
+		.mgr-btn-shift {
+			background: #c77b3b;
+			color: #ffffff;
+			border: none;
+			padding: 8px 18px;
+			border-radius: 12px;
+			font-size: 13px;
+			font-weight: 700;
+			text-decoration: none;
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			transition: all 0.2s ease;
+			box-shadow: 0 4px 12px rgba(199, 123, 59, 0.35);
+		}
 
-.order-table td {
-	padding: 12px 10px;
-	border-bottom: 1px solid #f7ede6;
-	color: #34251f;
-}
+		.mgr-btn-shift:hover {
+			background: #df8b46;
+			color: #ffffff;
+			transform: translateY(-2px);
+		}
 
-.badge-status {
-	padding: 4px 10px;
-	border-radius: 12px;
-	font-size: 11px;
-	font-weight: 700;
-}
+		/* 2. Four Operational Metric Cards */
+		.mgr-stats-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+			gap: 18px;
+		}
 
-.status-preparing {
-	background: #fff3cd;
-	color: #856404;
-}
+		.mgr-stat-card {
+			background: #ffffff;
+			border: 1px solid #ebdcd0;
+			border-radius: 18px;
+			padding: 20px 22px;
+			display: flex;
+			align-items: flex-start;
+			justify-content: space-between;
+			box-shadow: 0 4px 14px rgba(78, 48, 19, 0.03);
+			transition: transform 0.2s ease, box-shadow 0.2s ease;
+			text-decoration: none;
+			color: inherit;
+		}
 
-.status-completed {
-	background: #d4edda;
-	color: #155724;
-}
+		.mgr-stat-card:hover {
+			transform: translateY(-3px);
+			box-shadow: 0 8px 22px rgba(78, 48, 19, 0.08);
+		}
 
-.stock-list {
-	display: flex;
-	flex-direction: column;
-	gap: 12px;
-}
+		.mgr-stat-icon-wrap {
+			width: 48px;
+			height: 48px;
+			border-radius: 14px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 22px;
+			flex-shrink: 0;
+		}
 
-.stock-item {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 12px;
-	border-radius: 12px;
-	background: #fffaf5;
-	border-left: 4px solid #d9534f;
-}
+		.mgr-stat-sales {
+			background: #fef5ea;
+			color: #b86b2d;
+		}
 
-.stock-name {
-	font-weight: 600;
-	font-size: 13px;
-	color: #34251f;
-}
+		.mgr-stat-orders {
+			background: #eaf6ea;
+			color: #2e7d32;
+		}
 
-.stock-qty {
-	font-size: 12px;
-	color: #d9534f;
-	font-weight: 700;
-}
+		.mgr-stat-stock {
+			background: #fdf2f2;
+			color: #c62828;
+		}
 
-.quick-action-btn {
-	background: #b57a55;
-	color: #fff;
-	border: none;
-	padding: 8px 14px;
-	border-radius: 10px;
-	font-size: 12px;
-	font-weight: bold;
-	text-decoration: none;
-	cursor: pointer;
-}
+		.mgr-stat-menu {
+			background: #f4eefb;
+			color: #6a1b9a;
+		}
 
-@media ( max-width : 900px) {
-	.operations-grid {
-		grid-template-columns: 1fr;
-	}
-}
+		.mgr-stat-label {
+			font-size: 12.5px;
+			font-weight: 600;
+			color: #8c7365;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			margin-bottom: 4px;
+		}
 
-/* STAFF MENU UI ONLY — Admin/Manager blocks are unchanged */
-.staff-menu-page {
-	margin: -24px;
-	background: #f7f3ee;
-	min-height: 100vh;
-	color: #2f241e;
-	font-family: Arial, sans-serif
-}
+		.mgr-stat-val {
+			font-size: 22px;
+			font-weight: 800;
+			color: #2e1e17;
+			line-height: 1.15;
+		}
 
-.staff-topbar {
-	height: 74px;
-	background: #211a16;
-	color: #fff;
-	display: flex;
-	align-items: center;
-	gap: 30px;
-	padding: 0 34px
-}
+		.mgr-stat-subtext {
+			font-size: 12px;
+			color: #9c8477;
+			margin-top: 6px;
+			display: flex;
+			align-items: center;
+			gap: 4px;
+		}
 
-.staff-brand {
-	font-size: 25px;
-	font-weight: 800;
-	white-space: nowrap
-}
+		/* 3. Main Operational Split (2 Columns) */
+		.mgr-main-grid {
+			display: grid;
+			grid-template-columns: 2fr 1.15fr;
+			gap: 22px;
+		}
 
-.staff-brand small {
-	display: block;
-	font-size: 10px;
-	font-weight: 400;
-	color: #d7c8bd
-}
+		@media (max-width: 1024px) {
+			.mgr-main-grid {
+				grid-template-columns: 1fr;
+			}
+		}
 
-.staff-nav {
-	display: flex;
-	gap: 8px
-}
+		.mgr-panel {
+			background: #ffffff;
+			border: 1px solid #ebdcd0;
+			border-radius: 20px;
+			padding: 22px 24px;
+			box-shadow: 0 4px 16px rgba(78, 48, 19, 0.03);
+			margin-bottom: 22px;
+		}
 
-.staff-nav a {
-	color: #f6eee8;
-	text-decoration: none;
-	padding: 11px 17px;
-	border-radius: 9px;
-	font-size: 14px
-}
+		.mgr-panel-head {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 18px;
+			padding-bottom: 12px;
+			border-bottom: 1px solid #f4ebe3;
+		}
 
-.staff-nav a.active {
-	background: #9b6a49
-}
+		.mgr-panel-title {
+			font-size: 16.5px;
+			font-weight: 800;
+			color: #2e1e17;
+			margin: 0;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
 
-.staff-search {
-	margin-left: auto;
-	min-width: 250px;
-	border: 1px solid #8e8178;
-	border-radius: 22px;
-	padding: 9px 15px;
-	color: #cfc6c0
-}
+		.mgr-panel-link {
+			font-size: 13px;
+			font-weight: 600;
+			color: #b86b2d;
+			text-decoration: none;
+			display: inline-flex;
+			align-items: center;
+			gap: 4px;
+			transition: color 0.2s;
+		}
 
-.staff-hero {
-    height: 195px;
+		.mgr-panel-link:hover {
+			color: #874116;
+		}
 
-    background-image:
-        linear-gradient(
-            rgba(35, 22, 15, 0.30),
-            rgba(35, 22, 15, 0.30)
-        ),
-        url('/images/menu.png');
+		/* Orders Table */
+		.mgr-orders-table {
+			width: 100%;
+			border-collapse: collapse;
+		}
 
-    background-size: cover;
-    background-position: center 45%;
-    background-repeat: no-repeat;
+		.mgr-orders-table th {
+			font-size: 11.5px;
+			font-weight: 700;
+			color: #8c7365;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			padding: 10px 12px;
+			border-bottom: 1px solid #f0e4da;
+			background: #faf6f0;
+		}
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+		.mgr-orders-table td {
+			padding: 12px 12px;
+			font-size: 13px;
+			color: #2e1e17;
+			border-bottom: 1px solid #f7efe9;
+			vertical-align: middle;
+		}
 
-    color: #fff;
-}
+		.mgr-orders-table tr:hover td {
+			background: #fdfaf6;
+		}
 
-.staff-hero h1 {
-    font-size: 52px;
-    margin: 0 0 8px;
-    font-family: Georgia, serif;
-    font-style: italic;
-    text-shadow: 0 2px 8px rgba(0,0,0,.5);
-}
+		.mgr-status-badge {
+			display: inline-flex;
+			align-items: center;
+			gap: 5px;
+			padding: 4px 10px;
+			border-radius: 20px;
+			font-size: 11px;
+			font-weight: 700;
+		}
 
-.staff-hero p {
-    margin: 0;
-    font-size: 17px;
-    color: #fff;
-    text-shadow: 0 1px 5px rgba(0,0,0,.5);
-}
-.staff-menu-shell {
-	display: grid;
-	grid-template-columns: 220px minmax(0, 1fr) 245px;
-	gap: 18px;
-	padding: 22px 28px
-}
+		.mgr-badge-prep {
+			background: #fff8e1;
+			color: #b78103;
+			border: 1px solid #ffe082;
+		}
 
-.staff-panel {
-	background: #fff;
-	border: 1px solid #e4d9d0;
-	border-radius: 12px;
-	padding: 16px
-}
+		.mgr-badge-done {
+			background: #e8f5e9;
+			color: #2e7d32;
+			border: 1px solid #c8e6c9;
+		}
 
-.staff-panel h3 {
-	margin: 0 0 14px
-}
+		/* Menu Preview Cards */
+		.mgr-menu-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+			gap: 14px;
+		}
 
-.staff-cat {
-	display: flex;
-	justify-content: space-between;
-	padding: 12px;
-	border-radius: 8px;
-	margin-bottom: 5px
-}
+		.mgr-menu-card {
+			background: #fdfaf6;
+			border: 1px solid #f0e4da;
+			border-radius: 14px;
+			padding: 12px;
+			text-align: center;
+			transition: transform 0.2s ease;
+		}
 
-.staff-cat.active {
-	background: #a97753;
-	color: #fff
-}
+		.mgr-menu-card:hover {
+			transform: translateY(-2px);
+			border-color: #dfcfc2;
+		}
 
-.staff-section-title {
-	display: flex;
-	align-items: center;
-	gap: 10px;
-	margin: 5px 0 14px
-}
+		.mgr-menu-thumb {
+			width: 58px;
+			height: 58px;
+			border-radius: 14px;
+			object-fit: cover;
+			margin: 0 auto 8px;
+			display: block;
+			border: 1px solid #ebdcd0;
+		}
 
-.staff-section-title h2 {
-	margin: 0;
-	font-family: Georgia, serif;
-	font-style: italic
-}
+		.mgr-menu-name {
+			font-size: 13px;
+			font-weight: 700;
+			color: #2e1e17;
+			margin-bottom: 2px;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
 
-.staff-section-title:after {
-	content: '';
-	height: 1px;
-	background: #cdbbad;
-	flex: 1
-}
+		.mgr-menu-cat {
+			font-size: 11px;
+			color: #8c7365;
+			margin-bottom: 4px;
+		}
 
-.staff-products {
-	display: grid;
-	grid-template-columns: repeat(4, minmax(140px, 1fr));
-	gap: 13px
-}
+		.mgr-menu-price {
+			font-size: 12.5px;
+			font-weight: 800;
+			color: #b86b2d;
+		}
 
-.staff-product-img {
-    height: 200px;
-    overflow: hidden;
-    background: #f5eee8;
-}
+		/* Low Stock Item */
+		.mgr-stock-item {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 11px 14px;
+			border-radius: 12px;
+			background: #fdfaf6;
+			border: 1px solid #f0e4da;
+			margin-bottom: 10px;
+			transition: background 0.2s ease;
+		}
 
-.staff-product-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
+		.mgr-stock-item:hover {
+			background: #faf3ec;
+		}
 
-.staff-product-body {
-	padding: 11px
-}
+		.mgr-stock-item-alert {
+			border-left: 4px solid #c62828;
+		}
 
-.staff-product h4 {
-	margin: 0 0 5px
-}
+		.mgr-stock-item-good {
+			border-left: 4px solid #2e7d32;
+		}
 
-.staff-product p {
-	font-size: 12px;
-	color: #77685e;
-	min-height: 30px;
-	margin: 0 0 8px
-}
+		.mgr-stock-name {
+			font-size: 13px;
+			font-weight: 700;
+			color: #2e1e17;
+		}
 
-.staff-price {
-	font-weight: 800;
-	margin-bottom: 9px
-}
+		.mgr-stock-code {
+			font-size: 11px;
+			color: #8c7365;
+		}
 
-.staff-add, .staff-checkout {
-	width: 100%;
-	border: 0;
-	border-radius: 7px;
-	padding: 9px;
-	background: #986443;
-	color: #fff;
-	font-weight: 700;
-	cursor: pointer
-}
+		.mgr-stock-qty {
+			font-size: 13px;
+			font-weight: 800;
+			color: #c62828;
+		}
 
-.staff-cart-item {
-	display: flex;
-	justify-content: space-between;
-	border-bottom: 1px solid #eee2d9;
-	padding: 10px 0;
-	font-size: 13px
-}
+		/* Quick Action Tiles */
+		.mgr-action-tiles {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 12px;
+		}
 
-.staff-total {
-	display: flex;
-	justify-content: space-between;
-	font-weight: 800;
-	margin: 16px 0
-}
+		.mgr-action-tile {
+			background: #fdfaf6;
+			border: 1px solid #ebdcd0;
+			border-radius: 14px;
+			padding: 14px 12px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: 6px;
+			text-decoration: none;
+			color: #34251f;
+			font-size: 12.5px;
+			font-weight: 700;
+			text-align: center;
+			transition: all 0.2s ease;
+		}
 
-.staff-note {
-	font-size: 11px;
-	color: #8b7769;
-	margin-top: 12px
-}
+		.mgr-action-tile i {
+			font-size: 22px;
+			color: #b86b2d;
+			transition: transform 0.2s ease;
+		}
 
-@media ( max-width :1100px) {
-	.staff-menu-shell {
-		grid-template-columns: 190px 1fr
-	}
-	.staff-cart {
-		grid-column: 1/-1
-	}
-	.staff-products {
-		grid-template-columns: repeat(2, 1fr)
-	}
-}
-</style>
+		.mgr-action-tile:hover {
+			background: #fdf0e4;
+			border-color: #c77b3b;
+			color: #874116;
+			transform: translateY(-2px);
+		}
+
+		.mgr-action-tile:hover i {
+			transform: scale(1.15);
+		}
+
+		/* STAFF MENU UI ONLY — Admin/Manager blocks are unchanged */
+		.staff-menu-page {
+			margin: -24px;
+			background: #f7f3ee;
+			min-height: 100vh;
+			color: #2f241e;
+			font-family: Arial, sans-serif
+		}
+
+		.staff-topbar {
+			height: 74px;
+			background: #211a16;
+			color: #fff;
+			display: flex;
+			align-items: center;
+			gap: 30px;
+			padding: 0 34px
+		}
+
+		.staff-brand {
+			font-size: 25px;
+			font-weight: 800;
+			white-space: nowrap
+		}
+
+		.staff-brand small {
+			display: block;
+			font-size: 10px;
+			font-weight: 400;
+			color: #d7c8bd
+		}
+
+		.staff-nav {
+			display: flex;
+			gap: 8px
+		}
+
+		.staff-nav a {
+			color: #f6eee8;
+			text-decoration: none;
+			padding: 11px 17px;
+			border-radius: 9px;
+			font-size: 14px
+		}
+
+		.staff-nav a.active {
+			background: #9b6a49
+		}
+
+		.staff-search {
+			margin-left: auto;
+			min-width: 250px;
+			border: 1px solid #8e8178;
+			border-radius: 22px;
+			padding: 9px 15px;
+			color: #cfc6c0
+		}
+
+		.staff-hero {
+			height: 195px;
+
+			background-image:
+				linear-gradient(rgba(35, 22, 15, 0.30),
+					rgba(35, 22, 15, 0.30)),
+				url('/images/menu.png');
+
+			background-size: cover;
+			background-position: center 45%;
+			background-repeat: no-repeat;
+
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			text-align: center;
+
+			color: #fff;
+		}
+
+		.staff-hero h1 {
+			font-size: 52px;
+			margin: 0 0 8px;
+			font-family: Georgia, serif;
+			font-style: italic;
+			text-shadow: 0 2px 8px rgba(0, 0, 0, .5);
+		}
+
+		.staff-hero p {
+			margin: 0;
+			font-size: 17px;
+			color: #fff;
+			text-shadow: 0 1px 5px rgba(0, 0, 0, .5);
+		}
+
+		.staff-menu-shell {
+			display: grid;
+			grid-template-columns: 220px minmax(0, 1fr) 245px;
+			gap: 18px;
+			padding: 22px 28px
+		}
+
+		.staff-panel {
+			background: #fff;
+			border: 1px solid #e4d9d0;
+			border-radius: 12px;
+			padding: 16px
+		}
+
+		.staff-panel h3 {
+			margin: 0 0 14px
+		}
+
+		.staff-cat {
+			display: flex;
+			justify-content: space-between;
+			padding: 12px;
+			border-radius: 8px;
+			margin-bottom: 5px
+		}
+
+		.staff-cat.active {
+			background: #a97753;
+			color: #fff
+		}
+
+		.staff-section-title {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			margin: 5px 0 14px
+		}
+
+		.staff-section-title h2 {
+			margin: 0;
+			font-family: Georgia, serif;
+			font-style: italic
+		}
+
+		.staff-section-title:after {
+			content: '';
+			height: 1px;
+			background: #cdbbad;
+			flex: 1
+		}
+
+		.staff-products {
+			display: grid;
+			grid-template-columns: repeat(4, minmax(140px, 1fr));
+			gap: 13px
+		}
+
+		.staff-product-img {
+			height: 200px;
+			overflow: hidden;
+			background: #f5eee8;
+		}
+
+		.staff-product-img img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			display: block;
+		}
+
+		.staff-product-body {
+			padding: 11px
+		}
+
+		.staff-product h4 {
+			margin: 0 0 5px
+		}
+
+		.staff-product p {
+			font-size: 12px;
+			color: #77685e;
+			min-height: 30px;
+			margin: 0 0 8px
+		}
+
+		.staff-price {
+			font-weight: 800;
+			margin-bottom: 9px
+		}
+
+		.staff-add,
+		.staff-checkout {
+			width: 100%;
+			border: 0;
+			border-radius: 7px;
+			padding: 9px;
+			background: #986443;
+			color: #fff;
+			font-weight: 700;
+			cursor: pointer
+		}
+
+		.staff-cart-item {
+			display: flex;
+			justify-content: space-between;
+			border-bottom: 1px solid #eee2d9;
+			padding: 10px 0;
+			font-size: 13px
+		}
+
+		.staff-total {
+			display: flex;
+			justify-content: space-between;
+			font-weight: 800;
+			margin: 16px 0
+		}
+
+		.staff-note {
+			font-size: 11px;
+			color: #8b7769;
+			margin-top: 12px
+		}
+
+		@media (max-width :1100px) {
+			.staff-menu-shell {
+				grid-template-columns: 190px 1fr
+			}
+
+			.staff-cart {
+				grid-column: 1/-1
+			}
+
+			.staff-products {
+				grid-template-columns: repeat(2, 1fr)
+			}
+		}
+
+		/* ========================================================
+   COFFEE CRUSH ADMIN DASHBOARD (Design Match)
+======================================================== */
+		.admin-dash-wrapper {
+			display: flex;
+			flex-direction: column;
+			gap: 22px;
+			width: 100%;
+			max-width: 1360px;
+			margin: 0 auto;
+		}
+
+		/* Top Header Bar */
+		.admin-top-bar {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			gap: 20px;
+			margin-bottom: 2px;
+		}
+
+		.search-pill-container {
+			flex: 1;
+			max-width: 440px;
+			position: relative;
+			display: flex;
+			align-items: center;
+		}
+
+		.search-pill-input {
+			width: 100%;
+			background: #ffffff;
+			border: 1px solid #ebdcd0;
+			border-radius: 9999px;
+			padding: 9px 42px 9px 20px;
+			font-size: 13.5px;
+			color: #34251f;
+			outline: none;
+			box-shadow: 0 2px 8px rgba(78, 48, 19, 0.02);
+			transition: all 0.2s ease;
+		}
+
+		.search-pill-input:focus {
+			border-color: #b5815b;
+			box-shadow: 0 3px 12px rgba(181, 129, 91, 0.12);
+		}
+
+		.search-pill-input::placeholder {
+			color: #bcaaa0;
+		}
+
+		.search-pill-icon {
+			position: absolute;
+			right: 18px;
+			color: #bcaaa0;
+			font-size: 14px;
+			pointer-events: none;
+		}
+
+		.top-bar-right {
+			display: flex;
+			align-items: center;
+			gap: 16px;
+		}
+
+		.user-pill-dropdown {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			background: transparent;
+			border: none;
+			cursor: pointer;
+			padding: 4px 8px;
+			border-radius: 9999px;
+			transition: background 0.2s ease;
+			text-decoration: none;
+		}
+
+		.user-pill-dropdown:hover {
+			background: #f4e9de;
+		}
+
+		.user-avatar-circle {
+			width: 36px;
+			height: 36px;
+			border-radius: 50%;
+			background: #e8d7c8;
+			color: #55321b;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			overflow: hidden;
+			font-size: 16px;
+			border: 1px solid #dfcbb9;
+			flex-shrink: 0;
+		}
+
+		.user-avatar-circle img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		.user-pill-name {
+			font-size: 13.5px;
+			font-weight: 600;
+			color: #34251f;
+		}
+
+		.user-pill-chevron {
+			font-size: 11px;
+			color: #a49184;
+		}
+
+		.bell-btn {
+			width: 36px;
+			height: 36px;
+			border-radius: 50%;
+			background: transparent;
+			border: none;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #9c6741;
+			font-size: 17px;
+			position: relative;
+			cursor: pointer;
+			transition: all 0.2s ease;
+		}
+
+		.bell-btn:hover {
+			background: #f4e9de;
+			color: #55321b;
+		}
+
+		.bell-badge-dot {
+			position: absolute;
+			top: 7px;
+			right: 8px;
+			width: 6px;
+			height: 6px;
+			border-radius: 50%;
+			background: #e8505b;
+		}
+
+		/* Page Heading */
+		.dashboard-heading-row {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 2px;
+		}
+
+		.dashboard-heading {
+			font-size: 26px;
+			font-weight: 700;
+			color: #261913;
+			margin: 0;
+			letter-spacing: -0.4px;
+		}
+
+		/* Main Grid Layout */
+		.dash-grid-top {
+			display: grid;
+			grid-template-columns: 1.8fr 1.05fr;
+			gap: 22px;
+		}
+
+		.dash-grid-bottom {
+			display: grid;
+			grid-template-columns: 0.95fr 1.05fr 1fr;
+			gap: 22px;
+		}
+
+		@media (max-width: 1120px) {
+			.dash-grid-top {
+				grid-template-columns: 1fr;
+			}
+
+			.dash-grid-bottom {
+				grid-template-columns: 1fr;
+			}
+		}
+
+		/* Universal Card Styling */
+		.coffee-card {
+			background: #ffffff;
+			border-radius: 20px;
+			padding: 22px 26px;
+			border: 1px solid #f2e7dc;
+			box-shadow: 0 4px 18px rgba(60, 36, 17, 0.025);
+			display: flex;
+			flex-direction: column;
+			position: relative;
+			transition: transform 0.2s ease, box-shadow 0.2s ease;
+		}
+
+		.coffee-card:hover {
+			box-shadow: 0 6px 24px rgba(60, 36, 17, 0.045);
+		}
+
+		.coffee-card-head {
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-start;
+			margin-bottom: 12px;
+		}
+
+		.card-title-group h3 {
+			font-size: 16.5px;
+			font-weight: 700;
+			color: #291b15;
+			margin: 0;
+			letter-spacing: -0.2px;
+		}
+
+		.card-title-group p {
+			font-size: 12px;
+			color: #a49184;
+			margin: 3px 0 0 0;
+		}
+
+		.btn-view-report {
+			background: #ffffff;
+			border: 1px solid #ebdcd0;
+			border-radius: 9999px;
+			padding: 6px 16px;
+			font-size: 11.5px;
+			font-weight: 600;
+			color: #7d6556;
+			text-decoration: none;
+			box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+			transition: all 0.2s ease;
+			white-space: nowrap;
+		}
+
+		.btn-view-report:hover {
+			background: #fdfaf6;
+			border-color: #cbbaa9;
+			color: #342116;
+		}
+
+		/* Metric & Trends */
+		.stat-big-val {
+			font-size: 24px;
+			font-weight: 700;
+			color: #241611;
+			letter-spacing: -0.3px;
+			margin-bottom: 2px;
+		}
+
+		.trend-badge {
+			display: inline-flex;
+			align-items: center;
+			gap: 3px;
+			font-size: 11.5px;
+			font-weight: 600;
+			margin-bottom: 4px;
+		}
+
+		.trend-up {
+			color: #28a745;
+		}
+
+		.trend-down {
+			color: #e05252;
+		}
+
+		.period-subtext {
+			font-size: 11.5px;
+			color: #a49184;
+			margin-bottom: 14px;
+		}
+
+		/* Revenue Chart (Bars) */
+		.bar-chart-container {
+			margin-top: 10px;
+			position: relative;
+			height: 135px;
+			display: flex;
+			align-items: flex-end;
+			justify-content: space-between;
+			padding-bottom: 8px;
+			border-bottom: 1px dashed #ebdcd0;
+		}
+
+		.guideline-dashed {
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 35%;
+			border-top: 1px dashed #ebdcd0;
+			pointer-events: none;
+		}
+
+		.bar-pair {
+			display: flex;
+			align-items: flex-end;
+			gap: 4px;
+			height: 100%;
+		}
+
+		.bar-item {
+			width: 9px;
+			border-radius: 3px 3px 0 0;
+			transition: opacity 0.2s ease, transform 0.2s ease;
+			cursor: pointer;
+		}
+
+		.bar-item:hover {
+			opacity: 0.85;
+			transform: scaleY(1.05);
+			transform-origin: bottom;
+		}
+
+		.bar-dark {
+			background: #4c2d1b;
+		}
+
+		.bar-light {
+			background: #fae8d8;
+			border: 1px solid #ebd6c4;
+		}
+
+		.chart-legend {
+			display: flex;
+			align-items: center;
+			gap: 20px;
+			margin-top: 15px;
+			font-size: 11.5px;
+			color: #8f7d71;
+		}
+
+		.legend-item {
+			display: flex;
+			align-items: center;
+			gap: 7px;
+		}
+
+		.legend-dot {
+			width: 8px;
+			height: 8px;
+			border-radius: 50%;
+		}
+
+		/* Donut Chart & Callout */
+		.donut-wrapper {
+			position: relative;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			min-height: 165px;
+			margin: 6px 0;
+		}
+
+		.donut-callout {
+			position: absolute;
+			top: 8px;
+			right: 14px;
+			background: #9c6741;
+			color: #ffffff;
+			border-radius: 12px;
+			padding: 10px 14px;
+			box-shadow: 0 6px 18px rgba(156, 103, 65, 0.25);
+			z-index: 2;
+		}
+
+		.donut-callout::after {
+			content: '';
+			position: absolute;
+			bottom: -6px;
+			left: 20px;
+			width: 0;
+			height: 0;
+			border-left: 6px solid transparent;
+			border-right: 6px solid transparent;
+			border-top: 6px solid #9c6741;
+		}
+
+		.callout-title {
+			font-size: 11px;
+			font-weight: 500;
+			opacity: 0.9;
+			line-height: 1.2;
+		}
+
+		.callout-time {
+			font-size: 10px;
+			opacity: 0.75;
+			margin-bottom: 2px;
+		}
+
+		.callout-orders {
+			font-size: 15px;
+			font-weight: 700;
+			letter-spacing: -0.2px;
+		}
+
+		/* Overlapping Rating Bubbles */
+		.rating-bubbles-wrap {
+			position: relative;
+			height: 190px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin-top: 4px;
+		}
+
+		.bubble {
+			border-radius: 50%;
+			color: #ffffff;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			position: absolute;
+			box-shadow: 0 6px 16px rgba(50, 30, 15, 0.12);
+			transition: transform 0.2s ease;
+		}
+
+		.bubble:hover {
+			transform: scale(1.05);
+		}
+
+		.bubble-tan {
+			width: 98px;
+			height: 98px;
+			background: #bfa088;
+			top: 8px;
+			left: 40px;
+		}
+
+		.bubble-chestnut {
+			width: 112px;
+			height: 112px;
+			background: #714427;
+			bottom: 8px;
+			left: 18px;
+		}
+
+		.bubble-espresso {
+			width: 142px;
+			height: 142px;
+			background: #4a2c17;
+			top: 22px;
+			right: 24px;
+			z-index: 1;
+		}
+
+		.bubble-val {
+			font-size: 20px;
+			font-weight: 700;
+			line-height: 1.1;
+		}
+
+		.bubble-lbl {
+			font-size: 11px;
+			opacity: 0.9;
+			font-weight: 500;
+			margin-top: 2px;
+		}
+
+		/* Ranked Food Items */
+		.food-list {
+			display: flex;
+			flex-direction: column;
+			gap: 13px;
+			margin-top: 4px;
+		}
+
+		.food-row {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 5px 4px;
+			border-radius: 12px;
+			transition: background 0.2s ease;
+		}
+
+		.food-row:hover {
+			background: #fcf8f3;
+		}
+
+		.food-info-left {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+		}
+
+		.food-icon-circle {
+			width: 36px;
+			height: 36px;
+			border-radius: 50%;
+			background: #fbf0e4;
+			border: 1px solid #f2e2d0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 16px;
+			color: #7b4a27;
+			overflow: hidden;
+			flex-shrink: 0;
+		}
+
+		.food-icon-circle img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		.food-name {
+			font-size: 13.5px;
+			font-weight: 600;
+			color: #2b1d17;
+		}
+
+		.food-price {
+			font-size: 12.5px;
+			font-weight: 600;
+			color: #7a6659;
+		}
+
+		/* Order Line Chart */
+		.line-chart-container {
+			position: relative;
+			margin-top: 6px;
+		}
+
+		.line-chart-svg {
+			width: 100%;
+			height: 82px;
+			overflow: visible;
+		}
+
+		.day-ticks {
+			display: flex;
+			justify-content: space-between;
+			padding: 6px 10px 0 10px;
+			font-size: 10.5px;
+			color: #b09f92;
+			font-weight: 500;
+		}
+	</style>
 </head>
 
 <body>
 	<div layout:fragment="content">
 
 		<!-- ========================================================
-             1. ADMIN VIEW (All Branch UI)
+             1. ADMIN DASHBOARD VIEW (Coffee Crush Theme)
         ======================================================== -->
-		<th:block
-			th:if="${session.loggedInUser != null and session.loggedInUser.employee_role == 'ADMIN'}">
-			<div class="mgr-container">
+		<th:block th:if="${session.loggedInUser != null and session.loggedInUser.employee_role == 'ADMIN'}">
 
-				<!-- Admin Header & All Branches Selector -->
-				<div
-					style="display: flex; justify-content: space-between; align-items: center;">
-					<div>
-						<h2
-							style="font-size: 22px; font-weight: 700; color: #34251f; margin: 0;">Admin
-							Dashboard - All Branches Overview</h2>
-						<p style="font-size: 13px; color: #8c7365; margin: 4px 0 0 0;">Monitoring
-							data across all coffee shop branches</p>
+			<div class="admin-dash-wrapper">
+
+				<!-- 1. Top Bar: Search and Profile -->
+				<div class="admin-top-bar">
+					<div class="search-pill-container">
+						<input type="text" placeholder="Search" class="search-pill-input" id="adminSearchInput">
+						<i class="bi bi-search search-pill-icon"></i>
 					</div>
 
-					
-					<div style="display: flex; gap: 10px; align-items: center;">
-						<select class="form-control"
-							style="padding: 8px 15px; border-radius: 12px; border: 1px solid #ebd9cd; background: #fff; font-size: 13px;">
-							<option value="all">🏢 All Branches </option>
-							<!-- Controller မှပေးထားသော branches စာရင်းကို th:each ဖြင့်ဖော်ပြရန် -->
-							<option th:each="b : ${branches}" th:value="${b.branch_id}"
-								th:text="${b.name}"></option>
-						</select>
-					</div>
-				</div>
-
-				<div class="stats-grid">
-					<div class="stat-card">
-						<div class="stat-icon"
-							style="background: #eaf6ea; color: #28a745;">
-							<i class="bi bi-currency-dollar"></i>
-						</div>
-						<div class="stat-info">
-							<h4>Total Revenue (All Branches)</h4>
-							<div class="stat-value">$4,850.00</div>
-						</div>
-					</div>
-					<div class="stat-card">
-						<div class="stat-icon"
-							style="background: #eef2fa; color: #007bff;">
-							<i class="bi bi-receipt"></i>
-						</div>
-						<div class="stat-info">
-							<h4>Total Orders</h4>
-							<div class="stat-value">312</div>
-						</div>
-					</div>
-					<div class="stat-card">
-						<div class="stat-icon"
-							style="background: #fdf0f0; color: #dc3545;">
-							<i class="bi bi-building"></i>
-						</div>
-						<div class="stat-info">
-							<h4>Total Branches</h4>
-							<div class="stat-value"
-								th:text="${branches != null ? branches.size() : '5'}">5
-								Active</div>
-						</div>
-					</div>
-					<div class="stat-card">
-						<div class="stat-icon"
-							style="background: #fef7ec; color: #fd7e14;">
-							<i class="bi bi-people"></i>
-						</div>
-						<div class="stat-info">
-							<h4>Total Employees</h4>
-							<div class="stat-value">24 Staffs</div>
-						</div>
-					</div>
-				</div>
-
-				<!-- Operational Action Split -->
-				<div class="operations-grid">
-					<div class="op-card">
-						<div class="op-header">
-							<h3 class="op-title">Recent Orders Across Branches</h3>
-							<a th:href="@{/orders}"
-								style="font-size: 13px; color: #b57a55; text-decoration: none;">View
-								All</a>
-						</div>
-						<table class="order-table">
-							<thead>
-								<tr>
-									<th>Branch</th>
-									<th>Order ID</th>
-									<th>Items</th>
-									<th>Amount</th>
-									<th>Status</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td><b>Downtown Branch</b></td>
-									<td>#ORD-201</td>
-									<td>2x Cappuccino</td>
-									<td>$3.00</td>
-									<td><span class="badge-status status-completed">Completed</span></td>
-								</tr>
-								<tr>
-									<td><b>Suburban Branch</b></td>
-									<td>#ORD-104</td>
-									<td>1x Latte, 1x Croissant</td>
-									<td>$3.60</td>
-									<td><span class="badge-status status-preparing">Preparing</span></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-
-					<div class="op-card">
-						<div class="op-header">
-							<h3 class="op-title">Branches Status Summary</h3>
-							<a th:href="@{/manager/branches}" class="quick-action-btn"
-								style="padding: 5px 10px; font-size: 11px;"> Manage </a>
-						</div>
-						<div class="stock-list">
-							<div class="stock-item" style="border-left-color: #28a745;">
-								<div>
-									<div class="stock-name">Downtown Branch</div>
-									<small style="color: #8c7365;">Manager: Aung Aung</small>
+					<div class="top-bar-right">
+						<!-- User profile dropdown -->
+						<div class="dropdown">
+							<a href="#" class="user-pill-dropdown dropdown-toggle" id="adminProfileMenu"
+								data-bs-toggle="dropdown" aria-expanded="false">
+								<div class="user-avatar-circle">
+									<img th:if="${session.loggedInUser != null and session.loggedInUser.photopath != null}"
+										th:src="@{'/images/' + ${session.loggedInUser.photopath}}" alt="Avatar">
+									<i th:unless="${session.loggedInUser != null and session.loggedInUser.photopath != null}"
+										class="bi bi-person-fill"></i>
 								</div>
-								<div class="stock-qty" style="color: #28a745;">Open</div>
+								<span class="user-pill-name"
+									th:text="${session.loggedInUser != null and session.loggedInUser.employee_name != null ? session.loggedInUser.employee_name : 'Fan Coffee'}">Fan
+									Coffee</span>
+								<i class="bi bi-chevron-down user-pill-chevron"></i>
+							</a>
+							<ul class="dropdown-menu dropdown-menu-end shadow-sm border-0"
+								aria-labelledby="adminProfileMenu"
+								style="background: #fffaf5; border-radius: 14px; min-width: 170px; padding: 6px;">
+								<li><a class="dropdown-item py-2 px-3 fw-medium"
+										style="font-size: 13px; color: #34251f;" th:href="@{/changeprofile}"><i
+											class="bi bi-person me-2 text-warning"></i> Change Profile</a></li>
+								<li><a class="dropdown-item py-2 px-3 fw-medium"
+										style="font-size: 13px; color: #34251f;" th:href="@{/changepassword}"><i
+											class="bi bi-key me-2 text-warning"></i> Change Password</a></li>
+								<li>
+									<hr class="dropdown-divider my-1">
+								</li>
+								<li><a class="dropdown-item py-2 px-3 fw-medium text-danger" style="font-size: 13px;"
+										th:href="@{/logout}"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+
+				<!-- 2. Dashboard Title & Branch Filter -->
+				<div class="dashboard-heading-row">
+					<div style="display: flex; align-items: center; gap: 18px; flex-wrap: wrap;">
+						<h1 class="dashboard-heading">Dashboard</h1>
+
+						<!-- Real Backend Branch Selector -->
+						<form method="get" th:action="@{/}" id="branchFilterForm" style="margin: 0;">
+							<select name="branch_id" onchange="this.form.submit()"
+								style="padding: 7px 18px; border-radius: 9999px; border: 1.5px solid #dfcfc2; background: #ffffff; color: #432817; font-size: 13px; font-weight: 600; outline: none; cursor: pointer; box-shadow: 0 2px 6px rgba(60,36,17,0.04); transition: all 0.2s ease;">
+								<option value="all"
+									th:selected="${selectedBranchId == 'all' or selectedBranchId == null}">🏢 All
+									Branches</option>
+								<option th:each="b : ${branches}" th:value="${b.branch_id}" th:text="'🏢 ' + ${b.name}"
+									th:selected="${selectedBranchId == b.branch_id}"></option>
+							</select>
+						</form>
+					</div>
+				</div>
+
+				<!-- 3. Top Row Cards: Revenue & Order Time -->
+				<div class="dash-grid-top">
+
+					<!-- Card 1: Revenue -->
+					<div class="coffee-card">
+						<div class="coffee-card-head">
+							<div class="card-title-group">
+								<h3>Revenue</h3>
 							</div>
+							<a th:href="@{/admin/order-with-details}" class="btn-view-report"
+								title="View Order Report">View Report</a>
+						</div>
 
-							<div class="stock-item" style="border-left-color: #28a745;">
-								<div>
-									<div class="stock-name">Suburban Branch</div>
-									<small style="color: #8c7365;">Manager: Mya Mya</small>
+						<div class="stat-big-val"
+							th:text="${totalRevenueFormatted != null ? totalRevenueFormatted : 'IDR 30,254.00'}">IDR
+							30,254.00</div>
+						<div class="trend-badge" th:classappend="${isRevenueGrowthUp ? 'trend-up' : 'trend-down'}">
+							<i th:class="${isRevenueGrowthUp ? 'bi bi-arrow-up-short' : 'bi bi-arrow-down-short'}"
+								style="font-size: 16px;"></i>
+							<span
+								th:text="${revenueGrowth != null ? revenueGrowth + ' vs last week' : '2.14% vs last week'}">2.14%
+								vs last week</span>
+						</div>
+						<div class="period-subtext"
+							th:text="${salesDateRange != null ? salesDateRange : 'Sales from 12-18 Dec, 2021'}">Sales
+							from 12-18 Dec, 2021</div>
+
+						<!-- Dual Bar Chart -->
+						<div class="bar-chart-container">
+							<div class="guideline-dashed"></div>
+
+							<!-- Dynamic Backend Dual Bars -->
+							<div class="bar-pair" th:each="bar : ${revenueBars}" th:title="${bar.label}">
+								<div class="bar-item bar-dark" th:style="'height: ' + ${bar.darkHeight} + 'px;'"></div>
+								<div class="bar-item bar-light" th:style="'height: ' + ${bar.lightHeight} + 'px;'">
 								</div>
-								<div class="stock-qty" style="color: #28a745;">Open</div>
+							</div>
+						</div>
+
+						<div class="chart-legend">
+							<div class="legend-item">
+								<span class="legend-dot" style="background: #4c2d1b;"></span>
+								<span>Last 6 days</span>
+							</div>
+							<div class="legend-item">
+								<span class="legend-dot" style="background: #fae8d8; border: 1px solid #ebd6c4;"></span>
+								<span>Last Week</span>
 							</div>
 						</div>
 					</div>
+
+					<!-- Card 2: Order Time -->
+					<div class="coffee-card">
+						<div class="coffee-card-head">
+							<div class="card-title-group">
+								<h3>Order Time</h3>
+								<p th:text="${salesDateRange != null ? salesDateRange : 'From 12-18 Dec, 2021'}">From
+									12-18 Dec, 2021</p>
+							</div>
+							<a th:href="@{/admin/order-with-details}" class="btn-view-report"
+								title="View Order Timing">View Report</a>
+						</div>
+
+						<!-- Donut Ring with Floating Tooltip Callout -->
+						<div class="donut-wrapper">
+							<!-- Donut SVG with dynamic segments -->
+							<svg viewBox="0 0 160 160" width="145" height="145" style="transform: rotate(-75deg);">
+								<!-- Background circle -->
+								<circle cx="80" cy="80" r="54" fill="none" stroke="#f6ede3" stroke-width="24" />
+								<!-- Segment 3: Morning -->
+								<circle cx="80" cy="80" r="54" fill="none" stroke="#ebd6c2" stroke-width="24"
+									th:attr="stroke-dasharray=${donutMorningDash != null ? donutMorningDash : '95 244'}"
+									stroke-dashoffset="0" />
+								<!-- Segment 2: Evening -->
+								<circle cx="80" cy="80" r="54" fill="none" stroke="#9c6741" stroke-width="24"
+									th:attr="stroke-dasharray=${donutEveningDash != null ? donutEveningDash : '108 231'}, stroke-dashoffset=${donutEveningOffset != null ? donutEveningOffset : -95}" />
+								<!-- Segment 1: Afternoon -->
+								<circle cx="80" cy="80" r="54" fill="none" stroke="#50311c" stroke-width="24"
+									th:attr="stroke-dasharray=${donutAfternoonDash != null ? donutAfternoonDash : '136 203'}, stroke-dashoffset=${donutAfternoonOffset != null ? donutAfternoonOffset : -203}" />
+							</svg>
+
+							<!-- Floating Tooltip Callout -->
+							<div class="donut-callout">
+								<div class="callout-title"
+									th:text="${calloutPeriodName != null ? calloutPeriodName : 'Afternoon'}">Afternoon
+								</div>
+								<div class="callout-time"
+									th:text="${calloutPeriodHours != null ? calloutPeriodHours : '1pm - 4pm'}">1pm - 4pm
+								</div>
+								<div class="callout-orders"
+									th:text="${calloutPeriodOrders != null ? calloutPeriodOrders : '1112 orders'}">1112
+									orders</div>
+							</div>
+						</div>
+
+						<div class="chart-legend" style="justify-content: center; gap: 16px; margin-top: auto;">
+							<div class="legend-item">
+								<span class="legend-dot" style="background: #50311c;"></span>
+								<span>Afternoon <b style="color: #442a17; margin-left: 2px;"
+										th:text="${afternoonPct != null ? afternoonPct + '%' : '40%'}">40%</b></span>
+							</div>
+							<div class="legend-item">
+								<span class="legend-dot" style="background: #9c6741;"></span>
+								<span>Evening <b style="color: #442a17; margin-left: 2px;"
+										th:text="${eveningPct != null ? eveningPct + '%' : '32%'}">32%</b></span>
+							</div>
+							<div class="legend-item">
+								<span class="legend-dot" style="background: #ebd6c2;"></span>
+								<span>Morning <b style="color: #442a17; margin-left: 2px;"
+										th:text="${morningPct != null ? morningPct + '%' : '28%'}">28%</b></span>
+							</div>
+						</div>
+					</div>
+
 				</div>
+
+				<!-- 4. Bottom Row Cards: Rating, Food, Order -->
+				<div class="dash-grid-bottom">
+
+					<!-- Card 3: Your Rating (Derived from Quality & Operational Performance) -->
+					<div class="coffee-card">
+						<div class="coffee-card-head" style="margin-bottom: 4px;">
+							<div class="card-title-group">
+								<h3>Your Rating</h3>
+								<p>Quality & fulfillment standards</p>
+							</div>
+						</div>
+
+						<!-- Overlapping Rating Bubbles -->
+						<div class="rating-bubbles-wrap">
+							<!-- Bubble: Hygiene -->
+							<div class="bubble bubble-tan"
+								th:title="'Hygiene: ' + ${hygienePct != null ? hygienePct : 85} + '%'">
+								<div class="bubble-val" th:text="${(hygienePct != null ? hygienePct : 85) + '%'}">85%
+								</div>
+								<div class="bubble-lbl">Hygiene</div>
+							</div>
+							<!-- Bubble: Packaging -->
+							<div class="bubble bubble-chestnut"
+								th:title="'Packaging: ' + ${packagingPct != null ? packagingPct : 92} + '%'">
+								<div class="bubble-val" th:text="${(packagingPct != null ? packagingPct : 92) + '%'}">
+									92%</div>
+								<div class="bubble-lbl">Packaging</div>
+							</div>
+							<!-- Bubble: Food Taste -->
+							<div class="bubble bubble-espresso"
+								th:title="'Food Taste: ' + ${foodTastePct != null ? foodTastePct : 85} + '%'">
+								<div class="bubble-val" style="font-size: 24px;"
+									th:text="${(foodTastePct != null ? foodTastePct : 85) + '%'}">85%</div>
+								<div class="bubble-lbl" style="font-size: 12px;">Food Taste</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Card 4: Food with the most requests -->
+					<div class="coffee-card">
+						<div class="coffee-card-head" style="margin-bottom: 6px;">
+							<div class="card-title-group">
+								<h3>Food with the most requests</h3>
+								<p>specially made and grinded</p>
+							</div>
+						</div>
+
+						<!-- Live Filterable Food List from Backend -->
+						<div class="food-list" id="foodRankingList">
+							<div class="food-row" th:each="food : ${topFoods}" th:data-name="${food.name}">
+								<div class="food-info-left">
+									<div class="food-icon-circle">
+										<img th:src="@{${food.imagePath}}" th:alt="${food.name}"
+											onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+										<i class="bi bi-cup-hot" style="display: none;"></i>
+									</div>
+									<div class="food-name" th:text="${food.name}">Latte</div>
+								</div>
+								<div class="food-price" th:text="${food.priceFormatted}">IDR 300.00</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Card 5: Order -->
+					<div class="coffee-card">
+						<div class="coffee-card-head">
+							<div class="card-title-group">
+								<h3>Order</h3>
+							</div>
+							<a th:href="@{/admin/order-with-details}" class="btn-view-report"
+								title="View Order Report">View Report</a>
+						</div>
+
+						<div class="stat-big-val"
+							th:text="${totalOrdersFormatted != null ? totalOrdersFormatted : '2,568'}">2.568</div>
+						<div class="trend-badge" th:classappend="${isOrderGrowthUp ? 'trend-up' : 'trend-down'}">
+							<i th:class="${isOrderGrowthUp ? 'bi bi-arrow-up-short' : 'bi bi-arrow-down-short'}"
+								style="font-size: 16px;"></i>
+							<span
+								th:text="${orderGrowth != null ? orderGrowth + ' vs last week' : '2.14% vs last week'}">2.14%
+								vs last week</span>
+						</div>
+						<div class="period-subtext"
+							th:text="${salesDateRange != null ? salesDateRange : 'Sales from 12-18 Dec, 2021'}">Sales
+							from 12-18 Dec, 2021</div>
+
+						<!-- Line Chart SVG with Day Ticks -->
+						<div class="line-chart-container">
+							<svg viewBox="0 0 320 85" class="line-chart-svg">
+								<!-- Light Cream Line (Last Week) -->
+								<path
+									th:attr="d=${orderLightPathD != null ? orderLightPathD : 'M 10,48 L 70,32 L 135,22 L 200,44 L 265,25 L 310,35'}"
+									fill="none" stroke="#ebd6c2" stroke-width="2.2" stroke-linecap="round" />
+
+								<!-- Dark Espresso Line (Last 6 days) -->
+								<path
+									th:attr="d=${orderDarkPathD != null ? orderDarkPathD : 'M 10,65 L 70,72 L 135,46 L 200,58 L 265,72 L 310,30'}"
+									fill="none" stroke="#4c2d1b" stroke-width="2.6" stroke-linecap="round"
+									stroke-linejoin="round" />
+
+								<!-- Line points for visual accent -->
+								<th:block th:if="${orderDarkPoints != null}">
+									<circle th:each="pt : ${orderDarkPoints}" th:attr="cx=${pt.cx}, cy=${pt.cy}" r="2.8"
+										fill="#4c2d1b" />
+								</th:block>
+								<th:block th:unless="${orderDarkPoints != null}">
+									<circle cx="10" cy="65" r="2.5" fill="#4c2d1b" />
+									<circle cx="70" cy="72" r="2.5" fill="#4c2d1b" />
+									<circle cx="135" cy="46" r="2.5" fill="#4c2d1b" />
+									<circle cx="200" cy="58" r="2.5" fill="#4c2d1b" />
+									<circle cx="265" cy="72" r="2.5" fill="#4c2d1b" />
+									<circle cx="310" cy="30" r="3" fill="#4c2d1b" />
+								</th:block>
+							</svg>
+
+							<div class="day-ticks">
+								<span th:each="tick : ${dayTicks}" th:text="${tick}">01</span>
+							</div>
+						</div>
+
+						<div class="chart-legend" style="margin-top: 14px;">
+							<div class="legend-item">
+								<span class="legend-dot" style="background: #4c2d1b;"></span>
+								<span>Last 6 days</span>
+							</div>
+							<div class="legend-item">
+								<span class="legend-dot" style="background: #ebd6c2; border: 1px solid #dfcbb5;"></span>
+								<span>Last Week</span>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+				<!-- Client-side Interactive Search Script -->
+				<script>
+					document.addEventListener('DOMContentLoaded', function () {
+						const searchInput = document.getElementById('adminSearchInput');
+						const foodList = document.getElementById('foodRankingList');
+						if (searchInput && foodList) {
+							searchInput.addEventListener('input', function () {
+								const query = this.value.toLowerCase().trim();
+								const rows = foodList.querySelectorAll('.food-row');
+								rows.forEach(function (row) {
+									const name = (row.getAttribute('data-name') || row.innerText).toLowerCase();
+									if (name.includes(query)) {
+										row.style.display = 'flex';
+										row.style.background = query.length > 0 ? '#fdf0e4' : '';
+									} else {
+										row.style.display = 'none';
+									}
+								});
+							});
+						}
+					});
+				</script>
 			</div>
+
 		</th:block>
 
 
 		<!-- ========================================================
              2. MANAGER VIEW (Light Cream Operations Theme)
+		 ========================================================
+             2. MANAGER VIEW (Warm Artisanal Operations Theme)
         ======================================================== -->
-		<th:block
-			th:if="${session.loggedInUser != null and session.loggedInUser.employee_role == 'MANAGER'}">
-			<div class="mgr-container">
-				<div
-					style="display: flex; justify-content: space-between; align-items: center;">
-					<h2
-						style="font-size: 22px; font-weight: 700; color: #34251f; margin: 0;">Store
-						Daily Operations</h2>
-					<a th:href="@{/manager/daily-registers/all}"
-						class="quick-action-btn"> <i class="bi bi-calendar-check"></i>
-						Register Status
+		<th:block th:if="${session.loggedInUser != null and session.loggedInUser.employee_role == 'MANAGER'}">
+
+			<div class="mgr-dash-wrapper">
+
+				<!-- 1. Store Header & Live Shift Banner -->
+				<div class="mgr-hero-banner">
+					<div class="mgr-hero-left">
+						<div class="mgr-store-icon">
+							<i class="bi bi-shop"></i>
+						</div>
+						<div>
+							<h1 class="mgr-store-title"
+								th:text="${mgrBranchName != null ? mgrBranchName : 'Store Operations Command'}">Store
+								Operations Command</h1>
+							<div class="mgr-store-sub">
+								<span class="mgr-badge-role">
+									<i class="bi bi-shield-check me-1"></i> STORE MANAGER
+								</span>
+								<span>
+									<i class="bi bi-person-fill me-1" style="color: #c77b3b;"></i>
+									<span
+										th:text="${mgrEmployeeName != null ? mgrEmployeeName : 'Manager on Duty'}">Manager</span>
+								</span>
+								<span th:if="${mgrBranchAddress != null}">
+									<i class="bi bi-geo-alt me-1" style="color: #c77b3b;"></i>
+									<span th:text="${mgrBranchAddress}">Downtown</span>
+								</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="mgr-hero-right">
+						<div class="mgr-shift-pill"
+							th:classappend="${mgrIsShiftOpen ? 'mgr-shift-open' : 'mgr-shift-closed'}">
+							<i class="bi"
+								th:classappend="${mgrIsShiftOpen ? 'bi-check-circle-fill' : 'bi-dash-circle-fill'}"></i>
+							<span th:text="${mgrShiftStatusText != null ? mgrShiftStatusText : 'Shift Status'}">Shift
+								Status</span>
+						</div>
+
+						<a th:href="@{/manager-only/daily-registers/all}" class="mgr-btn-shift">
+							<i class="bi bi-journal-check"></i> Register Shift
+						</a>
+					</div>
+				</div>
+
+				<!-- 2. Four Operational KPI Metric Cards -->
+				<div class="mgr-stats-grid">
+
+					<!-- Card 1: Today's Store Sales -->
+					<div class="mgr-stat-card">
+						<div>
+							<div class="mgr-stat-label">Today's Sales</div>
+							<div class="mgr-stat-val"
+								th:text="${mgrTodaySalesFormatted != null ? mgrTodaySalesFormatted : '0.00 MMK'}">0.00
+								MMK</div>
+							<div class="mgr-stat-subtext">
+								<i class="bi bi-receipt" style="color: #b86b2d;"></i>
+								<span><strong
+										th:text="${mgrTodayOrderCount != null ? mgrTodayOrderCount : 0}">0</strong>
+									store orders today</span>
+							</div>
+						</div>
+						<div class="mgr-stat-icon-wrap mgr-stat-sales">
+							<i class="bi bi-cash-stack"></i>
+						</div>
+					</div>
+
+					<!-- Card 2: Kitchen & Floor Orders -->
+					<a th:href="@{/order-with-details}" class="mgr-stat-card">
+						<div>
+							<div class="mgr-stat-label">Order Queue</div>
+							<div class="mgr-stat-val">
+								<span th:text="${mgrPreparingOrderCount != null ? mgrPreparingOrderCount : 0}">0</span>
+								<small style="font-size: 13px; font-weight: 600; color: #b78103;">Preparing</small>
+							</div>
+							<div class="mgr-stat-subtext">
+								<i class="bi bi-check2-circle" style="color: #2e7d32;"></i>
+								<span><strong
+										th:text="${mgrCompletedOrderCount != null ? mgrCompletedOrderCount : 0}">0</strong>
+									completed orders</span>
+							</div>
+						</div>
+						<div class="mgr-stat-icon-wrap mgr-stat-orders">
+							<i class="bi bi-cup-straw"></i>
+						</div>
 					</a>
+
+					<!-- Card 3: Inventory Batches Alert -->
+					<a th:href="@{/manager-only/ingredient-batches}" class="mgr-stat-card">
+						<div>
+							<div class="mgr-stat-label">Ingredient Batches</div>
+							<div class="mgr-stat-val">
+								<span th:text="${mgrTotalBatchesCount != null ? mgrTotalBatchesCount : 0}">0</span>
+								<small style="font-size: 13px; font-weight: 600; color: #8c7365;">Batches</small>
+							</div>
+							<div class="mgr-stat-subtext">
+								<i class="bi bi-exclamation-triangle" style="color: #c62828;"></i>
+								<span><strong th:text="${mgrLowStockCount != null ? mgrLowStockCount : 0}">0</strong>
+									low stock alert</span>
+							</div>
+						</div>
+						<div class="mgr-stat-icon-wrap mgr-stat-stock">
+							<i class="bi bi-boxes"></i>
+						</div>
+					</a>
+
+					<!-- Card 4: Store Menu Items & Waste -->
+					<a th:href="@{/manager-only/products}" class="mgr-stat-card">
+						<div>
+							<div class="mgr-stat-label">Menu Items</div>
+							<div class="mgr-stat-val">
+								<span th:text="${mgrMenuItemsCount != null ? mgrMenuItemsCount : 0}">0</span>
+								<small style="font-size: 13px; font-weight: 600; color: #8c7365;">Drinks</small>
+							</div>
+							<div class="mgr-stat-subtext">
+								<i class="bi bi-trash3" style="color: #6a1b9a;"></i>
+								<span><strong th:text="${mgrWasteLogsCount != null ? mgrWasteLogsCount : 0}">0</strong>
+									waste logs recorded</span>
+							</div>
+						</div>
+						<div class="mgr-stat-icon-wrap mgr-stat-menu">
+							<i class="bi bi-cup-hot"></i>
+						</div>
+					</a>
+
 				</div>
 
-				<!-- Operations Stats Cards -->
-				<div class="stats-grid">
-					<div class="stat-card">
-						<div class="stat-icon"
-							style="background: #eaf6ea; color: #28a745;">
-							<i class="bi bi-currency-dollar"></i>
+				<!-- 3. Operational Main Grid: Live Orders & Store Operations -->
+				<div class="mgr-main-grid">
+
+					<!-- Left Column: Live Orders Feed & Featured Menu -->
+					<div>
+
+						<!-- Live Store Orders Table -->
+						<div class="mgr-panel">
+							<div class="mgr-panel-head">
+								<h3 class="mgr-panel-title">
+									<i class="bi bi-receipt text-warning"></i>
+									Live Store Orders
+								</h3>
+								<a th:href="@{/order-with-details}" class="mgr-panel-link">
+									View Floor Orders <i class="bi bi-arrow-right"></i>
+								</a>
+							</div>
+
+							<div class="table-responsive">
+								<table class="mgr-orders-table">
+									<thead>
+										<tr>
+											<th style="width: 22%;">Token / ID</th>
+											<th style="width: 20%;">Time</th>
+											<th style="width: 24%;">Total Amount</th>
+											<th style="width: 22%;">Live Status</th>
+											<th style="width: 12%; text-align: end;">Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:if="${mgrRecentOrders == null or mgrRecentOrders.empty}">
+											<td colspan="5" class="text-center py-4 text-muted">
+												<i class="bi bi-inbox fs-3 d-block mb-1 text-secondary"></i>
+												No recent store orders for this branch yet.
+											</td>
+										</tr>
+										<tr th:each="ord : ${mgrRecentOrders}">
+											<td>
+												<span class="fw-bold" style="color: #34251f;"
+													th:text="${ord.token_number > 0 ? '#' + ord.token_number : '#' + ord.order_id}">#101</span>
+												<small class="d-block text-muted" style="font-size: 10.5px;"
+													th:text="${ord.order_id}">ORD-123</small>
+											</td>
+											<td>
+												<span class="text-muted"
+													th:text="${ord.created_time != null ? #temporals.format(ord.created_time, 'hh:mm a') : '-'}">10:30
+													AM</span>
+											</td>
+											<td>
+												<span class="fw-bold" style="color: #b86b2d;"
+													th:text="${#numbers.formatDecimal(ord.total_amount, 1, 2) + ' MMK'}">5,000.00
+													MMK</span>
+											</td>
+											<td>
+												<span th:if="${ord.received_time != null}"
+													class="mgr-status-badge mgr-badge-done">
+													<i class="bi bi-check-circle"></i> Completed
+												</span>
+												<span th:unless="${ord.received_time != null}"
+													class="mgr-status-badge mgr-badge-prep">
+													<i class="bi bi-clock-history"></i> Preparing
+												</span>
+											</td>
+											<td style="text-align: end;">
+												<a th:href="@{/order-with-details}"
+													class="btn btn-sm btn-light border py-1 px-2"
+													style="font-size: 11px; border-radius: 8px;" title="View Order">
+													<i class="bi bi-eye"></i>
+												</a>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
 						</div>
-						<div class="stat-info">
-							<h4>Today's Sales</h4>
-							<div class="stat-value">$320.50</div>
+
+						<!-- Branch Menu Preview -->
+						<div class="mgr-panel">
+							<div class="mgr-panel-head">
+								<h3 class="mgr-panel-title">
+									<i class="bi bi-cup-straw text-primary"></i>
+									Store Drink Offerings
+								</h3>
+								<div class="d-flex align-items-center gap-2">
+									<a th:href="@{/manager-only/products/add}" class="btn btn-sm text-white py-1 px-3"
+										style="background: #c77b3b; font-size: 12px; border-radius: 8px;">
+										<i class="bi bi-plus-lg me-1"></i> Add Drink
+									</a>
+									<a th:href="@{/manager-only/products}" class="mgr-panel-link">
+										Manage All <i class="bi bi-arrow-right"></i>
+									</a>
+								</div>
+							</div>
+
+							<div class="mgr-menu-grid">
+								<div th:if="${mgrFeaturedProducts == null or mgrFeaturedProducts.empty}"
+									class="w-100 text-center py-3 text-muted" style="grid-column: 1/-1;">
+									No menu items configured for this store branch.
+								</div>
+								<div class="mgr-menu-card" th:each="p : ${mgrFeaturedProducts}">
+									<img th:if="${p.coverimgpath != null and !#strings.isEmpty(p.coverimgpath)}"
+										th:src="@{'/images/' + ${p.coverimgpath}}" th:alt="${p.name}"
+										class="mgr-menu-thumb"
+										onerror="this.onerror=null; this.src='/images/Cappuccino.jpg';">
+									<img th:unless="${p.coverimgpath != null and !#strings.isEmpty(p.coverimgpath)}"
+										th:src="@{/images/Cappuccino.jpg}" class="mgr-menu-thumb" alt="Coffee">
+									<div class="mgr-menu-name" th:text="${p.name}">Espresso</div>
+									<div class="mgr-menu-cat" th:text="${p.category_name}">Hot Drinks</div>
+									<div class="mgr-menu-price"
+										th:text="${#numbers.formatDecimal(p.price, 1, 2) + ' MMK'}">4,500.00 MMK</div>
+								</div>
+							</div>
 						</div>
+
 					</div>
-					<div class="stat-card">
-						<div class="stat-icon"
-							style="background: #eef2fa; color: #007bff;">
-							<i class="bi bi-receipt"></i>
+
+					<!-- Right Column: Inventory Batches Monitor & Quick Action Tiles -->
+					<div>
+
+						<!-- Low Stock & Ingredient Monitor -->
+						<div class="mgr-panel">
+							<div class="mgr-panel-head">
+								<h3 class="mgr-panel-title">
+									<i class="bi bi-boxes text-danger"></i>
+									Inventory Monitor
+								</h3>
+								<a th:href="@{/manager-only/stock-imports}"
+									class="btn btn-sm btn-outline-danger py-1 px-2"
+									style="font-size: 11px; border-radius: 8px;">
+									<i class="bi bi-plus-lg"></i> Import
+								</a>
+							</div>
+
+							<div>
+								<div th:if="${mgrAlertBatches == null or mgrAlertBatches.empty}"
+									class="text-center py-3 text-muted small">
+									All ingredient stocks in good condition.
+								</div>
+								<div th:each="b : ${mgrAlertBatches}" class="mgr-stock-item"
+									th:classappend="${b.remaining_quantity != null and b.remaining_quantity.compareTo(new java.math.BigDecimal('10')) <= 0 ? 'mgr-stock-item-alert' : 'mgr-stock-item-good'}">
+									<div>
+										<div class="mgr-stock-name" th:text="${b.ingredientType_name}">Whole Milk</div>
+										<div class="mgr-stock-code">
+											Batch: <span th:text="${b.batch_id}">IB-001</span>
+											<span th:if="${b.expire_date != null}" class="ms-1">| Exp: <span
+													th:text="${b.expire_date}">2026-10-20</span></span>
+										</div>
+									</div>
+									<div style="text-align: end;">
+										<div class="mgr-stock-qty"
+											th:style="${b.remaining_quantity != null and b.remaining_quantity.compareTo(new java.math.BigDecimal('10')) <= 0 ? 'color: #c62828;' : 'color: #2e7d32;'}"
+											th:text="${b.remaining_quantity + ' ' + (b.name != null ? b.name : '')}">
+											2.5 L
+										</div>
+										<span
+											th:if="${b.remaining_quantity != null and b.remaining_quantity.compareTo(new java.math.BigDecimal('10')) <= 0}"
+											class="badge bg-danger-subtle text-danger" style="font-size: 10px;">Low
+											Stock</span>
+										<span
+											th:unless="${b.remaining_quantity != null and b.remaining_quantity.compareTo(new java.math.BigDecimal('10')) <= 0}"
+											class="badge bg-success-subtle text-success"
+											style="font-size: 10px;">Good</span>
+									</div>
+								</div>
+							</div>
+
+							<div class="mt-3 text-center">
+								<a th:href="@{/manager-only/ingredient-batches}" class="mgr-panel-link">
+									View All Batches <i class="bi bi-arrow-right"></i>
+								</a>
+							</div>
 						</div>
-						<div class="stat-info">
-							<h4>Today's Orders</h4>
-							<div class="stat-value">42</div>
+
+						<!-- Store Operations Quick Shortcuts -->
+						<div class="mgr-panel">
+							<div class="mgr-panel-head">
+								<h3 class="mgr-panel-title">
+									<i class="bi bi-grid-fill text-warning"></i>
+									Store Quick Tools
+								</h3>
+							</div>
+
+							<div class="mgr-action-tiles">
+								<a th:href="@{/manager-only/products}" class="mgr-action-tile">
+									<i class="bi bi-cup-straw"></i>
+									<span>Manage Menu</span>
+								</a>
+
+								<a th:href="@{/manager-only/products/add}" class="mgr-action-tile">
+									<i class="bi bi-plus-circle"></i>
+									<span>Add New Drink</span>
+								</a>
+
+								<a th:href="@{/manager-only/ingredient-batches}" class="mgr-action-tile">
+									<i class="bi bi-boxes"></i>
+									<span>Ingredients</span>
+								</a>
+
+								<a th:href="@{/manager-only/stock-imports}" class="mgr-action-tile">
+									<i class="bi bi-truck"></i>
+									<span>Stock Imports</span>
+								</a>
+
+								<a th:href="@{/manager-only/daily-registers/all}" class="mgr-action-tile">
+									<i class="bi bi-journal-bookmark"></i>
+									<span>Daily Register</span>
+								</a>
+
+								<a th:href="@{/manager-only/WasteLogs}" class="mgr-action-tile">
+									<i class="bi bi-trash3"></i>
+									<span>Waste Logs</span>
+								</a>
+							</div>
 						</div>
+
 					</div>
-					<div class="stat-card">
-						<div class="stat-icon"
-							style="background: #fdf0f0; color: #dc3545;">
-							<i class="bi bi-exclamation-triangle"></i>
-						</div>
-						<div class="stat-info">
-							<h4>Low Stock Items</h4>
-							<div class="stat-value">3 Types</div>
-						</div>
-					</div>
-					<div class="stat-card">
-						<div class="stat-icon"
-							style="background: #fef7ec; color: #fd7e14;">
-							<i class="bi bi-trash"></i>
-						</div>
-						<div class="stat-info">
-							<h4>Today's Waste</h4>
-							<div class="stat-value">2 Logs</div>
-						</div>
-					</div>
+
 				</div>
 
-				<!-- Operational Action Split -->
-				<div class="operations-grid">
-					<div class="op-card">
-						<div class="op-header">
-							<h3 class="op-title">Recent Store Orders</h3>
-							<a th:href="@{/orders}"
-								style="font-size: 13px; color: #b57a55; text-decoration: none;">View
-								All</a>
-						</div>
-						<table class="order-table">
-							<thead>
-								<tr>
-									<th>Order ID</th>
-									<th>Items</th>
-									<th>Amount</th>
-									<th>Status</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>#ORD-104</td>
-									<td>2x Cappuccino, 1x Croissant</td>
-									<td>$5.20</td>
-									<td><span class="badge-status status-preparing">Preparing</span></td>
-								</tr>
-								<tr>
-									<td>#ORD-103</td>
-									<td>1x Americano</td>
-									<td>$1.55</td>
-									<td><span class="badge-status status-completed">Completed</span></td>
-								</tr>
-								<tr>
-									<td>#ORD-102</td>
-									<td>3x Latte, 2x Donut</td>
-									<td>$8.40</td>
-									<td><span class="badge-status status-completed">Completed</span></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-
-					<div class="op-card">
-						<div class="op-header">
-							<h3 class="op-title">Low Stock Alert</h3>
-							<a th:href="@{/manager/stock_imports}" class="quick-action-btn"
-								style="padding: 5px 10px; font-size: 11px;"> + Import </a>
-						</div>
-						<div class="stock-list">
-							<div class="stock-item">
-								<div>
-									<div class="stock-name">Fresh Whole Milk</div>
-									<small style="color: #8c7365;">Threshold: 5 Liters</small>
-								</div>
-								<div class="stock-qty">1.5 L left</div>
-							</div>
-							<div class="stock-item">
-								<div>
-									<div class="stock-name">Espresso Roast Beans</div>
-									<small style="color: #8c7365;">Threshold: 2 kg</small>
-								</div>
-								<div class="stock-qty">0.8 kg left</div>
-							</div>
-							<div class="stock-item">
-								<div>
-									<div class="stock-name">Paper Cups (Medium)</div>
-									<small style="color: #8c7365;">Threshold: 50 pcs</small>
-								</div>
-								<div class="stock-qty">15 pcs left</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</th:block>
-
-		<!-- STAFF VIEW: Coffee Shop Menu UI -->
-		<th:block
-			th:if="${session.loggedInUser != null and session.loggedInUser.employee_role == 'STAFF'}">
-			<div class="staff-menu-page">
-				<header class="staff-topbar">
-					<div class="staff-brand">
-						☕ Coffee Shop<small>Good Coffee · Good Mood</small>
-					</div>
-					<nav class="staff-nav">
-						<a href="#">⌂ Home</a><a href="#" class="active">☕ Menu</a> <a
-							href="#">ⓘ About</a><a href="#">✉ Contact</a>
-					</nav>
-					<div class="staff-search">⌕ &nbsp; Search menu...</div>
-					<div>👤</div>
-				</header>
-
-				<section class="staff-hero">
-					
-				</section>
-
-				<main class="staff-menu-shell">
-					<aside class="staff-panel">
-						<h3>☕ Categories</h3>
-						<div class="staff-cat active">
-							<span>☕ All Items</span><span>24</span>
-						</div>
-						<div class="staff-cat">
-							<span>☕ Coffee</span><span>8</span>
-						</div>
-						<div class="staff-cat">
-							<span>🧋 Milk Tea</span><span>6</span>
-						</div>
-						<div class="staff-cat">
-							<span>🥛 Non Coffee</span><span>4</span>
-						</div>
-						<div class="staff-cat">
-							<span>🥤 Smoothies</span><span>4</span>
-						</div>
-						<div class="staff-cat">
-							<span>🥐 Bakery</span><span>2</span>
-						</div>
-					</aside>
-
-					<section>
-						<div class="staff-section-title">
-							<h2>☕ Coffee</h2>
-						</div>
-						<div class="staff-products">
-							<article class="staff-product">
-								<div class="staff-product-img">
-								<img src="/images/Americano.jpg" alt="Americano">
-							</div>
-								<div class="staff-product-body">
-									<h4>Americano</h4>
-									<p>Pure coffee, rich flavor.</p>
-									<div class="staff-price">2,500 MMK</div>
-									<button type="button" class="staff-add">🛒 Add to Cart</button>
-								</div>
-							</article>
-							<article class="staff-product">
-								<div class="staff-product-img">
-								<img src="/images/Latte.jpg" alt="Americano">
-							</div>
-								<div class="staff-product-body">
-									<h4>Latte</h4>
-									<p>Espresso with steamed milk.</p>
-									<div class="staff-price">3,500 MMK</div>
-									<button type="button" class="staff-add">🛒 Add to Cart</button>
-								</div>
-							</article>
-							<article class="staff-product">
-								<div class="staff-product-img">
-								<img src="/images/Cappuccino.jpg" alt="Americano">
-							</div>
-								<div class="staff-product-body">
-									<h4>Cappuccino</h4>
-									<p>Espresso, milk, foam.</p>
-									<div class="staff-price">3,500 MMK</div>
-									<button type="button" class="staff-add">🛒 Add to Cart</button>
-								</div>
-							</article>
-							<article class="staff-product">
-								<div class="staff-product-img">
-								<img src="/images/Mocha.jpg" alt="Americano">
-							</div>
-								<div class="staff-product-body">
-									<h4>Mocha</h4>
-									<p>Chocolate + coffee.</p>
-									<div class="staff-price">4,000 MMK</div>
-									<button type="button" class="staff-add">🛒 Add to Cart</button>
-								</div>
-							</article>
-						</div>
-
-						<div class="staff-section-title" style="margin-top: 22px">
-							<h2>🧋 Milk Tea</h2>
-						</div>
-						<div class="staff-products">
-							<article class="staff-product">
-								<div class="staff-product-img">
-								<img src="/images/LifeBegin.jpg" alt="Americano">
-							</div>
-								<div class="staff-product-body">
-									<h4>Classic Milk Tea</h4>
-									<p>Smooth & creamy.</p>
-									<div class="staff-price">2,800 MMK</div>
-									<button type="button" class="staff-add">🛒 Add to Cart</button>
-								</div>
-							</article>
-							<article class="staff-product">
-								<div class="staff-product-img">
-								<img src="/images/classic milk tea.jpg" alt="Americano">
-							</div>
-								<div class="staff-product-body">
-									<h4>Oolong Milk Tea</h4>
-									<p>Light and fragrant.</p>
-									<div class="staff-price">3,200 MMK</div>
-									<button type="button" class="staff-add">🛒 Add to Cart</button>
-								</div>
-							</article>
-							<article class="staff-product">
-								<div class="staff-product-img">
-								<img src="/images/oolong milk tea.jpg" alt="Americano">
-							</div>
-								<div class="staff-product-body">
-									<h4>Thai Milk Tea</h4>
-									<p>Rich and sweet.</p>
-									<div class="staff-price">3,500 MMK</div>
-									<button type="button" class="staff-add">🛒 Add to Cart</button>
-								</div>
-							</article>
-							<article class="staff-product">
-								<div class="staff-product-img">
-								<img src="/images/ThaiMilkTea.jpg" alt="Americano">
-							</div>
-								<div class="staff-product-body">
-									<h4>Brown Sugar Milk Tea</h4>
-									<p>Sweet & chewy.</p>
-									<div class="staff-price">3,800 MMK</div>
-									<button type="button" class="staff-add">🛒 Add to Cart</button>
-								</div>
-							</article>
-						</div>
-					</section>
-
-					<aside class="staff-panel staff-cart">
-						<h3>🛒 Your Cart</h3>
-						<div class="staff-cart-item">
-							<span>Latte × 1</span><b>3,500</b>
-						</div>
-						<div class="staff-cart-item">
-							<span>Brown Sugar Milk Tea × 1</span><b>3,800</b>
-						</div>
-						<div class="staff-total">
-							<span>Total</span><span>7,300 MMK</span>
-						</div>
-						<button type="button" class="staff-checkout">🛒 Checkout</button>
-						<div class="staff-note">Connect these buttons to your
-							existing Staff cart/order handlers.</div>
-					</aside>
-				</main>
 			</div>
 		</th:block>
 
 	</div>
 </body>
+
 </html>

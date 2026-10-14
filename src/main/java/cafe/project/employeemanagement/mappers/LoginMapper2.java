@@ -14,7 +14,7 @@ public class LoginMapper2 implements RowMapper<LoginDto>{
 		
 		return new LoginDto(rs.getString("e.email"), rs.getString("e.password"), rs.getString("employee_id"), 
 							rs.getString("role_name"), rs.getString("branch_id"), rs.getString("branch_name"), 
-							rs.getString("status_name"), rs.getString("employee_role_id"), rs.getString("employee_status_id"), rs.getString("e.name"));
+							rs.getString("status_name"), rs.getString("employee_role_id"), rs.getString("employee_status_id"), rs.getString("e.name"), rs.getString("photopath"));
 	}
 
 }

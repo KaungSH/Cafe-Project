@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Deleted Branch Stats | Café Luft</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #F8F5F0;
+            color: #2D241E;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 14px;
+        }
+
+        .deleted-container {
+            width: 95%;
+            max-width: 1400px;
+            margin: 32px auto;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .header-title-box {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .header-avatar-trash {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #A84232, #75281C);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFF2F0;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(168, 66, 50, 0.25);
+        }
+
+        .header-title-box h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #261B14;
+            margin: 0;
+            letter-spacing: -0.2px;
+        }
+
+        .header-title-box p {
+            font-size: 13px;
+            color: #8C7A68;
+            margin: 2px 0 0 0;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #FFFFFF;
+            color: #5C432D !important;
+            border: 1px solid #D8C8B5;
+            border-radius: 9px;
+            padding: 8px 16px;
+            font-size: 13.5px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-back:hover {
+            background-color: #F3EBDD;
+            border-color: #BFA78E;
+        }
+
+        /* Table Card Container */
+        .table-container {
+            background: #FFFFFF;
+            border-radius: 16px;
+            border: 1px solid #EADBCC;
+            box-shadow: 0 8px 24px -6px rgba(58, 41, 26, 0.05);
+            overflow: hidden;
+        }
+
+        .table-luxury {
+            width: 100%;
+            margin: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .table-luxury thead th {
+            background: #FAF3ED;
+            color: #796450;
+            padding: 14px 18px;
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            border-bottom: 1px solid #EADBCC;
+        }
+
+        .table-luxury tbody td {
+            padding: 14px 18px;
+            color: #49382B;
+            font-size: 13.5px;
+            border-bottom: 1px solid #F3ECE2;
+            vertical-align: middle;
+        }
+
+        .table-luxury tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table-luxury tbody tr:hover {
+            background-color: #FAF6EF;
+        }
+
+        .badge-branch {
+            font-weight: 600;
+            color: #2D1D12;
+        }
+
+        .badge-month {
+            background-color: #F1E7D9;
+            color: #6C4724;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        /* Action Buttons */
+        .btn-restore {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: #4B6E45;
+            background-color: #F1F8F0;
+            border: 1px solid #C9E2C5;
+            border-radius: 7px;
+            padding: 6px 12px;
+            font-size: 12.5px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .btn-restore:hover {
+            background-color: #E2F2E0;
+            color: #2F5229;
+        }
+
+        .btn-hard-delete {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: #A33A2D;
+            background-color: #FFF5F4;
+            border: 1px solid #F0C4BD;
+            border-radius: 7px;
+            padding: 6px 12px;
+            font-size: 12.5px;
+            font-weight: 600;
+            text-decoration: none;
+            margin-left: 6px;
+            transition: 0.2s;
+        }
+
+        .btn-hard-delete:hover {
+            background-color: #FCE1DF;
+            color: #7C2419;
+        }
+    </style>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div class="deleted-container">
+        <div class="dashboard-header">
+            <div class="header-title-box">
+                <div class="header-avatar-trash">
+                    <i class="bi bi-trash3-fill"></i>
+                </div>
+                <div>
+                    <h2>Deleted Branch Stats</h2>
+                    <p>Restore archived metrics or permanently remove records</p>
+                </div>
+            </div>
+
+            <div>
+                <a th:href="@{/manager-only/branchstats}" class="btn-back">
+                    <i class="bi bi-arrow-left"></i> Back to Stats List
+                </a>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table class="table-luxury">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">No</th>
+                        <th>Branch Name</th>
+                        <th>Sale Count</th>
+                        <th>Sale Amount</th>
+                        <th>Month</th>
+                        <th>Employee Cost</th>
+                        <th>Created By</th>
+                        <th class="text-end" style="width: 230px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="branchesStats, state : ${branchseStats}">
+                        <td th:text="${state.count}" class="text-muted">1</td>
+                        <td><span class="badge-branch" th:text="${branchesStats.branch_name}">Branch Name</span></td>
+                        <td><strong th:text="${branchesStats.salecount}">0</strong></td>
+                        <td th:text="${#numbers.formatDecimal(branchesStats.saleamount, 1, 'COMMA', 2, 'POINT')} + ' MMK'">0.00 MMK</td>
+                        <td><span class="badge-month" th:text="${branchesStats.month}">October</span></td>
+                        <td th:text="${#numbers.formatDecimal(branchesStats.employee_cost, 1, 'COMMA', 2, 'POINT')} + ' MMK'">0.00 MMK</td>
+                        <td th:text="${branchesStats.employee_name}">Admin</td>
+                        <td class="text-end">
+                            <a th:href="@{/manager-only/branchstats/restore(branch_stats_id=${branchesStats.branch_stats_id})}"
+                               class="btn-restore"
+                               onclick="return confirm('Are you sure you want to restore this record?')">
+                                <i class="bi bi-arrow-counterclockwise"></i> Restore
+                            </a>
+                            <a th:href="@{/manager-only/branchstats/real-delete(branch_stats_id=${branchesStats.branch_stats_id})}"
+                               class="btn-hard-delete"
+                               onclick="return confirm('This record will be permanently deleted. Are you sure?')">
+                                <i class="bi bi-trash"></i> Delete Forever
+                            </a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(branchseStats)}">
+                        <td colspan="8" class="text-center py-5 text-muted">
+                            <i class="bi bi-check2-circle fs-2 d-block mb-2 text-success opacity-75"></i>
+                            No deleted records found in the recycle bin.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

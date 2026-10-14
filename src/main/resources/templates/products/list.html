@@ -9,6 +9,8 @@
 <title>Products Management - Café Shop</title>
 
 <!-- Fonts & FontAwesome -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
@@ -56,8 +58,8 @@ body {
 }
 
 .search-box-wrapper input:focus {
-	border-color: #c2410c;
-	box-shadow: 0 0 0 3px rgba(194, 65, 12, 0.1);
+	border-color: #3B2014;
+	box-shadow: 0 0 0 3px rgba(59, 32, 20, 0.15);
 	background-color: #ffffff;
 	outline: none;
 }
@@ -104,7 +106,7 @@ body {
 	right: 12px;
 	width: 8px;
 	height: 8px;
-	background-color: #ea580c;
+	background-color: #3B2014;
 	border-radius: 50%;
 	border: 2px solid #ffffff;
 }
@@ -205,7 +207,7 @@ body {
 	font-size: 1.15rem;
 }
 
-.stat-icon-coffee { background: #fff7ed; color: #c2410c; }
+.stat-icon-coffee { background: #fbf6ed; color: #523223; }
 .stat-icon-category { background: #fefce8; color: #ca8a04; }
 .stat-icon-stock { background: #f0fdf4; color: #16a34a; }
 
@@ -239,25 +241,29 @@ body {
 	color: #0f172a;
 }
 
+/* Real Deep Coffee Tone (+ Add Product Type Button) */
 .btn-add-type {
-	background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+	background: #3B2014 !important;
+	background-color: #3B2014 !important;
 	color: #ffffff !important;
-	border-radius: 10px;
-	padding: 10px 22px;
-	font-weight: 600;
-	font-size: 0.88rem;
-	border: none;
-	display: inline-flex;
-	align-items: center;
-	gap: 8px;
-	text-decoration: none;
-	box-shadow: 0 6px 14px rgba(194, 65, 12, 0.25);
-	transition: all 0.2s;
+	border-radius: 10px !important;
+	padding: 10px 22px !important;
+	font-weight: 700 !important;
+	font-size: 0.88rem !important;
+	border: 1px solid #2B160D !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	gap: 8px !important;
+	text-decoration: none !important;
+	box-shadow: 0 6px 16px rgba(59, 32, 20, 0.35) !important;
+	transition: all 0.25s ease !important;
 }
 
 .btn-add-type:hover {
-	transform: translateY(-1px);
-	box-shadow: 0 8px 18px rgba(194, 65, 12, 0.3);
+	background: #4E2A1A !important;
+	background-color: #4E2A1A !important;
+	transform: translateY(-2px) !important;
+	box-shadow: 0 8px 20px rgba(59, 32, 20, 0.45) !important;
 }
 
 .btn-bin-trash {
@@ -350,25 +356,6 @@ body {
 	margin-left: 4px;
 }
 
-.btn-action-icon {
-	width: 34px;
-	height: 34px;
-	border-radius: 8px;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	background: #ffffff;
-	border: 1px solid #e2e8f0;
-	color: #64748b;
-	transition: all 0.2s;
-	text-decoration: none;
-}
-
-.btn-action-icon:hover {
-	background: #f8fafc;
-	border-color: #cbd5e1;
-}
-
 .btn-details-expand {
 	background: #0f172a;
 	color: #ffffff;
@@ -386,6 +373,57 @@ body {
 .btn-details-expand:hover {
 	background: #334155;
 }
+
+/* ================= Edit & Delete Buttons Style (From Categories) ================= */
+.action-pill-group {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	align-items: flex-end;
+}
+
+.btn-pill-action {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	width: 78px;
+	padding: 5px 10px;
+	border-radius: 9px;
+	font-size: 0.82rem;
+	font-weight: 600;
+	text-decoration: none;
+	transition: all 0.2s ease;
+}
+
+/* Edit Pill Button */
+.btn-pill-edit {
+	background-color: #FBF6EE;
+	color: #8C5332 !important;
+	border: 1px solid #E8D9C8;
+}
+
+.btn-pill-edit:hover {
+	background-color: #F2E7D5;
+	color: #5C3218 !important;
+	border-color: #D9C3A8;
+}
+
+/* Delete Pill Button */
+.btn-pill-delete {
+	background-color: #FFF5F4;
+	color: #A3281D !important;
+	border: 1px solid transparent;
+}
+
+.btn-pill-delete:hover {
+	background-color: #FFE6E4;
+	color: #7A1910 !important;
+}
+
+.btn-pill-action i {
+	font-size: 0.8rem;
+}
 </style>
 </head>
 
@@ -395,37 +433,10 @@ body {
 
 		<!-- 1. Top Navbar: Search & Manager Profile -->
 		<div class="top-navbar-wrapper">
-			<form method="post" th:action="@{/manager/products/search}" th:object="${keywordmodel}" id="search" class="search-box-wrapper mb-0">
+			<form method="post" th:action="@{/manager-only/products/search}" th:object="${keywordmodel}" id="search" class="search-box-wrapper mb-0">
 				<i class="fa-solid fa-magnifying-glass search-icon"></i>
 				<input type="text" th:field="*{keyword}" placeholder="Search coffee, recipes, categories..." aria-label="Search">
 			</form>
-
-			<div class="user-profile-wrapper">
-				<div class="notif-bell" title="Notifications">
-					<i class="fa-regular fa-bell"></i>
-				</div>
-
-				<!-- Click-to-Upload Profile Card Label -->
-				<label for="profileFileInput" class="profile-card-label" title="Click to change profile picture">
-					<div class="profile-avatar-wrapper">
-						<img id="managerProfileImg" 
-						     th:src="@{/images/Manager_Thura.jpg}" 
-						     src="/images/Manager_Thura.jpg" 
-						     alt="Manager Thura" 
-						     class="profile-img">
-						<div class="avatar-overlay">
-							<i class="fa-solid fa-camera"></i>
-						</div>
-					</div>
-					<div class="d-flex flex-column text-start">
-						<span class="fw-bold text-dark" style="font-size: 0.88rem; line-height: 1.2;">Manager Thura</span>
-						<span class="text-muted" style="font-size: 0.72rem;">manager@cafeluft.com</span>
-					</div>
-				</label>
-
-				<!-- Hidden File Input -->
-				<input type="file" id="profileFileInput" accept="image/*" style="display: none;">
-			</div>
 		</div>
 
 		<!-- 2. Mini Metric KPI Summary Cards -->
@@ -490,11 +501,11 @@ body {
 					<i class="fa-solid fa-arrow-up-from-bracket text-muted"></i> Export
 				</button>
 
-				<a th:href="@{/manager/products/add}" class="btn-add-type">
+				<a th:href="@{/manager-only/products/add}" class="btn-add-type">
 					<i class="fa-solid fa-plus"></i> Add Product Type
 				</a>
 
-				<a th:href="@{/manager/products/deleted}" class="btn-bin-trash">
+				<a th:href="@{/manager-only/products/deleted}" class="btn-bin-trash">
 					<i class="fa-solid fa-trash-can"></i> Deleted Bin
 				</a>
 			</div>
@@ -508,13 +519,13 @@ body {
 						<tr>
 							<th style="width: 5%;">No.</th>
 							<th style="width: 9%;">Cover</th>
-							<th style="width: 18%;">Product Name</th>
-							<th style="width: 22%;">Description</th>
+							<th style="width: 17%;">Product Name</th>
+							<th style="width: 20%;">Description</th>
 							<th style="width: 12%;">Category</th>
 							<th style="width: 12%;">Default Price</th>
-							<th style="width: 7%; text-align: center;">Edited</th>
+							<th style="width: 6%; text-align: center;">Edited</th>
 							<th style="width: 9%;">Created At</th>
-							<th style="width: 6%; text-align: end;">Actions</th>
+							<th style="width: 10%; text-align: end;">Action</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -587,16 +598,20 @@ body {
 								<td class="text-muted small" th:text="${#temporals.format(p.created_at, 'yyyy-MM-dd HH:mm')}">2026-09-27 23:52</td>
 
 								<td class="text-end">
-									<div class="d-flex justify-content-end gap-2 align-items-center">
-										<a class="btn-action-icon text-primary" th:href="@{/manager/products/edit/{id}(id=${p.type_id})}" title="Edit Product">
-											<i class="fa-solid fa-pen-to-square"></i>
-										</a>
-										<a class="btn-action-icon text-danger" th:href="@{/manager/products/delete/type/{id}(id=${p.type_id})}" onclick="return confirm('Are you sure you want to delete this product?');" title="Delete">
-											<i class="fa-solid fa-trash-can"></i>
-										</a>
+									<div class="d-inline-flex align-items-center justify-content-end gap-2">
 										<button class="btn-details-expand" type="button" data-bs-toggle="collapse" th:data-bs-target="'#detailRow-' + ${state.index}">
 											Details <i class="fa-solid fa-chevron-down ms-1" style="font-size: 0.65rem;"></i>
 										</button>
+
+										<!-- Stacked Pill Action Buttons matching Category List design -->
+										<div class="action-pill-group">
+											<a class="btn-pill-action btn-pill-edit" th:href="@{/manager-only/products/edit/{id}(id=${p.type_id})}" title="Edit Product">
+												<i class="fa-solid fa-pen-to-square"></i> Edit
+											</a>
+											<a class="btn-pill-action btn-pill-delete" th:href="@{/manager-only/products/delete/type/{id}(id=${p.type_id})}" onclick="return confirm('Are you sure you want to delete this product?');" title="Delete Product">
+												<i class="fa-solid fa-trash-can"></i> Delete
+											</a>
+										</div>
 									</div>
 								</td>
 							</tr>
@@ -622,7 +637,7 @@ body {
 															<th>Status</th>
 															<th>Discounts</th>
 															<th>Ingredients</th>
-															<th class="text-center">Action</th>
+															<th class="text-end" style="width: 100px;">Action</th>
 														</tr>
 													</thead>
 													<tbody>
@@ -642,10 +657,12 @@ body {
 																<span th:if="${prod.ingredient_names != null and !prod.ingredient_names.empty}" class="small" th:text="${prod.ingredient_names}">Ingredients</span>
 																<span th:unless="${prod.ingredient_names != null and !prod.ingredient_names.empty}" class="text-muted small">None</span>
 															</td>
-															<td class="text-center">
-																<a class="btn btn-sm btn-outline-danger border-0" th:href="@{/manager/products/delete/{id}(id=${prod.product_id})}" onclick="return confirm('Delete this size?');">
-																	<i class="fa-solid fa-trash-can"></i>
-																</a>
+															<td class="text-end">
+																<div class="action-pill-group">
+																	<a class="btn-pill-action btn-pill-delete" th:href="@{/manager-only/products/delete/{id}(id=${prod.product_id})}" onclick="return confirm('Delete this size?');" title="Delete Size">
+																		<i class="fa-solid fa-trash-can"></i> Delete
+																	</a>
+																</div>
 															</td>
 														</tr>
 													</tbody>
@@ -666,17 +683,15 @@ body {
 
 	</div>
 
-	
 	<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 
 	<!-- Profile Instant Update & LocalStorage Persistence Script -->
 	<script>
 		document.addEventListener("DOMContentLoaded", function () {
 			const profileInput = document.getElementById("profileFileInput");
-			const profileImg = document.getElementById("managerProfileImg");
+			const profileImg = document.getElementById("manager-onlyProfileImg");
 
-			
-			const savedProfileImage = localStorage.getItem("manager_profile_avatar");
+			const savedProfileImage = localStorage.getItem("manager-only_profile_avatar");
 			if (savedProfileImage && profileImg) {
 				profileImg.src = savedProfileImage;
 			}
@@ -689,7 +704,7 @@ body {
 						reader.onload = function (e) {
 							const newImageDataUrl = e.target.result;
 							profileImg.src = newImageDataUrl;
-							localStorage.setItem("manager_profile_avatar", newImageDataUrl);
+							localStorage.setItem("manager-only_profile_avatar", newImageDataUrl);
 						};
 						reader.readAsDataURL(file);
 					}

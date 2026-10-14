@@ -12,6 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
@@ -86,28 +87,55 @@
             word-break: break-all;
         }
 
-        .action-circle-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
+        /* ================= Edit & Delete Buttons Style (From Categories) ================= */
+        .action-pill-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: flex-end;
+        }
+
+        .btn-pill-action {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid #e5d8cc;
-            background: #ffffff;
-            color: #796659;
+            gap: 6px;
+            width: 78px;
+            padding: 5px 10px;
+            border-radius: 9px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
             transition: all 0.2s ease;
         }
-        .action-circle-btn:hover {
-            color: var(--coffee-main);
-            border-color: var(--coffee-accent);
-            background-color: #faf5ee;
-            transform: scale(1.05);
+
+        /* Edit Pill Button */
+        .btn-pill-edit {
+            background-color: #FBF6EE;
+            color: #8C5332 !important;
+            border: 1px solid #E8D9C8;
         }
-        .action-circle-btn.delete-btn:hover {
-            color: #c0392b;
-            border-color: #f5b7b1;
-            background-color: #fdedec;
+
+        .btn-pill-edit:hover {
+            background-color: #F2E7D5;
+            color: #5C3218 !important;
+            border-color: #D9C3A8;
+        }
+
+        /* Delete Pill Button */
+        .btn-pill-delete {
+            background-color: #FFF5F4;
+            color: #A3281D !important;
+            border: 1px solid transparent;
+        }
+
+        .btn-pill-delete:hover {
+            background-color: #FFE6E4;
+            color: #7A1910 !important;
+        }
+
+        .btn-pill-action i {
+            font-size: 0.8rem;
         }
 
         .empty-icon-wrapper {
@@ -134,7 +162,7 @@
                 </div>
                 <p class="text-muted small mb-0">Manage and audit coffee waste, calibration, and stock loss.</p>
             </div>
-            <a th:href="@{/manager/wastereasons/add}" class="btn btn-coffee mt-2 mt-sm-0">
+            <a th:href="@{/admin/wastereasons/add}" class="btn btn-coffee mt-2 mt-sm-0">
                 <i class="bi bi-plus-lg me-1"></i> Add Waste Reason
             </a>
         </div>
@@ -145,15 +173,15 @@
                 <table class="table table-coffee table-hover mb-0 w-100">
                     <thead>
                         <tr>
-                            <th style="width: 30%;">Reason ID</th>
+                            <th style="width: 30%;">No</th>
                             <th>Reason Name</th>
                             <th class="text-end" style="width: 15%;">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="r : ${reasons}">
+                        <tr th:each="r, state : ${reasons}">
                             <td>
-                                <span class="badge-id" th:text="${r.waste_reason_id}">WR-01</span>
+                                <span class="badge-id" th:text="${state.count}">WR-01</span>
                             </td>
                             <td>
                                 <div class="d-flex align-items-center gap-2">
@@ -162,17 +190,20 @@
                                 </div>
                             </td>
                             <td class="text-end">
-                                <a th:href="@{/manager/wastereasons/edit/{id}(id=${r.waste_reason_id})}" 
-                                   class="action-circle-btn me-1" 
-                                   title="Edit">
-                                    <i class="bi bi-pencil-fill fs-6"></i>
-                                </a>
-                                <a th:href="@{/manager/wastereasons/delete/{id}(id=${r.waste_reason_id})}" 
-                                   class="action-circle-btn delete-btn" 
-                                   title="Delete"
-                                   onclick="return confirm('Are you sure you want to remove this waste reason?');">
-                                    <i class="bi bi-trash3-fill fs-6"></i>
-                                </a>
+                                <!-- Stacked Pill Action Buttons matching Category List design -->
+                                <div class="action-pill-group">
+                                    <a th:href="@{/admin/wastereasons/edit/{id}(id=${r.waste_reason_id})}" 
+                                       class="btn-pill-action btn-pill-edit" 
+                                       title="Edit Waste Reason">
+                                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                                    </a>
+                                    <a th:href="@{/admin/wastereasons/delete/{id}(id=${r.waste_reason_id})}" 
+                                       class="btn-pill-action btn-pill-delete" 
+                                       title="Delete Waste Reason"
+                                       onclick="return confirm('Are you sure you want to remove this waste reason?');">
+                                        <i class="fa-solid fa-trash-can"></i> Delete
+                                    </a>
+                                </div>
                             </td>
                         </tr>
 
@@ -187,7 +218,7 @@
                                     <p class="text-muted small mx-auto mb-4" style="max-width: 320px;">
                                         There are currently no recorded loss indicators for this outlet.
                                     </p>
-                                    <a th:href="@{/manager/wastereasons/add}" class="btn btn-coffee">
+                                    <a th:href="@{/admin/wastereasons/add}" class="btn btn-coffee">
                                         <i class="bi bi-plus-circle me-1"></i> Add Waste Reason
                                     </a>
                                 </div>

@@ -3,107 +3,191 @@
 <body>
 <div th:fragment="sidebar_admin" class="cafe-sidebar admin-sidebar">
 
-    <!-- ================= BRAND ================= -->
+<!-- ================= BRAND ================= -->
     <div class="cafe-brand">
         <div class="cafe-brand-icon admin-icon">
             <i class="bi bi-cup-hot-fill"></i>
         </div>
         <div>
-            <div class="cafe-brand-name">
-                Café <span>Shop</span>
-            </div>
+             <img th:if="${session.loggedInUser != null}" 
+			 th:src="@{'/images/' + ${session.loggedInUser.photopath}}"
+			 alt="Thumbnail Error" 
+			 style="height: 30px; width: 30px; object-fit: cover; border-radius: 100%;" class = "shadow-lg">
+			 <span th:text="${session.loggedInUser != null ? session.loggedInUser.employee_name : 'Staff Name'}" style = "color:#c77b3b"></span>
+            
             <div class="cafe-role">
                 <i class="bi bi-shield-lock-fill"></i>
-                ADMIN
+               ADMIN
             </div>
+            <div class="dropdown">
+            <a href="#" class="staff-profile-dropdown dropdown-toggle text-decoration-none d-flex align-items-center gap-2" id="staffUserDropdown" data-bs-toggle="dropdown" aria-expanded="false" style = "color:#c77b3b">
+            Profile
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="staffUserDropdown" style="background: #fffaf5;">
+                <li><a class="dropdown-item py-2 px-3 text-dark fw-medium" th:href="@{/changeprofile}"><i class="bi bi-person me-2 text-warning"></i> Change Profile</a></li>
+                <li><a class="dropdown-item py-2 px-3 text-dark fw-medium" th:href="@{/changepassword}"><i class="bi bi-person me-2 text-warning"></i> Change Password</a></li>
+                <li><hr class="dropdown-divider bg-light"></li>
+                <li><a class="dropdown-item py-2 px-3 text-danger fw-medium" th:href="@{/logout}"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
+            </ul>
+        </div>
         </div>
     </div>
 
     <!-- ================= MENU ================= -->
-    <div class="cafe-menu">
-        <a th:href="@{/}" class="cafe-menu-item">
-            <i class="bi bi-house"></i>
-            <span>Home</span>
-        </a>
-        <a th:href="@{/manager/employee}" class="cafe-menu-item">
-            <i class="bi bi-people"></i>
-            <span>Employees</span>
-        </a>
-        <a th:href="@{/manager/daily-registers/all}" class="cafe-menu-item">
-            <i class="bi bi-calendar-check"></i>
-            <span>Daily Registers</span>
-        </a>
-        <a th:href="@{/manager/ingredientBatch}" class="cafe-menu-item">
-            <i class="bi bi-box-seam"></i>
-            <span>Ingredient Batch</span>
-        </a>
-        <a th:href="@{/categories}" class="cafe-menu-item">
-            <i class="bi bi-tags"></i>
-            <span>Product Categories</span>
-        </a>
-        <a th:href="@{/units}" class="cafe-menu-item">
-            <i class="bi bi-rulers"></i>
-            <span>Units</span>
-        </a>
-        <a th:href="@{/manager/products}" class="cafe-menu-item">
-            <i class="bi bi-cup-hot"></i>
-            <span>Products List</span>
-        </a>
-        <a th:href="@{/manager/supplier}" class="cafe-menu-item">
-            <i class="bi bi-truck"></i>
-            <span>Suppliers</span>
-        </a>
-        <a th:href="@{/staff/ingredientType}" class="cafe-menu-item">
-            <i class="bi bi-list-check"></i>
-            <span>Ingredient Types</span>
-        </a>
-        <a th:href="@{/manager/WasteLogs}" class="cafe-menu-item">
-            <i class="bi bi-trash"></i>
-            <span>Waste Logs</span>
-        </a>
-        <a th:href="@{/manager/wastereasons}" class="cafe-menu-item">
-            <i class="bi bi-exclamation-circle"></i>
-            <span>Waste Reasons</span>
-        </a>
-        <a th:href="@{/manager/paymethod}" class="cafe-menu-item">
-            <i class="bi bi-credit-card"></i>
-            <span>Pay Methods</span>
-        </a>
-        <a th:href="@{/manager/stock_imports}" class="cafe-menu-item">
-            <i class="bi bi-box-arrow-in-down"></i>
-            <span>Stock Imports</span>
-        </a>
-        <a th:href="@{/orders}" class="cafe-menu-item">
-            <i class="bi bi-bag"></i>
-            <span>Orders</span>
-        </a>
-        <a th:href="@{/payments}" class="cafe-menu-item">
-            <i class="bi bi-cash-stack"></i>
-            <span>Payments</span>
-        </a>
-        <a th:href="@{/manager/discounts}" class="cafe-menu-item">
-            <i class="bi bi-percent"></i>
-            <span>Discounts</span>
-        </a>
-        <a th:href="@{/manager/expensecategory}" class="cafe-menu-item">
-            <i class="bi bi-folder"></i>
-            <span>Expense Categories</span>
-        </a>
-        <a th:href="@{/manager/expense}" class="cafe-menu-item">
-            <i class="bi bi-wallet2"></i>
-            <span>Expenses</span>
-        </a>
-        <a th:href="@{/manager/branches}" class="cafe-menu-item">
-            <i class="bi bi-building"></i>
-            <span>Branches</span>
-        </a>
-    </div>
+	<div class="cafe-menu">
+	
+	    <!-- HOME -->
+	    <a th:href="@{/}" class="cafe-menu-item">
+	        <i class="bi bi-house"></i>
+	        <span>Home</span>
+	    </a>
+	
+	    <!-- ================= MENU ================= -->
+	    <div class="sidebar-section-header px-3 mt-3 mb-1 fw-bold text-uppercase" style="color: #c77b3b; font-size: 0.75rem; letter-spacing: 1px;">MENU</div>
+	
+	    <!-- EMPLOYEES -->
+	    <a th:href="@{/admin/employee}" class="cafe-menu-item">
+	        <i class="bi bi-person-badge"></i>
+	        <span>Employees</span>
+	    </a>
+	
+	    <!-- BRANCHES -->
+	    <a th:href="@{/admin/branches}" class="cafe-menu-item">
+	        <i class="bi bi-shop"></i>
+	        <span>Branches</span>
+	    </a>
+	
+	    <!-- AUDIENCE -->
+	    <a th:href="@{/admin/types/audience}" class="cafe-menu-item">
+	        <i class="bi bi-people"></i>
+	        <span>Audience</span>
+	    </a>
+	
+	    <!-- PROMO -->
+	    <a th:href="@{/admin/types/promo}" class="cafe-menu-item">
+	        <i class="bi bi-megaphone"></i>
+	        <span>Promo</span>
+	    </a>
+	
+	    <!-- EXPENSE CATEGORIES -->
+	    <a th:href="@{/admin/expensecategory}" class="cafe-menu-item">
+	        <i class="bi bi-tags"></i>
+	        <span>Expense Categories</span>
+	    </a>
+	
+	    <!-- INGREDIENT TYPE -->
+	    <a th:href="@{/admin/ingredient-types}" class="cafe-menu-item">
+	        <i class="bi bi-basket3"></i>
+	        <span>Ingredient Type</span>
+	    </a>
+	
+	    <!-- PAY METHOD -->
+	    <a th:href="@{/admin/paymethod}" class="cafe-menu-item">
+	        <i class="bi bi-credit-card-2-front"></i>
+	        <span>PayMethod</span>
+	    </a>
+	
+	    <!-- SIZES -->
+	    <a th:href="@{/admin/sizes}" class="cafe-menu-item">
+	        <i class="bi bi-aspect-ratio"></i>
+	        <span>Sizes</span>
+	    </a>
+	
+	    <!-- UNITS -->
+	    <a th:href="@{/admin/units}" class="cafe-menu-item">
+	        <i class="bi bi-speedometer2"></i>
+	        <span>Units</span>
+	    </a>
+	
+	    <!-- SUPPLIERS -->
+	    <a th:href="@{/admin/suppliers}" class="cafe-menu-item">
+	        <i class="bi bi-truck"></i>
+	        <span>Suppliers</span>
+	    </a>
+	
+	    <!-- WASTE REASONS -->
+	    <a th:href="@{/admin/wastereasons}" class="cafe-menu-item">
+	        <i class="bi bi-trash3"></i>
+	        <span>Waste Reasons</span>
+	    </a>
+	
+	    <!-- ================= VIEW ONLY ================= -->
+	    <div class="sidebar-section-header px-3 mt-3 mb-1 fw-bold text-uppercase" style="color: #c77b3b; font-size: 0.75rem; letter-spacing: 1px;">View Only</div>
+	
+	    <!-- DAILY REGISTERS -->
+	    <a th:href="@{/admin/daily-registers}" class="cafe-menu-item">
+	        <i class="bi bi-journal-bookmark"></i>
+	        <span>Daily Registers</span>
+	    </a>
+	
+	    <!-- DISCOUNTS -->
+	    <a th:href="@{/admin/discounts}" class="cafe-menu-item">
+	        <i class="bi bi-percent"></i>
+	        <span>Discounts</span>
+	    </a>
+	
+	    <!-- CATEGORIES -->
+	    <a th:href="@{/admin/categories}" class="cafe-menu-item">
+	        <i class="bi bi-grid"></i>
+	        <span>Categories</span>
+	    </a>
+	
+	    <!-- BRANCH STATS -->
+	    <a th:href="@{/admin/branchesstats}" class="cafe-menu-item">
+	        <i class="bi bi-shop"></i>
+	        <span>Branch Stats</span>
+	    </a>
+	
+	    <!-- EXPENSES -->
+	    <a th:href="@{/admin/expenses}" class="cafe-menu-item">
+	        <i class="bi bi-cash-coin"></i>
+	        <span>Expenses</span>
+	    </a>
+	
+	    <!-- INGREDIENT BATCHES -->
+	    <a th:href="@{/admin/ingredientBatches}" class="cafe-menu-item">
+	        <i class="bi bi-boxes"></i>
+	        <span>IngredientBatches</span>
+	    </a>
+	
+	    <!-- ORDER DETAILS -->
+	    <a th:href="@{/admin/order-with-details}" class="cafe-menu-item">
+	        <i class="bi bi-receipt-cutoff"></i>
+	        <span>Order Details</span>
+	    </a>
+	
+	    <!-- PAYMENTS -->
+	    <a th:href="@{/admin/payments}" class="cafe-menu-item">
+	        <i class="bi bi-wallet2"></i>
+	        <span>Payments</span>
+	    </a>
+	
+	    <!-- PRODUCTS -->
+	    <a th:href="@{/admin/products}" class="cafe-menu-item">
+	        <i class="bi bi-cup-hot"></i>
+	        <span>Products</span>
+	    </a>
+	
+	    <!-- STATUSES -->
+	    <a th:href="@{/admin/statuses}" class="cafe-menu-item">
+	        <i class="bi bi-toggle-on"></i>
+	        <span>Statuses</span>
+	    </a>
+	
+	    <!-- WASTE LOGS -->
+	    <a th:href="@{/admin/wastelogs}" class="cafe-menu-item">
+	        <i class="bi bi-trash3"></i>
+	        <span>Waste Logs</span>
+	    </a>
+	
+	</div>
 
+    <!-- ================= DIVIDER ================= -->
     <div class="cafe-divider"></div>
 
-    <!-- LOGOUT -->
+    <!-- ================= LOGOUT ================= -->
     <div class="cafe-bottom-menu">
-        <a style="" th:href="@{/logout}" class="cafe-menu-item logout-item">
+        <a style="color:red" th:href="@{/logout}" class="cafe-menu-item logout-item">
             <i class="bi bi-box-arrow-right"></i>
             <span>Log out</span>
         </a>

@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Branch Employee List | Café Luft</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -68,14 +71,64 @@
         .btn-action-icon {
             width: 32px; height: 32px; border-radius: 8px; border: 1px solid #ebdccb; background: #fff;
             display: inline-flex; align-items: center; justify-content: center; color: #7a6556; text-decoration: none;
+            transition: all 0.2s ease;
         }
         .btn-action-icon:hover { border-color: var(--caramel); color: var(--caramel); background: #faf6f0; }
-        .btn-action-icon.danger { border-color: #fad4d0; color: #cb5a4c; }
-        .btn-action-icon.danger:hover { background: #fdf2f0; color: #a72d1f; }
+
+        /* ================= Edit & Delete Buttons Style (From Categories) ================= */
+        .action-pill-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: flex-end;
+        }
+
+        .btn-pill-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 78px;
+            padding: 5px 10px;
+            border-radius: 9px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        /* Edit Pill Button */
+        .btn-pill-edit {
+            background-color: #FBF6EE;
+            color: #8C5332 !important;
+            border: 1px solid #E8D9C8;
+        }
+
+        .btn-pill-edit:hover {
+            background-color: #F2E7D5;
+            color: #5C3218 !important;
+            border-color: #D9C3A8;
+        }
+
+        /* Delete Pill Button */
+        .btn-pill-delete {
+            background-color: #FFF5F4;
+            color: #A3281D !important;
+            border: 1px solid transparent;
+        }
+
+        .btn-pill-delete:hover {
+            background-color: #FFE6E4;
+            color: #7A1910 !important;
+        }
+
+        .btn-pill-action i {
+            font-size: 0.8rem;
+        }
     </style>
 </head>
 <body>
-<div class="main-wrapper">
+<div layout:fragment="content" class="main-wrapper">
     <div class="cafe-header-banner">
         <div class="brand-section">
             <div class="brand-logo-circle"><i class="bi bi-cup-hot-fill" style="font-size: 24px; color: #5c3a21;"></i></div>
@@ -103,7 +156,7 @@
                         <th>Role</th>
                         <th>Salary</th>
                         <th>Status</th>
-                        <th class="text-end">Actions</th>
+                        <th class="text-end">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -129,12 +182,23 @@
                             <span th:if="${emp.status_name == 'ONLEAVE'}" class="badge-status onleave"><i class="bi bi-clock-history"></i> On Leave</span>
                         </td>
                         <td class="text-end">
-                            <div class="d-inline-flex gap-2">
-                                <a th:href="@{/manager-only/employee/edit/{id}(id=${emp.employee_id})}" class="btn-action-icon" title="Edit"><i class="bi bi-pencil-square"></i></a>
-                                <a th:href="@{/manager-only/employee/transfer/{id}(id=${emp.employee_id})}" class="btn-action-icon" title="Transfer"><i class="bi bi-arrow-left-right"></i></a>
-                                <a th:if="${emp.status_name == 'NORMAL'}" th:href="@{/manager-only/employee/setonleave/{id}(id=${emp.employee_id})}" class="btn-action-icon" title="Set On Leave"><i class="bi bi-pause-circle"></i></a>
-                                <a th:if="${emp.status_name == 'ONLEAVE'}" th:href="@{/manager-only/employee/setnormal/{id}(id=${emp.employee_id})}" class="btn-action-icon" title="Set Normal"><i class="bi bi-play-circle"></i></a>
-                                <a th:href="@{/manager-only/employee/fire/{id}(id=${emp.employee_id})}" onclick="return confirm('Do you really want to fire this employee?')" class="btn-action-icon danger" title="Fire"><i class="bi bi-person-x"></i></a>
+                            <div class="d-inline-flex align-items-center gap-2">
+                                <!-- Transfer & Leave Status Icons -->
+                                <div class="d-flex flex-column gap-1">
+                                    <a th:href="@{/manager-only/employee/transfer/{id}(id=${emp.employee_id})}" class="btn-action-icon" title="Transfer"><i class="bi bi-arrow-left-right"></i></a>
+                                    <a th:if="${emp.status_name == 'NORMAL'}" th:href="@{/manager-only/employee/setonleave/{id}(id=${emp.employee_id})}" class="btn-action-icon" title="Set On Leave"><i class="bi bi-pause-circle"></i></a>
+                                    <a th:if="${emp.status_name == 'ONLEAVE'}" th:href="@{/manager-only/employee/setnormal/{id}(id=${emp.employee_id})}" class="btn-action-icon" title="Set Normal"><i class="bi bi-play-circle"></i></a>
+                                </div>
+
+                                <!-- Stacked Pill Action Buttons matching Category List design -->
+                                <div class="action-pill-group">
+                                    <a th:href="@{/manager-only/employee/edit/{id}(id=${emp.employee_id})}" class="btn-pill-action btn-pill-edit" title="Edit Employee">
+                                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                                    </a>
+                                    <a th:href="@{/manager-only/employee/fire/{id}(id=${emp.employee_id})}" onclick="return confirm('Do you really want to fire this employee?');" class="btn-pill-action btn-pill-delete" title="Fire / Delete Employee">
+                                        <i class="fa-solid fa-trash-can"></i> Fire
+                                    </a>
+                                </div>
                             </div>
                         </td>
                     </tr>

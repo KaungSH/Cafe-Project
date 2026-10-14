@@ -29,6 +29,16 @@ public class OrderDetailsRepository {
 		return jdbcTemplate.query(sql, new OrderDetailsMapper());
 	}
 
+	public List<OrderDetails> findByBranchId(String branchId) {
+		String sql = "SELECT od.*, pt.name AS product_name, p.price AS price "
+				+ "FROM order_details od "
+				+ "INNER JOIN orders o ON od.order_id = o.order_id "
+				+ "LEFT JOIN products p ON od.product_id = p.product_id "
+				+ "LEFT JOIN product_types pt ON p.item_id = pt.type_id "
+				+ "WHERE o.isdeleted = false AND o.branch_id = ?";
+		return jdbcTemplate.query(sql, new OrderDetailsMapper(), branchId);
+	}
+
 	public OrderDetails findById(String id) {
 
 		String sql = "SELECT od.*, pt.name AS product_name \r\n" + "FROM order_details od \r\n"

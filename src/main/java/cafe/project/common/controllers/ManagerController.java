@@ -5,19 +5,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import cafe.project.employeemanagement.models.LoginDto;
 import cafe.project.repositories.AtypeAndPtypeRepository;
-import cafe.project.repositories.StatusRepository;
-import cafe.project.services.BranchService;
-import cafe.project.services.CategoryService;
-import cafe.project.services.DailyRegisterService;
-import cafe.project.services.DiscountService;
-import cafe.project.services.EmployeeService;
+import cafe.project.repositories.WasteReasonRepository;
 import cafe.project.services.ExpenseCategoryService;
+import cafe.project.services.IngredientTypeService;
 import cafe.project.services.PayMethodService;
 import cafe.project.services.SizeService;
+import cafe.project.services.SupplierService;
 import cafe.project.services.UnitService;
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/manager-only")
@@ -28,13 +23,19 @@ public class ManagerController {
 	private final SizeService sizeService;
 	private final PayMethodService payMethodService;
 	private final UnitService unitService;
+	private final IngredientTypeService ingredientTypeService;
+	private final SupplierService supplierService;
+	private final WasteReasonRepository wasteReasonRepo;
 	
-	public ManagerController(AtypeAndPtypeRepository typeRepo, ExpenseCategoryService expenseCategoryService, SizeService sizeService, PayMethodService payMethodService, UnitService unitService) {
+	public ManagerController(AtypeAndPtypeRepository typeRepo, ExpenseCategoryService expenseCategoryService, SizeService sizeService, PayMethodService payMethodService, UnitService unitService, IngredientTypeService ingredientTypeService, SupplierService supplierService, WasteReasonRepository wasteReasonRepo) {
 		this.typeRepo = typeRepo;
 		this.expenseCategoryService = expenseCategoryService;
 		this.sizeService = sizeService;
 		this.payMethodService = payMethodService;
 		this.unitService = unitService;
+		this.ingredientTypeService = ingredientTypeService;
+		this.supplierService = supplierService;
+		this.wasteReasonRepo = wasteReasonRepo;
 	}
 	
 	@GetMapping("/types/audience")
@@ -77,6 +78,22 @@ public class ManagerController {
 		return "units/list-manager";
 	}
 	
+	@GetMapping("/ingredient_types")
+    public String list(Model model) {
+        model.addAttribute("ingredientTypes", ingredientTypeService.getAllActiveIngredientTypes());
+        return "ingredient-type/list-manager";
+    }
 	
+	@GetMapping("/suppliers")
+	public String supplierList(Model model) {
+		model.addAttribute("suppliers", this.supplierService.findAll());
+		return "supplier/list-manager";
+	}
+	
+	@GetMapping("/waste-reasons")
+	public String getReason(Model model) {
+		model.addAttribute("reasons", wasteReasonRepo.findReasonsAll());
+		return "/wastereasons/list-manager";
+	}
 
 }

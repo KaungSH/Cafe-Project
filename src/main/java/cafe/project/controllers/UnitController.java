@@ -42,11 +42,12 @@ public class UnitController {
 	}
 
 	@PostMapping("/units/add")
-	public String addUnit(@ModelAttribute("unit") Unit unit, Model model, HttpSession session) {
+	public String addUnit(@ModelAttribute("unit") UnitDto unit, Model model, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		unit.setEmployee_name(ldto.getEmployee_id());
 		unit.setEmployee_id(ldto.getEmployee_id());
 		this.unitService.add(unit);
-		return "redirect:/units";
+		return "redirect:/admin/units";
 	}
 
 	@GetMapping("/units/edit/{id}")
@@ -65,11 +66,12 @@ public class UnitController {
 	}
 
 	@PostMapping("/units/edit/{id}")
-	public String editUnit(@ModelAttribute("unit") Unit unit, Model model, HttpSession session) {
+	public String editUnit(@ModelAttribute("unit") UnitDto unit, Model model, HttpSession session) {
 		LoginDto ldto = (LoginDto) session.getAttribute("loggedInUser");
+		unit.setEmployee_name(ldto.getEmployee_id());
 		unit.setEmployee_id(ldto.getEmployee_id());
 		this.unitService.edit(unit.getUnit_id(), unit);
-		return "redirect:/units";
+		return "redirect:/admin/units";
 	}
 
 	@GetMapping("/units/delete/{id}")
@@ -92,7 +94,7 @@ public class UnitController {
 
 		this.unitService.delete(unit.getUnit_id());
 
-		return "redirect:/units";
+		return "redirect:/admin/units";
 	}
 	
 	@GetMapping("/units/deleted-list")
@@ -108,7 +110,7 @@ public class UnitController {
 		
 		unitService.restore(id);
 		
-		return "redirect:/units/deleted-list";
+		return "redirect:/admin/units/deleted-list";
 	}
 	
 	@PostMapping("/units/real-delete")
@@ -116,6 +118,6 @@ public class UnitController {
 		
 		unitService.hardDelete(id);
 		
-		return "redirect:/units/deleted-list";
+		return "redirect:/admin/units/deleted-list";
 	}
 }

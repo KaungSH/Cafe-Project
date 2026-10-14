@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discounts & Promotions | Café Luft</title>
+    <!-- Bootstrap 5 & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --canvas-bg: #f4ece4;       /* Soft warm creamy background */
+            --card-surface: #ffffff;
+            --espresso-dark: #271810;   /* Deep roast coffee color */
+            --subtext-brown: #8a7c73;
+            --border-line: #f1e7dd;
+            --id-box-bg: #fffbf8;
+            --id-border: #eddcd0;
+            --btn-brown: #5c3820;
+            --btn-brown-hover: #452814;
+            --status-green-bg: #e5f6ec;
+            --status-green-text: #288049;
+            --status-red-bg: #fdeeee;
+            --status-red-text: #b8332a;
+        }
+
+        body {
+            background-color: var(--canvas-bg);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--espresso-dark);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .main-container {
+            max-width: 1440px;
+            margin: 36px auto;
+            padding: 0 24px;
+        }
+
+        /* Top Header Area matching the screenshot */
+        .page-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 22px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .header-icon-squircle {
+            width: 58px;
+            height: 58px;
+            background: linear-gradient(145deg, #5c3820, #412613);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 26px;
+            box-shadow: 0 8px 18px rgba(65, 38, 19, 0.22);
+            flex-shrink: 0;
+        }
+
+        .header-title-box h2 {
+            font-size: 1.62rem;
+            font-weight: 800;
+            color: var(--espresso-dark);
+            margin: 0;
+            letter-spacing: -0.02em;
+        }
+
+        .header-title-box p {
+            color: var(--subtext-brown);
+            font-size: 0.88rem;
+            margin: 3px 0 0 0;
+            font-weight: 500;
+        }
+
+        .btn-header-action {
+            background-color: var(--btn-brown);
+            color: #ffffff !important;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 14px;
+            padding: 12px 24px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 6px 16px rgba(92, 56, 32, 0.25);
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .btn-header-action:hover {
+            background-color: var(--btn-brown-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(92, 56, 32, 0.35);
+        }
+
+        /* Pure White Card Table matching the screenshot */
+        .management-table-card {
+            background: var(--card-surface);
+            border-radius: 20px;
+            border: 1px solid rgba(225, 210, 196, 0.4);
+            box-shadow: 0 10px 32px rgba(45, 30, 20, 0.04);
+            padding: 12px 28px 24px 28px;
+            overflow: hidden;
+        }
+
+        .luft-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .luft-table thead th {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #8c7e75;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 20px 14px 16px 14px;
+            border-bottom: 1.5px solid var(--border-line);
+            white-space: nowrap;
+        }
+
+        .luft-table tbody tr td {
+            padding: 20px 14px;
+            vertical-align: middle;
+            font-size: 0.92rem;
+            border-bottom: 1px solid var(--border-line);
+            color: #4a3e36;
+        }
+
+        .luft-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .luft-table tbody tr:hover {
+            background-color: #fdfbf8;
+        }
+
+        /* ID Rounded Pill/Box */
+        .id-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            border-radius: 11px;
+            background-color: var(--id-box-bg);
+            border: 1.5px solid var(--id-border);
+            font-weight: 700;
+            color: #7b6251;
+            font-size: 0.86rem;
+            padding: 0 8px;
+        }
+
+        /* Row Title */
+        .title-primary {
+            font-weight: 700;
+            color: var(--espresso-dark);
+            font-size: 0.95rem;
+        }
+
+        /* Value Highlight */
+        .value-highlight {
+            font-weight: 700;
+            color: var(--espresso-dark);
+            font-size: 0.95rem;
+            letter-spacing: 0.2px;
+        }
+
+        /* Status Pills (Like OPENED in Screenshot) */
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        .status-pill.active {
+            background-color: var(--status-green-bg);
+            color: var(--status-green-text);
+            border: 1px solid rgba(40, 128, 73, 0.15);
+        }
+
+        .status-pill.inactive {
+            background-color: var(--status-red-bg);
+            color: var(--status-red-text);
+            border: 1px solid rgba(184, 51, 42, 0.15);
+        }
+
+        /* Action Buttons exactly matching the screenshot */
+        .action-column {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+        }
+
+        .btn-action-edit {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 6px 16px;
+            background-color: #ffffff;
+            border: 1.5px solid #e8dbce;
+            border-radius: 10px;
+            color: #5c3820 !important;
+            font-size: 0.84rem;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            min-width: 90px;
+            transition: all 0.15s ease;
+        }
+
+        .btn-action-edit:hover {
+            background-color: #faf4ed;
+            border-color: #c9b09a;
+            color: #412613 !important;
+        }
+
+        .btn-action-view {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 5px 12px;
+            background-color: transparent;
+            border: none;
+            color: #9c3b30 !important;
+            font-size: 0.84rem;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: opacity 0.15s ease;
+        }
+
+        .btn-action-view:hover {
+            opacity: 0.8;
+            color: #7d261d !important;
+        }
+
+        /* Drawer Box for collapsible item details */
+        .drawer-detail-card {
+            background: #fbf7f2;
+            border-radius: 14px;
+            border: 1px solid #ebdccb;
+            padding: 20px 24px;
+            margin: 8px 0 12px 0;
+        }
+
+        .product-mini-pill {
+            background: #ffffff;
+            border: 1px solid #e8ddd2;
+            border-radius: 10px;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+    </style>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div class="main-container">
+
+        <!-- Header Row (Branch Management Style) -->
+        <div class="page-header-row">
+            <div class="header-left">
+                <div class="header-icon-squircle">
+                    <i class="bi bi-tag-fill"></i>
+                </div>
+                <div class="header-title-box">
+                    <h2>Discounts & Promotions</h2>
+                    <p>Overview of active promotional campaigns, discounts & offering schedules</p>
+                </div>
+            </div>
+
+            <!-- Staff access badge -->
+            <div>
+                <span class="badge px-3 py-2" style="background-color: #e8dbce; color: #5c3820; border-radius: 10px; font-weight: 700; font-size: 0.85rem;">
+                    <i class="bi bi-shield-check me-1"></i> Staff Directory View
+                </span>
+            </div>
+        </div>
+
+        <!-- Management White Card Table -->
+        <div class="management-table-card">
+            <div class="table-responsive">
+                <table class="luft-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">ID</th>
+                            <th>NAME</th>
+                            <th>LOCATION / BRANCH</th>
+                            <th>PROMO TYPE</th>
+                            <th>AUDIENCE</th>
+                            <th>SCHEDULE</th>
+                            <th>VALUE</th>
+                            <th>STATUS</th>
+                            <th class="text-end" style="width: 120px;">ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <th:block th:each="discount, state : ${discounts}">
+                            <tr>
+                                <!-- ID Badge Column -->
+                                <td>
+                                    <span class="id-badge" th:text="${state.count}">1</span>
+                                </td>
+
+                                <!-- Promotion Name -->
+                                <td>
+                                    <div class="title-primary" th:text="${discount.name}">Café Luft - Original</div>
+                                    <small class="text-muted d-block" style="font-size: 0.8rem;" 
+                                           th:text="${discount.description != null ? discount.description : 'Standard promotion'}">Description</small>
+                                </td>
+
+                                <!-- Branch -->
+                                <td>
+                                    <span style="font-weight: 600; color: #4a3e36;" th:text="${discount.branch_name}">Yangon - Kamayut</span>
+                                </td>
+
+                                <!-- Promo Type -->
+                                <td>
+                                    <span style="font-weight: 600;" th:text="${discount.promo_type_name}">Seasonal</span>
+                                </td>
+
+                                <!-- Audience -->
+                                <td>
+                                    <span style="color: var(--subtext-brown); font-weight: 600;" th:text="${discount.audience_type_name}">All Customers</span>
+                                </td>
+
+                                <!-- Schedule / Duration -->
+                                <td>
+                                    <div style="font-size: 0.85rem; line-height: 1.4;">
+                                        <div><i class="bi bi-clock me-1 text-muted"></i><span th:text="${discount.startdate}">09:00:00</span></div>
+                                        <div><i class="bi bi-arrow-right-short text-muted"></i><span th:text="${discount.enddate}">19:00:00</span></div>
+                                    </div>
+                                </td>
+
+                                <!-- Value / Finances Style -->
+                                <td>
+                                    <span class="value-highlight" th:text="${discount.discount_value + '%'}">25,000,001.00 MMK</span>
+                                </td>
+
+                                <!-- Status (OPENED / CLOSED Style) -->
+                                <td>
+                                    <span th:if="${discount.is_active == true}" class="status-pill active">
+                                        <i class="bi bi-check2"></i> OPENED
+                                    </span>
+                                    <span th:if="${discount.is_active == false or discount.is_active == null}" class="status-pill inactive">
+                                        <i class="bi bi-x"></i> CLOSED
+                                    </span>
+                                </td>
+
+                                <!-- Stacked Action Column (Matching Screenshot) -->
+                                <td class="text-end">
+                                    <div class="action-column">
+                                        <button class="btn-action-edit" type="button"
+                                                data-bs-toggle="collapse"
+                                                th:data-bs-target="'#detailRow-' + ${state.index}"
+                                                aria-expanded="false">
+                                            <i class="fa-regular fa-eye"></i> View
+                                        </button>
+                                        <span class="btn-action-view" style="font-size: 0.78rem; opacity: 0.65; cursor: default;">
+                                            <i class="bi bi-lock-fill"></i> Readonly
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Expandable Drawer Details for Products -->
+                            <tr class="collapse" th:id="'detailRow-' + ${state.index}">
+                                <td colspan="9" class="p-0 border-0">
+                                    <div class="drawer-detail-card">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <div class="fw-bold" style="color: var(--espresso-dark); font-size: 0.92rem;">
+                                                <i class="bi bi-cup-hot-fill me-1" style="color: #8c5332;"></i>
+                                                Enrolled Coffees & Pastries in <span th:text="${discount.name}"></span>
+                                            </div>
+                                            <small class="text-muted fw-semibold">Created By: <span th:text="${discount.ename != null ? discount.ename : 'Admin'}">Admin</span></small>
+                                        </div>
+
+                                        <div th:if="${discount.products != null and !discount.products.empty}">
+                                            <div class="row g-2">
+                                                <div class="col-md-4 col-sm-6" th:each="dp : ${discount.products}">
+                                                    <div class="product-mini-pill">
+                                                        <i class="bi bi-cup-hot text-muted"></i>
+                                                        <div>
+                                                            <strong class="d-block" style="font-size: 0.88rem; color: var(--espresso-dark);" th:text="${dp.type_name}">Espresso</strong>
+                                                            <small class="text-muted" style="font-size: 0.76rem;">Handcrafted Specialty</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div th:unless="${discount.products != null and !discount.products.empty}" class="text-muted small py-1">
+                                            <i class="bi bi-info-circle me-1"></i> No products are enrolled in this discount yet.
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </th:block>
+
+                        <!-- Empty State -->
+                        <tr th:if="${#lists.isEmpty(discounts)}">
+                            <td colspan="9" class="text-center py-5 text-muted">
+                                <i class="bi bi-inbox fs-2 d-block mb-2 text-muted"></i> No discount promotions available.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>
